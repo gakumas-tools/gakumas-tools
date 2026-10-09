@@ -36,8 +36,8 @@ export const SIGNATURE_CARD_BY_PIDOL = SkillCards.getAll().reduce((acc, sc) => {
 }, {});
 
 // Entities that should be hidden from any user-facing browser/picker.
-export const HIDDEN_ITEM_IDS = new Set([496]);
-export const HIDDEN_CARD_IDS = new Set([887]);
+export const HIDDEN_ITEM_IDS = new Set([]);
+export const HIDDEN_CARD_IDS = new Set([]);
 
 export function isEntityHidden(type, id) {
   if (type === EntityTypes.SKILL_CARD) return HIDDEN_CARD_IDS.has(id);

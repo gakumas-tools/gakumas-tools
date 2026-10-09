@@ -494,7 +494,7 @@ id,name,rarity,upgraded,plan,mode,sourceType,pIdolId,welfare,effects
 493,天性の才能,SSR,FALSE,sense,stage,pIdol,158,FALSE,at:afterCardUsed { if:countCards[hand & baseId(23)]>=1 { score+=goodConditionTurns*0.3 } }
 494,天性の才能+,SSR,TRUE,sense,stage,pIdol,158,FALSE,at:afterCardUsed { if:countCards[hand & baseId(23)]>=1 { genki+=1; score+=goodConditionTurns*0.5 } }
 495,王子様隠しかぼちゃ,SR,FALSE,sense,produce,support,,FALSE,
-496,規格外の魅力,SSR,FALSE,logic,stage,pIdol,159,FALSE,at:mentalCardUsed { if:motivation>=5 { effectCounter+=1; if:effectCounter%2==1 { motivation+=5; goodImpressionTurns+=1; costReduction+=1; limit:2 } } }
+496,規格外の魅力,SSR,FALSE,logic,stage,pIdol,159,FALSE,at:mentalCardUsed { if:motivation>=5 { effectCounter+=1; if:effectCounter%2==1 { motivation+=4; costReduction+=1; limit:2 } } }
 497,規格外の魅力+,SSR,TRUE,logic,stage,pIdol,159,FALSE,at:mentalCardUsed { if:motivation>=5 { effectCounter+=1; if:effectCounter%2==1 { motivation+=5; goodImpressionTurns+=1; costReduction+=1; limit:2 } } }
 498,花海ファームランタン,SSR,FALSE,logic,produce,support,,FALSE,
 499,お手製ぴったり衣装,SR,FALSE,logic,produce,support,,FALSE,

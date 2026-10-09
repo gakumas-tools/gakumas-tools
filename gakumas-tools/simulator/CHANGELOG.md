@@ -2,6 +2,10 @@
 
 All notable changes to the contest simulator will be documented in this file.
 
+## 2026-10-09
+
+- Update agitato saki
+
 ## 2026-10-08
 
 - Add preview of agitato saki
