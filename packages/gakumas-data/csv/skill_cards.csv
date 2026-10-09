@@ -885,5 +885,5 @@ id,name,availableCustomizations,rarity,type,plan,unlockPlv,upgraded,unique,sourc
 884,無自覚チャーム+,,SSR,mental,sense,1,TRUE,TRUE,pIdol,158,FALSE,if:goodConditionTurns>=8,cost-=0,goodConditionTurns+=10; addCardToTopOfDeck(23); at:turn { drawCard(2); cardUsesRemaining+=1; limit:1 }; at:turn { drawCard(2); limit:1; delay:1 },,
 885,なりきりデビル,,SSR,mental,sense,1,FALSE,TRUE,support,,FALSE,if:turnsElapsed>=2,concentration-=2,"setGoodConditionTurnsAdditionBuff(2,2); at:turn { goodConditionTurns+=3; limit:1 }",1,
 886,なりきりデビル+,"32,28",SSR,mental,sense,1,TRUE,TRUE,support,,FALSE,if:turnsElapsed>=2,concentration-=2,"setGoodConditionTurnsAdditionBuff(2,3); at:turn { goodConditionTurns+=4; limit:1 }",1,
-887,スイートトラップ♡,,SSR,mental,logic,1,FALSE,TRUE,pIdol,159,FALSE,,cost-=2,"nullifyDebuff+=1; cardUsesRemaining+=1; at:startOfTurn { if:genki>=40 { moveRandomToTopOfDeck[active & (deck | discarded)]; fixedStamina+=2 } }",1,
+887,スイートトラップ♡,,SSR,mental,logic,1,FALSE,TRUE,pIdol,159,FALSE,,cost-=5,"nullifyDebuff+=1; cardUsesRemaining+=1; at:startOfTurn { if:genki>=40 { moveRandomToTopOfDeck[active & (deck | discarded)]; fixedStamina+=2 } }",1,
 888,スイートトラップ♡+,,SSR,mental,logic,1,TRUE,TRUE,pIdol,159,FALSE,,cost-=2,"nullifyDebuff+=1; cardUsesRemaining+=1; at:startOfTurn { if:genki>=40 { moveRandomToTopOfDeck[active & (deck | discarded)]; fixedStamina+=2 } }",1,
