@@ -11,12 +11,17 @@ function MemorySave() {
   const t = useTranslations("MemorySave");
 
   const { status } = useSession();
-  const { id, save, saveState } = useContext(MemoryContext);
+  const { id, save, saveState, stashDraft } = useContext(MemoryContext);
+
+  function signInToSave() {
+    stashDraft();
+    signIn("discord");
+  }
 
   return (
     <div className={styles.save}>
       {status == "unauthenticated" && (
-        <Button style="primary" onClick={() => signIn("discord")}>
+        <Button style="primary" onClick={signInToSave}>
           {t("signInToSave")}
         </Button>
       )}

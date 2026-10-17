@@ -32,6 +32,7 @@
     "test:stamina": "node --loader ./scripts/extensionless-loader.mjs --test tests/stamina.test.mjs",
     "test:card-effects": "node --loader ./scripts/extensionless-loader.mjs --test tests/cardHasEffect.test.mjs",
     "test:next-turn": "node --loader ./scripts/extensionless-loader.mjs --test tests/nextTurnReservation.test.mjs",
+    "test:memory-draft": "node --test tests/memoryDraft.test.mjs",
     "regression:add": "node --loader ./scripts/extensionless-loader.mjs ./tests/add.mjs",
     "regression:bootstrap": "node --loader ./scripts/extensionless-loader.mjs ./tests/generate-suite.mjs",
     "regression:coverage": "node --loader ./scripts/extensionless-loader.mjs ./tests/coverage.mjs",

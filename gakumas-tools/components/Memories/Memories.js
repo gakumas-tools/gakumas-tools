@@ -4,9 +4,13 @@ import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import Alert from "@/components/Alert";
 import Button from "@/components/Button";
+import MemoryEditorModal from "@/components/MemoryEditorModal";
 import DataContext from "@/contexts/DataContext";
+import MemoryContext from "@/contexts/MemoryContext";
+import ModalContext from "@/contexts/ModalContext";
 import SearchContext from "@/contexts/SearchContext";
 import { calculateContestPower } from "@/utils/contestPower";
+import { takeMemoryDraft } from "@/utils/memoryDraft";
 import {
   compareFilteredMemories,
   compareUnfilteredMemories,
@@ -20,6 +24,8 @@ function Memories() {
   const t = useTranslations("Memories");
   const { status } = useSession();
   const { memories, memoriesError, fetchMemories } = useContext(DataContext);
+  const { restoreDraft } = useContext(MemoryContext);
+  const { setModal } = useContext(ModalContext);
   const { pItemIds, skillCardIds } = useContext(SearchContext);
   const [action, setAction] = useState(null);
   const [selectedMemories, setSelectedMemories] = useState({});
@@ -29,6 +35,21 @@ function Memories() {
       fetchMemories();
     }
   }, [status]);
+
+  useEffect(() => {
+    if (restoreDraft()) {
+      setModal(<MemoryEditorModal />);
+    }
+  }, []);
+
+  useEffect(() => {
+    const dropDraftOnBackForwardRestore = (event) => {
+      if (event.persisted) takeMemoryDraft();
+    };
+    window.addEventListener("pageshow", dropDraftOnBackForwardRestore);
+    return () =>
+      window.removeEventListener("pageshow", dropDraftOnBackForwardRestore);
+  }, []);
 
   const hasSearchQuery = pItemIds.some((i) => i) || skillCardIds.some((i) => i);
   const filteredMemories = useMemo(

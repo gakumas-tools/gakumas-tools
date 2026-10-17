@@ -9,6 +9,7 @@ import {
 } from "react";
 import DataContext from "@/contexts/DataContext";
 import { fixCustomizations } from "@/utils/customizations";
+import { stashMemoryDraft, takeMemoryDraft } from "@/utils/memoryDraft";
 
 const MemoryContext = createContext();
 
@@ -103,6 +104,25 @@ export function MemoryContextProvider({ children }) {
     }
   }, []);
 
+  const stashDraft = useCallback(() => {
+    stashMemoryDraft({
+      _id: id,
+      name,
+      pIdolId,
+      params,
+      pItemIds,
+      skillCardIds,
+      customizations,
+    });
+  }, [id, name, pIdolId, params, pItemIds, skillCardIds, customizations]);
+
+  const restoreDraft = useCallback(() => {
+    const draft = takeMemoryDraft();
+    if (!draft) return false;
+    setAll(draft);
+    return true;
+  }, [setAll]);
+
   const replacePItemId = useCallback((index, itemId) => {
     setPItemIds((cur) => {
       const next = [...cur];
@@ -145,6 +165,8 @@ export function MemoryContextProvider({ children }) {
       replaceCustomizations,
       setAll,
       save,
+      stashDraft,
+      restoreDraft,
     }),
     [
       saveState,
@@ -160,6 +182,8 @@ export function MemoryContextProvider({ children }) {
       replaceCustomizations,
       setAll,
       save,
+      stashDraft,
+      restoreDraft,
     ]
   );
 
