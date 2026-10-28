@@ -669,7 +669,9 @@
     "needsChecking": "{count}件の行を確認してください",
     "confirmRow": "この行の値が正しいことを確認",
     "selectFiles": "ファイルを選択",
-    "addRow": "行を追加"
+    "addRow": "行を追加",
+    "clear": "クリア",
+    "confirmClear": "すべての行を削除しますか？"
   },
   "RehearsalComparison": {
     "addResults": "リハーサル結果を追加",

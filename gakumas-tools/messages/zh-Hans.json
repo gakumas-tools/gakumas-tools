@@ -661,7 +661,9 @@
     "needsChecking": "{count} 行需要检查",
     "confirmRow": "确认此行的数值正确",
     "selectFiles": "选择文件",
-    "addRow": "添加行"
+    "addRow": "添加行",
+    "clear": "清除",
+    "confirmClear": "确定要删除所有行吗？"
   },
   "RehearsalComparison": {
     "addResults": "添加排练结果",

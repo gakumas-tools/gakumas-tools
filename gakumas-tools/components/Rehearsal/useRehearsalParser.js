@@ -253,9 +253,18 @@ export default function useRehearsalParser() {
     [processVideo, processImages, t],
   );
 
+  const clearData = useCallback(() => {
+    setData((d) => {
+      revokeRowSources(d);
+      return [];
+    });
+    setIcons(null);
+  }, []);
+
   return {
     data,
     setData,
+    clearData,
     icons,
     handleFiles,
     progress,

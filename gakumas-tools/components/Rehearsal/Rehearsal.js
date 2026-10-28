@@ -7,6 +7,7 @@ import {
   FaFileCsv,
   FaFileImage,
   FaPlus,
+  FaTrashCan,
   FaTriangleExclamation,
   FaVideo,
 } from "react-icons/fa6";
@@ -31,8 +32,15 @@ import styles from "./Rehearsal.module.scss";
 
 function Rehearsal() {
   const t = useTranslations("Rehearsal");
-  const { data, setData, handleFiles, progress, total, processingStatus } =
-    useRehearsalParser();
+  const {
+    data,
+    setData,
+    clearData,
+    handleFiles,
+    progress,
+    total,
+    processingStatus,
+  } = useRehearsalParser();
   const [selected, setSelected] = useState(null);
 
   const download = useCallback(() => {
@@ -189,6 +197,16 @@ function Rehearsal() {
             {t("needsChecking", { count: flaggedCount })}
           </span>
         )}
+        <Button
+          style="default"
+          size="sm"
+          onClick={() => {
+            if (confirm(t("confirmClear"))) clearData();
+          }}
+          disabled={!data.length}
+        >
+          <FaTrashCan /> {t("clear")}
+        </Button>
         <Button
           style="default"
           size="sm"
