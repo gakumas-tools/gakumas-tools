@@ -32,7 +32,7 @@ export function LoadoutContextProvider({ children }) {
 
   const initialLoadout = loadoutsFromUrl[0] || loadoutFromUrl;
 
-  const [memoryParams, setMemoryParams] = useState([null, null]);
+  const [memorySlots, setMemorySlots] = useState([null, null]);
   const [stageId, setStageId] = useState(initialLoadout.stageId);
   const [customStage, setCustomStage] = useState(null);
   const [supportBonus, setSupportBonus] = useState(initialLoadout.supportBonus);
@@ -153,13 +153,13 @@ export function LoadoutContextProvider({ children }) {
 
   const stageRef = useRef(stage);
   stageRef.current = stage;
-  const memoryParamsRef = useRef(memoryParams);
-  memoryParamsRef.current = memoryParams;
+  const memorySlotsRef = useRef(memorySlots);
+  memorySlotsRef.current = memorySlots;
   const paramsRef = useRef(params);
   paramsRef.current = params;
 
   const clear = useCallback(() => {
-    setMemoryParams([null, null]);
+    setMemorySlots([null, null]);
     setParams(getDefaultParams(stageRef.current));
     setPItemIds([0, 0, 0, 0]);
     setSkillCardIdGroups([
@@ -305,13 +305,13 @@ export function LoadoutContextProvider({ children }) {
     const stage = stageRef.current;
     const multiplier = stage.type !== "linkContest" && index ? 0.2 : 1;
     const applied = setMemorySlot(
-      { params: paramsRef.current, slots: memoryParamsRef.current },
+      { params: paramsRef.current, slots: memorySlotsRef.current },
       index,
       memory.params,
       multiplier,
     );
 
-    setMemoryParams(applied.slots);
+    setMemorySlots(applied.slots);
     setParams(applied.params);
     if (index == 0) {
       setPItemIds(memory.pItemIds);

@@ -18,3 +18,11 @@ test("Replacing a slot removes only what the old memory added", () => {
   state = setMemorySlot(state, 1, B, 0.2);
   assert.deepEqual(state.params, [1300, 1180, 1060, 50]);
 });
+
+test("Replacing a slot after the stage type changed removes what was added", () => {
+  let state = { params: [0, 0, 0, 0], slots: EMPTY };
+  state = setMemorySlot(state, 0, A, 1);
+  state = setMemorySlot(state, 1, A, 0.2);
+  state = setMemorySlot(state, 1, B, 1);
+  assert.deepEqual(state.params, [2500, 2300, 2100, 90]);
+});
