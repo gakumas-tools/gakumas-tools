@@ -532,7 +532,10 @@
     "allStages": "全部舞台",
     "actions": "操作",
     "loadFailed": "无法加载已保存的编组。",
-    "retry": "重试"
+    "retry": "重试",
+    "saveFailed": "保存失败",
+    "renameFailed": "重命名失败",
+    "deleteFailed": "删除失败"
   },
   "SimulatorStats": {
     "total": "合计",

@@ -532,7 +532,10 @@
     "allStages": "전체 스테이지",
     "actions": "작업",
     "loadFailed": "저장된 편성을 불러오지 못했습니다.",
-    "retry": "다시 시도"
+    "retry": "다시 시도",
+    "saveFailed": "저장 실패",
+    "renameFailed": "이름 변경 실패",
+    "deleteFailed": "삭제 실패"
   },
   "SimulatorStats": {
     "total": "합계",

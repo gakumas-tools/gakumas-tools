@@ -540,7 +540,10 @@
     "allStages": "全ステージ",
     "actions": "操作",
     "loadFailed": "保存済み編成を読み込めませんでした。",
-    "retry": "再試行"
+    "retry": "再試行",
+    "saveFailed": "保存に失敗",
+    "renameFailed": "名前変更に失敗",
+    "deleteFailed": "削除に失敗"
   },
   "SimulatorStats": {
     "total": "合計",

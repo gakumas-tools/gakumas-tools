@@ -532,7 +532,10 @@
     "allStages": "All stages",
     "actions": "Actions",
     "loadFailed": "Couldn't load your saved loadouts.",
-    "retry": "Retry"
+    "retry": "Retry",
+    "saveFailed": "Save failed",
+    "renameFailed": "Rename failed",
+    "deleteFailed": "Delete failed"
   },
   "SimulatorStats": {
     "total": "Total",
