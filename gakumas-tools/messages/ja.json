@@ -411,7 +411,8 @@
     "provideData": "データを提供する",
     "lastUpdated": "最終更新",
     "start": "開始",
-    "restart": "再開"
+    "restart": "再開",
+    "simulationFailed": "シミュレーション中にエラーが発生しました。もう一度実行するか、編成を変更してください。"
   },
   "StrategyPicker": {
     "auto": "自動",

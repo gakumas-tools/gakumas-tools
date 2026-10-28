@@ -403,7 +403,8 @@
     "provideData": "Provide data",
     "lastUpdated": "Last updated",
     "start": "Start",
-    "restart": "Restart"
+    "restart": "Restart",
+    "simulationFailed": "The simulation stopped with an error. Try again, or change the loadout."
   },
   "StrategyPicker": {
     "auto": "Auto",

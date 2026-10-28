@@ -403,7 +403,8 @@
     "provideData": "데이터 제공하기",
     "lastUpdated": "최종 업데이트",
     "start": "시작",
-    "restart": "재시작"
+    "restart": "재시작",
+    "simulationFailed": "시뮬레이션 중 오류가 발생했습니다. 다시 실행하거나 편성을 변경해 주세요."
   },
   "StrategyPicker": {
     "auto": "자동",

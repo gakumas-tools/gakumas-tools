@@ -403,7 +403,8 @@
     "provideData": "提供数据",
     "lastUpdated": "最后更新于",
     "start": "开始",
-    "restart": "重新开始"
+    "restart": "重新开始",
+    "simulationFailed": "模拟过程中出错。请重试或修改编组。"
   },
   "StrategyPicker": {
     "auto": "自动",
