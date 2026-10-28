@@ -460,7 +460,8 @@
     "clear": "초기화",
     "share": "공유",
     "openLoadouts": "편성",
-    "import": "가져오기"
+    "import": "가져오기",
+    "copyFailed": "URL을 복사하지 못했습니다"
   },
   "SimulatorLoadoutImporterModal": {
     "title": "스크린샷에서 편성 불러오기",

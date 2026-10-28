@@ -460,7 +460,8 @@
     "clear": "Clear",
     "share": "Share",
     "openLoadouts": "Loadouts",
-    "import": "Import"
+    "import": "Import",
+    "copyFailed": "Couldn't copy the URL"
   },
   "SimulatorLoadoutImporterModal": {
     "title": "Import loadout from screenshot",

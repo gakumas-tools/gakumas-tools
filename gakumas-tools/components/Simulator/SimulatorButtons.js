@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import {
   FaCheck,
+  FaCircleExclamation,
   FaFileImport,
   FaRegCopy,
   FaRegFloppyDisk,
@@ -30,7 +31,7 @@ function SimulatorButtons() {
   const { clear, loadout, setLoadout, simulatorUrl } =
     useContext(LoadoutContext);
   const { setModal } = useContext(ModalContext);
-  const [linkCopied, setLinkCopied] = useState(false);
+  const [copyStatus, setCopyStatus] = useState(null);
   const copiedTimerRef = useRef(null);
 
   useEffect(
@@ -90,20 +91,30 @@ function SimulatorButtons() {
           <Button
             style="blue-secondary"
             size="sm"
-            onClick={() => {
-              navigator.clipboard.writeText(simulatorUrl);
-              setLinkCopied(true);
+            title={copyStatus === "failed" ? t("copyFailed") : undefined}
+            ariaLabel={copyStatus === "failed" ? t("copyFailed") : undefined}
+            onClick={async () => {
+              let status = "copied";
+              try {
+                await navigator.clipboard.writeText(simulatorUrl);
+              } catch (err) {
+                console.error(err);
+                status = "failed";
+              }
+              setCopyStatus(status);
               if (copiedTimerRef.current) {
                 clearTimeout(copiedTimerRef.current);
               }
               copiedTimerRef.current = setTimeout(
-                () => setLinkCopied(false),
+                () => setCopyStatus(null),
                 3000,
               );
             }}
           >
-            {linkCopied ? (
+            {copyStatus === "copied" ? (
               <FaCheck className={styles.copied} />
+            ) : copyStatus === "failed" ? (
+              <FaCircleExclamation className={styles.copyFailed} />
             ) : (
               <FaRegCopy />
             )}

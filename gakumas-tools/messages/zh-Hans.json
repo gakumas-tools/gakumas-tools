@@ -460,7 +460,8 @@
     "clear": "清除",
     "share": "分享",
     "openLoadouts": "编组",
-    "import": "导入"
+    "import": "导入",
+    "copyFailed": "无法复制 URL"
   },
   "SimulatorLoadoutImporterModal": {
     "title": "从截图导入编组",

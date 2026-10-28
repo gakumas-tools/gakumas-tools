@@ -273,6 +273,11 @@
   @include mixins.pop-in;
 }
 
+.copyFailed {
+  color: tokens.$danger;
+  @include mixins.pop-in;
+}
+
 .buttonText {
   @media (max-width: 480px) {
     display: none;

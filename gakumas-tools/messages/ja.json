@@ -468,7 +468,8 @@
     "clear": "クリア",
     "share": "共有",
     "openLoadouts": "編成",
-    "import": "読み込み"
+    "import": "読み込み",
+    "copyFailed": "URLをコピーできませんでした"
   },
   "SimulatorLoadoutImporterModal": {
     "title": "スクリーンショットから編成を読み込み",
