@@ -907,6 +907,10 @@ import image_907 from "./907.png";
 import image_908 from "./908.png";
 import image_909 from "./909.png";
 import image_910 from "./910.png";
+import image_911 from "./911.png";
+import image_912 from "./912.png";
+import image_913 from "./913.png";
+import image_914 from "./914.png";
 
 const IMAGES = {
   '1': image_1,
@@ -1818,6 +1822,10 @@ const IMAGES = {
   '908': image_908,
   '909': image_909,
   '910': image_910,
+  '911': image_911,
+  '912': image_912,
+  '913': image_913,
+  '914': image_914,
 };
 
 export default IMAGES;

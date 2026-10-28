@@ -11,6 +11,7 @@ All notable changes to the contest simulator will be documented in this file.
 
 - Update garakutaroad tsubame
 - Fix garakutaroad tsubame recommended effect
+- Add garakutaroad tsubame icons
 
 ## 2026-10-25
 
