@@ -70,13 +70,14 @@ export function loadoutFromSearchParams(searchParams) {
     stageId || params || pItemIds || skillCardIdGroups || customizationGroups;
 
   stageId = stageId || DEFAULTS.stageId;
-  supportBonus = supportBonus || DEFAULTS.supportBonus;
+  if (!searchParams.has("support_bonus")) supportBonus = DEFAULTS.supportBonus;
   pItemIds = pItemIds || DEFAULTS.pItemIds;
   skillCardIdGroups = skillCardIdGroups || DEFAULTS.skillCardIdGroups;
   customizationGroups = customizationGroups || DEFAULTS.customizationGroups;
 
   stageId = knownStageId(parseInt(stageId, 10));
-  supportBonus = parseFloat(supportBonus) || null;
+  supportBonus = parseFloat(supportBonus);
+  if (isNaN(supportBonus)) supportBonus = null;
   params = params ? deserializeIds(params) : getDefaultParams(getStage(stageId));
   pItemIds = deserializeIds(pItemIds);
   skillCardIdGroups = skillCardIdGroups.split("_").map(deserializeIds);
@@ -111,7 +112,7 @@ export function loadoutToSearchParams(loadout) {
   } = loadout;
   const searchParams = new URLSearchParams();
   searchParams.set("stage", stageId);
-  if (supportBonus) {
+  if (supportBonus != null) {
     searchParams.set("support_bonus", supportBonus);
   }
   searchParams.set("params", serializeIds(params));
