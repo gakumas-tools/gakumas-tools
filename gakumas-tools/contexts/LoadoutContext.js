@@ -92,6 +92,7 @@ export function LoadoutContextProvider({ children }) {
       setCustomStage(custom);
     }
     setSupportBonus(loadout.supportBonus);
+    setMemorySlots([null, null]);
     setParams(loadout.params);
     setPItemIds(loadout.pItemIds);
     setSkillCardIdGroups(loadout.skillCardIdGroups);
