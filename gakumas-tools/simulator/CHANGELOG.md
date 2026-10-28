@@ -10,6 +10,7 @@ All notable changes to the contest simulator will be documented in this file.
 ## 2026-10-28
 
 - Update garakutaroad tsubame
+- Fix garakutaroad tsubame recommended effect
 
 ## 2026-10-25
 
