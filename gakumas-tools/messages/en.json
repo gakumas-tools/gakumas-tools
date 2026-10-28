@@ -477,7 +477,8 @@
     "more": "More…",
     "x": "Share on X",
     "saveImage": "Save as image",
-    "exporting": "Saving…"
+    "exporting": "Saving…",
+    "exportFailed": "Couldn't save. Try again"
   },
   "ConfirmModal": {
     "cancel": "Cancel",

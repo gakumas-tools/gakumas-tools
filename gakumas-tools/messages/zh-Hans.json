@@ -477,7 +477,8 @@
     "more": "更多…",
     "x": "分享到 X",
     "saveImage": "保存为图片",
-    "exporting": "保存中…"
+    "exporting": "保存中…",
+    "exportFailed": "保存失败，请重试"
   },
   "ConfirmModal": {
     "cancel": "取消",

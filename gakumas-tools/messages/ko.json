@@ -477,7 +477,8 @@
     "more": "더보기",
     "x": "X에 공유",
     "saveImage": "이미지로 저장",
-    "exporting": "저장 중…"
+    "exporting": "저장 중…",
+    "exportFailed": "저장 실패. 다시 시도"
   },
   "ConfirmModal": {
     "cancel": "취소",

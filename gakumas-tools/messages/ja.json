@@ -485,7 +485,8 @@
     "more": "その他…",
     "x": "Xで共有",
     "saveImage": "画像として保存",
-    "exporting": "保存中…"
+    "exporting": "保存中…",
+    "exportFailed": "保存できませんでした。再試行"
   },
   "ConfirmModal": {
     "cancel": "キャンセル",
