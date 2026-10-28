@@ -86,7 +86,7 @@ function LoadoutSkillCardGroup({
       icon: FaPercent,
       onClick: () => {
         const nonPidolSkillCardIds = skillCardIds.filter(
-          (id) => SkillCards.getById(id).sourceType != "pIdol",
+          (id) => id && SkillCards.getById(id).sourceType != "pIdol",
         );
         setTargetSkillCardIds(() => nonPidolSkillCardIds);
         setAcquiredSkillCardIds(() => nonPidolSkillCardIds);
