@@ -502,7 +502,7 @@ id,name,rarity,upgraded,plan,mode,sourceType,pIdolId,welfare,effects
 501,世界を魅了する姿+,SSR,TRUE,sense,stage,pIdol,160,FALSE,at:afterStartOfTurn { if:turnsRemaining<=5 { genki+=2; moveRandomToHand[removed & baseId(909)]; fixedStamina-=1; doubleBuffCostTurns+=1 }; limit:5 }
 502,お誘いチケット,SSR,FALSE,sense,produce,support,,FALSE,
 503,ねぎらいコーヒー,SR,FALSE,sense,produce,support,,FALSE,
-504,ヒーローの輝き,SSR,FALSE,anomaly,stage,pIdol,161,FALSE,at:afterStartOfTurn { if:cumulativeFullPowerCharge>=10 { genki+=11; setScoreBuff(0.25); moveRandomToHand[baseId(911) & (deck | discarded)] }; limit:1 }
+504,ヒーローの輝き,SSR,FALSE,anomaly,stage,pIdol,161,FALSE,at:afterStartOfTurn { if:cumulativeFullPowerCharge>=10 { genki+=4; setScoreBuff(0.25); moveRandomToHand[baseId(911) & (deck | discarded)] }; limit:1 }
 505,ヒーローの輝き+,SSR,TRUE,anomaly,stage,pIdol,161,FALSE,at:afterStartOfTurn { if:cumulativeFullPowerCharge>=10 { genki+=11; setScoreBuff(0.25); moveRandomToHand[baseId(911) & (deck | discarded)] }; limit:1 }
 506,夢見る輝き,SSR,FALSE,anomaly,stage,pIdol,162,FALSE,at:afterCardUsed { if:usedCardBaseId==917 { moveRandomToTopOfDeck[removed & baseId(917)]; genki+=2 }; limit:3 }
 507,夢見る輝き+,SSR,TRUE,anomaly,stage,pIdol,162,FALSE,at:afterCardUsed { if:usedCardBaseId==917 { moveRandomToTopOfDeck[removed & baseId(917)]; genki+=2 }; limit:3 }
