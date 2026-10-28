@@ -17,7 +17,7 @@ import {
   getStage,
   knownStageId,
 } from "@/utils/simulator";
-import { getMemoryParamContribution } from "@/utils/stamina";
+import { setMemorySlot } from "@/utils/memorySlots";
 import { fixCustomizations } from "@/utils/customizations";
 
 const LoadoutContext = createContext();
@@ -303,34 +303,16 @@ export function LoadoutContextProvider({ children }) {
 
   const setMemory = useCallback((memory, index) => {
     const stage = stageRef.current;
-    const memoryParams = memoryParamsRef.current;
     const multiplier = stage.type !== "linkContest" && index ? 0.2 : 1;
-
-    if (!memoryParams.some((p) => p)) {
-      setParams([0, 0, 0, 0]);
-    } else if (memoryParams[index]) {
-      // If there is currently a memory in that slot, remove its params
-      setParams((curParams) =>
-        curParams.map(
-          (p, i) =>
-            (p || 0) -
-            getMemoryParamContribution(memoryParams[index][i], multiplier),
-        )
-      );
-    }
-
-    // Set memory
-    setMemoryParams((cur) => {
-      const next = [...cur];
-      next[index] = memory.params;
-      return next;
-    });
-    setParams((curParams) =>
-      curParams.map(
-        (p, i) =>
-          (p || 0) + getMemoryParamContribution(memory.params[i], multiplier),
-      )
+    const applied = setMemorySlot(
+      { params: paramsRef.current, slots: memoryParamsRef.current },
+      index,
+      memory.params,
+      multiplier,
     );
+
+    setMemoryParams(applied.slots);
+    setParams(applied.params);
     if (index == 0) {
       setPItemIds(memory.pItemIds);
     }
