@@ -6,6 +6,11 @@ All notable changes to the contest simulator will be documented in this file.
 
 
 
+
+## 2026-10-28
+
+- Update garakutaroad tsubame
+
 ## 2026-10-25
 
 - Fix 憧れの標 genki
