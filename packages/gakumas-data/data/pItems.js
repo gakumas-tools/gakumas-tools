@@ -1,12 +1,16 @@
 import P_ITEMS from "../csv/p_items.csv";
 import { getPItemContestPower } from "../utils/contestPower";
 import { deserializeEffectSequence } from "../utils/effects";
+import { lazyParse } from "../utils/lazyParse";
 
 P_ITEMS.forEach((pItem) => {
   pItem._type = "pItem";
-  pItem.effects = deserializeEffectSequence(pItem.effects);
   pItem.pIdolId = pItem.pIdolId || null;
   pItem.contestPower = getPItemContestPower(pItem);
+});
+
+const parsed = lazyParse(P_ITEMS, (pItem) => {
+  pItem.effects = deserializeEffectSequence(pItem.effects);
 });
 
 const P_ITEMS_BY_ID = P_ITEMS.reduce((acc, cur) => {
@@ -16,11 +20,11 @@ const P_ITEMS_BY_ID = P_ITEMS.reduce((acc, cur) => {
 
 class PItems {
   static getAll() {
-    return P_ITEMS;
+    return parsed.all();
   }
 
   static getById(id) {
-    return P_ITEMS_BY_ID[id];
+    return parsed.one(P_ITEMS_BY_ID[id]);
   }
 
   static getFiltered({ rarities, plans, modes, sourceTypes, pIdolIds }) {
@@ -31,7 +35,7 @@ class PItems {
       if (sourceTypes && !sourceTypes.includes(pItem.sourceType)) return false;
       if (pIdolIds && !pIdolIds.includes(pItem.pIdolId)) return false;
       return true;
-    });
+    }).map(parsed.one);
   }
 }
 

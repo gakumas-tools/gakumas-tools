@@ -1,7 +1,8 @@
 import CUSTOMIZATIONS from "../csv/customizations.csv";
 import { deserializePatchSequence } from "../utils/effects";
+import { lazyParse } from "../utils/lazyParse";
 
-CUSTOMIZATIONS.forEach((customization) => {
+const parsed = lazyParse(CUSTOMIZATIONS, (customization) => {
   customization.conditions = deserializePatchSequence(customization.conditions);
   customization.cost = deserializePatchSequence(customization.cost);
   customization.actions = deserializePatchSequence(customization.actions);
@@ -15,11 +16,11 @@ const CUSTOMIZATIONS_BY_ID = CUSTOMIZATIONS.reduce((acc, cur) => {
 
 class Customizations {
   static getAll() {
-    return CUSTOMIZATIONS;
+    return parsed.all();
   }
 
   static getById(id) {
-    return CUSTOMIZATIONS_BY_ID[id];
+    return parsed.one(CUSTOMIZATIONS_BY_ID[id]);
   }
 }
 

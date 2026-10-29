@@ -1,5 +1,6 @@
 import STAGES from "../csv/stages.csv";
 import { deserializeEffectSequence } from "../utils/effects";
+import { lazyParse } from "../utils/lazyParse";
 
 STAGES.forEach((stage) => {
   const [vo, da, vi] = stage.criteria.split(",").map((p) => parseFloat(p));
@@ -12,10 +13,13 @@ STAGES.forEach((stage) => {
     .split(",")
     .map((p) => parseFloat(p));
   stage.firstTurns = { vocal: voFt, dance: daFt, visual: viFt };
-  stage.effects = deserializeEffectSequence(stage.effects);
   stage.linkTurnCounts = stage.linkTurnCounts
     .split(",")
     .map((p) => parseInt(p, 10));
+});
+
+const parsed = lazyParse(STAGES, (stage) => {
+  stage.effects = deserializeEffectSequence(stage.effects);
 });
 
 const STAGES_BY_ID = STAGES.reduce((acc, cur) => {
@@ -25,11 +29,15 @@ const STAGES_BY_ID = STAGES.reduce((acc, cur) => {
 
 class Stages {
   static getAll() {
-    return STAGES;
+    return parsed.all();
   }
 
   static getById(id) {
-    return STAGES_BY_ID[id];
+    return parsed.one(STAGES_BY_ID[id]);
+  }
+
+  static findLast(predicate) {
+    return parsed.one(STAGES.findLast(predicate));
   }
 }
 

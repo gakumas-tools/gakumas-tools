@@ -27,8 +27,8 @@ CSVs under `csv/` are the source of truth and are imported directly. Webpack
 fields to integers.
 
 Each CSV row's DSL columns (`conditions`, `cost`, `actions`, `effects`) are
-parsed at package import time via `deserializeEffectSequence` or
-`deserializePatchSequence`.
+parsed via `deserializeEffectSequence` or `deserializePatchSequence` the first
+time a lookup returns the row, so importing the package parses nothing.
 
 ## Validation
 
