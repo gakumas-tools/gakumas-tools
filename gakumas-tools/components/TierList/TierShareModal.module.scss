@@ -18,6 +18,7 @@
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: tokens.$text-xs;
   font-weight: tokens.$weight-semibold;
+  @include mixins.no-focus-zoom;
 }
 
 .urlRow .copyBtn {

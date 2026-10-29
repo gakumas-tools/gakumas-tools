@@ -245,6 +245,7 @@
     color: inherit;
     font: inherit;
     text-align: inherit;
+    @include mixins.no-focus-zoom;
   }
 
   // A stage the OCR could not verify: kept and shown, but marked so the user
