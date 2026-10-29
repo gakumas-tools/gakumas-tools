@@ -49,6 +49,15 @@
   }
 }
 
+.failedFiles {
+  height: 2lh;
+  flex-shrink: 0;
+  overflow-y: auto;
+  color: tokens.$danger;
+  font-size: tokens.$text-sm;
+  overflow-wrap: anywhere;
+}
+
 .bar {
   opacity: 0;
   transition: opacity tokens.$duration-base;

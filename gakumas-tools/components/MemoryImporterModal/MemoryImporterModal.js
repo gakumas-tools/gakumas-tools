@@ -25,6 +25,7 @@ function MemoryImporterModal({ onSuccess, multiple = true }) {
   const [status, setStatus] = useState(null);
   const [progress, setProgress] = useState(0);
   const [total, setTotal] = useState(0);
+  const [failedFiles, setFailedFiles] = useState([]);
   const engWorkerRef = useRef(null);
   const busy = BUSY_STATUSES.includes(status);
 
@@ -40,10 +41,14 @@ function MemoryImporterModal({ onSuccess, multiple = true }) {
       if (!files.length) return;
       setTotal(files.length);
       setProgress(0);
+      setFailedFiles([]);
       setStatus("preparing");
 
       try {
-        engWorkerRef.current ??= createWorker("eng", 1);
+        engWorkerRef.current ??= createWorker("eng", 1).catch((err) => {
+          engWorkerRef.current = null;
+          throw err;
+        });
         const [engWorker, pItemModel, skillCardModel] = await Promise.all([
           engWorkerRef.current,
           loadPItemModel(),
@@ -53,20 +58,28 @@ function MemoryImporterModal({ onSuccess, multiple = true }) {
         console.time("All memories parsed");
         setStatus("reading");
         const results = [];
+        const failed = [];
         for (const file of files) {
-          results.push(
-            await getMemoryFromFile(
-              file,
-              engWorker,
-              pItemModel.session,
-              pItemModel.classes,
-              skillCardModel.session,
-              skillCardModel.classes
-            )
-          );
+          try {
+            results.push(
+              await getMemoryFromFile(
+                file,
+                engWorker,
+                pItemModel.session,
+                pItemModel.classes,
+                skillCardModel.session,
+                skillCardModel.classes
+              )
+            );
+          } catch (err) {
+            console.error(file.name, err);
+            failed.push(file.name);
+          }
           setProgress((p) => p + 1);
         }
         console.timeEnd("All memories parsed");
+        setFailedFiles(failed);
+        if (!results.length) throw new Error("No screenshots could be read");
 
         logEvent("memories.import", {
           num: results.length,
@@ -132,6 +145,11 @@ function MemoryImporterModal({ onSuccess, multiple = true }) {
         </div>
         <div className={c(styles.bar, status && styles.barShown)}>
           <ProgressBar value={progress} max={total} />
+        </div>
+        <div className={styles.failedFiles}>
+          {!busy &&
+            failedFiles.length > 0 &&
+            t("unreadable", { files: failedFiles.join(", ") })}
         </div>
       </div>
     </Modal>

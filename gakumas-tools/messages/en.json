@@ -391,6 +391,7 @@
     "preparing": "Preparing the reader… (first use downloads a few MB)",
     "saving": "Saving…",
     "failed": "Import failed. Check the screenshots and try again.",
+    "unreadable": "Couldn't read: {files}",
     "selectScreenshots": "Select screenshots",
     "dropHint": "Tap to select, or drop screenshots here"
   },
