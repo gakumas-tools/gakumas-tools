@@ -128,7 +128,7 @@ export function LoadoutContextProvider({ children }) {
   useEffect(() => {
     if (pathname !== "/simulator") return;
     updateUrl(loadout, loadouts);
-  }, [loadout]);
+  }, [loadout, loadouts]);
 
   // Update link loadouts when loadout changes
   useEffect(() => {
