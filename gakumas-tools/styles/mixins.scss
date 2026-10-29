@@ -105,6 +105,13 @@
   }
 }
 
+// iOS zooms the page when focusing a field under 16px.
+@mixin no-focus-zoom {
+  @media (pointer: coarse) {
+    font-size: 16px;
+  }
+}
+
 @mixin field {
   min-width: 0;
   min-height: tokens.$field-height;
@@ -142,6 +149,8 @@
     color: tokens.$surface-ink-faint;
     cursor: not-allowed;
   }
+
+  @include no-focus-zoom;
 }
 
 @mixin no-spinner {

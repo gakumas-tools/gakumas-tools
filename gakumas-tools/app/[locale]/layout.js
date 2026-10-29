@@ -36,7 +36,6 @@ const TOOL_SWITCH = { "nav-tool": "tool-switch", default: "none" };
 export const viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
   colorScheme: "light dark",
 };
 

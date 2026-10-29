@@ -1,5 +1,5 @@
 import { Fragment, memo, useEffect, useMemo, useRef, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import {
   FaChevronDown,
   FaCheck,
@@ -41,6 +41,7 @@ function CompareRow({
 }) {
   const t = useTranslations("CompareTab");
   const tStage = useTranslations("StageSummary");
+  const locale = useLocale();
 
   const { loadout, derived, stats, name, createdAt } = run;
 
@@ -189,7 +190,7 @@ function CompareRow({
     }
   }
 
-  const relative = showTime && !editMode ? formatRelative(createdAt) : null;
+  const relative = showTime && !editMode ? formatRelative(createdAt, locale) : null;
   const shownError = editError || error;
 
   return (

@@ -15,6 +15,7 @@
   padding: 4px 28px 4px 10px;
   background-position: right 9px center;
   font-size: tokens.$text-sm;
+  @include mixins.no-focus-zoom;
 }
 
 .fill {

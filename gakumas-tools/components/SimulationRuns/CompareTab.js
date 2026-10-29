@@ -23,6 +23,7 @@ import styles from "./SimulationRuns.module.scss";
 
 function CompareTab({ currentRun, onAfterLoad }) {
   const t = useTranslations("CompareTab");
+  const tStage = useTranslations("StageSummary");
   const { status } = useSession();
   const { setModal } = useContext(ModalContext);
   const {
@@ -125,10 +126,10 @@ function CompareTab({ currentRun, onAfterLoad }) {
     for (const r of allPools) {
       const key = stageKeyOf(r);
       if (!key || map.has(key)) continue;
-      map.set(key, stageLabelOf(r) || key);
+      map.set(key, stageLabelOf(r, tStage("custom")) || key);
     }
     return [...map.entries()].sort((a, b) => a[1].localeCompare(b[1]));
-  }, [allPools]);
+  }, [allPools, tStage]);
 
   const seasonOptions = useMemo(() => {
     const seasons = new Set();
