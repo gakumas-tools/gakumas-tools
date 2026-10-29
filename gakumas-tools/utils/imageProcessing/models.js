@@ -1,14 +1,28 @@
 import * as ort from "onnxruntime-web/wasm";
 
-function loadModel(modelPath, classesPath) {
+async function fetchClasses(classesPath) {
+  const res = await fetch(classesPath);
+  if (!res.ok) throw new Error(`Failed to load ${classesPath}: ${res.status}`);
+  return res.json();
+}
+
+export function loadModel(
+  modelPath,
+  classesPath,
+  createSession = (path) => ort.InferenceSession.create(path),
+) {
   let promise;
   return () => {
-    if (!promise) {
-      promise = Promise.all([
-        ort.InferenceSession.create(modelPath),
-        fetch(classesPath).then((r) => r.json()),
-      ]).then(([session, classes]) => ({ session, classes }));
-    }
+    promise ??= Promise.all([
+      createSession(modelPath),
+      fetchClasses(classesPath),
+    ]).then(
+      ([session, classes]) => ({ session, classes }),
+      (err) => {
+        promise = null;
+        throw err;
+      },
+    );
     return promise;
   };
 }
