@@ -316,7 +316,10 @@
     "parameters": "パラメータ",
     "pItems": "Pアイテム",
     "skillCards": "スキルカード",
-    "customizations": "カスタマイズ"
+    "customizations": "カスタマイズ",
+    "confirmDiscard": "保存していない変更を破棄しますか？",
+    "discard": "破棄する",
+    "keepEditing": "編集を続ける"
   },
   "ParametersInput": {
     "stamina": "体力"

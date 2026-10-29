@@ -308,7 +308,10 @@
     "parameters": "参数",
     "pItems": "P道具",
     "skillCards": "技能卡",
-    "customizations": "定制"
+    "customizations": "定制",
+    "confirmDiscard": "要放弃未保存的更改吗？",
+    "discard": "放弃",
+    "keepEditing": "继续编辑"
   },
   "ParametersInput": {
     "stamina": "体力"

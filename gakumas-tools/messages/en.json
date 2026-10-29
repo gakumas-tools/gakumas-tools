@@ -308,7 +308,10 @@
     "parameters": "Parameters",
     "pItems": "P-items",
     "skillCards": "Skill cards",
-    "customizations": "Customizations"
+    "customizations": "Customizations",
+    "confirmDiscard": "Discard unsaved changes?",
+    "discard": "Discard",
+    "keepEditing": "Keep editing"
   },
   "ParametersInput": {
     "stamina": "Stamina"

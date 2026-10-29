@@ -15,6 +15,7 @@ const MemoryContext = createContext();
 
 export function MemoryContextProvider({ children }) {
   const [saveState, setSaveState] = useState("unsaved");
+  const [dirty, setDirty] = useState(false);
   const [id, setId] = useState(null);
   const [name, setName] = useState(null);
   const [pIdolId, setPIdolId] = useState(null);
@@ -69,6 +70,7 @@ export function MemoryContextProvider({ children }) {
         const savedId = isNew ? (await response.json()).ids[0] : id;
         setId(savedId);
         setSaveState("saved");
+        setDirty(false);
         putMemories([{ ...memory, _id: savedId }]);
       } catch (error) {
         console.error(error);
@@ -99,6 +101,7 @@ export function MemoryContextProvider({ children }) {
     } else {
       setCustomizations([{}, {}, {}, {}, {}, {}]);
     }
+    setDirty(false);
   }, []);
 
   const stashDraft = useCallback(() => {
@@ -117,6 +120,7 @@ export function MemoryContextProvider({ children }) {
     const draft = takeMemoryDraft();
     if (!draft) return false;
     setAll(draft);
+    setDirty(true);
     return true;
   }, [setAll]);
 
@@ -124,7 +128,23 @@ export function MemoryContextProvider({ children }) {
     takeMemoryDraft();
   }, []);
 
+  const editName = useCallback((value) => {
+    setName(value);
+    setDirty(true);
+  }, []);
+
+  const editPIdolId = useCallback((value) => {
+    setPIdolId(value);
+    setDirty(true);
+  }, []);
+
+  const editParams = useCallback((value) => {
+    setParams(value);
+    setDirty(true);
+  }, []);
+
   const replacePItemId = useCallback((index, itemId) => {
+    setDirty(true);
     setPItemIds((cur) => {
       const next = [...cur];
       next[index] = itemId;
@@ -133,6 +153,7 @@ export function MemoryContextProvider({ children }) {
   }, []);
 
   const replaceSkillCardId = useCallback((index, cardId) => {
+    setDirty(true);
     setSkillCardIds((cur) => {
       const next = [...cur];
       next[index] = cardId;
@@ -141,6 +162,7 @@ export function MemoryContextProvider({ children }) {
   }, []);
 
   const replaceCustomizations = useCallback((index, c11n) => {
+    setDirty(true);
     setCustomizations((cur) => {
       const next = [...cur];
       next[index] = c11n;
@@ -151,13 +173,14 @@ export function MemoryContextProvider({ children }) {
   const value = useMemo(
     () => ({
       saveState,
+      dirty,
       id,
       name,
-      setName,
+      setName: editName,
       pIdolId,
-      setPIdolId,
+      setPIdolId: editPIdolId,
       params,
-      setParams,
+      setParams: editParams,
       pItemIds,
       skillCardIds,
       customizations,
@@ -172,8 +195,12 @@ export function MemoryContextProvider({ children }) {
     }),
     [
       saveState,
+      dirty,
       id,
       name,
+      editName,
+      editPIdolId,
+      editParams,
       pIdolId,
       params,
       pItemIds,
