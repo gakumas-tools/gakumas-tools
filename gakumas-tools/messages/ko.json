@@ -661,7 +661,9 @@
     "needsChecking": "{count}개의 행을 확인해야 합니다",
     "confirmRow": "이 행의 값이 올바른지 확인",
     "selectFiles": "파일 선택",
-    "addRow": "행 추가"
+    "addRow": "행 추가",
+    "clear": "지우기",
+    "confirmClear": "모든 행을 삭제할까요?"
   },
   "RehearsalComparison": {
     "addResults": "리허설 결과 추가",

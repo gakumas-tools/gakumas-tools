@@ -661,7 +661,9 @@
     "needsChecking": "{count} row(s) need checking",
     "confirmRow": "Confirm this row's values are correct",
     "selectFiles": "Select files",
-    "addRow": "Add row"
+    "addRow": "Add row",
+    "clear": "Clear",
+    "confirmClear": "Clear all rows?"
   },
   "RehearsalComparison": {
     "addResults": "Add rehearsal results",

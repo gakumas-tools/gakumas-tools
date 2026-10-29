@@ -58,6 +58,7 @@ export default function useRehearsalParser() {
   const ocrPoolRef = useRef(null);
   const dataRef = useRef(data);
   const unmountedRef = useRef(false);
+  const batchesRef = useRef(0);
 
   const getOcrPool = useCallback(() => {
     ocrPoolRef.current ??= createWorkerPool({
@@ -186,15 +187,11 @@ export default function useRehearsalParser() {
   const handleFiles = useCallback(
     async (fileList) => {
       const files = Array.from(fileList);
-      setProgress(null);
-      setProcessingStatus("");
       if (!files.length) return;
-      setData((d) => {
-        revokeRowSources(d);
-        return [];
-      });
-      setTotal(files.length);
-      setProgress(0);
+      const joining = batchesRef.current++ > 0;
+      if (!joining) setProcessingStatus("");
+      setTotal((cur) => (joining ? cur + files.length : files.length));
+      setProgress((p) => (joining ? p : 0));
 
       const { csvs, videos, images } = bucketFiles(files);
       if (DEBUG) console.time("All results parsed");
@@ -239,21 +236,35 @@ export default function useRehearsalParser() {
         }
       })();
 
-      await Promise.all([csvPromise, ocrPromise]);
+      try {
+        await Promise.all([csvPromise, ocrPromise]);
+      } finally {
+        batchesRef.current--;
+      }
       if (DEBUG) console.timeEnd("All results parsed");
       if (unmountedRef.current) {
         revokeRowSources(results);
         return;
       }
-      setIcons(results.find((r) => r.icons)?.icons ?? null);
-      setData(results.map(({ icons, ...row }) => row));
+      const batchIcons = results.find((r) => r.icons)?.icons;
+      if (batchIcons) setIcons(batchIcons);
+      setData((d) => [...d, ...results.map(({ icons, ...row }) => row)]);
     },
     [processVideo, processImages, t],
   );
 
+  const clearData = useCallback(() => {
+    setData((d) => {
+      revokeRowSources(d);
+      return [];
+    });
+    setIcons(null);
+  }, []);
+
   return {
     data,
     setData,
+    clearData,
     icons,
     handleFiles,
     progress,
