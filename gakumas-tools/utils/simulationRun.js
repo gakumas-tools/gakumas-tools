@@ -70,7 +70,7 @@ export function deriveRunMeta(loadout) {
   let stageName = null;
   let season = null;
   if (stageId === "custom") {
-    stageName = customStage?.name || "Custom";
+    stageName = customStage?.name || null;
   } else if (stageId) {
     const stage = Stages.getById(stageId);
     if (stage) {
@@ -161,10 +161,10 @@ export function stageKeyOf(run) {
   return String(id);
 }
 
-export function stageLabelOf(run) {
+export function stageLabelOf(run, customLabel) {
   const id = run?.loadout?.stageId;
   if (id == null) return null;
-  if (id === "custom") return "Custom";
+  if (id === "custom") return customLabel;
   const s = Stages.getById(id);
   if (s?.season != null && s?.stage != null) {
     return `S${s.season}-${s.stage}`;
@@ -259,15 +259,19 @@ const MIN_MS = 60 * 1000;
 const HOUR_MS = 60 * MIN_MS;
 const DAY_MS = 24 * HOUR_MS;
 
-export function formatRelative(iso) {
+export function formatRelative(iso, locale, now = Date.now()) {
   if (!iso) return null;
   const ts = new Date(iso).getTime();
   if (!isFinite(ts)) return null;
-  const diff = Date.now() - ts;
-  if (diff < MIN_MS) return "just now";
-  if (diff < HOUR_MS) return `${Math.floor(diff / MIN_MS)}m ago`;
-  if (diff < DAY_MS) return `${Math.floor(diff / HOUR_MS)}h ago`;
-  return `${Math.floor(diff / DAY_MS)}d ago`;
+  const diff = now - ts;
+  const rtf = new Intl.RelativeTimeFormat(locale, {
+    numeric: "auto",
+    style: "narrow",
+  });
+  if (diff < MIN_MS) return rtf.format(0, "second");
+  if (diff < HOUR_MS) return rtf.format(-Math.floor(diff / MIN_MS), "minute");
+  if (diff < DAY_MS) return rtf.format(-Math.floor(diff / HOUR_MS), "hour");
+  return rtf.format(-Math.floor(diff / DAY_MS), "day");
 }
 
 export function normalizeSavedRun(doc) {
