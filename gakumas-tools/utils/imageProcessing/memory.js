@@ -31,13 +31,18 @@ export async function getMemoryFromFile(
   const img = await loadImageFromFile(file);
   const blackCanvas = getBlackCanvas(img);
   const whiteCanvas = getWhiteCanvas(img);
-
-  const engWhiteResult = await engWorker.recognize(whiteCanvas);
-  const engBlackResult = await engWorker.recognize(
-    blackCanvas,
-    {},
-    { blocks: true }
-  );
+  let engWhiteResult, engBlackResult;
+  try {
+    engWhiteResult = await engWorker.recognize(whiteCanvas);
+    engBlackResult = await engWorker.recognize(
+      blackCanvas,
+      {},
+      { blocks: true }
+    );
+  } finally {
+    blackCanvas.width = blackCanvas.height = 0;
+    whiteCanvas.width = whiteCanvas.height = 0;
+  }
 
   const powerCandidates = extractPower(engWhiteResult);
   const blackLines = extractLines(engBlackResult);

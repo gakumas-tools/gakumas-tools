@@ -99,7 +99,9 @@ export function getImageData(img) {
   canvas.height = img.height;
   const ctx = canvas.getContext("2d", { willReadFrequently: true });
   ctx.drawImage(img, 0, 0);
-  return ctx.getImageData(0, 0, img.width, img.height);
+  const imageData = ctx.getImageData(0, 0, img.width, img.height);
+  canvas.width = canvas.height = 0;
+  return imageData;
 }
 
 export function isWhite(data, i) {
