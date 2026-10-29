@@ -8,11 +8,12 @@ import styles from "./Modal.module.scss";
 const INLINE_LAYER = { closing: false, covered: false, stacked: false };
 const EXIT_FALLBACK_MS = 400;
 
-function Modal({ children, dismissable = true, onClose, size }) {
+function Modal({ children, dismissable = true, onClose, onDismiss, size }) {
   const t = useTranslations("Modal");
   const { closeModal: contextClose, getModalStackDepth } =
     useContext(ModalContext);
   const close = onClose || contextClose;
+  const dismiss = onDismiss || close;
   // When `onClose` is provided, the modal is rendered inline by a parent
   // rather than pushed onto the global stack. If a stacked modal is currently
   // on top, defer ESC to it instead of closing ourselves alongside it.
@@ -49,7 +50,7 @@ function Modal({ children, dismissable = true, onClose, size }) {
       if (e.key === "Escape" && dismissable) {
         if (isInline && getModalStackDepth() > 0) return;
         e.preventDefault();
-        close();
+        dismiss();
         return;
       }
 
@@ -79,7 +80,7 @@ function Modal({ children, dismissable = true, onClose, size }) {
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [active, dismissable, close, isInline, getModalStackDepth]);
+  }, [active, dismissable, dismiss, isInline, getModalStackDepth]);
 
   const handleOverlayMouseDown = (e) => {
     mouseDownOnOverlayRef.current = e.target === e.currentTarget;
@@ -90,13 +91,13 @@ function Modal({ children, dismissable = true, onClose, size }) {
     // itself. A drag that crosses the overlay/modal boundary in either
     // direction fires `click` on the nearest common ancestor (the overlay),
     // which would otherwise look indistinguishable from a real outside click.
-    const dismiss =
+    const shouldDismiss =
       active &&
       dismissable &&
       mouseDownOnOverlayRef.current &&
       e.target === e.currentTarget;
     mouseDownOnOverlayRef.current = false;
-    if (dismiss) close();
+    if (shouldDismiss) dismiss();
   };
 
   return (
@@ -125,7 +126,7 @@ function Modal({ children, dismissable = true, onClose, size }) {
           <button
             type="button"
             className={styles.close}
-            onClick={close}
+            onClick={dismiss}
             aria-label={t("close")}
           >
             <FaXmark aria-hidden="true" />

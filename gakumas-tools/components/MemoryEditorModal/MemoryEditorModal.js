@@ -5,6 +5,7 @@ import { FaChevronDown } from "react-icons/fa6";
 import { PIdols, SkillCards } from "gakumas-data";
 import gkImg from "gakumas-images";
 import Collapse from "@/components/Collapse";
+import ConfirmModal from "@/components/ConfirmModal";
 import Image from "@/components/Image";
 import Input from "@/components/Input";
 import MemorySave from "@/components/MemorySave";
@@ -14,6 +15,7 @@ import PIdolSelect from "@/components/PIdolSelect";
 import StagePItems from "@/components/StagePItems";
 import StageSkillCards from "@/components/StageSkillCards";
 import MemoryContext from "@/contexts/MemoryContext";
+import ModalContext from "@/contexts/ModalContext";
 import WorkspaceContext from "@/contexts/WorkspaceContext";
 import { MAX_NAME_LENGTH } from "@/utils/apiValidation";
 import { calculateContestPowerBreakdown } from "@/utils/contestPower";
@@ -36,7 +38,9 @@ function MemoryEditorModal() {
     replaceSkillCardId,
     customizations,
     replaceCustomizations,
+    dirty,
   } = useContext(MemoryContext);
+  const { setModal, closeModal } = useContext(ModalContext);
   const { idolId: workspaceIdolId } = useContext(WorkspaceContext);
 
   const [powerOpen, setPowerOpen] = useState(false);
@@ -76,8 +80,24 @@ function MemoryEditorModal() {
     [costBreakdown]
   );
 
+  const dismiss = () => {
+    if (!dirty) {
+      closeModal();
+      return;
+    }
+    setModal(
+      <ConfirmModal
+        message={t("confirmDiscard")}
+        confirmLabel={t("discard")}
+        cancelLabel={t("keepEditing")}
+        danger
+        onConfirm={closeModal}
+      />
+    );
+  };
+
   return (
-    <Modal>
+    <Modal onDismiss={dismiss}>
       <div className={styles.memoryEditor}>
         <div className={styles.name}>
           <Input

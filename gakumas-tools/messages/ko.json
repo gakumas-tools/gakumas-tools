@@ -308,7 +308,10 @@
     "parameters": "패러미터",
     "pItems": "P아이템",
     "skillCards": "스킬 카드",
-    "customizations": "커스터마이즈"
+    "customizations": "커스터마이즈",
+    "confirmDiscard": "저장하지 않은 변경 사항을 버릴까요?",
+    "discard": "버리기",
+    "keepEditing": "계속 편집"
   },
   "ParametersInput": {
     "stamina": "체력"
