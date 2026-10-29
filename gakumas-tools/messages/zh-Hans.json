@@ -388,6 +388,7 @@
     "preparing": "正在准备识别…（首次使用需下载数MB）",
     "saving": "保存中…",
     "failed": "导入失败，请检查截图后重试。",
+    "unreadable": "无法读取的截图：{files}",
     "selectScreenshots": "选择截图",
     "dropHint": "点击选择，或将截图拖放到此处"
   },
