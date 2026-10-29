@@ -273,6 +273,11 @@
   @include mixins.pop-in;
 }
 
+.copyFailed {
+  color: tokens.$danger;
+  @include mixins.pop-in;
+}
+
 .buttonText {
   @media (max-width: 480px) {
     display: none;
@@ -372,4 +377,10 @@
 .resultPlaceholder {
   flex-basis: 100%;
   height: 8px;
+}
+
+.resultError {
+  flex: 1;
+  max-width: Min(100%, 800px);
+  @include mixins.pop-in;
 }

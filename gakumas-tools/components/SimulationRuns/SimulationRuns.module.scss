@@ -358,13 +358,19 @@
   font-size: tokens.$text-sm;
 }
 
-.stageName {
+.stageName,
+.rowError {
   overflow: hidden;
   color: tokens.$surface-ink-muted;
   font-size: tokens.$text-xs;
   font-weight: tokens.$weight-semibold;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.rowError {
+  color: tokens.$danger;
+  @include mixins.pop-in;
 }
 
 .plotCell {

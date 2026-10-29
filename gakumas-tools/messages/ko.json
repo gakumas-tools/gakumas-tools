@@ -403,7 +403,8 @@
     "provideData": "데이터 제공하기",
     "lastUpdated": "최종 업데이트",
     "start": "시작",
-    "restart": "재시작"
+    "restart": "재시작",
+    "simulationFailed": "시뮬레이션 중 오류가 발생했습니다. 다시 실행하거나 편성을 변경해 주세요."
   },
   "StrategyPicker": {
     "auto": "자동",
@@ -460,7 +461,8 @@
     "clear": "초기화",
     "share": "공유",
     "openLoadouts": "편성",
-    "import": "가져오기"
+    "import": "가져오기",
+    "copyFailed": "URL을 복사하지 못했습니다"
   },
   "SimulatorLoadoutImporterModal": {
     "title": "스크린샷에서 편성 불러오기",
@@ -476,7 +478,8 @@
     "more": "더보기",
     "x": "X에 공유",
     "saveImage": "이미지로 저장",
-    "exporting": "저장 중…"
+    "exporting": "저장 중…",
+    "exportFailed": "저장 실패. 다시 시도"
   },
   "ConfirmModal": {
     "cancel": "취소",
@@ -532,7 +535,10 @@
     "allStages": "전체 스테이지",
     "actions": "작업",
     "loadFailed": "저장된 편성을 불러오지 못했습니다.",
-    "retry": "다시 시도"
+    "retry": "다시 시도",
+    "saveFailed": "저장 실패",
+    "renameFailed": "이름 변경 실패",
+    "deleteFailed": "삭제 실패"
   },
   "SimulatorStats": {
     "total": "합계",

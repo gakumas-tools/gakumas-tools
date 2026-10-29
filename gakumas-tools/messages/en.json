@@ -403,7 +403,8 @@
     "provideData": "Provide data",
     "lastUpdated": "Last updated",
     "start": "Start",
-    "restart": "Restart"
+    "restart": "Restart",
+    "simulationFailed": "The simulation stopped with an error. Try again, or change the loadout."
   },
   "StrategyPicker": {
     "auto": "Auto",
@@ -460,7 +461,8 @@
     "clear": "Clear",
     "share": "Share",
     "openLoadouts": "Loadouts",
-    "import": "Import"
+    "import": "Import",
+    "copyFailed": "Couldn't copy the URL"
   },
   "SimulatorLoadoutImporterModal": {
     "title": "Import loadout from screenshot",
@@ -476,7 +478,8 @@
     "more": "More…",
     "x": "Share on X",
     "saveImage": "Save as image",
-    "exporting": "Saving…"
+    "exporting": "Saving…",
+    "exportFailed": "Couldn't save. Try again"
   },
   "ConfirmModal": {
     "cancel": "Cancel",
@@ -532,7 +535,10 @@
     "allStages": "All stages",
     "actions": "Actions",
     "loadFailed": "Couldn't load your saved loadouts.",
-    "retry": "Retry"
+    "retry": "Retry",
+    "saveFailed": "Save failed",
+    "renameFailed": "Rename failed",
+    "deleteFailed": "Delete failed"
   },
   "SimulatorStats": {
     "total": "Total",

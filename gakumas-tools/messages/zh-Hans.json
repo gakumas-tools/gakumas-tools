@@ -403,7 +403,8 @@
     "provideData": "提供数据",
     "lastUpdated": "最后更新于",
     "start": "开始",
-    "restart": "重新开始"
+    "restart": "重新开始",
+    "simulationFailed": "模拟过程中出错。请重试或修改编组。"
   },
   "StrategyPicker": {
     "auto": "自动",
@@ -460,7 +461,8 @@
     "clear": "清除",
     "share": "分享",
     "openLoadouts": "编组",
-    "import": "导入"
+    "import": "导入",
+    "copyFailed": "无法复制 URL"
   },
   "SimulatorLoadoutImporterModal": {
     "title": "从截图导入编组",
@@ -476,7 +478,8 @@
     "more": "更多…",
     "x": "分享到 X",
     "saveImage": "保存为图片",
-    "exporting": "保存中…"
+    "exporting": "保存中…",
+    "exportFailed": "保存失败，请重试"
   },
   "ConfirmModal": {
     "cancel": "取消",
@@ -532,7 +535,10 @@
     "allStages": "全部舞台",
     "actions": "操作",
     "loadFailed": "无法加载已保存的编组。",
-    "retry": "重试"
+    "retry": "重试",
+    "saveFailed": "保存失败",
+    "renameFailed": "重命名失败",
+    "deleteFailed": "删除失败"
   },
   "SimulatorStats": {
     "total": "合计",

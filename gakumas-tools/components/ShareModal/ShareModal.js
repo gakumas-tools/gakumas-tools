@@ -1,7 +1,12 @@
 "use client";
 import { useContext, useState } from "react";
 import { useTranslations } from "next-intl";
-import { FaDownload, FaShareNodes, FaXTwitter } from "react-icons/fa6";
+import {
+  FaCircleExclamation,
+  FaDownload,
+  FaShareNodes,
+  FaXTwitter,
+} from "react-icons/fa6";
 import Button from "@/components/Button";
 import Loader from "@/components/Loader";
 import Modal from "@/components/Modal";
@@ -14,6 +19,7 @@ export default function ShareModal({ url }) {
   const t = useTranslations("ShareModal");
   const { closeModal } = useContext(ModalContext);
   const [exporting, setExporting] = useState(false);
+  const [error, setError] = useState(null);
 
   const canWebShare =
     typeof navigator !== "undefined" && typeof navigator.share === "function";
@@ -29,6 +35,7 @@ export default function ShareModal({ url }) {
 
   async function saveImage() {
     setExporting(true);
+    setError(null);
     let timeoutId;
     try {
       const timeout = new Promise((_, reject) => {
@@ -41,6 +48,7 @@ export default function ShareModal({ url }) {
       closeModal();
     } catch (err) {
       console.error(err);
+      setError(t("exportFailed"));
     } finally {
       clearTimeout(timeoutId);
       setExporting(false);
@@ -58,8 +66,8 @@ export default function ShareModal({ url }) {
         >
           <span className={c(styles.swap, exporting && styles.busy)}>
             <span className={styles.idle} aria-hidden={exporting}>
-              <FaDownload />
-              {t("saveImage")}
+              {error ? <FaCircleExclamation /> : <FaDownload />}
+              {error || t("saveImage")}
             </span>
             <span className={styles.working} aria-hidden={!exporting}>
               <Loader />

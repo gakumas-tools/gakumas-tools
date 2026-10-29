@@ -411,7 +411,8 @@
     "provideData": "データを提供する",
     "lastUpdated": "最終更新",
     "start": "開始",
-    "restart": "再開"
+    "restart": "再開",
+    "simulationFailed": "シミュレーション中にエラーが発生しました。もう一度実行するか、編成を変更してください。"
   },
   "StrategyPicker": {
     "auto": "自動",
@@ -468,7 +469,8 @@
     "clear": "クリア",
     "share": "共有",
     "openLoadouts": "編成",
-    "import": "読み込み"
+    "import": "読み込み",
+    "copyFailed": "URLをコピーできませんでした"
   },
   "SimulatorLoadoutImporterModal": {
     "title": "スクリーンショットから編成を読み込み",
@@ -484,7 +486,8 @@
     "more": "その他…",
     "x": "Xで共有",
     "saveImage": "画像として保存",
-    "exporting": "保存中…"
+    "exporting": "保存中…",
+    "exportFailed": "保存できませんでした。再試行"
   },
   "ConfirmModal": {
     "cancel": "キャンセル",
@@ -540,7 +543,10 @@
     "allStages": "全ステージ",
     "actions": "操作",
     "loadFailed": "保存済み編成を読み込めませんでした。",
-    "retry": "再試行"
+    "retry": "再試行",
+    "saveFailed": "保存に失敗",
+    "renameFailed": "名前変更に失敗",
+    "deleteFailed": "削除に失敗"
   },
   "SimulatorStats": {
     "total": "合計",
