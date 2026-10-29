@@ -225,8 +225,10 @@ export function mergeResults(results) {
     }
   }
 
-  const graphDatas = results.map((result) => result.graphData);
-  const mergedGraphData = mergeGraphDatas(graphDatas);
+  const { graphData, graphRunCounts } = mergeGraphDatas(
+    results.map((result) => result.graphData),
+    results.map((result) => result.graphRunCounts)
+  );
 
   // Merge cardUsage across workers: element-wise per turn, key-wise per card.
   const cardUsage = { numRuns: 0, turns: [] };
@@ -292,7 +294,8 @@ export function mergeResults(results) {
   }
 
   return {
-    graphData: mergedGraphData,
+    graphData,
+    graphRunCounts,
     minRun,
     averageRun,
     maxRun,
@@ -555,30 +558,30 @@ function ensureScoreTurn(turns, i) {
   return turns[i];
 }
 
-export function mergeGraphDatas(graphDatas) {
-  let mergedGraphData = GRAPHED_FIELDS.reduce((acc, cur) => {
+export function mergeGraphDatas(graphDatas, runCounts) {
+  const sums = GRAPHED_FIELDS.reduce((acc, cur) => {
     acc[cur] = [];
     return acc;
   }, {});
+  const graphRunCounts = [];
 
-  for (let graphData of graphDatas) {
-    for (let field of GRAPHED_FIELDS) {
-      for (let i = 0; i < graphData[field].length; i++) {
-        if (!mergedGraphData[field][i]) mergedGraphData[field][i] = [];
-        mergedGraphData[field][i].push(graphData[field][i]);
+  graphDatas.forEach((graphData, g) => {
+    const length = graphData[GRAPHED_FIELDS[0]].length;
+    for (let i = 0; i < length; i++) {
+      const count = runCounts ? runCounts[g][i] : 1;
+      graphRunCounts[i] = (graphRunCounts[i] || 0) + count;
+      for (let field of GRAPHED_FIELDS) {
+        sums[field][i] = (sums[field][i] || 0) + graphData[field][i] * count;
       }
     }
-  }
+  });
 
+  const graphData = {};
   for (let field of GRAPHED_FIELDS) {
-    for (let i = 0; i < mergedGraphData[field].length; i++) {
-      mergedGraphData[field][i] =
-        mergedGraphData[field][i].reduce((acc, cur) => acc + cur, 0) /
-        mergedGraphData[field][i].length;
-    }
+    graphData[field] = sums[field].map((sum, i) => sum / graphRunCounts[i]);
   }
 
-  return mergedGraphData;
+  return { graphData, graphRunCounts };
 }
 
 export function getIndications(config, loadout) {
