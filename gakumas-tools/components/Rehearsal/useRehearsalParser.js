@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { DEBUG } from "@/utils/imageProcessing/common";
 import { mapWithLimit } from "@/utils/mapWithLimit";
-import { createWorkerPool } from "@/utils/workerPool";
+import { createOcrPool, getOcrPoolSize } from "@/utils/ocrPool";
 import {
   bucketFiles,
   canvasToObjectURL,
@@ -34,19 +34,6 @@ function loadOcrModules() {
 const FRAME_INTERVAL_MS = 200;
 const BRIGHTNESS_THRESHOLD = 180;
 
-// A Tesseract worker's wasm heap grows to ~350 MB on an upscaled phone
-// screenshot and never shrinks, so the pool is sized by memory, not cores.
-function getOcrPoolSize() {
-  const cap = matchMedia("(pointer: coarse)").matches ? 2 : 4;
-  const byMemory = navigator.deviceMemory
-    ? Math.floor(navigator.deviceMemory / 2)
-    : cap;
-  return Math.max(
-    1,
-    Math.min(cap, byMemory, navigator.hardwareConcurrency || 1),
-  );
-}
-
 export default function useRehearsalParser() {
   const t = useTranslations("Rehearsal");
 
@@ -61,11 +48,9 @@ export default function useRehearsalParser() {
   const batchesRef = useRef(0);
 
   const getOcrPool = useCallback(() => {
-    ocrPoolRef.current ??= createWorkerPool({
-      size: getOcrPoolSize(),
-      create: async () => (await loadOcrModules()).createWorker("eng", 1),
-      destroy: (worker) => worker.terminate(),
-    });
+    ocrPoolRef.current ??= createOcrPool(async () =>
+      (await loadOcrModules()).createWorker("eng", 1),
+    );
     return ocrPoolRef.current;
   }, []);
 
