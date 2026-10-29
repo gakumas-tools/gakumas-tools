@@ -35,6 +35,10 @@ class Stages {
   static getById(id) {
     return parsed.one(STAGES_BY_ID[id]);
   }
+
+  static findLast(predicate) {
+    return parsed.one(STAGES.findLast(predicate));
+  }
 }
 
 export default Stages;
