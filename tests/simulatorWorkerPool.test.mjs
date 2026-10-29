@@ -9,6 +9,7 @@ Object.defineProperty(globalThis, "navigator", {
 
 let workers = [];
 let msPerRun = () => 0;
+let failToLoad = false;
 
 class FakeWorker extends EventTarget {
   constructor() {
@@ -18,6 +19,14 @@ class FakeWorker extends EventTarget {
     this.terminated = false;
     this.queue = Promise.resolve();
     workers.push(this);
+    if (failToLoad) {
+      setTimeout(() => {
+        this.terminated = true;
+        this.dispatchEvent(
+          Object.assign(new Event("error"), { message: "failed to load" })
+        );
+      });
+    }
   }
 
   postMessage(message) {
@@ -60,6 +69,7 @@ const config = {
 beforeEach(() => {
   workers = [];
   msPerRun = () => 0;
+  failToLoad = false;
 });
 
 test("retaining the pool spawns workers before the first run", async () => {
@@ -107,6 +117,17 @@ test("aborting a run replaces the pool while it is still retained", async () => 
   await assert.rejects(run, { name: "AbortError" });
   assert.ok(workers.slice(0, 4).every((worker) => worker.terminated));
   await sleep(0);
+  assert.equal(workers.length, 8);
+  release();
+});
+
+test("a worker that fails to load while prewarming is replaced", async () => {
+  failToLoad = true;
+  const release = retainWorkerPool();
+  await sleep(0);
+  await sleep(0);
+  failToLoad = false;
+  await runOnWorkers({ ...config, numRuns: 100 }, () => {});
   assert.equal(workers.length, 8);
   release();
 });

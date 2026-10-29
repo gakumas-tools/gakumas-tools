@@ -57,10 +57,15 @@ function terminatePool(reason) {
 
 function getWorkerPool() {
   if (!workers) {
-    workers = Array.from(
-      { length: workerCount() },
-      () => new Worker(new URL("./worker.js", import.meta.url))
-    );
+    workers = Array.from({ length: workerCount() }, () => {
+      const worker = new Worker(new URL("./worker.js", import.meta.url));
+      worker.addEventListener("error", (e) => {
+        if (workers?.includes(worker)) {
+          terminatePool(e.error || new Error(e.message || "Worker failed"));
+        }
+      });
+      return worker;
+    });
   }
   return workers;
 }
