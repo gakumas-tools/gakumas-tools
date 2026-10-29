@@ -7,6 +7,11 @@ All notable changes to the contest simulator will be documented in this file.
 
 
 
+
+## 2026-10-29
+
+- Add negirai coffee icons
+
 ## 2026-10-28
 
 - Update garakutaroad tsubame

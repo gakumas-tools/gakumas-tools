@@ -500,6 +500,7 @@ import image_499 from "./499.png";
 import image_500 from "./500.png";
 import image_501 from "./501.png";
 import image_502 from "./502.png";
+import image_503 from "./503.png";
 import image_504 from "./504.png";
 import image_505 from "./505.png";
 
@@ -1006,6 +1007,7 @@ const IMAGES = {
   '500': image_500,
   '501': image_501,
   '502': image_502,
+  '503': image_503,
   '504': image_504,
   '505': image_505,
 };
