@@ -5,6 +5,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import DataContext from "@/contexts/DataContext";
@@ -16,6 +17,7 @@ const MemoryContext = createContext();
 export function MemoryContextProvider({ children }) {
   const [saveState, setSaveState] = useState("unsaved");
   const [dirty, setDirty] = useState(false);
+  const revisionRef = useRef(0);
   const [id, setId] = useState(null);
   const [name, setName] = useState(null);
   const [pIdolId, setPIdolId] = useState(null);
@@ -45,6 +47,7 @@ export function MemoryContextProvider({ children }) {
 
   const save = useCallback(
     async (asNew) => {
+      const savedRevision = revisionRef.current;
       setSaveState("saving");
       const memory = {
         name,
@@ -70,7 +73,7 @@ export function MemoryContextProvider({ children }) {
         const savedId = isNew ? (await response.json()).ids[0] : id;
         setId(savedId);
         setSaveState("saved");
-        setDirty(false);
+        if (revisionRef.current == savedRevision) setDirty(false);
         putMemories([{ ...memory, _id: savedId }]);
       } catch (error) {
         console.error(error);
@@ -101,6 +104,7 @@ export function MemoryContextProvider({ children }) {
     } else {
       setCustomizations([{}, {}, {}, {}, {}, {}]);
     }
+    revisionRef.current++;
     setDirty(false);
   }, []);
 
@@ -128,23 +132,28 @@ export function MemoryContextProvider({ children }) {
     takeMemoryDraft();
   }, []);
 
+  const markDirty = useCallback(() => {
+    revisionRef.current++;
+    setDirty(true);
+  }, []);
+
   const editName = useCallback((value) => {
     setName(value);
-    setDirty(true);
+    markDirty();
   }, []);
 
   const editPIdolId = useCallback((value) => {
     setPIdolId(value);
-    setDirty(true);
+    markDirty();
   }, []);
 
   const editParams = useCallback((value) => {
     setParams(value);
-    setDirty(true);
+    markDirty();
   }, []);
 
   const replacePItemId = useCallback((index, itemId) => {
-    setDirty(true);
+    markDirty();
     setPItemIds((cur) => {
       const next = [...cur];
       next[index] = itemId;
@@ -153,7 +162,7 @@ export function MemoryContextProvider({ children }) {
   }, []);
 
   const replaceSkillCardId = useCallback((index, cardId) => {
-    setDirty(true);
+    markDirty();
     setSkillCardIds((cur) => {
       const next = [...cur];
       next[index] = cardId;
@@ -162,7 +171,7 @@ export function MemoryContextProvider({ children }) {
   }, []);
 
   const replaceCustomizations = useCallback((index, c11n) => {
-    setDirty(true);
+    markDirty();
     setCustomizations((cur) => {
       const next = [...cur];
       next[index] = c11n;
