@@ -188,3 +188,6 @@ id,name,type,preview,season,stage,round,plan,criteria,turnCounts,firstTurns,effe
 187,シーズン54 ステージ1,contest,FALSE,54,1,,sense,"0.35,0.2,0.45","3,2,5","0,0,1",at:cardUsed { if:turnsRemaining<=5 & turnCardsUsed%2==1 { concentration+=4; setConcentrationEffectBuff(0.15) }; limit:5 },
 188,シーズン54 ステージ2,contest,FALSE,54,2,,logic,"0.2,0.35,0.45","2,4,6","0,0,1",at:cardUsed[active] { if:stamina>=maxStamina*0.8 { genki+=6; motivation+=8 }; limit:3 },
 189,シーズン54 ステージ3,contest,FALSE,54,3,,anomaly,"0.35,0.45,0.2","2,4,2","0,1,0","at:cardUsed { if:cardHasEffect(strength) & cumulativeFullPowerCharge>=10 { setEnthusiasmBonus(5,1); at:turn { drawCard(2); limit:1 } }; limit:3 }",
+190,シーズン55 ステージ1,contest,TRUE,55,1,,sense,"0.35,0.2,0.45","3,2,5","0,0,1",at:cardUsed { if:turnsRemaining<=5 & turnCardsUsed%2==1 { concentration+=4; setConcentrationEffectBuff(0.15) }; limit:5 },
+191,シーズン55 ステージ2,contest,TRUE,55,2,,logic,"0.45,0.2,0.35","6,2,4","1,0,0","at:goodImpressionTurnsIncreased { if:isDirectEffect { effectCounter+=1; if:effectCounter%4==3 { goodImpressionTurns+=7; setGoodImpressionTurnsTimesBuff(1,1); limit:4 } } }",
+192,シーズン55 ステージ3,contest,TRUE,55,3,,anomaly,"0.2,0.45,0.35","2,6,4","0,1,0",at:cardUsed { if:cumulativeFullPowerCharge>=10 & turnCardsUsed%5==4 { target:effect(fullPowerCharge) { g.score+=20; g.scoreTimes+=1 } }; limit:3 },
