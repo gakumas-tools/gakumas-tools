@@ -122,7 +122,11 @@ export default function Simulator() {
     if (savedNumRuns == null) {
       setNumRuns(Math.round(workerCount() / 2) * 1000);
     }
-    return retainWorkerPool();
+    const release = retainWorkerPool();
+    return () => {
+      abortRef.current?.abort();
+      release();
+    };
   }, []);
 
   const setResult = useCallback(
