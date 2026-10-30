@@ -11,7 +11,7 @@
     "build:effect-icons": "node --loader ./scripts/extensionless-loader.mjs ./scripts/build-effect-icon-templates.mjs",
     "generate": "./scripts/pull_gkdata.sh && pnpm --filter gakumas-images generate && python -m scripts.generate",
     "regenerate": "rm -rf gk-img/docs/*s && pnpm generate",
-    "test": "node --loader ./scripts/extensionless-loader.mjs --test 'tests/*.test.mjs'",
+    "test": "node --loader ./scripts/extensionless-loader.mjs --test 'tests/unit/**/*.test.mjs'",
     "test:regression": "node --loader ./scripts/extensionless-loader.mjs ./tests/run.mjs",
     "test:draft": "node --loader ./scripts/extensionless-loader.mjs ./tests/draftPickBoxes.mjs",
     "test:memory": "node --loader ./scripts/extensionless-loader.mjs ./tests/memoryBoxes.mjs",
