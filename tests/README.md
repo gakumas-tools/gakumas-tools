@@ -17,9 +17,11 @@ Local tools for catching score drift and perf regressions in the structured engi
 ### Unit tests
 
 ```sh
-pnpm test                                                                      # every tests/*.test.mjs
-node --loader ./scripts/extensionless-loader.mjs --test tests/<name>.test.mjs  # just one file
+pnpm test                                                                           # every tests/unit/**/*.test.mjs
+node --loader ./scripts/extensionless-loader.mjs --test tests/unit/<path>.test.mjs  # just one file
 ```
+
+`tests/unit/` mirrors the source tree, one file per module, without the `packages/` prefix: `gakumas-tools/utils/simulator.js` is tested in `tests/unit/gakumas-tools/utils/simulator.test.mjs`, `packages/gakumas-engine/engine/Executor/index.js` in `tests/unit/gakumas-engine/engine/Executor.test.mjs`. Add a test to the file of the module it exercises; create a file only for a module that has none. `layout.test.mjs` fails on a file that doesn't match a source module. Engine tests build their engine with `tests/unit/gakumas-engine/helpers.mjs`.
 
 Fixture harnesses (`test:draft`, `test:memory`, `test:contest-loadout`, `test:rehearsal`, `test:regression`) take their mode as a flag, e.g. `pnpm test:draft --update`.
 

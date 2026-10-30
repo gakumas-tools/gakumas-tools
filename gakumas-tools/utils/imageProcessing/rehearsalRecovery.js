@@ -27,8 +27,8 @@
 //                          splitting already lost interior digits.
 //
 // `stageVerified` and `recoverStage` below are the only functions rehearsal.js
-// calls; everything else is re-exported for tests/rehearsalRecovery.test.mjs,
-// which exercises each solver's pure logic directly.
+// calls; everything else is re-exported for its unit test in tests/unit/, which
+// exercises each solver's pure logic directly.
 import {
   allTokens,
   numberOf,
