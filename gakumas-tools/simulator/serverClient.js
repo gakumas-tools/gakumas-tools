@@ -20,14 +20,14 @@ export function serverSimulationEnabled() {
 
 // Resolves null when the server refuses, so the caller can fall back to workers.
 export async function runOnServer(
-  { loadout, loadouts, stage, enterPercents, numRuns },
+  { loadout, loadouts, enterPercents, numRuns },
   onProgress,
   signal,
 ) {
   const response = await fetch("/api/simulate", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ loadout, loadouts, stage, enterPercents, numRuns }),
+    body: JSON.stringify({ loadout, loadouts, enterPercents, numRuns }),
     signal,
   });
   if (response.status === 404) return null;

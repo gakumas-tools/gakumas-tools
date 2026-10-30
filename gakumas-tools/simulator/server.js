@@ -4,9 +4,10 @@ import { isAdmin } from "@/utils/admin";
 import { createSimulation } from ".";
 import { MAX_CHUNK_SIZE } from "./constants";
 import { encodeLine } from "./ndjson";
+import { parseSimulationInput } from "./serverInput";
 
 const MAX_BODY_BYTES = 200_000;
-const MAX_NUM_RUNS = 10000;
+const MAX_DURATION_MS = 60_000;
 
 function buildConfig(loadout, stage, enterPercents) {
   return new IdolStageConfig(
@@ -18,6 +19,7 @@ function buildConfig(loadout, stage, enterPercents) {
 
 function streamRuns(simulation, numRuns, signal) {
   const encoder = new TextEncoder();
+  const deadline = performance.now() + MAX_DURATION_MS;
   let cancelled = false;
   return new ReadableStream({
     async start(controller) {
@@ -26,6 +28,9 @@ function streamRuns(simulation, numRuns, signal) {
       try {
         for (let done = 0; done < numRuns; ) {
           if (cancelled || signal?.aborted) return;
+          if (performance.now() > deadline) {
+            throw new Error("Simulation took too long");
+          }
           const chunk = Math.min(MAX_CHUNK_SIZE, numRuns - done);
           await simulation.run(chunk);
           done += chunk;
@@ -52,10 +57,9 @@ export async function handleSimulationRequest(request, session) {
   const { body, error, status } = await readJsonBody(request, MAX_BODY_BYTES);
   if (error) return new Response(error, { status });
 
-  const { loadout, loadouts, stage, enterPercents, numRuns } = body;
-  if (!Number.isInteger(numRuns) || numRuns < 1 || numRuns > MAX_NUM_RUNS) {
-    return new Response("Invalid numRuns", { status: 400 });
-  }
+  const { input, error: invalid } = parseSimulationInput(body);
+  if (invalid) return new Response(invalid, { status: 400 });
+  const { loadout, loadouts, stage, enterPercents, numRuns } = input;
 
   let simulation;
   try {

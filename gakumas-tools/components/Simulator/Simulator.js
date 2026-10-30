@@ -224,11 +224,11 @@ export default function Simulator() {
         const onProgress = (delta) => progress.set((p) => p + delta);
         const serverResults =
           serverSimulationEnabled() &&
+          stage.id != "custom" &&
           (await runOnServer(
             {
               loadout,
               loadouts: linkConfigs && loadouts,
-              stage,
               enterPercents,
               numRuns,
             },
