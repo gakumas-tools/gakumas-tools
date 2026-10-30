@@ -38,7 +38,11 @@ import {
   runOnWorkers,
   workerCount,
 } from "@/simulator/workerPool";
-import { runOnServer, serverSimulationEnabled } from "@/simulator/serverClient";
+import {
+  rememberServerFlagFromUrl,
+  runOnServer,
+  serverSimulationEnabled,
+} from "@/simulator/serverClient";
 import c from "@/utils/classNames";
 import { createProgressStore } from "@/utils/progressStore";
 import { bucketScores, getMedianScore, mergeResults } from "@/utils/simulator";
@@ -114,6 +118,7 @@ export default function Simulator() {
   }, [loadouts, stage, enterPercents]);
 
   useEffect(() => {
+    rememberServerFlagFromUrl();
     // Seed a hardware-scaled default only when the user has no saved value.
     let savedNumRuns = null;
     try {
