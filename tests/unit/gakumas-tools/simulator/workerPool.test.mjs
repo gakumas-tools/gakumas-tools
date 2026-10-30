@@ -57,7 +57,7 @@ class FakeWorker extends EventTarget {
 globalThis.Worker = FakeWorker;
 
 const { retainWorkerPool, runOnWorkers } = await import(
-  "../gakumas-tools/simulator/workerPool.js"
+  "../../../../gakumas-tools/simulator/workerPool.js"
 );
 
 const config = {

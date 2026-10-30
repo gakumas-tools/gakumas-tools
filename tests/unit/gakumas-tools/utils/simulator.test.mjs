@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { Stages } from "gakumas-data";
+import { GRAPHED_FIELDS } from "gakumas-engine";
 import { FALLBACK_STAGE } from "../../../../gakumas-tools/simulator/constants.js";
 import {
   getSimulatorUrl,
@@ -8,6 +9,7 @@ import {
   knownStageId,
   loadoutFromSearchParams,
   loadoutToSearchParams,
+  mergeGraphDatas,
 } from "../../../../gakumas-tools/utils/simulator.js";
 
 const UNKNOWN_ID = 999999;
@@ -15,6 +17,9 @@ const knownStage = Stages.getAll()[0];
 const customStage = { ...FALLBACK_STAGE, name: "Mine" };
 
 const loadout = loadoutFromSearchParams(new URLSearchParams());
+
+const graph = (values) =>
+  Object.fromEntries(GRAPHED_FIELDS.map((field) => [field, values]));
 
 const roundTrip = (supportBonus) =>
   loadoutFromSearchParams(
@@ -69,4 +74,25 @@ test("an unreadable support bonus loads as none", () => {
     const params = new URLSearchParams({ support_bonus: value });
     assert.equal(loadoutFromSearchParams(params).supportBonus, null);
   }
+});
+
+test("graph merge weighs each worker by its runs per turn", () => {
+  const { graphData, graphRunCounts } = mergeGraphDatas(
+    [graph([10, 20, 30]), graph([40, 50])],
+    [
+      [3, 3, 1],
+      [1, 1],
+    ]
+  );
+  assert.deepEqual(graphRunCounts, [4, 4, 1]);
+  assert.deepEqual(graphData[GRAPHED_FIELDS[0]], [17.5, 27.5, 30]);
+});
+
+test("graph merge of single runs is their plain mean", () => {
+  const { graphData, graphRunCounts } = mergeGraphDatas([
+    graph([1, 2]),
+    graph([3]),
+  ]);
+  assert.deepEqual(graphRunCounts, [2, 1]);
+  assert.deepEqual(graphData[GRAPHED_FIELDS[0]], [2, 2]);
 });
