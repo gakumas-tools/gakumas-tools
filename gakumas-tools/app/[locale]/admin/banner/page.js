@@ -2,7 +2,8 @@ import { notFound } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { setRequestLocale } from "next-intl/server";
 import OshiEditor from "@/components/OshiEditor";
-import { authOptions, isAdmin } from "@/utils/auth";
+import { isAdmin } from "@/utils/admin";
+import { authOptions } from "@/utils/auth";
 import { readOshiSettings } from "@/utils/oshiStore";
 
 export const metadata = {

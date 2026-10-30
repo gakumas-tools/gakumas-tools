@@ -1,5 +1,6 @@
 import { getServerSession } from "next-auth/next";
-import { authOptions, isAdmin } from "@/utils/auth";
+import { isAdmin } from "@/utils/admin";
+import { authOptions } from "@/utils/auth";
 import { validateOshiSettings } from "@/utils/oshi";
 import { saveOshiSettings } from "@/utils/oshiStore";
 

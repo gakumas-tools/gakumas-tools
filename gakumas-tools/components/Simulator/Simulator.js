@@ -38,6 +38,11 @@ import {
   runOnWorkers,
   workerCount,
 } from "@/simulator/workerPool";
+import {
+  rememberServerFlagFromUrl,
+  runOnServer,
+  serverSimulationEnabled,
+} from "@/simulator/serverClient";
 import c from "@/utils/classNames";
 import { createProgressStore } from "@/utils/progressStore";
 import { bucketScores, getMedianScore, mergeResults } from "@/utils/simulator";
@@ -113,6 +118,7 @@ export default function Simulator() {
   }, [loadouts, stage, enterPercents]);
 
   useEffect(() => {
+    rememberServerFlagFromUrl();
     // Seed a hardware-scaled default only when the user has no saved value.
     let savedNumRuns = null;
     try {
@@ -121,7 +127,11 @@ export default function Simulator() {
     if (savedNumRuns == null) {
       setNumRuns(Math.round(workerCount() / 2) * 1000);
     }
-    return retainWorkerPool();
+    const release = retainWorkerPool();
+    return () => {
+      abortRef.current?.abort();
+      release();
+    };
   }, []);
 
   const setResult = useCallback(
@@ -211,16 +221,32 @@ export default function Simulator() {
           (completed) => progress.set(completed),
         );
       } else {
-        const results = await runOnWorkers(
-          {
-            idolStageConfig: config,
-            linkConfigs,
-            strategyName: strategy,
-            numRuns,
-          },
-          (delta) => progress.set((p) => p + delta),
-          controller.signal,
-        );
+        const onProgress = (delta) => progress.set((p) => p + delta);
+        const serverResults =
+          serverSimulationEnabled() &&
+          stage.id != "custom" &&
+          (await runOnServer(
+            {
+              loadout,
+              loadouts: linkConfigs && loadouts,
+              enterPercents,
+              numRuns,
+            },
+            onProgress,
+            controller.signal,
+          ));
+        const results =
+          serverResults ||
+          (await runOnWorkers(
+            {
+              idolStageConfig: config,
+              linkConfigs,
+              strategyName: strategy,
+              numRuns,
+            },
+            onProgress,
+            controller.signal,
+          ));
         result = mergeResults(results);
       }
       startTransition(() => setResult(result));
