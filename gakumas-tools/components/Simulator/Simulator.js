@@ -38,6 +38,7 @@ import {
   runOnWorkers,
   workerCount,
 } from "@/simulator/workerPool";
+import { runOnServer, serverSimulationEnabled } from "@/simulator/serverClient";
 import c from "@/utils/classNames";
 import { createProgressStore } from "@/utils/progressStore";
 import { bucketScores, getMedianScore, mergeResults } from "@/utils/simulator";
@@ -211,16 +212,32 @@ export default function Simulator() {
           (completed) => progress.set(completed),
         );
       } else {
-        const results = await runOnWorkers(
-          {
-            idolStageConfig: config,
-            linkConfigs,
-            strategyName: strategy,
-            numRuns,
-          },
-          (delta) => progress.set((p) => p + delta),
-          controller.signal,
-        );
+        const onProgress = (delta) => progress.set((p) => p + delta);
+        const serverResults =
+          serverSimulationEnabled() &&
+          (await runOnServer(
+            {
+              loadout,
+              loadouts: linkConfigs && loadouts,
+              stage,
+              enterPercents,
+              numRuns,
+            },
+            onProgress,
+            controller.signal,
+          ));
+        const results =
+          serverResults ||
+          (await runOnWorkers(
+            {
+              idolStageConfig: config,
+              linkConfigs,
+              strategyName: strategy,
+              numRuns,
+            },
+            onProgress,
+            controller.signal,
+          ));
         result = mergeResults(results);
       }
       startTransition(() => setResult(result));
