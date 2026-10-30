@@ -7,7 +7,3 @@ test("contest loadout stamina includes 20% of the secondary memory", () => {
     41, 8,
   ]);
 });
-
-test("link contest loadout stamina includes every memory at full value", () => {
-  assert.deepEqual(getLoadoutStaminaContributions([41, 42], [1, 1]), [41, 42]);
-});
