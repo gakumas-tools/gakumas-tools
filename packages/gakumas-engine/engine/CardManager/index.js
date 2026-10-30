@@ -262,6 +262,7 @@ export default class CardManager extends EngineComponent {
       (s, k) => this.getCardEffects(s, k),
       (s, k) => this.getCardCosts(s, k),
       (s, k) => this.getCardRarity(s, k),
+      (s, k, n, o) => this.selectCardsToGrow(s, k, n, o),
     );
   }
 
@@ -272,6 +273,14 @@ export default class CardManager extends EngineComponent {
       }
     }
     return null;
+  }
+
+  selectCardsToGrow(state, cards, num = 1, optional = false) {
+    if (state[S.nullifySelect]) return new Set();
+    if (!optional && cards.length <= num) return cards;
+    const candidates = [...cards];
+    const selectedIndices = this.engine.strategy.pickCardsToGrow(state, candidates, num, optional);
+    return new Set(selectedIndices.map((i) => candidates[i]));
   }
 
   // State initialization
@@ -706,7 +715,7 @@ export default class CardManager extends EngineComponent {
       const orig = state[S.cardMap][cards[i]];
       const card = { ...orig, growth: { ...orig.growth } };
       state[S.cardMap][cards[i]] = card;
-      this.engine.executor.executeGrowthActions(card.growth, actions);
+      this.engine.executor.executeGrowthActions(state, cards[i], actions);
       this.logger.log(state, "growth", { type: "skillCard", id: card.id });
     }
   }

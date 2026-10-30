@@ -119,16 +119,24 @@ export default class Executor extends EngineComponent {
     };
   }
 
-  executeGrowthActions(growth, actions) {
+  executeGrowthActions(state, card, actions) {
     for (let i = 0; i < actions.length; i++) {
-      this.executeGrowthAction(growth, actions[i]);
+      this.executeGrowthAction(state, card, actions[i]);
     }
   }
 
-  executeGrowthAction(growth, action) {
+  executeGrowthAction(state, card, action) {
+    const growth = state[S.cardMap][card].growth;
     if (action.type === "assignment") {
-      const { lhs, op, rhs } = action;
+      let { lhs, op, rhs } = action;
 
+      if (lhs === "g.staminaCost") {
+        if (this.engine.cardManager.getCardCosts(state, card).has("stamina")) {
+          lhs = "g.typedCost";
+        } else {
+          return; // ignore g.staminaCost if the card doesn't have a stamina cost
+        }
+      }
       if (rhs.type !== "number") {
         throw new Error(`Invalid growth action RHS: expected number`);
       }

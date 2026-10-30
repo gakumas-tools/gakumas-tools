@@ -11,6 +11,7 @@
  */
 import {
   GROWTH_FIELDS,
+  GROWTH_ASSIGNABLE_FIELDS,
   INTERMEDIATE_FIELDS,
   MODIFIERS,
   PHASES,
@@ -58,6 +59,7 @@ const ASSIGNABLE_FIELDS = new Set([
   ...STATE_FIELDS,
   ...INTERMEDIATE_FIELDS,
   ...GROWTH_FIELDS, // growth assignments live alongside regular ones
+  ...GROWTH_ASSIGNABLE_FIELDS, // valid only for growth assignments
 ]);
 
 /**

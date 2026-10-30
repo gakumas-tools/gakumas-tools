@@ -486,4 +486,9 @@ export default class HeuristicStrategy extends BaseStrategy {
       num,
     ).map((j) => playable[j]);
   }
+
+  pickCardsToGrow(state, cards, num = 1, optional = false) {
+    return this.pickCardsToHold(state, cards, num, optional);
+  }
+
 }

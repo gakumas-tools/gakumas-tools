@@ -56,4 +56,9 @@ export default class PlayerStrategy {
       return this.pickCardsToHold(state, cards, 1)[0];
     }
   }
+
+  pickCardsToGrow(state, cards, num = 1, optional = false) {
+    return this.pickCardsInternal("GROW_SELECTION", state, cards, num, optional);
+  }
+
 }
