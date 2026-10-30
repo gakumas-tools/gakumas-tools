@@ -8,6 +8,11 @@ All notable changes to the contest simulator will be documented in this file.
 
 
 
+
+## 2026-10-30
+
+- Add contest season 55 preview
+
 ## 2026-10-29
 
 - Add negirai coffee icons
