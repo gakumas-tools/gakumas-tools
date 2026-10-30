@@ -12,6 +12,8 @@ export function encodeLine(message) {
 
 export function decodeLine(line) {
   return JSON.parse(line, (_, value) =>
-    Object.hasOwn(NON_FINITE, value) ? NON_FINITE[value] : value,
+    typeof value === "string" && Object.hasOwn(NON_FINITE, value)
+      ? NON_FINITE[value]
+      : value,
   );
 }
