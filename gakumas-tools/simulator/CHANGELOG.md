@@ -9,6 +9,11 @@ All notable changes to the contest simulator will be documented in this file.
 
 
 
+
+## 2026-10-31
+
+- Fix 翼 sometimes not returning また、飛べる from removed cards
+
 ## 2026-10-30
 
 - Add contest season 55 preview

@@ -215,8 +215,8 @@ id,name,rarity,upgraded,plan,mode,sourceType,pIdolId,welfare,effects
 214,ぜったいいっぱい！,SSR,FALSE,anomaly,produce,support,,FALSE,
 215,いつか見た夢,SSR,FALSE,sense,stage,pIdol,75,FALSE,at:afterCardUsed { if:usedCardBaseId==28 { concentration+=1; fixedStamina-=3; at:startOfTurn { concentration+=3; limit:3 } } limit:2 }
 216,いつか見た夢+,SSR,TRUE,sense,stage,pIdol,75,FALSE,at:afterCardUsed { if:usedCardBaseId==28 { concentration+=1; fixedStamina-=1; at:startOfTurn { concentration+=3; limit:3 } } limit:2 }
-217,翼,SSR,FALSE,logic,stage,pIdol,76,FALSE,at:afterCardUsed { if:usedCardBaseId==58 & genki>=7 { goodImpressionTurns*=1.5; fixedStamina-=2; at:turn { moveCardToHandFromRemoved(490); limit:1 } } limit:2 }
-218,翼+,SSR,TRUE,logic,stage,pIdol,76,FALSE,at:afterCardUsed { if:usedCardBaseId==58 & genki>=7 { goodImpressionTurns*=1.5; at:turn { moveCardToHandFromRemoved(490); limit:1 } } limit:2 }
+217,翼,SSR,FALSE,logic,stage,pIdol,76,FALSE,at:afterCardUsed { if:usedCardBaseId==58 & genki>=7 { goodImpressionTurns*=1.5; fixedStamina-=2; at:turn { moveRandomToHand[baseId(490) & removed]; limit:1 } } limit:2 }
+218,翼+,SSR,TRUE,logic,stage,pIdol,76,FALSE,at:afterCardUsed { if:usedCardBaseId==58 & genki>=7 { goodImpressionTurns*=1.5; at:turn { moveRandomToHand[baseId(490) & removed]; limit:1 } } limit:2 }
 219,体ほぐしローラー,SR,FALSE,free,produce,support,,FALSE,
 220,うるおいのどケア,SR,FALSE,free,produce,support,,FALSE,
 221,トレーナーの優しさ,SR,FALSE,free,produce,support,,FALSE,
