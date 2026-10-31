@@ -161,8 +161,6 @@ export default class CardManager extends EngineComponent {
           cardId,
           parseInt(exact, 10),
         ),
-      moveCardToHandFromRemoved: (state, cardBaseId) =>
-        this.moveCardToHandFromRemoved(state, cardBaseId),
       moveSelectedToHand: (state, targetRule, num = 1) =>
         this.moveSelectedToHandByTarget(state, targetRule, parseInt(num, 10)),
       holdCard: (state, cardBaseId) =>
@@ -904,34 +902,6 @@ export default class CardManager extends EngineComponent {
       type: "skillCard",
       id: state[S.cardMap][pick.cardIdx].id,
     });
-  }
-
-  moveCardToHandFromRemoved(state, cardBaseId) {
-    if (state[S.handCards].length >= 5) return;
-    let cards = state[S.cardMap]
-      .map((c, i) => (c.baseId == cardBaseId ? i : -1))
-      .filter((i) => i != -1);
-
-    if (!cards.length) return;
-
-    const card = cards[Math.floor(getRand() * cards.length)];
-
-    const index = state[S.removedCards].indexOf(card);
-    if (index != -1) {
-      state[S.removedCards].splice(index, 1);
-      state[S.handCards].push(card);
-
-      state[S.movedCard] = card;
-      this.engine.effectManager.triggerEffectsForPhase(
-        state,
-        "cardMovedToHand",
-      );
-
-      this.logger.log(state, "moveCardToHand", {
-        type: "skillCard",
-        id: state[S.cardMap][card].id,
-      });
-    }
   }
 
   // Hold actions
