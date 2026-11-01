@@ -77,10 +77,8 @@ export function generatePossibleMemories(skillCardIds, rank) {
         break;
       }
 
-      // Generate all combinations based on remaining slots
-      let hasInRangeCostCombination = false;
-      let maxCombinedCost;
-      let stepCombinations = [];
+      // Generate all combinations based on remaining slots, with their costs
+      const costedCombinations = [];
       const combinations = generateCombinations(
         produceSkillCards,
         remainingSlots
@@ -93,8 +91,9 @@ export function generatePossibleMemories(skillCardIds, rank) {
         }
 
         // Calculate cost of this combination
+        const fullCombination = preLotteryCombination.concat(combination);
         const combinationCost = calculateSkillCardCost(
-          preLotteryCombination.concat(combination).map(({ id }) => id)
+          fullCombination.map(({ id }) => id)
         );
 
         // Remove combinations that cost too much
@@ -103,31 +102,28 @@ export function generatePossibleMemories(skillCardIds, rank) {
           continue;
         }
 
-        // Record the highest cost combination below max cost
-        if (!maxCombinedCost) {
-          maxCombinedCost = combinationCost;
-        }
-
-        // If there are no combinations within cost range, then if there is a
-        // combination higher than max cost, add all combinations lower than min
-        // cost. Otherwise, add only the highest possible cost combination.
-        if (maxCombinedCost < minCost) {
-          if (hasOverCostCombination || maxCombinedCost === combinationCost) {
-            stepCombinations.push(preLotteryCombination.concat(combination));
-            continue;
-          }
-        }
-
-        // Remove combinations that cost too little
-        if (combinationCost < minCost) {
-          continue;
-        }
-
-        hasInRangeCostCombination = true;
-
-        // Add valid combination
-        stepCombinations.push(preLotteryCombination.concat(combination));
+        costedCombinations.push({ combination: fullCombination, combinationCost });
       }
+
+      // Keep the combinations within cost range. If there are none, then if
+      // there is a combination higher than max cost, keep all combinations
+      // lower than min cost. Otherwise, keep only the highest cost ones.
+      const inRange = costedCombinations.filter(
+        ({ combinationCost }) => combinationCost >= minCost
+      );
+      const hasInRangeCostCombination = inRange.length > 0;
+      let kept = inRange;
+      if (!hasInRangeCostCombination) {
+        const maxCombinedCost = Math.max(
+          ...costedCombinations.map(({ combinationCost }) => combinationCost)
+        );
+        kept = hasOverCostCombination
+          ? costedCombinations
+          : costedCombinations.filter(
+              ({ combinationCost }) => combinationCost === maxCombinedCost
+            );
+      }
+      const stepCombinations = kept.map(({ combination }) => combination);
 
       // If we found in-range combinations at the current number of slots, end the lottery
       if (hasInRangeCostCombination) {
