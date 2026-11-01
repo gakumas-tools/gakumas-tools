@@ -29,3 +29,10 @@ test("an append that expands to several effects appends them all", () => {
   assert.equal(records.length, 2);
   assert.ok(records.every((r) => r.op === "append" && r.effect.phase === "startOfTurn"));
 });
+
+test("nested conditions in an anchor patch add to the outer ones", () => {
+  const [patch] = deserializePatchSequence(
+    "@base if:stamina>=1 { if:genki>=1 { score+=1 } }",
+  );
+  assert.equal(patch.delta.conditions.length, 2);
+});

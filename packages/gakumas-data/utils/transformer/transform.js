@@ -456,14 +456,15 @@ function applyToDelta(delta, node) {
       for (const child of node.body) applyToDelta(delta, child);
       break;
     }
+    // Nested blocks add to the outer conditions/targets, as in effects.
     case "condition":
-      delta.conditions = [node.expr];
+      delta.conditions = [...(delta.conditions || []), node.expr];
       for (const child of node.body) applyToDelta(delta, child);
       break;
     case "target": {
       const targetName =
         node.target.type === "identifier" ? node.target.name : node.target;
-      delta.targets = [targetName];
+      delta.targets = [...(delta.targets || []), targetName];
       for (const child of node.body) applyToDelta(delta, child);
       break;
     }
