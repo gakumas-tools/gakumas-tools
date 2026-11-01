@@ -511,6 +511,14 @@ export default class CardManager extends EngineComponent {
 
     this.logger.debug("Using card", skillCard.id, skillCard.name);
 
+    // A free or paid use can run inside another card's actions
+    // (useRandomFree, useSelected, ...). Restore that card's phase and
+    // usedCard afterwards so the rest of its actions and its own
+    // afterCardUsed still see it.
+    const nested = usingFree || usingPaid;
+    const outerPhase = nested ? state[S.phase] : undefined;
+    const outerUsedCard = nested ? state[S.usedCard] : null;
+
     state[S.usedCard] = card;
 
     this.engine.effectManager.triggerEffectsForPhase(
@@ -549,7 +557,7 @@ export default class CardManager extends EngineComponent {
     } else {
       state[S.phase] = "processCost";
       this.engine.executor.executeActions(state, cost, card);
-      state[S.phase] = undefined;
+      state[S.phase] = outerPhase;
     }
 
     state[pile].splice(pileIndex, 1);
@@ -586,7 +594,7 @@ export default class CardManager extends EngineComponent {
       }
       state[S.effectInstanceId]++;
       this.engine.effectManager.triggerEffects(state, actions, null, card);
-      state[S.phase] = undefined;
+      state[S.phase] = outerPhase;
     }
 
     state[S.cardsUsed]++;
@@ -641,8 +649,8 @@ export default class CardManager extends EngineComponent {
       );
     }
 
-    state[S.lastUsedCard] = state[S.usedCard];
-    state[S.usedCard] = null;
+    state[S.lastUsedCard] = card;
+    state[S.usedCard] = outerUsedCard;
 
     this.logger.log(state, "entityEnd", {
       type: "skillCard",

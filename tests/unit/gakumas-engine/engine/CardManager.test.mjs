@@ -1,5 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { deserializeEffectSequence, SkillCards } from "gakumas-data";
 import { S } from "gakumas-engine";
 import { createEngine } from "../helpers.mjs";
 
@@ -35,4 +36,43 @@ test("Reductions in costs still count as costs", () => {
     cardManager.getCardCosts(state, cardOf(TODOITE_PLUS)).has("stamina"),
     true,
   );
+});
+
+test("a free use inside a card's actions keeps that card's phase and usedCard", () => {
+  // 830 舞台で輝く一番星: concentration+=4; useRandomFree[hand & SR];
+  // cardUsesRemaining+=1; drawCard
+  const sr = SkillCards.getAll().find(
+    (c) =>
+      c.rarity === "SR" &&
+      !c.upgraded &&
+      c.type === "active" &&
+      c.plan === "sense" &&
+      c.sourceType === "produce" &&
+      !c.conditions?.length,
+  );
+  const engine = createEngine({
+    params: [1000, 1000, 1000, 50],
+    skillCardIds: [830, sr.id],
+  });
+  const state = engine.getInitialState();
+  const outer = state[S.cardMap].findIndex((c) => c.id === 830);
+  const inner = state[S.cardMap].findIndex((c) => c.id === sr.id);
+  engine.effectManager.setEffects(
+    state,
+    deserializeEffectSequence(
+      "at:afterCardUsed { if:usedCardId==830 { do:fixedGenki+=100 } }; " +
+        "at:cardMovedToHand { if:isDirectEffect { do:fixedGenki+=1 } }",
+    ),
+  );
+  state[S.handCards] = [outer, inner];
+  state[S.deckCards] = state[S.deckCards].filter(
+    (c) => c !== outer && c !== inner,
+  );
+  state[S.cardUsesRemaining] = 5;
+  const after = engine.useCard(state, outer);
+  // 830's own afterCardUsed fired (+100), and its drawCard after the free
+  // use counted as a direct effect (+1).
+  assert.equal(after[S.genki], 101);
+  assert.equal(after[S.lastUsedCard], outer);
+  assert.equal(after[S.usedCard], null);
 });
