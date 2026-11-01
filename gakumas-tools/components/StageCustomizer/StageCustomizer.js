@@ -43,7 +43,7 @@ function StageCustomizer({ initialStage, onApply }) {
     Object.values(initialStage.criteria)
   );
   const [effects, setEffects] = useState(
-    serializeEffectSequence(initialStage.effects).replaceAll(";", ";\n")
+    serializeEffectSequence(initialStage.effects)
   );
 
   const TYPE_OPTIONS = [
