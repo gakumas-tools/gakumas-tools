@@ -173,7 +173,14 @@ export default class BuffManager extends EngineComponent {
     // Buff lists are copy-on-write.
     const arr = state[field].slice();
     state[field] = arr;
-    const buffIndex = arr.findIndex((b) => b.turns == turns);
+    // Merge only into an entry that will expire at the same time: a buff
+    // gained now is protected from this turn's decrement (fresh), so it
+    // can't share an entry with an older one that isn't. Buffs without a
+    // duration never decrement, so freshness doesn't matter for them.
+    const fresh = !state[S.unfreshPhase];
+    const buffIndex = arr.findIndex(
+      (b) => b.turns == turns && (turns == null || b.fresh == fresh),
+    );
     if (buffIndex != -1) {
       const old = arr[buffIndex];
       arr[buffIndex] = { ...old, amount: old.amount + amount };
@@ -181,7 +188,7 @@ export default class BuffManager extends EngineComponent {
       arr.push({
         amount,
         turns,
-        fresh: !state[S.unfreshPhase],
+        fresh,
       });
     }
     this.logger.log(state, logLabel, {
