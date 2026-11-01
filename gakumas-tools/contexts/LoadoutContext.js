@@ -256,7 +256,13 @@ export function LoadoutContextProvider({ children }) {
     });
     setCustomizationGroups((cur) => {
       const updatedCustomizations = [...cur];
-      updatedCustomizations.splice(groupIndex, 0, []);
+      // One entry per card slot: replaceCustomizations and swapSkillCardIds
+      // index customizations as one flat list cut into groups of 6.
+      updatedCustomizations.splice(
+        groupIndex,
+        0,
+        Array.from({ length: 6 }, () => ({})),
+      );
       return updatedCustomizations;
     });
   }, []);
