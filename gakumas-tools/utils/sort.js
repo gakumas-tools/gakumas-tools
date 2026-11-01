@@ -138,12 +138,12 @@ export function compareFilteredMemories(a, b) {
   }
 }
 
+// "(FIXME)" memories come first, then each group by contest power.
 export function compareUnfilteredMemories(a, b) {
-  if (b.name?.indexOf("(FIXME)") > -1) {
-    return 1;
-  } else if (a.name?.indexOf("(FIXME)") > -1) {
-    return -1;
-  } else {
-    return b.contestPower - a.contestPower;
+  const aFixme = a.name?.includes("(FIXME)") ? 1 : 0;
+  const bFixme = b.name?.includes("(FIXME)") ? 1 : 0;
+  if (aFixme != bFixme) {
+    return bFixme - aFixme;
   }
+  return b.contestPower - a.contestPower;
 }
