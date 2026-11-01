@@ -52,9 +52,8 @@ function LoadoutSkillCardGroup({
     swapSkillCardIds,
     replaceCustomizations,
   } = useContext(LoadoutActionsContext);
-  const { setTargetSkillCardIds, setAcquiredSkillCardIds } = useContext(
-    MemoryCalculatorContext,
-  );
+  const { clearTargetCardIds, setTargetSkillCardIds, setAcquiredSkillCardIds } =
+    useContext(MemoryCalculatorContext);
   const { setModal, closeModal } = useContext(ModalContext);
   const [expanded, setExpanded] = useState(false);
   const [costExpanded, setCostExpanded] = useState(false);
@@ -88,6 +87,9 @@ function LoadoutSkillCardGroup({
         const nonPidolSkillCardIds = skillCardIds.filter(
           (id) => id && SkillCards.getById(id).sourceType != "pIdol",
         );
+        // Start a fresh query: alternates and negations are kept by slot,
+        // so earlier ones would attach to these cards.
+        clearTargetCardIds();
         setTargetSkillCardIds(() => nonPidolSkillCardIds);
         setAcquiredSkillCardIds(() => nonPidolSkillCardIds);
         router.push("/memory-calculator");
