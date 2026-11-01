@@ -72,20 +72,25 @@ export default class EffectManager extends EngineComponent {
 
   initializeCardEffects(state) {
     for (let i = 0; i < state[S.cardMap].length; i++) {
-      const skillCardId = state[S.cardMap][i].id;
+      this.setCardEffects(state, i);
+    }
+  }
 
-      const skillCard = SkillCards.getById(skillCardId);
-      const cardEffects = this.engine.cardManager.getLines(state, i, "effects");
-      if (cardEffects.length) {
-        this.logger.debug("Setting card effects", skillCard.name, cardEffects);
-        this.setEffects(state, cardEffects, {
-          type: "skillCard",
-          id: skillCardId,
-          idx: i,
-          primary: true,
-        });
-        state[S.effectInstanceId]++;
-      }
+  // Register a card's effects column. Also called for cards added to the
+  // card map mid-stage.
+  setCardEffects(state, card) {
+    const skillCardId = state[S.cardMap][card].id;
+    const skillCard = SkillCards.getById(skillCardId);
+    const cardEffects = this.engine.cardManager.getLines(state, card, "effects");
+    if (cardEffects.length) {
+      this.logger.debug("Setting card effects", skillCard.name, cardEffects);
+      this.setEffects(state, cardEffects, {
+        type: "skillCard",
+        id: skillCardId,
+        idx: card,
+        primary: true,
+      });
+      state[S.effectInstanceId]++;
     }
   }
 

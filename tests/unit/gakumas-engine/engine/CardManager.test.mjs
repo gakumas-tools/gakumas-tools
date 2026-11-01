@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { S } from "gakumas-engine";
+import { G, S } from "gakumas-engine";
 import { createEngine } from "../helpers.mjs";
 
 const TODOITE_PLUS = 153;
@@ -35,4 +35,20 @@ test("Reductions in costs still count as costs", () => {
     cardManager.getCardCosts(state, cardOf(TODOITE_PLUS)).has("stamina"),
     true,
   );
+});
+
+test("cards added mid-stage register their effects column", () => {
+  // 431 総合芸術+: at:stanceChanged { if:isDirectEffect { target:this {
+  // g.score+=20 } }; limit:4 }
+  const engine = createEngine({ params: [1000, 1000, 1000, 50], skillCardIds: [370] });
+  const state = engine.getInitialState();
+  state[S.handCards] = [];
+  engine.cardManager.addCardToHand(state, 431);
+  const card = state[S.cardMap].findIndex((c) => c.id === 431);
+  assert.ok(state[S.effects].some((e) => e.source?.idx === card));
+
+  state[S.phase] = "processCard";
+  engine.buffManager.setStance(state, "strength");
+  state[S.phase] = undefined;
+  assert.equal(state[S.cardMap][card].growth?.[G["g.score"]], 20);
 });

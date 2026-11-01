@@ -766,6 +766,18 @@ export default class CardManager extends EngineComponent {
     });
   }
 
+  // Add a card created mid-stage and register its effects column, as
+  // initializeCardEffects does for the starting cards.
+  addToCardMap(state, skillCard) {
+    state[S.cardMap].push({
+      id: skillCard.id,
+      baseId: getBaseId(skillCard),
+    });
+    const card = state[S.cardMap].length - 1;
+    this.engine.effectManager.setCardEffects(state, card);
+    return card;
+  }
+
   addRandomUpgradedCardToHand(state, rarities = ["R", "SR", "SSR"]) {
     if (state[S.handCards].length >= 5) return;
 
@@ -776,10 +788,7 @@ export default class CardManager extends EngineComponent {
     }).filter((card) => card.upgraded);
     const skillCard =
       validSkillCards[Math.floor(getRand() * validSkillCards.length)];
-    state[S.cardMap].push({
-      id: skillCard.id,
-      baseId: getBaseId(skillCard),
-    });
+    this.addToCardMap(state, skillCard);
     state[S.handCards].push(state[S.cardMap].length - 1);
     this.logger.log(state, "addCardToHand", {
       type: "skillCard",
@@ -800,10 +809,7 @@ export default class CardManager extends EngineComponent {
   addCardToTopOfDeck(state, cardId) {
     const skillCard = SkillCards.getById(cardId);
 
-    state[S.cardMap].push({
-      id: skillCard.id,
-      baseId: getBaseId(skillCard),
-    });
+    this.addToCardMap(state, skillCard);
     state[S.deckCards].push(state[S.cardMap].length - 1);
     this.logger.log(state, "addCardToTopOfDeck", {
       type: "skillCard",
@@ -814,10 +820,7 @@ export default class CardManager extends EngineComponent {
   addCardToDeck(state, cardId) {
     const skillCard = SkillCards.getById(cardId);
 
-    state[S.cardMap].push({
-      id: skillCard.id,
-      baseId: getBaseId(skillCard),
-    });
+    this.addToCardMap(state, skillCard);
     const cardIdx = state[S.cardMap].length - 1;
     const insertPos = Math.floor(getRand() * (state[S.deckCards].length + 1));
     state[S.deckCards].splice(insertPos, 0, cardIdx);
@@ -831,10 +834,7 @@ export default class CardManager extends EngineComponent {
     if (state[S.handCards].length >= 5) return;
     const skillCard = SkillCards.getById(cardId);
 
-    state[S.cardMap].push({
-      id: skillCard.id,
-      baseId: getBaseId(skillCard),
-    });
+    this.addToCardMap(state, skillCard);
     state[S.handCards].push(state[S.cardMap].length - 1);
     this.logger.log(state, "addCardToHand", {
       type: "skillCard",
