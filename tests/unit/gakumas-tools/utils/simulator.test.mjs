@@ -4,6 +4,8 @@ import { PItems, Stages } from "gakumas-data";
 import { GRAPHED_FIELDS, IdolConfig } from "gakumas-engine";
 import { FALLBACK_STAGE } from "../../../../gakumas-tools/simulator/constants.js";
 import {
+  accumulateCardUsage,
+  bucketScores,
   createGraphAverage,
   getSimulatorUrl,
   getStage,
@@ -183,4 +185,57 @@ test("a graph average read early keeps its values as runs are added", () => {
   assert.deepEqual(early.graphRunCounts, [1]);
   assert.deepEqual(early.graphData[GRAPHED_FIELDS[0]], [10]);
   assert.deepEqual(average.result().graphData[GRAPHED_FIELDS[0]], [20, 40]);
+});
+
+test("score buckets list in ascending order with no bucket below 0", () => {
+  const { bucketedScores, bucketSize } = bucketScores([0, 500, 1500, 3200]);
+  const keys = Object.keys(bucketedScores).map(Number);
+  assert.deepEqual(
+    keys,
+    [...keys].sort((a, b) => a - b),
+  );
+  assert.ok(keys.every((k) => k >= 0));
+  assert.equal(
+    Object.values(bucketedScores).reduce((a, b) => a + b, 0),
+    4,
+  );
+  assert.ok(bucketSize > 0);
+});
+
+test("a card played, drawn again and played again counts two draws", () => {
+  const hand = (ids, selectedIndex) => ({
+    logType: "hand",
+    data: { handCards: ids.map((id) => ({ id })), selectedIndex },
+  });
+  const cardUsage = {};
+  accumulateCardUsage(
+    [
+      { logType: "startTurn" },
+      hand([757, 132, 21], 0),
+      hand([132, 21, 757], 2),
+    ],
+    cardUsage,
+  );
+  const usage = Object.values(cardUsage.turns[0]).find((u) => u.id === 757);
+  assert.deepEqual([usage.use, usage.draw], [2, 2]);
+});
+
+test("re-showing the same hand doesn't count extra draws", () => {
+  const cardUsage = {};
+  accumulateCardUsage(
+    [
+      { logType: "startTurn" },
+      {
+        logType: "hand",
+        data: { handCards: [{ id: 1 }, { id: 2 }], selectedIndex: null },
+      },
+      {
+        logType: "hand",
+        data: { handCards: [{ id: 1 }, { id: 2 }], selectedIndex: 0 },
+      },
+    ],
+    cardUsage,
+  );
+  const usage = Object.values(cardUsage.turns[0]).find((u) => u.id === 1);
+  assert.deepEqual([usage.use, usage.draw], [1, 1]);
 });
