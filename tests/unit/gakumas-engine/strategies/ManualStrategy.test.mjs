@@ -116,3 +116,46 @@ test("先生でアイドル！ into 潜在能力 resolves after three prompts", 
   ]);
   assert.equal(state[S.heldCards].length, 2);
 });
+
+// Plays `cardId` with a single card left in the deck and returns the
+// selection request it raises.
+function selectionRequest(cardId) {
+  const engine = createEngine({
+    skillCardIds: [cardId, 19, 20, 21],
+    params: [100, 100, 100, 50],
+  });
+  const state = engine.startStage(engine.getInitialState());
+  const card = state[S.cardMap].findIndex((c) => c.id === cardId);
+  const others = [
+    ...state[S.handCards],
+    ...state[S.deckCards],
+    ...state[S.discardedCards],
+  ].filter((k) => k !== card);
+  state[S.handCards] = [card, ...others.slice(0, 3)];
+  state[S.deckCards] = others.slice(3, 4);
+  state[S.discardedCards] = [];
+  state[S.removedCards] = others.slice(4);
+  state[S.fullPowerCharge] = 10;
+  engine.strategy = new ManualStrategy(engine, async () => []);
+  try {
+    engine.executeDecision(state, { card });
+  } catch (request) {
+    return request;
+  }
+  assert.fail("no selection request");
+}
+
+test("a selection never asks for more cards than there are", () => {
+  // あの日、この場所で+ (527): holdSelected[deck | discarded](2)
+  const request = selectionRequest(527);
+  assert.equal(request.cards.length, 1);
+  assert.equal(request.num, 1);
+  assert.equal(request.optional, false);
+});
+
+test("an Upto selection is optional", () => {
+  // 本領発揮 (753): holdSelectedUpto[deck | discarded](2)
+  const request = selectionRequest(753);
+  assert.equal(request.num, 1);
+  assert.equal(request.optional, true);
+});
