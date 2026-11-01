@@ -7,6 +7,15 @@
 import { SkillCards } from "gakumas-data";
 import { S } from "../../constants";
 
+// Whether a cardMap index is one of the current idol's cards. In a link
+// contest, cardMap also holds the other idols' cards, which aren't in play.
+function isPhaseCard(state, k) {
+  return (
+    (k >= state[S.phaseCardsStart] && k < state[S.phaseCardsEnd]) ||
+    k >= state[S.phaseAddedCardsStart]
+  );
+}
+
 /**
  * Get cards matching a target rule
  * @param {Object} state - Game state
@@ -68,6 +77,7 @@ function evaluateTargetAST(state, node, source, getCardEffects, getCardCosts, ge
         const operand = evaluateTargetAST(state, node.operand, source, getCardEffects, getCardCosts, getCardRarity);
         const result = new Set();
         for (let k = 0; k < state[S.cardMap].length; k++) {
+          if (!isPhaseCard(state, k)) continue;
           if (!operand.has(k)) result.add(k);
         }
         return result;
@@ -83,6 +93,7 @@ function evaluateTargetAST(state, node, source, getCardEffects, getCardCosts, ge
           args[0].type === "identifier" ? args[0].name : String(args[0].value);
         const result = new Set();
         for (let k = 0; k < state[S.cardMap].length; k++) {
+          if (!isPhaseCard(state, k)) continue;
           if (getCardEffects(state, k).has(effectName)) {
             result.add(k);
           }
@@ -94,6 +105,7 @@ function evaluateTargetAST(state, node, source, getCardEffects, getCardCosts, ge
           args[0].type === "identifier" ? args[0].name : String(args[0].value);
         const result = new Set();
         for (let k = 0; k < state[S.cardMap].length; k++) {
+          if (!isPhaseCard(state, k)) continue;
           if (getCardCosts(state, k).has(costName)) {
             result.add(k);
           }
@@ -104,6 +116,7 @@ function evaluateTargetAST(state, node, source, getCardEffects, getCardCosts, ge
         const wantId = args[0].type === "number" ? args[0].value : parseInt(args[0].name, 10);
         const result = new Set();
         for (let k = 0; k < state[S.cardMap].length; k++) {
+          if (!isPhaseCard(state, k)) continue;
           if (state[S.cardMap][k].baseId == wantId) result.add(k);
         }
         return result;
@@ -112,6 +125,7 @@ function evaluateTargetAST(state, node, source, getCardEffects, getCardCosts, ge
         const wantId = args[0].type === "number" ? args[0].value : parseInt(args[0].name, 10);
         const result = new Set();
         for (let k = 0; k < state[S.cardMap].length; k++) {
+          if (!isPhaseCard(state, k)) continue;
           if (state[S.cardMap][k].id == wantId) result.add(k);
         }
         return result;
@@ -167,24 +181,28 @@ function getTargetCards(state, target, source, getCardRarity) {
     }
   } else if (target === "all") {
     for (let k = 0; k < state[S.cardMap].length; k++) {
+      if (!isPhaseCard(state, k)) continue;
       targetCards.add(k);
     }
   }
   // Type-based targets
   else if (["active", "mental", "trouble"].includes(target)) {
     for (let k = 0; k < state[S.cardMap].length; k++) {
+      if (!isPhaseCard(state, k)) continue;
       if (SkillCards.getById(state[S.cardMap][k].id).type === target) {
         targetCards.add(k);
       }
     }
   } else if (target === "basic") {
     for (let k = 0; k < state[S.cardMap].length; k++) {
+      if (!isPhaseCard(state, k)) continue;
       if (SkillCards.getById(state[S.cardMap][k].id).name.includes("基本")) {
         targetCards.add(k);
       }
     }
   } else if (target === "pIdol") {
     for (let k = 0; k < state[S.cardMap].length; k++) {
+      if (!isPhaseCard(state, k)) continue;
       if (SkillCards.getById(state[S.cardMap][k].id).sourceType === "pIdol") {
         targetCards.add(k);
       }
@@ -194,6 +212,7 @@ function getTargetCards(state, target, source, getCardRarity) {
   else if (["T", "N", "R", "SR", "SSR", "L"].includes(target)) {
     const rarity = target;
     for (let k = 0; k < state[S.cardMap].length; k++) {
+      if (!isPhaseCard(state, k)) continue;
       if (getCardRarity(state, k) === rarity) {
         targetCards.add(k);
       }
@@ -202,6 +221,7 @@ function getTargetCards(state, target, source, getCardRarity) {
   // Card ID-based target
   else if (/^\d+$/.test(target)) {
     for (let k = 0; k < state[S.cardMap].length; k++) {
+      if (!isPhaseCard(state, k)) continue;
       if (state[S.cardMap][k].baseId == target) {
         targetCards.add(k);
       }

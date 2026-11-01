@@ -305,6 +305,9 @@ export default class CardManager extends EngineComponent {
     for (let i = 0; i < numCards; i++) {
       deckCards.push(index + i);
     }
+    state[S.phaseCardsStart] = index;
+    state[S.phaseCardsEnd] = index + numCards;
+    state[S.phaseAddedCardsStart] = state[S.cardMap].length;
     state[S.deckCards] = deckCards;
     shuffle(state[S.deckCards]);
     state[S.deckCards].sort((a, b) => {

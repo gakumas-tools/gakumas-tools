@@ -138,6 +138,12 @@ export const ALL_FIELDS = [
   "turnsRemaining",
   "turnTypes",
   "linkPhase",
+  // The current idol's cards in cardMap: [phaseCardsStart, phaseCardsEnd)
+  // plus every card added from phaseAddedCardsStart on. In a link contest,
+  // the other idols' cards fall outside these ranges.
+  "phaseCardsStart",
+  "phaseCardsEnd",
+  "phaseAddedCardsStart",
 
   // Buffs
   "halfCostTurns",
