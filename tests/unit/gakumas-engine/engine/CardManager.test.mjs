@@ -36,3 +36,16 @@ test("Reductions in costs still count as costs", () => {
     true,
   );
 });
+
+test("a card whose cost will be nullified is usable without the stamina", () => {
+  // 858 夏風の通り道+ costs 5; useCard skips the cost while
+  // nullifyCostCards is set.
+  const engine = createEngine({ params: [1000, 1000, 1000, 50], skillCardIds: [858] });
+  const state = engine.getInitialState();
+  const card = state[S.cardMap].findIndex((c) => c.id === 858);
+  state[S.stamina] = 0;
+  state[S.genki] = 0;
+  assert.equal(engine.cardManager.isCardUsable(state, card), false);
+  state[S.nullifyCostCards] = 1;
+  assert.equal(engine.cardManager.isCardUsable(state, card), true);
+});

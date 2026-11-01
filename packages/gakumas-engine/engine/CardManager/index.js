@@ -484,6 +484,19 @@ export default class CardManager extends EngineComponent {
     }
 
     const cost = this.getCostActions(state, card);
+
+    // useCard skips the whole cost when a nullified-cost use applies.
+    const hasStaminaCost = cost.some(
+      (action) => action.lhs === "cost" || action.lhs === "stamina",
+    );
+    if (
+      hasStaminaCost &&
+      (state[S.nullifyCostCards] ||
+        (skillCard.type === "active" && state[S.nullifyCostActiveCards]))
+    ) {
+      return true;
+    }
+
     const previewState = shallowCopy(state);
     previewState[S.phase] = "checkCost";
     for (let i = 0; i < cost.length; i++) {
