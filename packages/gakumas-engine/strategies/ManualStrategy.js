@@ -41,13 +41,24 @@ export class UseCardFreeSelectionRequest extends Error {
   }
 }
 
+const REQUEST_TYPES = [
+  [HoldSelectionRequest, "HOLD_SELECTION"],
+  [MoveToHandSelectionRequest, "MOVE_TO_HAND_SELECTION"],
+  [MoveToTopOfDeckSelectionRequest, "MOVE_TO_TOP_OF_DECK_SELECTION"],
+  [UseCardFreeSelectionRequest, "USE_CARD_FREE_SELECTION"],
+];
+
 export default class ManualStrategy extends BaseStrategy {
   constructor(engine, inputCallback) {
     super(engine);
     this.inputCallback = inputCallback;
+    this.answers = [];
+    this.answerCursor = 0;
   }
 
   async evaluate(state) {
+    this.answers = [];
+    this.answerCursor = 0;
     const handLog = this.engine.logger.log(state, "hand", null);
 
     const usableCards = state[S.handCards].filter((card) =>
@@ -76,87 +87,50 @@ export default class ManualStrategy extends BaseStrategy {
     return { card: selectedCard };
   }
 
-  pickCardsToMoveToHand(state, cards, num = 1) {
-    if (!this.pickCardsToMoveToHandIndices) {
-      throw new MoveToHandSelectionRequest(state, cards, num);
+  // Answers to this card use's selection prompts, in the order the use asks
+  // them. A prompt aborts the use; once it's answered, the use replays from
+  // the start and earlier prompts take their answers from here.
+  nextAnswer(RequestType, state, cards, num) {
+    if (this.answerCursor < this.answers.length) {
+      return this.answers[this.answerCursor++];
     }
+    throw new RequestType(state, cards, num);
+  }
 
-    const indices = this.pickCardsToMoveToHandIndices;
-    delete this.pickCardsToMoveToHandIndices;
-    return indices;
+  pickCardsToMoveToHand(state, cards, num = 1) {
+    return this.nextAnswer(MoveToHandSelectionRequest, state, cards, num);
   }
 
   pickCardsToMoveToTopOfDeck(state, cards, num = 1) {
-    if (!this.pickCardsToMoveToTopOfDeckIndices) {
-      throw new MoveToTopOfDeckSelectionRequest(state, cards, num);
-    }
-
-    const indices = this.pickCardsToMoveToTopOfDeckIndices;
-    delete this.pickCardsToMoveToTopOfDeckIndices;
-    return indices;
+    return this.nextAnswer(MoveToTopOfDeckSelectionRequest, state, cards, num);
   }
 
   pickCardsToHold(state, cards, num = 1) {
-    if (!this.pickCardsToHoldIndices) {
-      throw new HoldSelectionRequest(state, cards, num);
-    }
-
-    const indices = this.pickCardsToHoldIndices;
-    delete this.pickCardsToHoldIndices;
-    return indices;
+    return this.nextAnswer(HoldSelectionRequest, state, cards, num);
   }
 
   pickCardsToUseFree(state, cards, num = 1) {
-    if (!this.pickCardsToUseFreeIndices) {
-      throw new UseCardFreeSelectionRequest(state, cards, num);
-    }
-
-    const indices = this.pickCardsToUseFreeIndices;
-    delete this.pickCardsToUseFreeIndices;
-    return indices;
+    return this.nextAnswer(UseCardFreeSelectionRequest, state, cards, num);
   }
 
   async handleException(exception, state, decision) {
-    if (exception instanceof HoldSelectionRequest) {
-      const selectedIndices = await this.inputCallback({
-        type: "HOLD_SELECTION",
-        state: exception.state,
-        cards: exception.cards,
-        num: exception.num,
-      });
+    const type = REQUEST_TYPES.find(
+      ([RequestType]) => exception instanceof RequestType,
+    )?.[1];
+    if (!type) throw exception;
 
-      this.pickCardsToHoldIndices = selectedIndices;
-    } else if (exception instanceof MoveToHandSelectionRequest) {
-      const selectedIndices = await this.inputCallback({
-        type: "MOVE_TO_HAND_SELECTION",
-        state: exception.state,
-        cards: exception.cards,
-        num: exception.num,
-      });
+    const selectedIndices = await this.inputCallback({
+      type,
+      state: exception.state,
+      cards: exception.cards,
+      num: exception.num,
+    });
+    this.answers.push(selectedIndices);
 
-      this.pickCardsToMoveToHandIndices = selectedIndices;
-    } else if (exception instanceof MoveToTopOfDeckSelectionRequest) {
-      const selectedIndices = await this.inputCallback({
-        type: "MOVE_TO_TOP_OF_DECK_SELECTION",
-        state: exception.state,
-        cards: exception.cards,
-        num: exception.num,
-      });
-
-      this.pickCardsToMoveToTopOfDeckIndices = selectedIndices;
-    } else if (exception instanceof UseCardFreeSelectionRequest) {
-      const selectedIndices = await this.inputCallback({
-        type: "USE_CARD_FREE_SELECTION",
-        state: exception.state,
-        cards: exception.cards,
-        num: exception.num,
-      });
-
-      this.pickCardsToUseFreeIndices = selectedIndices;
-    } else {
-      throw exception;
-    }
-
-    return this.engine.executeDecision(state, decision);
+    this.answerCursor = 0;
+    const nextState = this.engine.executeDecision(state, decision);
+    this.answers = [];
+    this.answerCursor = 0;
+    return nextState;
   }
 }
