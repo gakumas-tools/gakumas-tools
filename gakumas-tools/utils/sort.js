@@ -1,4 +1,5 @@
 import { PItems, SkillCards } from "gakumas-data";
+import { getOtherVersionId } from "@/utils/upgrades";
 
 export const RARITY_VALUES = {
   N: 0,
@@ -102,10 +103,9 @@ export function getSearchScore(memory, pItemIds, skillCardIds) {
       const multiplier = Math.pow(0.95, i);
       if (memory.pItemIds.includes(pItem.id)) score += 1 * multiplier;
       if (pItem.sourceType == "pIdol") {
-        if (!pItem.upgraded && memory.pItemIds.includes(pItem.id + 1))
-          score += 0.6 * multiplier;
-        if (pItem.upgraded && memory.pItemIds.includes(pItem.id - 1))
-          score += 0.5 * multiplier;
+        const otherId = getOtherVersionId(PItems, pItem);
+        if (otherId != null && memory.pItemIds.includes(otherId))
+          score += (pItem.upgraded ? 0.5 : 0.6) * multiplier;
       }
     });
   skillCardIds
@@ -115,16 +115,9 @@ export function getSearchScore(memory, pItemIds, skillCardIds) {
       const multiplier = Math.pow(0.95, i);
       if (memory.skillCardIds.includes(skillCard.id)) score += 1 * multiplier;
       if (skillCard.type != "trouble") {
-        if (
-          !skillCard.upgraded &&
-          memory.skillCardIds.includes(skillCard.id + 1)
-        )
-          score += 0.6 * multiplier;
-        if (
-          skillCard.upgraded &&
-          memory.skillCardIds.includes(skillCard.id - 1)
-        )
-          score += 0.5 * multiplier;
+        const otherId = getOtherVersionId(SkillCards, skillCard);
+        if (otherId != null && memory.skillCardIds.includes(otherId))
+          score += (skillCard.upgraded ? 0.5 : 0.6) * multiplier;
       }
     });
   return score;
