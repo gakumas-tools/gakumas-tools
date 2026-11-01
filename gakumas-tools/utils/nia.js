@@ -317,17 +317,31 @@ export function calculateGainedVotes(voteRegimes, affection, score) {
   return 0;
 }
 
-function calculateScoreForVotes(voteRegimes, affection, votes) {
-  for (let j = 0; j < voteRegimes.length; j++) {
-    const { threshold, multiplier, constant } = voteRegimes[j];
-    if (votes > constant) {
-      return Math.floor(
-        (Math.ceil(votes / (1 + 0.05 * (affection - 10))) - constant) /
-          multiplier,
-      );
+const MAX_SEARCH_SCORE = 1e9;
+
+// The lowest score whose gained votes reach `votes`, or Infinity if none
+// does. Gained votes rise with score within each regime but can drop at a
+// regime's threshold, so search each regime's score range on its own.
+export function calculateScoreForVotes(voteRegimes, affection, votes) {
+  if (votes <= 0) return 0;
+  const gainedVotes = (score) =>
+    calculateGainedVotes(voteRegimes, affection, score);
+  let lowest = Infinity;
+  let upper = MAX_SEARCH_SCORE;
+  for (const { threshold } of voteRegimes) {
+    let lo = Math.floor(threshold) + 1;
+    let hi = upper;
+    if (lo <= hi && gainedVotes(hi) >= votes) {
+      while (lo < hi) {
+        const mid = Math.floor((lo + hi) / 2);
+        if (gainedVotes(mid) >= votes) hi = mid;
+        else lo = mid + 1;
+      }
+      lowest = Math.min(lowest, lo);
     }
+    upper = Math.floor(threshold);
   }
-  return 0;
+  return lowest;
 }
 
 const VOTE_RANKS = [
