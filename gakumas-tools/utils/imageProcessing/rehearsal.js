@@ -124,11 +124,17 @@ export function extractScores(result) {
     flags.push(recovery);
   }
 
-  // Always return three aligned stages, padding any not found with zeros. A padded
-  // (never-found) stage is "ok" — it is an empty read, not an unverified value.
+  // Every stage has a row on screen, so finding fewer than three means one was
+  // missed — and the found rows, numbered top to bottom, may have shifted into
+  // the wrong stages. Flag every stage for review rather than trust them.
+  if (stageRows.length < NUM_STAGES) {
+    flags.fill("flagged");
+  }
+
+  // Always return three aligned stages, padding any not found with zeros.
   while (scores.length < NUM_STAGES) {
     scores.push([0, 0, 0]);
-    flags.push("ok");
+    flags.push(stageRows.length ? "flagged" : "ok");
     rows.push(null);
   }
   return { scores, flags, rows };
