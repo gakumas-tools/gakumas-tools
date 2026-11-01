@@ -1,6 +1,13 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { S } from "gakumas-engine";
+import { Stages } from "gakumas-data";
+import {
+  IdolConfig,
+  IdolStageConfig,
+  S,
+  StageConfig,
+  StageEngine,
+} from "gakumas-engine";
 import { createEngine } from "../helpers.mjs";
 
 const TODOITE_PLUS = 153;
@@ -35,4 +42,35 @@ test("Reductions in costs still count as costs", () => {
     cardManager.getCardCosts(state, cardOf(TODOITE_PLUS)).has("stamina"),
     true,
   );
+});
+
+test("changing idols in a link contest clears the held cards", () => {
+  const stage = new StageConfig(
+    Stages.getAll().find((s) => s.type == "linkContest"),
+  );
+  const idol = (cards) =>
+    new IdolConfig({
+      params: [1000, 1000, 1000, 50],
+      supportBonus: 0,
+      pItemIds: [],
+      skillCardIdGroups: [cards],
+      customizationGroups: [[]],
+    });
+  const linkConfigs = [
+    new IdolStageConfig(idol([5, 7]), stage),
+    new IdolStageConfig(idol([9, 11]), stage),
+  ];
+  const engine = new StageEngine(linkConfigs[0], linkConfigs);
+  engine.logger.disable();
+  let state = engine.getInitialState();
+  engine.startStage(state);
+  // Hold one of the first idol's cards, then end the turn before the change.
+  for (const pile of [S.deckCards, S.handCards, S.discardedCards]) {
+    state[pile] = state[pile].filter((c) => c !== 0);
+  }
+  state[S.heldCards] = [0];
+  state[S.turnsElapsed] = stage.linkPhaseChangeTurns[0] - 1;
+  state = engine.endTurn(state);
+  assert.equal(state[S.linkPhase], 1);
+  assert.deepEqual(state[S.heldCards], []);
 });

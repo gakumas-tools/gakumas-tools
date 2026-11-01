@@ -315,6 +315,7 @@ export default class CardManager extends EngineComponent {
     state[S.handCards] = [];
     state[S.discardedCards] = [];
     state[S.removedCards] = [];
+    state[S.heldCards] = [];
     state[S.turnCardsUsed] = 0;
     state[S.turnCardsUpgraded] = 0;
   }
