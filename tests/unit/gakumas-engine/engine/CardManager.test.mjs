@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { G, S } from "gakumas-engine";
-import { createEngine } from "../helpers.mjs";
+import { createEngine, parseActions } from "../helpers.mjs";
 
 const TODOITE_PLUS = 153;
 const HEART_NO_AIZU_PLUS = 93;
@@ -58,4 +58,25 @@ test("holding a card triggers cardMovedToHeld", () => {
   engine.cardManager.holdCard(state, 787);
   assert.deepEqual(state[S.heldCards], [card]);
   assert.equal(state[S.cardMap][card].growth?.[G["g.scoreTimes"]], 1);
+});
+
+test("Removing a card by effect triggers cardRemoved effects", () => {
+  const KIBOU_GA_TODOKU_MADE = 536;
+  const { cardManager, state, cardOf } = setup([KIBOU_GA_TODOKU_MADE]);
+  const engine = cardManager.engine;
+
+  // 希望が届くまで: at:cardRemoved { goodConditionTurns+=2 }
+  const kibou = cardOf(KIBOU_GA_TODOKU_MADE);
+  cardManager.useCard(state, kibou, cardManager.findCardPile(state, kibou));
+  const removed = state[S.removedCards].length;
+  const goodConditionTurns = state[S.goodConditionTurns];
+
+  engine.executor.executeActions(
+    state,
+    parseActions("removeRandom[basic & (deck | discarded | hand)]"),
+    null,
+  );
+
+  assert.equal(state[S.removedCards].length, removed + 1);
+  assert.equal(state[S.goodConditionTurns], goodConditionTurns + 2);
 });

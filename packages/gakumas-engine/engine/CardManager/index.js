@@ -1152,6 +1152,7 @@ export default class CardManager extends EngineComponent {
       type: "skillCard",
       id: state[S.cardMap][pick.cardIdx].id,
     });
+    this.engine.effectManager.triggerEffectsForPhase(state, "cardRemoved");
   }
 
   moveAllToHandByTarget(state, targetRule) {
