@@ -23,7 +23,7 @@ const parsed = lazyParse(SKILL_CARDS, (skillCard) => {
 const SKILL_CARDS_BY_ID = SKILL_CARDS.reduce((acc, cur) => {
   acc[cur.id] = cur;
   return acc;
-}, {});
+}, Object.create(null));
 
 class SkillCards {
   static getAll() {

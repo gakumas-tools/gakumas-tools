@@ -25,7 +25,7 @@ const parsed = lazyParse(STAGES, (stage) => {
 const STAGES_BY_ID = STAGES.reduce((acc, cur) => {
   acc[cur.id] = cur;
   return acc;
-}, {});
+}, Object.create(null));
 
 class Stages {
   static getAll() {
