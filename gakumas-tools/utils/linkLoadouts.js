@@ -7,6 +7,7 @@ export function synchronizeLinkLoadouts(loadouts, loadout, index, phaseCount) {
     return {
       ...phase,
       stageId: loadout.stageId,
+      enterPercents: loadout.enterPercents,
       customStage: loadout.customStage,
       params: [...loadout.params.slice(0, 3), phase.params[3]],
     };

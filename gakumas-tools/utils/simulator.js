@@ -65,8 +65,14 @@ export function loadoutFromSearchParams(searchParams) {
   let pItemIds = searchParams.get("items");
   let skillCardIdGroups = searchParams.get("cards");
   let customizationGroups = searchParams.get("customizations");
+  const enterPercents = searchParams.get("enter_percents") == "1";
   const hasDataFromParams =
-    stageId || params || pItemIds || skillCardIdGroups || customizationGroups;
+    stageId ||
+    params ||
+    pItemIds ||
+    skillCardIdGroups ||
+    customizationGroups ||
+    enterPercents;
 
   stageId = stageId || DEFAULTS.stageId;
   if (!searchParams.has("support_bonus")) supportBonus = DEFAULTS.supportBonus;
@@ -91,6 +97,7 @@ export function loadoutFromSearchParams(searchParams) {
 
   return {
     stageId,
+    enterPercents,
     supportBonus,
     params,
     pItemIds,
@@ -103,6 +110,7 @@ export function loadoutFromSearchParams(searchParams) {
 export function loadoutToSearchParams(loadout) {
   const {
     stageId,
+    enterPercents,
     supportBonus,
     params,
     pItemIds,
@@ -111,6 +119,7 @@ export function loadoutToSearchParams(loadout) {
   } = loadout;
   const searchParams = new URLSearchParams();
   searchParams.set("stage", stageId);
+  if (enterPercents) searchParams.set("enter_percents", "1");
   if (supportBonus != null) {
     searchParams.set("support_bonus", supportBonus);
   }

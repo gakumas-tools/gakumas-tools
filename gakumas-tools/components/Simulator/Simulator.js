@@ -59,6 +59,7 @@ export default function Simulator() {
     loadout,
     simulatorUrl,
     setSupportBonus,
+    setEnterPercents,
     loadouts,
     setLoadout,
     currentLoadoutIndex,
@@ -74,7 +75,7 @@ export default function Simulator() {
     NUM_RUNS_KEY,
     DEFAULT_NUM_RUNS,
   );
-  const [enterPercents, setEnterPercents] = useState(false);
+  const { enterPercents } = loadout;
 
   const [pendingDecision, setPendingDecision] = useState(null);
   const resolveDecisionRef = useRef(null);

@@ -72,6 +72,12 @@ export function cleanMemories(memories) {
 
 export function validateLoadout(loadout) {
   if (loadout.name != null && !isName(loadout.name)) return "Invalid name";
+  if (
+    loadout.enterPercents != null &&
+    typeof loadout.enterPercents != "boolean"
+  ) {
+    return "Invalid enterPercents";
+  }
   for (const field of [
     "params",
     "pItemIds",

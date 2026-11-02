@@ -35,6 +35,9 @@ export function LoadoutContextProvider({ children }) {
 
   const [memorySlots, setMemorySlots] = useState([null, null]);
   const [stageId, setStageId] = useState(initialLoadout.stageId);
+  const [enterPercents, setEnterPercents] = useState(
+    !!initialLoadout.enterPercents
+  );
   const [customStage, setCustomStage] = useState(null);
   const [supportBonus, setSupportBonus] = useState(initialLoadout.supportBonus);
   const [params, setParams] = useState(initialLoadout.params);
@@ -51,6 +54,7 @@ export function LoadoutContextProvider({ children }) {
   const loadout = useMemo(
     () => ({
       stageId,
+      enterPercents,
       customStage: stageId == "custom" ? customStage : {},
       supportBonus,
       params,
@@ -60,6 +64,7 @@ export function LoadoutContextProvider({ children }) {
     }),
     [
       stageId,
+      enterPercents,
       customStage,
       supportBonus,
       params,
@@ -83,6 +88,7 @@ export function LoadoutContextProvider({ children }) {
     // Phase tabs set their own index right after this.
     setCurrentLoadoutIndex(0);
     setStageId(knownStageId(loadout.stageId));
+    setEnterPercents(!!loadout.enterPercents);
     if (loadout.stageId == "custom") {
       let custom = { ...loadout.customStage };
       if (Array.isArray(custom.firstTurns)) {
@@ -325,6 +331,7 @@ export function LoadoutContextProvider({ children }) {
       setMemory,
       selectStage,
       setSupportBonus,
+      setEnterPercents,
       setParams,
       replacePItemId,
       swapPItemIds,

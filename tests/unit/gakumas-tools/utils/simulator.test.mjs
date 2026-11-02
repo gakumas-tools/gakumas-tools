@@ -9,6 +9,8 @@ import {
   knownStageId,
   loadoutFromSearchParams,
   loadoutToSearchParams,
+  loadoutsFromSearchParams,
+  loadoutsToSearchParams,
   mergeGraphDatas,
 } from "../../../../gakumas-tools/utils/simulator.js";
 
@@ -67,6 +69,29 @@ test("support bonus survives a URL round trip", () => {
 test("a missing support bonus loads as the default", () => {
   assert.equal(loadout.supportBonus, 0.1);
   assert.equal(roundTrip(null), 0.1);
+});
+
+test("percentage input survives a URL round trip", () => {
+  const percents = { ...loadout, enterPercents: true };
+  const restored = loadoutFromSearchParams(loadoutToSearchParams(percents));
+  assert.equal(restored.enterPercents, true);
+  const linked = loadoutsFromSearchParams(
+    loadoutsToSearchParams([percents, percents]),
+  );
+  assert.ok(linked.every((l) => l.enterPercents));
+});
+
+test("a URL without enter_percents=1 loads raw stats", () => {
+  assert.equal(loadoutToSearchParams(loadout).has("enter_percents"), false);
+  for (const query of ["", "enter_percents=0", "enter_percents=true"]) {
+    const params = new URLSearchParams(query);
+    assert.equal(loadoutFromSearchParams(params).enterPercents, false);
+  }
+});
+
+test("a URL with only enter_percents=1 counts as URL data", () => {
+  const params = new URLSearchParams("enter_percents=1");
+  assert.ok(loadoutFromSearchParams(params).hasDataFromParams);
 });
 
 test("an unreadable support bonus loads as none", () => {
