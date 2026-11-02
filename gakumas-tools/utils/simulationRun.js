@@ -18,6 +18,13 @@ export function extractLoadoutFields(loadout) {
   return out;
 }
 
+export function sameRunInputs(a, b) {
+  return (
+    JSON.stringify([a.loadout, a.linkLoadouts]) ===
+    JSON.stringify([b.loadout, b.linkLoadouts])
+  );
+}
+
 const NUM_BUCKETS = 40;
 
 export function summarizeScores(scores) {
