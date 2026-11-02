@@ -32,7 +32,10 @@ export default function StageSelectModal() {
 
   const { selectStage, stage } = useContext(LoadoutContext);
   const { closeModal } = useContext(ModalContext);
-  const [stageType, setStageType] = useState(stage?.type || "contest");
+  // A custom stage keeps the type it simulates as, so open its own tab.
+  const [stageType, setStageType] = useState(
+    stage?.id == "custom" ? "custom" : stage?.type || "contest",
+  );
 
   function setStage(stageId, customStage) {
     selectStage(stageId, customStage);
