@@ -587,30 +587,39 @@ function ensureScoreTurn(turns, i) {
   return turns[i];
 }
 
-export function mergeGraphDatas(graphDatas, runCounts) {
+export function createGraphAverage() {
   const sums = GRAPHED_FIELDS.reduce((acc, cur) => {
     acc[cur] = [];
     return acc;
   }, {});
   const graphRunCounts = [];
 
-  graphDatas.forEach((graphData, g) => {
+  function add(graphData, runCounts) {
     const length = graphData[GRAPHED_FIELDS[0]].length;
     for (let i = 0; i < length; i++) {
-      const count = runCounts ? runCounts[g][i] : 1;
+      const count = runCounts ? runCounts[i] : 1;
       graphRunCounts[i] = (graphRunCounts[i] || 0) + count;
       for (let field of GRAPHED_FIELDS) {
         sums[field][i] = (sums[field][i] || 0) + graphData[field][i] * count;
       }
     }
-  });
-
-  const graphData = {};
-  for (let field of GRAPHED_FIELDS) {
-    graphData[field] = sums[field].map((sum, i) => sum / graphRunCounts[i]);
   }
 
-  return { graphData, graphRunCounts };
+  function result() {
+    const graphData = {};
+    for (let field of GRAPHED_FIELDS) {
+      graphData[field] = sums[field].map((sum, i) => sum / graphRunCounts[i]);
+    }
+    return { graphData, graphRunCounts: [...graphRunCounts] };
+  }
+
+  return { add, result };
+}
+
+export function mergeGraphDatas(graphDatas, runCounts) {
+  const average = createGraphAverage();
+  graphDatas.forEach((graphData, g) => average.add(graphData, runCounts?.[g]));
+  return average.result();
 }
 
 export function getIndications(config, loadout) {
