@@ -19,7 +19,9 @@ thresholds. Comparing whole stages and loadouts is `pnpm fidelity`'s job.
 - `initial`: the state before the first turn, checked before any card is
   played.
 - `turnTypes`: the turn order the game showed.
-- `displayedPercents`: the multiplier the game showed for each turn type.
+- `displayedPercents`: the multiplier the game showed for each turn type, in
+  an exam. Lessons show none, so their fixtures set `replayMultipliers` to 1
+  and record score as the gain over the lesson's starting attribute.
 - `plays[].actions[]`: each card played, by `cardId` and `name`; `expected`,
   the state read from the screenshot after it; and `capture`, that
   screenshot's name.
@@ -49,3 +51,11 @@ result overlay, so it isn't recorded.
 Covers fixed stamina costs, costs paid with genki, gaining motivation, genki
 gains at several motivation values, and genki-based scores at 250% and 400%.
 Motivation doesn't count down, so each play's last `expected` checks it too.
+
+## 【基礎5】消費体力減少
+
+A visual lesson starting at 100. Covers テレビ出演's halved costs counting down
+4, 3, 2, paid with genki, stamina or both, along with concentration and good
+condition. The first play clears at the cap of 140, and the other two end on
+the retry screen while the last score is still counting, so the last card of
+each checks only stamina, genki and concentration.
