@@ -1,0 +1,170 @@
+{
+  "date": "2026-11-02",
+  "gameVersion": "3.5.0",
+  "stage": "【基礎8】強気",
+  "sourceDirectory": "screenshots/sources/ingame/",
+  "initialAttribute": 100,
+  "targetGain": 25,
+  "initial": {
+    "score": 0,
+    "stamina": 30,
+    "genki": 0,
+    "fullPowerCharge": 0,
+    "stance": "none"
+  },
+  "turnTypes": [
+    "vocal",
+    "vocal",
+    "vocal"
+  ],
+  "replayMultipliers": {
+    "vocal": 1
+  },
+  "scope": "Selected-action replay with synthetic unit multiplier and gain above vocal100. No full-deck/draw/raw-parameter or lesson cap claim. Only base strength stance observed.",
+  "initialCaptures": [
+    "campaign-strength-r1-turn1.png",
+    "campaign-strength-r2-turn1.png",
+    "campaign-strength-r3-turn1.png"
+  ],
+  "plays": [
+    {
+      "id": "guided-appeal",
+      "actions": [
+        {
+          "cardId": 1,
+          "name": "アピールの基本",
+          "expected": {
+            "score": 9,
+            "stamina": 26,
+            "genki": 0,
+            "fullPowerCharge": 0,
+            "stance": "none"
+          },
+          "capture": "campaign-strength-r1-turn2.png"
+        },
+        {
+          "cardId": 368,
+          "name": "挨拶の基本",
+          "expected": {
+            "score": 9,
+            "stamina": 26,
+            "genki": 0,
+            "fullPowerCharge": 0,
+            "stance": "strength"
+          },
+          "capture": "campaign-strength-r1-turn3-guide1.png"
+        },
+        {
+          "cardId": 1,
+          "name": "アピールの基本",
+          "expected": {
+            "stamina": 18,
+            "genki": 0,
+            "fullPowerCharge": 0,
+            "stance": "strength"
+          },
+          "capture": "campaign-strength-r1-final-b.png"
+        }
+      ],
+      "terminalAttribute": 125,
+      "terminalScoreCompared": false
+    },
+    {
+      "id": "genki-first",
+      "actions": [
+        {
+          "cardId": 13,
+          "name": "表現の基本",
+          "expected": {
+            "score": 0,
+            "stamina": 30,
+            "genki": 4,
+            "fullPowerCharge": 0,
+            "stance": "none"
+          },
+          "capture": "campaign-strength-r2-turn2.png"
+        },
+        {
+          "cardId": 368,
+          "name": "挨拶の基本",
+          "expected": {
+            "score": 0,
+            "stamina": 30,
+            "genki": 4,
+            "fullPowerCharge": 0,
+            "stance": "strength"
+          },
+          "capture": "campaign-strength-r2-turn3-guide1.png"
+        },
+        {
+          "cardId": 1,
+          "name": "アピールの基本",
+          "expected": {
+            "score": 18,
+            "stamina": 26,
+            "genki": 0,
+            "fullPowerCharge": 0,
+            "stance": "strength"
+          },
+          "capture": "campaign-strength-r2-final-a.png"
+        }
+      ],
+      "terminalAttribute": 118,
+      "terminalScoreCompared": true
+    },
+    {
+      "id": "pose-validation",
+      "actions": [
+        {
+          "cardId": 3,
+          "name": "ポーズの基本",
+          "expected": {
+            "score": 2,
+            "stamina": 27,
+            "genki": 2,
+            "fullPowerCharge": 0,
+            "stance": "none"
+          },
+          "capture": "campaign-strength-r3-turn2.png"
+        },
+        {
+          "cardId": 368,
+          "name": "挨拶の基本",
+          "expected": {
+            "score": 2,
+            "stamina": 27,
+            "genki": 2,
+            "fullPowerCharge": 0,
+            "stance": "strength"
+          },
+          "capture": "campaign-strength-r3-turn3-guide1.png"
+        },
+        {
+          "cardId": 3,
+          "name": "ポーズの基本",
+          "expected": {
+            "score": 6,
+            "stamina": 23,
+            "genki": 2,
+            "fullPowerCharge": 0,
+            "stance": "strength"
+          },
+          "capture": "campaign-strength-r3-final-a.png"
+        }
+      ],
+      "terminalAttribute": 106,
+      "terminalScoreCompared": true
+    }
+  ],
+  "verification": {
+    "plays": 3,
+    "checkpoints": 9,
+    "outcomeFields": 44,
+    "maxAbsoluteNumericError": 0,
+    "categoricalMatches": "all recorded stances"
+  },
+  "limits": [
+    "First play capped at125; terminal score excluded. Other two terminal attributes118/106 are settled and uncapped.",
+    "Only base strength stance and fixed lessons observed; no strength2 upgrade or general raw-parameter formula claim."
+  ]
+}
