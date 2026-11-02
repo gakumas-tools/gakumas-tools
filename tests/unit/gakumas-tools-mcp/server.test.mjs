@@ -1,0 +1,193 @@
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { createRequire } from "node:module";
+import { tmpdir } from "node:os";
+import { fileURLToPath } from "node:url";
+import { Stages } from "gakumas-data";
+import {
+  IdolConfig,
+  IdolStageConfig,
+  StageConfig,
+  StageEngine,
+  StagePlayer,
+  STRATEGIES,
+  resetRand,
+} from "gakumas-engine";
+import { createMcpServer } from "../../../packages/gakumas-tools-mcp/server.js";
+import { loadSuite, loadoutFromQuery } from "../../lib.mjs";
+
+const require = createRequire(
+  new URL("../../../packages/gakumas-tools-mcp/package.json", import.meta.url),
+);
+const { Client } = await import(
+  require.resolve("@modelcontextprotocol/sdk/client/index.js")
+);
+const { InMemoryTransport } = await import(
+  require.resolve("@modelcontextprotocol/sdk/inMemory.js")
+);
+const { StdioClientTransport } = await import(
+  require.resolve("@modelcontextprotocol/sdk/client/stdio.js")
+);
+
+async function connect(t) {
+  const [clientTransport, serverTransport] =
+    InMemoryTransport.createLinkedPair();
+  const server = createMcpServer();
+  const client = new Client({ name: "test", version: "1.0.0" });
+  t.after(async () => {
+    await client.close();
+    await server.close();
+  });
+  await server.connect(serverTransport);
+  await client.connect(clientTransport);
+  return client;
+}
+
+async function call(client, name, args) {
+  const result = await client.callTool({ name, arguments: args });
+  assert.ok(!result.isError, result.content[0].text);
+  return result.structuredContent;
+}
+
+function loadout(suiteId = "seed1-002", extra = {}) {
+  const { query } = loadSuite().find((entry) => entry.id == suiteId);
+  return { ...loadoutFromQuery(query), seed: 12345, runs: 3, ...extra };
+}
+
+async function directScores({ seed, runs, ...loadout }) {
+  const scores = [];
+  for (let i = 0; i < runs; i++) {
+    resetRand((seed + i) >>> 0);
+    const config = new IdolStageConfig(
+      new IdolConfig(structuredClone(loadout)),
+      new StageConfig(Stages.getById(loadout.stageId)),
+      loadout.enterPercents,
+    );
+    const engine = new StageEngine(config);
+    const strategy = new STRATEGIES.HeuristicStrategy(engine);
+    engine.strategy = strategy;
+    scores.push((await new StagePlayer(engine, strategy).play()).score);
+  }
+  return scores;
+}
+
+test("stages page through every non-preview stage once", async (t) => {
+  const client = await connect(t);
+  const ids = [];
+  let offset = 0;
+  while (offset != null) {
+    const page = await call(client, "gakumas_list_stages", {
+      limit: 50,
+      offset,
+    });
+    ids.push(...page.stages.map((stage) => stage.id));
+    offset = page.nextOffset;
+  }
+
+  const expected = Stages.getAll()
+    .filter((stage) => !stage.preview)
+    .map((stage) => stage.id)
+    .sort((a, b) => a - b);
+  assert.deepEqual(ids, expected);
+});
+
+test("a stage reads as its data, link turn counts only for link contests", async (t) => {
+  const client = await connect(t);
+  const { linkTurnCounts, ...contest } = Stages.getById(187);
+  const link = Stages.getById(121);
+
+  assert.deepEqual(
+    (await call(client, "gakumas_get_stage", { stageId: 187 })).stage,
+    contest,
+  );
+  assert.deepEqual(
+    (await call(client, "gakumas_get_stage", { stageId: 121 })).stage,
+    link,
+  );
+});
+
+test("seeded scores match direct engine plays for each plan", async (t) => {
+  const client = await connect(t);
+  for (const suiteId of ["seed1-001", "seed1-002", "seed1-007"]) {
+    for (const enterPercents of [false, true]) {
+      const args = loadout(suiteId, { enterPercents, seed: 0xffffffff });
+      const result = await call(client, "gakumas_simulate_loadout", args);
+      const expected = await directScores(args);
+      assert.deepEqual(result.scores, expected);
+      assert.equal(result.min, Math.min(...expected));
+    }
+  }
+});
+
+test("simulations on two servers at once keep their seeds", async (t) => {
+  const clients = [await connect(t), await connect(t)];
+  const loadouts = [
+    loadout("seed1-001", { seed: 0, runs: 8 }),
+    loadout("seed1-007", { seed: 123, runs: 8 }),
+  ];
+  const expected = [];
+  for (const args of loadouts) expected.push(await directScores(args));
+
+  const results = await Promise.all(
+    loadouts.map((args, i) =>
+      call(clients[i], "gakumas_simulate_loadout", args),
+    ),
+  );
+  assert.deepEqual(results.map((result) => result.scores), expected);
+});
+
+test("a loadout with an unknown ID or customization is refused", async (t) => {
+  const client = await connect(t);
+  const refused = [
+    { stageId: 999999 },
+    { stageId: 121 },
+    { pItemIds: [999999] },
+    { skillCardIdGroups: [[999999]], customizationGroups: undefined },
+    { skillCardIdGroups: [[25]], customizationGroups: [[{ 65: 10 }]] },
+  ];
+  for (const extra of refused) {
+    const result = await client.callTool({
+      name: "gakumas_simulate_loadout",
+      arguments: loadout(undefined, extra),
+    });
+    assert.equal(result.isError, true, JSON.stringify(extra));
+  }
+});
+
+test("a cancelled simulation leaves the queue to the next one", async (t) => {
+  const client = await connect(t);
+  const controller = new AbortController();
+  const cancelled = client.callTool(
+    {
+      name: "gakumas_simulate_loadout",
+      arguments: loadout(undefined, { runs: 100 }),
+    },
+    undefined,
+    { signal: controller.signal },
+  );
+  controller.abort();
+  await assert.rejects(cancelled);
+
+  const args = loadout();
+  const result = await call(client, "gakumas_simulate_loadout", args);
+  assert.deepEqual(result.scores, await directScores(args));
+});
+
+test("the server runs from outside the checkout over stdio", async (t) => {
+  const client = new Client({ name: "test", version: "1.0.0" });
+  t.after(() => client.close());
+  await client.connect(
+    new StdioClientTransport({
+      command: process.execPath,
+      args: [
+        fileURLToPath(
+          new URL("../../../packages/gakumas-tools-mcp/bin.js", import.meta.url),
+        ),
+      ],
+      cwd: tmpdir(),
+    }),
+  );
+
+  const result = await call(client, "gakumas_simulate_loadout", loadout());
+  assert.equal(result.scores.length, 3);
+});
