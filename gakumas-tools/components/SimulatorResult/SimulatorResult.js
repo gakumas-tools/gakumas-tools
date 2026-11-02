@@ -112,8 +112,8 @@ function SimulatorResult({
   const [optimizeFeedback, setOptimizeFeedback] = useState(null);
   const rehearsalParser = useRehearsalParser();
   const [rehearsalCell, setRehearsalCell] = useState(null);
-  const [run, setRun] = useState({ data, config });
-  if (run.data !== data) setRun({ data, config });
+  const [run, setRun] = useState({ data, config, enterPercents });
+  if (run.data !== data) setRun({ data, config, enterPercents });
 
   useEffect(() => {
     try {
@@ -156,7 +156,7 @@ function SimulatorResult({
     const result = findOptimalParams({
       scoreStats: data.scoreStats,
       config: run.config,
-      enterPercents,
+      enterPercents: run.enterPercents,
     });
     if (!result) {
       showFeedback("failed");
@@ -185,7 +185,7 @@ function SimulatorResult({
     logEvent("simulator_params_optimize", {
       gain: Math.round(result.optimalScore - result.baseScore),
     });
-  }, [data.scoreStats, run.config, config, enterPercents, setParams]);
+  }, [data.scoreStats, run, config, setParams]);
 
   const isContest =
     Stages.getById(currentRun?.loadout?.stageId)?.type == "contest";
@@ -226,7 +226,7 @@ function SimulatorResult({
           <FaDownload />
           {t("downloadScores")}
         </Button>
-        {canOptimizeParams(run.config.stage, enterPercents) && (
+        {canOptimizeParams(run.config.stage, run.enterPercents) && (
           <Button
             fill
             size="sm"
