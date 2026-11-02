@@ -1,7 +1,7 @@
 import { setImmediate } from "node:timers/promises";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { Customizations, PItems, SkillCards, Stages } from "gakumas-data";
+import { Customizations, Stages } from "gakumas-data";
 import {
   IdolConfig,
   IdolStageConfig,
@@ -11,6 +11,7 @@ import {
   STRATEGIES,
   resetRand,
 } from "gakumas-engine";
+import { ENTITY_KINDS, getEntity, searchEntities } from "./entities.js";
 
 const READ_ONLY = { readOnlyHint: true, openWorldHint: false };
 
@@ -23,6 +24,16 @@ const listStagesSchema = z
     type: z.enum(["contest", "event", "linkContest"]).optional(),
     plan: plan.optional(),
     includePreview: z.boolean().default(false),
+    offset: z.number().int().min(0).default(0),
+    limit: z.number().int().min(1).max(100).default(20),
+  })
+  .strict();
+
+const searchEntitiesSchema = z
+  .object({
+    kind: z.enum(ENTITY_KINDS),
+    query: z.string().default(""),
+    plan: plan.optional(),
     offset: z.number().int().min(0).default(0),
     limit: z.number().int().min(1).max(100).default(20),
   })
@@ -110,15 +121,12 @@ function readStage({ stageId }) {
 
 function checkLoadout({ pItemIds, skillCardIdGroups, customizationGroups }) {
   for (const pItemId of pItemIds) {
-    if (pItemId && !PItems.getById(pItemId)) {
-      throw new Error(`Unknown p-item ${pItemId}.`);
-    }
+    if (pItemId) getEntity("pItem", pItemId);
   }
   for (const [i, group] of skillCardIdGroups.entries()) {
     for (const [j, cardId] of group.entries()) {
       if (!cardId) continue;
-      const card = SkillCards.getById(cardId);
-      if (!card) throw new Error(`Unknown skill card ${cardId}.`);
+      const card = getEntity("skillCard", cardId);
 
       const customizations = customizationGroups?.[i]?.[j] ?? {};
       for (const [customizationId, level] of Object.entries(customizations)) {
@@ -230,6 +238,30 @@ export function createMcpServer() {
     },
     async (input, { signal }) =>
       json(await queueSimulation(() => simulate(input, signal))),
+  );
+
+  server.registerTool(
+    "gakumas_search_entities",
+    {
+      title: "Find cards, items, idols or customizations",
+      description:
+        "Search one kind of entity by its name in the data, usually Japanese, or by ID. Gives the IDs and customizations a loadout needs.",
+      inputSchema: searchEntitiesSchema,
+      annotations: READ_ONLY,
+    },
+    async (input) => json(searchEntities(input)),
+  );
+
+  server.registerTool(
+    "gakumas_get_entity",
+    {
+      title: "Read a card, item, idol or customization",
+      description:
+        "Read one entity's data and parsed effects. A customization's max is its highest level.",
+      inputSchema: z.object({ kind: z.enum(ENTITY_KINDS), id }).strict(),
+      annotations: READ_ONLY,
+    },
+    async ({ kind, id }) => json({ entity: getEntity(kind, id) }),
   );
 
   return server;

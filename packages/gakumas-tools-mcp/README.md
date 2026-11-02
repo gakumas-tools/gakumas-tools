@@ -30,6 +30,8 @@ MCP messages.
 | `gakumas_list_stages`      | Searches stages by name or ID, type and plan        |
 | `gakumas_get_stage`        | Reads a stage's criteria, turn counts and effects   |
 | `gakumas_simulate_loadout` | Plays a loadout on a contest or event stage, seeded |
+| `gakumas_search_entities`  | Searches cards, items, idols and more by name or ID |
+| `gakumas_get_entity`       | Reads one of those with its parsed effects          |
 
 A simulation takes the website's loadout fields:
 
@@ -47,6 +49,12 @@ A simulation takes the website's loadout fields:
 `params` are Vo, Da, Vi and stamina. Contest stages take raw parameters unless
 `enterPercents` is true; event stages always take percentages. `supportBonus`
 is a fraction. Zero IDs are empty slots.
+
+Card and item IDs come from `gakumas_search_entities`, which searches the
+names in the data, mostly Japanese. A card's summary lists the customizations
+it can take; `customizationGroups` gives each card slot a map of customization
+ID to level, up to that customization's `max`. Cards and items the website
+hides can't be looked up or simulated.
 
 Run `i` is seeded with `(seed + i) mod 2^32`, so the same input gives the same
 scores, and more runs keep the earlier ones. Simulations take turns, since the

@@ -142,7 +142,9 @@ test("a loadout with an unknown ID or customization is refused", async (t) => {
     { stageId: 999999 },
     { stageId: 121 },
     { pItemIds: [999999] },
+    { pItemIds: [506] },
     { skillCardIdGroups: [[999999]], customizationGroups: undefined },
+    { skillCardIdGroups: [[915]], customizationGroups: undefined },
     { skillCardIdGroups: [[25]], customizationGroups: [[{ 65: 10 }]] },
   ];
   for (const extra of refused) {
@@ -152,6 +154,27 @@ test("a loadout with an unknown ID or customization is refused", async (t) => {
     });
     assert.equal(result.isError, true, JSON.stringify(extra));
   }
+});
+
+test("a card found by name simulates with its customization", async (t) => {
+  const client = await connect(t);
+  const { entities } = await call(client, "gakumas_search_entities", {
+    kind: "skillCard",
+    query: "軽い足取り+",
+  });
+  const card = entities.find(({ id }) => id == 25);
+  const customizationId = card.availableCustomizations[0];
+  const { entity: customization } = await call(client, "gakumas_get_entity", {
+    kind: "customization",
+    id: Number(customizationId),
+  });
+
+  const args = loadout(undefined, {
+    skillCardIdGroups: [[card.id]],
+    customizationGroups: [[{ [customizationId]: customization.max }]],
+  });
+  const result = await call(client, "gakumas_simulate_loadout", args);
+  assert.deepEqual(result.scores, await directScores(args));
 });
 
 test("a cancelled simulation leaves the queue to the next one", async (t) => {
