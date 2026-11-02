@@ -75,7 +75,11 @@ export default function NiaCalculator() {
   const DIFFICULTIES = ["pro", "master"];
   const TABLE_HEADERS = [t("produceRank"), "Vo", "Da", "Vi"];
 
-  const { idolId, setIdolId } = useContext(WorkspaceContext);
+  const { idolId: workspaceIdolId, setIdolId } = useContext(WorkspaceContext);
+  // The workspace idol may be one N.I.A doesn't offer (e.g. 亜紗里).
+  const idolId = IDOL_OPTIONS.some((o) => o.id == workspaceIdolId)
+    ? workspaceIdolId
+    : IDOL_OPTIONS[0].id;
 
   const [difficulty, setDifficulty] = useState("master");
   const [stage, setStage] = useState("finale");
