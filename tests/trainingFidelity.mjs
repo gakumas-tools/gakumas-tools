@@ -8,6 +8,7 @@ const FIXTURES = [
   "training-exam-impression",
   "training-exam-motivation",
   "training-lesson-cost-reduction",
+  "training-lesson-flat-cost-reduction",
 ];
 
 function loadCapture(name) {
@@ -26,11 +27,10 @@ function getTypeMultipliers(capture) {
 }
 
 function createEngine(capture, play) {
-  const cardIds = new Set(play.actions.map((action) => action.cardId));
   const idol = new IdolConfig({
     params: [0, 0, 0, capture.initial.stamina],
     pItemIds: [],
-    skillCardIdGroups: [[...cardIds]],
+    skillCardIdGroups: [play.actions.map((action) => action.cardId)],
   });
   const engine = new StageEngine({
     idol,
@@ -46,6 +46,12 @@ function createEngine(capture, play) {
   return engine;
 }
 
+function findCopy(state, cardId) {
+  return state[S.cardMap].findIndex(
+    (c, index) => c.id == cardId && !state[S.removedCards].includes(index),
+  );
+}
+
 function putInHand(state, card) {
   for (const pile of [S.handCards, S.deckCards, S.discardedCards]) {
     state[pile] = state[pile].filter((c) => c != card);
@@ -55,7 +61,9 @@ function putInHand(state, card) {
 
 function replay(capture, play) {
   const engine = createEngine(capture, play);
-  let state = engine.startStage(engine.getInitialState());
+  const initialState = engine.getInitialState();
+  initialState[S.genki] = capture.initial.genki;
+  let state = engine.startStage(initialState);
   engine.logger.disable();
 
   for (const [field, value] of Object.entries(capture.initial)) {
@@ -66,8 +74,8 @@ function replay(capture, play) {
     const turn = i + 1;
     assert.equal(SkillCards.getById(action.cardId).name, action.name);
 
-    const card = state[S.cardMap].findIndex((c) => c.id == action.cardId);
-    assert.ok(!state[S.removedCards].includes(card), `${action.name} removed`);
+    const card = findCopy(state, action.cardId);
+    assert.ok(card >= 0, `no copy of ${action.name} left`);
     putInHand(state, card);
     assert.ok(engine.isCardUsable(state, card), `turn ${turn}: usable`);
     state = engine.useCard(state, card);
