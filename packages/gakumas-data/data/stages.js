@@ -13,7 +13,8 @@ STAGES.forEach((stage) => {
     .split(",")
     .map((p) => parseFloat(p));
   stage.firstTurns = { vocal: voFt, dance: daFt, visual: viFt };
-  stage.linkTurnCounts = stage.linkTurnCounts
+  // A single count is parsed as a number, so split its string form.
+  stage.linkTurnCounts = String(stage.linkTurnCounts ?? "")
     .split(",")
     .map((p) => parseInt(p, 10));
 });
