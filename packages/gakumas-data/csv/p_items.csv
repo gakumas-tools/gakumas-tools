@@ -191,7 +191,7 @@ id,name,rarity,upgraded,plan,mode,sourceType,pIdolId,welfare,effects
 190,太陽まで届ける歌声,SSR,FALSE,sense,stage,pIdol,67,FALSE,at:afterCardUsed { if:usedCardBaseId==32 { concentration+=1; cardUsesRemaining+=1; fixedStamina-=1 }; limit:3 }
 191,太陽まで届ける歌声+,SSR,TRUE,sense,stage,pIdol,67,FALSE,at:afterCardUsed { if:usedCardBaseId==32 { concentration+=2; cardUsesRemaining+=1; fixedStamina-=1 }; limit:3 }
 192,あたしだけの一番星,SSR,FALSE,logic,stage,pIdol,68,FALSE,at:afterCardUsed { if:usedCardBaseId==64 { goodImpressionTurns+=2; cardUsesRemaining+=1; fixedStamina-=2 }; limit:3 }
-193,あたしだけの一番星,SSR,TRUE,logic,stage,pIdol,68,FALSE,at:afterCardUsed { if:usedCardBaseId==64 { goodImpressionTurns+=3; cardUsesRemaining+=1; fixedStamina-=1 }; limit:3 }
+193,あたしだけの一番星+,SSR,TRUE,logic,stage,pIdol,68,FALSE,at:afterCardUsed { if:usedCardBaseId==64 { goodImpressionTurns+=3; cardUsesRemaining+=1; fixedStamina-=1 }; limit:3 }
 194,N.I.Aワッペン,SSR,FALSE,free,produce,produce,,FALSE,
 195,N.I.Aバンド（紫）,SSR,FALSE,sense,produce,produce,,FALSE,
 196,N.I.Aライト（紫）,SSR,FALSE,sense,produce,produce,,FALSE,
