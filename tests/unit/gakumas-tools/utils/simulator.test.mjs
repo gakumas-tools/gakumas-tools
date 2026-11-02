@@ -4,6 +4,7 @@ import { Stages } from "gakumas-data";
 import { GRAPHED_FIELDS } from "gakumas-engine";
 import { FALLBACK_STAGE } from "../../../../gakumas-tools/simulator/constants.js";
 import {
+  createGraphAverage,
   getSimulatorUrl,
   getStage,
   knownStageId,
@@ -95,4 +96,14 @@ test("graph merge of single runs is their plain mean", () => {
   ]);
   assert.deepEqual(graphRunCounts, [2, 1]);
   assert.deepEqual(graphData[GRAPHED_FIELDS[0]], [2, 2]);
+});
+
+test("a graph average read early keeps its values as runs are added", () => {
+  const average = createGraphAverage();
+  average.add(graph([10]));
+  const early = average.result();
+  average.add(graph([30, 40]));
+  assert.deepEqual(early.graphRunCounts, [1]);
+  assert.deepEqual(early.graphData[GRAPHED_FIELDS[0]], [10]);
+  assert.deepEqual(average.result().graphData[GRAPHED_FIELDS[0]], [20, 40]);
 });
