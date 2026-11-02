@@ -37,7 +37,9 @@ export function decodeList(str) {
 // Known ranks only, each id once, and at most `maxPerTier` ids per tier, plus
 // the count cut from each tier.
 export function clampList(list, maxPerTier) {
-  const tiers = list.tiers.filter((rank) => AVAILABLE_RANKS.includes(rank));
+  const tiers = [...new Set(list.tiers)].filter((rank) =>
+    AVAILABLE_RANKS.includes(rank),
+  );
   const items = {};
   const overflow = {};
   const seen = new Set();

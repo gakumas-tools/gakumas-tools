@@ -31,3 +31,13 @@
 .apply {
   margin-top: tokens.$space-3;
 }
+
+.linkTurnCounts {
+  display: flex;
+  gap: tokens.$space-1;
+
+  input {
+    flex: 1;
+    min-width: 0;
+  }
+}

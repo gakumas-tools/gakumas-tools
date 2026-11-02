@@ -1,6 +1,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { setMemorySlot } from "../../../../gakumas-tools/utils/memorySlots.js";
+import {
+  getFilledSkillCardSlots,
+  setMemorySlot,
+} from "../../../../gakumas-tools/utils/memorySlots.js";
 
 const EMPTY = [null, null];
 const A = [1000, 900, 800, 40];
@@ -25,4 +28,15 @@ test("Replacing a slot after the stage type changed removes what was added", () 
   state = setMemorySlot(state, 1, A, 0.2);
   state = setMemorySlot(state, 1, B, 1);
   assert.deepEqual(state.params, [2500, 2300, 2100, 90]);
+});
+
+test("Filled skill card slots keep their slot index for customizations", () => {
+  const filled = getFilledSkillCardSlots([null, 752, undefined, 117]);
+  assert.deepEqual(
+    filled.map(({ skillCard, slot }) => [skillCard.id, slot]),
+    [
+      [752, 1],
+      [117, 3],
+    ],
+  );
 });

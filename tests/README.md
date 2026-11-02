@@ -53,7 +53,10 @@ Users can share simulator-vs-rehearsal comparisons from the simulator's Rehearsa
 ```sh
 (cd gakumas-tools && pnpm comparisons export --since 2026-10-01) > comparisons.jsonl
 pnpm fidelity comparisons.jsonl --runs 500   # re-simulate on the current engine, rank gaps by z-score
+pnpm fidelity comparisons.jsonl --runs 500 --max-gap-pct 5 --min-rehearsals 3
 ```
+
+With `--max-gap-pct`, fidelity exits nonzero if any comparison's mean score is off by more than that percentage, likely mis-picks included, or has fewer than `--min-rehearsals` rehearsal scores (3 by default).
 
 ## Bootstrap (one-shot)
 

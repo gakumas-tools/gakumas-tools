@@ -18,7 +18,8 @@ import {
   knownStageId,
 } from "@/utils/simulator";
 import { setMemorySlot } from "@/utils/memorySlots";
-import { fixCustomizations } from "@/utils/customizations";
+import { synchronizeLinkLoadouts } from "@/utils/linkLoadouts";
+import { fixCustomizationGroups } from "@/utils/customizations";
 
 const LoadoutContext = createContext();
 
@@ -34,6 +35,9 @@ export function LoadoutContextProvider({ children }) {
 
   const [memorySlots, setMemorySlots] = useState([null, null]);
   const [stageId, setStageId] = useState(initialLoadout.stageId);
+  const [enterPercents, setEnterPercents] = useState(
+    !!initialLoadout.enterPercents
+  );
   const [customStage, setCustomStage] = useState(null);
   const [supportBonus, setSupportBonus] = useState(initialLoadout.supportBonus);
   const [params, setParams] = useState(initialLoadout.params);
@@ -50,6 +54,7 @@ export function LoadoutContextProvider({ children }) {
   const loadout = useMemo(
     () => ({
       stageId,
+      enterPercents,
       customStage: stageId == "custom" ? customStage : {},
       supportBonus,
       params,
@@ -59,6 +64,7 @@ export function LoadoutContextProvider({ children }) {
     }),
     [
       stageId,
+      enterPercents,
       customStage,
       supportBonus,
       params,
@@ -79,9 +85,12 @@ export function LoadoutContextProvider({ children }) {
   );
 
   const setLoadout = useCallback((loadout) => {
+    // Phase tabs set their own index right after this.
+    setCurrentLoadoutIndex(0);
     setStageId(knownStageId(loadout.stageId));
+    setEnterPercents(!!loadout.enterPercents);
     if (loadout.stageId == "custom") {
-      let custom = loadout.customStage;
+      let custom = { ...loadout.customStage };
       if (Array.isArray(custom.firstTurns)) {
         const length = custom.firstTurns.length;
         custom.firstTurns = custom.firstTurns.reduce((acc, cur) => {
@@ -96,32 +105,18 @@ export function LoadoutContextProvider({ children }) {
     setParams(loadout.params);
     setPItemIds(loadout.pItemIds);
     setSkillCardIdGroups(loadout.skillCardIdGroups);
-    if (loadout.customizationGroups) {
-      try {
-        setCustomizationGroups(
-          loadout.customizationGroups.map((g) => g.map(fixCustomizations))
-        );
-      } catch (e) {
-        console.error(e);
-      }
-    }
+    setCustomizationGroups(
+      fixCustomizationGroups(
+        loadout.skillCardIdGroups,
+        loadout.customizationGroups
+      )
+    );
   }, []);
 
   useEffect(() => {
     if (["sense", "logic", "anomaly"].includes(stage.plan)) {
       setPlan(stage.plan);
     }
-
-    if (stage.type !== "linkContest") return;
-    if (loadouts.length == stage.linkTurnCounts.length) return;
-
-    setLoadouts((cur) => {
-      const next = [...cur];
-      while (next.length < stage.linkTurnCounts.length) {
-        next.push(loadout);
-      }
-      return next;
-    });
   }, [stage]);
 
   // Update browser URL when the loadout changes
@@ -133,17 +128,15 @@ export function LoadoutContextProvider({ children }) {
   // Update link loadouts when loadout changes
   useEffect(() => {
     if (stage.type == "linkContest") {
-      setLoadouts((cur) => {
-        const next = [...cur];
-        next[currentLoadoutIndex] = loadout;
-        for (let i = 0; i < next.length; i++) {
-          next[i].stageId = loadout.stageId;
-          next[i].params = [...loadout.params.slice(0, 3), next[i].params[3]];
-        }
-        return next;
-      });
+      const phaseCount = Math.max(1, stage.linkTurnCounts.length);
+      setLoadouts((cur) =>
+        synchronizeLinkLoadouts(cur, loadout, currentLoadoutIndex, phaseCount)
+      );
+      if (currentLoadoutIndex >= phaseCount) {
+        setCurrentLoadoutIndex(phaseCount - 1);
+      }
     }
-  }, [loadout]);
+  }, [loadout, currentLoadoutIndex, stage]);
 
   useEffect(() => {
     // If fewer than 4 pItems, pad with 0s
@@ -256,7 +249,13 @@ export function LoadoutContextProvider({ children }) {
     });
     setCustomizationGroups((cur) => {
       const updatedCustomizations = [...cur];
-      updatedCustomizations.splice(groupIndex, 0, []);
+      // One entry per card slot: replaceCustomizations and swapSkillCardIds
+      // index customizations as one flat list cut into groups of 6.
+      updatedCustomizations.splice(
+        groupIndex,
+        0,
+        Array.from({ length: 6 }, () => ({})),
+      );
       return updatedCustomizations;
     });
   }, []);
@@ -335,6 +334,7 @@ export function LoadoutContextProvider({ children }) {
       setMemory,
       selectStage,
       setSupportBonus,
+      setEnterPercents,
       setParams,
       replacePItemId,
       swapPItemIds,

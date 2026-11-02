@@ -2,7 +2,11 @@ import { IdolConfig } from "gakumas-engine";
 import gkImg from "gakumas-images";
 import Preview from "@/components/Preview";
 import { CARD_SIZE, previewLayout } from "@/components/Preview/Preview.styles";
-import { collectIcons, MAX_GROUPS } from "@/components/Preview/previewIcons";
+import {
+  boundPreviewLoadout,
+  collectIcons,
+  MAX_GROUPS,
+} from "@/components/Preview/previewIcons";
 import {
   loadFonts,
   OG_SIZE,
@@ -17,7 +21,9 @@ const cachedPng = createPngCache(500);
 
 export async function GET(request) {
   const url = new URL(request.url);
-  const loadout = loadoutFromSearchParams(url.searchParams);
+  const loadout = boundPreviewLoadout(
+    loadoutFromSearchParams(url.searchParams),
+  );
   const idolConfig = new IdolConfig(loadout);
   const { pItemIds, skillCardIdGroups, customizationGroups } = loadout;
 

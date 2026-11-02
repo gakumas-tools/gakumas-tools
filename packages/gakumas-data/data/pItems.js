@@ -16,7 +16,7 @@ const parsed = lazyParse(P_ITEMS, (pItem) => {
 const P_ITEMS_BY_ID = P_ITEMS.reduce((acc, cur) => {
   acc[cur.id] = cur;
   return acc;
-}, {});
+}, Object.create(null));
 
 class PItems {
   static getAll() {

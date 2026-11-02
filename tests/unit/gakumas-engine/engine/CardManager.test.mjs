@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { S } from "gakumas-engine";
+import { G, S } from "gakumas-engine";
 import { createEngine } from "../helpers.mjs";
 
 const TODOITE_PLUS = 153;
@@ -47,4 +47,15 @@ test("a perfectConditionTurns cost must be payable", () => {
   assert.equal(engine.cardManager.isCardUsable(state, card), false);
   state[S.perfectConditionTurns] = 1;
   assert.equal(engine.cardManager.isCardUsable(state, card), true);
+});
+
+test("holding a card triggers cardMovedToHeld", () => {
+  // 787 グランドフィナーレ: at:cardMovedToHeld { if:movedCardId==787 {
+  // target:held { g.scoreTimes+=1 } } }
+  const engine = createEngine({ params: [1000, 1000, 1000, 50], skillCardIds: [787] });
+  const state = engine.getInitialState();
+  const card = state[S.cardMap].findIndex((c) => c.id === 787);
+  engine.cardManager.holdCard(state, 787);
+  assert.deepEqual(state[S.heldCards], [card]);
+  assert.equal(state[S.cardMap][card].growth?.[G["g.scoreTimes"]], 1);
 });

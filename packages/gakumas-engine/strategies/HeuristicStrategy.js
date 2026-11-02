@@ -204,6 +204,9 @@ export default class HeuristicStrategy extends BaseStrategy {
   }
 
   getStateScore(state) {
+    // After the last turn, resources and card plays are worth nothing.
+    if (state[S.turnsRemaining] == 0) return state[S.score];
+
     const sc = this._getScoringConfig(state);
     // Mirror multipliers on `this` so call-sites that read them (including
     // `getFuture`'s scoring adjustments) keep working unchanged.
