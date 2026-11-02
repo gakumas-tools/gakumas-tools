@@ -280,6 +280,17 @@
     "clear": "Clear",
     "confirm": "Are you sure you want to clear these skill cards?"
   },
+  "MemoryAttemptPlanner": {
+    "title": "Plan repeated attempts",
+    "show": "Show",
+    "hide": "Hide",
+    "assumption": "Estimate for independent attempts with the same acquired cards and rank. Uses the estimated success probability above; actual odds may differ.",
+    "attempts": "Number of attempts",
+    "atLeastOne": "Chance of at least one success:",
+    "targetChance": "Target chance",
+    "attemptsNeeded": "{count, plural, one {# attempt needed} other {# attempts needed}}",
+    "beyondLimit": "Target chance is not reached within {limit, number} attempts."
+  },
   "TargetSkillCards": {
     "acquired": "Acquired"
   },

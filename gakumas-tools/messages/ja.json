@@ -288,6 +288,17 @@
     "clear": "クリア",
     "confirm": "これらのスキルカードをクリアしますか？"
   },
+  "MemoryAttemptPlanner": {
+    "title": "周回回数の目安",
+    "show": "表示",
+    "hide": "非表示",
+    "assumption": "取得カードと評価が同じで、各回の結果が独立している場合の目安です。上記の推定成功率を使っており、実際の確率とは異なる可能性があります。",
+    "attempts": "試行回数",
+    "atLeastOne": "1回以上成功する確率：",
+    "targetChance": "目標の確率",
+    "attemptsNeeded": "必要な試行回数：{count, number}回",
+    "beyondLimit": "{limit, number}回以内では目標の確率に達しません。"
+  },
   "TargetSkillCards": {
     "acquired": "取得済み"
   },
