@@ -513,6 +513,7 @@
     "optimizeGain": "平均 +{gain}",
     "optimizeAlready": "最適化済み",
     "optimizeFailed": "最適化できません",
+    "optimizeNeedsSimulation": "現在の編成でシミュレーションしてから最適化してください",
     "rehearsal": "リハーサル"
   },
   "CompareTab": {

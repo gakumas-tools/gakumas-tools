@@ -505,6 +505,7 @@
     "optimizeGain": "Avg +{gain}",
     "optimizeAlready": "Already optimal",
     "optimizeFailed": "Can't optimize",
+    "optimizeNeedsSimulation": "Simulate the current loadout first",
     "rehearsal": "Rehearsal"
   },
   "CompareTab": {

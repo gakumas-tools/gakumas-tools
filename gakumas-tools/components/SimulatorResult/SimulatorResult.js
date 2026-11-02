@@ -114,6 +114,7 @@ function SimulatorResult({
   const [rehearsalCell, setRehearsalCell] = useState(null);
   const [run, setRun] = useState({ data, config });
   if (run.data !== data) setRun({ data, config });
+  const isStale = config !== run.config;
 
   useEffect(() => {
     try {
@@ -231,6 +232,8 @@ function SimulatorResult({
           size="sm"
           className={styles.optimize}
           onClick={optimizeParams}
+          disabled={pending || isStale}
+          title={isStale ? t("optimizeNeedsSimulation") : undefined}
         >
           <OptimizeLabel feedback={optimizeFeedback} />
         </Button>

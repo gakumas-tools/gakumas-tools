@@ -505,6 +505,7 @@
     "optimizeGain": "平均 +{gain}",
     "optimizeAlready": "已是最优",
     "optimizeFailed": "无法优化",
+    "optimizeNeedsSimulation": "请先模拟当前编成",
     "rehearsal": "排练"
   },
   "CompareTab": {
