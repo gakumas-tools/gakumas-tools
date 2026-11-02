@@ -89,10 +89,13 @@ export default function Simulator() {
     return new IdolStageConfig(idolConfig, stageConfig, enterPercents);
   }, [loadout, stage, enterPercents]);
 
-  const manualInputCallback = useCallback((decision) => {
-    return new Promise((resolve) => {
+  const manualInputCallback = useCallback((decision, signal) => {
+    return new Promise((resolve, reject) => {
       setPendingDecision(decision);
       resolveDecisionRef.current = resolve;
+      signal.addEventListener("abort", () => reject(signal.reason), {
+        once: true,
+      });
     });
   }, []);
 
@@ -175,19 +178,23 @@ export default function Simulator() {
   }
 
   async function startManualPlay() {
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
+    const input = getInput();
     setRunning(true);
     setSimError(null);
     setSimulatorData(null);
     setPendingDecision(null);
 
     pushRun({
-      loadout,
-      loadouts: stage.type === "linkContest" ? loadouts : null,
+      loadout: input.loadout,
+      loadouts: input.loadouts,
       scores: null,
     });
 
     try {
-      const engine = new StageEngine(config, linkConfigs);
+      const engine = new StageEngine(input.config, input.linkConfigs);
 
       const wrappedInputCallback = async (decision) => {
         const currentLogs = engine.logger.getLogs(decision.state);
@@ -195,8 +202,8 @@ export default function Simulator() {
           ...currentLogs[currentLogs.length - 1],
           isPending: true,
         };
-        setSimulatorData({ logs: currentLogs });
-        return await manualInputCallback(decision);
+        setSimulatorData({ logs: currentLogs, input });
+        return await manualInputCallback(decision, controller.signal);
       };
 
       const ManualStrategy = STRATEGIES["ManualStrategy"];
@@ -205,13 +212,13 @@ export default function Simulator() {
 
       const player = new StagePlayer(engine, strategy);
       const result = await player.play();
-      setSimulatorData({ logs: result.logs });
+      setSimulatorData({ logs: result.logs, input });
     } catch (err) {
+      if (controller.signal.aborted) return;
       setPendingDecision(null);
       failSimulation(err);
-    } finally {
-      setRunning(false);
     }
+    setRunning(false);
   }
 
   const startSimulation = useCallback(() => runSimulationRef.current(), []);
@@ -409,7 +416,7 @@ export default function Simulator() {
           logs={simulatorData.logs}
           pendingDecision={pendingDecision}
           onDecision={handleDecision}
-          idolId={config.idol.idolId || idolId}
+          idolId={simulatorData.input.idolId}
         />
       )}
 
