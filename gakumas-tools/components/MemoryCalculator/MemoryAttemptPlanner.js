@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { FaChevronDown } from "react-icons/fa6";
+import Collapse from "@/components/Collapse";
 import Input from "@/components/Input";
 import Panel from "@/components/Panel";
 import Select from "@/components/Select";
@@ -21,6 +23,7 @@ const CHANCE_OPTIONS = [
 
 export default function MemoryAttemptPlanner({ probability, stale }) {
   const t = useTranslations("MemoryAttemptPlanner");
+  const [open, setOpen] = useState(false);
   const [attempts, setAttempts] = useState(10);
   const [targetChance, setTargetChance] = useState(0.9);
 
@@ -30,8 +33,23 @@ export default function MemoryAttemptPlanner({ probability, stale }) {
   const attemptsNeeded = attemptsForChance(successChance, targetChance);
 
   return (
-    <Panel label={t("title")}>
-      <div className={c(styles.planner, stale && styles.stale)}>
+    <Panel
+      label={
+        <button
+          type="button"
+          className={c(styles.plannerToggle, open && styles.open)}
+          onClick={() => setOpen(!open)}
+          aria-expanded={open}
+        >
+          {t("title")}
+          <FaChevronDown className={styles.plannerCaret} aria-hidden="true" />
+        </button>
+      }
+    >
+      <Collapse
+        open={open}
+        className={c(styles.planner, stale && styles.stale)}
+      >
         <p className={styles.plannerHelp}>{t("assumption")}</p>
         <label className={styles.plannerRow}>
           {t("attempts")}
@@ -63,7 +81,7 @@ export default function MemoryAttemptPlanner({ probability, stale }) {
               : t("beyondLimit", { limit: MAX_ATTEMPTS })}
           </strong>
         </p>
-      </div>
+      </Collapse>
     </Panel>
   );
 }

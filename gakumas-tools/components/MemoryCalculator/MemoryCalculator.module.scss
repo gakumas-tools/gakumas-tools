@@ -95,6 +95,28 @@
   height: 1px;
 }
 
+.plannerToggle {
+  display: flex;
+  align-items: center;
+  gap: tokens.$space-2;
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.plannerCaret {
+  color: tokens.$surface-ink-subtle;
+  font-size: 11px;
+  @include mixins.caret;
+
+  .open & {
+    @include mixins.caret-open;
+  }
+}
+
 .planner {
   display: flex;
   flex-direction: column;
