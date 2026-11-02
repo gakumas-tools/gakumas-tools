@@ -11,6 +11,7 @@ import {
 import DataContext from "@/contexts/DataContext";
 import { fixCustomizations } from "@/utils/customizations";
 import { stashMemoryDraft, takeMemoryDraft } from "@/utils/memoryDraft";
+import { getSaveOutcome } from "@/utils/memorySave";
 
 const MemoryContext = createContext();
 
@@ -18,6 +19,9 @@ export function MemoryContextProvider({ children }) {
   const [saveState, setSaveState] = useState("unsaved");
   const [dirty, setDirty] = useState(false);
   const revisionRef = useRef(0);
+  // Bumped whenever the editor loads a memory, so a save that returns late
+  // can tell it no longer belongs to what is being edited.
+  const documentRef = useRef(0);
   const [id, setId] = useState(null);
   const [name, setName] = useState(null);
   const [pIdolId, setPIdolId] = useState(null);
@@ -48,6 +52,7 @@ export function MemoryContextProvider({ children }) {
   const save = useCallback(
     async (asNew) => {
       const savedRevision = revisionRef.current;
+      const savedDocument = documentRef.current;
       setSaveState("saving");
       const memory = {
         name,
@@ -71,13 +76,19 @@ export function MemoryContextProvider({ children }) {
           throw new Error(`${method} ${url} failed with ${response.status}`);
         }
         const savedId = isNew ? (await response.json()).ids[0] : id;
-        setId(savedId);
-        setSaveState("saved");
-        if (revisionRef.current == savedRevision) setDirty(false);
+        const outcome = getSaveOutcome({
+          savedDocument,
+          currentDocument: documentRef.current,
+          savedRevision,
+          currentRevision: revisionRef.current,
+        });
+        if (outcome.applyId) setId(savedId);
+        if (outcome.saveState) setSaveState(outcome.saveState);
+        if (outcome.clean) setDirty(false);
         putMemories([{ ...memory, _id: savedId }]);
       } catch (error) {
         console.error(error);
-        setSaveState("error");
+        if (documentRef.current == savedDocument) setSaveState("error");
       }
     },
     [
@@ -105,6 +116,7 @@ export function MemoryContextProvider({ children }) {
       setCustomizations([{}, {}, {}, {}, {}, {}]);
     }
     revisionRef.current++;
+    documentRef.current++;
     setDirty(false);
   }, []);
 
