@@ -30,7 +30,9 @@ function growthOf(c11n) {
   for (const [id, level] of Object.entries(c11n)) {
     for (const patch of Customizations.getById(id).effects || []) {
       if ((patch.level || 1) != level) continue;
-      if (patch.effect.phase !== "prestage") continue;
+      // Patches that edit an existing effect (op:"patch", e.g. 107 on
+      // 一番高い星+) carry a delta instead of an effect.
+      if (patch.effect?.phase !== "prestage") continue;
       for (const { lhs, rhs } of patch.effect.actions) {
         const field = lhs.replace(/^g\./, "");
         growth[field] = (growth[field] || 0) + rhs.value;
