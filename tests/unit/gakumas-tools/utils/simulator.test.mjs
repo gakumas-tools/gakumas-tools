@@ -4,6 +4,7 @@ import { Stages } from "gakumas-data";
 import { GRAPHED_FIELDS } from "gakumas-engine";
 import { FALLBACK_STAGE } from "../../../../gakumas-tools/simulator/constants.js";
 import {
+  bucketScores,
   getSimulatorUrl,
   getStage,
   knownStageId,
@@ -95,4 +96,31 @@ test("graph merge of single runs is their plain mean", () => {
   ]);
   assert.deepEqual(graphRunCounts, [2, 1]);
   assert.deepEqual(graphData[GRAPHED_FIELDS[0]], [2, 2]);
+});
+
+// DistributionPlot draws Object.keys(bucketedScores) in the order they come.
+const bucketsInOrder = ({ bucketedScores, bucketSize }) =>
+  Object.keys(bucketedScores).map((key) => [
+    key * bucketSize,
+    bucketedScores[key],
+  ]);
+
+test("score buckets start at 0 when a score is in the lowest bucket", () => {
+  assert.deepEqual(
+    bucketsInOrder(bucketScores([420, 610, 780, 950, 1210, 1480])),
+    [
+      [0, 4],
+      [1000, 2],
+      [2000, 0],
+    ],
+  );
+});
+
+test("score buckets get an empty bucket on each side otherwise", () => {
+  assert.deepEqual(bucketsInOrder(bucketScores([2500, 3100, 3900])), [
+    [1000, 0],
+    [2000, 1],
+    [3000, 2],
+    [4000, 0],
+  ]);
 });

@@ -168,7 +168,9 @@ export function bucketScores(scores) {
   const keys = Object.keys(data);
   const minKey = Math.min(...keys);
   const maxKey = Math.max(...keys);
-  for (let i = minKey - 1; i <= maxKey + 1; i++) {
+  // No padding below 0: scores are never negative, and a "-1" key would be
+  // listed after the others, drawing an empty bar at the far right.
+  for (let i = Math.max(minKey - 1, 0); i <= maxKey + 1; i++) {
     if (!data[i]) data[i] = 0;
   }
 
