@@ -31,10 +31,15 @@ export async function connect() {
   }
 
   if (!cached.promise) {
-    cached.promise = MongoClient.connect(MONGODB_URI).then((client) => ({
-      client,
-      db: client.db(MONGODB_DB),
-    }));
+    cached.promise = MongoClient.connect(MONGODB_URI)
+      .then((client) => ({
+        client,
+        db: client.db(MONGODB_DB),
+      }))
+      .catch((error) => {
+        cached.promise = null;
+        throw error;
+      });
   }
 
   cached.conn = await cached.promise;
