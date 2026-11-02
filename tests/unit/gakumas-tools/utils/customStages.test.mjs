@@ -10,7 +10,10 @@ import {
   StagePlayer,
   resetRand,
 } from "gakumas-engine";
-import { createCustomStage } from "../../../../gakumas-tools/utils/customStages.js";
+import {
+  createCustomStage,
+  customStageErrors,
+} from "../../../../gakumas-tools/utils/customStages.js";
 
 function copy(stage, type = stage.type) {
   return createCustomStage(stage, {
@@ -18,6 +21,7 @@ function copy(stage, type = stage.type) {
     turnCounts: Object.values(stage.turnCounts),
     firstTurns: Object.values(stage.firstTurns),
     criteria: Object.values(stage.criteria),
+    linkTurnCounts: stage.linkTurnCounts,
     effects: stage.effects,
   });
 }
@@ -109,4 +113,65 @@ test("an unedited copy plays the same as its stage", async () => {
     assert.equal(custom.score, original.score, stage.name);
     assert.deepEqual(custom.logs, original.logs, stage.name);
   }
+});
+
+test("every preset's turn settings are valid", () => {
+  for (const stage of Stages.getAll()) {
+    const errors = customStageErrors({
+      type: stage.type,
+      turnCounts: Object.values(stage.turnCounts),
+      firstTurns: Object.values(stage.firstTurns),
+      linkTurnCounts: stage.linkTurnCounts,
+    });
+    assert.deepEqual(errors, [], stage.name);
+  }
+});
+
+test("a stage needs a turn, a first turn rate only on types with turns, and link phases adding up", () => {
+  const settings = (overrides) => ({
+    type: "linkContest",
+    turnCounts: [4, 4, 0],
+    firstTurns: [0.5, 0.5, 0],
+    linkTurnCounts: [3, 3, 2],
+    ...overrides,
+  });
+  assert.deepEqual(customStageErrors(settings()), []);
+  assert.deepEqual(
+    customStageErrors(settings({ type: "contest", linkTurnCounts: [] })),
+    [],
+  );
+  assert.deepEqual(customStageErrors(settings({ turnCounts: [0, 0, 0] })), [
+    "invalidTurnCounts",
+    "invalidFirstTurns",
+    "invalidLinkTurnCounts",
+  ]);
+  for (const firstTurns of [
+    [0, 0, 0],
+    [0.5, 0, 0.5],
+  ]) {
+    assert.deepEqual(customStageErrors(settings({ firstTurns })), [
+      "invalidFirstTurns",
+    ]);
+  }
+  for (const linkTurnCounts of [
+    [4, 4, 4],
+    [4, 4, 1],
+    [8, null, 0],
+  ]) {
+    assert.deepEqual(customStageErrors(settings({ linkTurnCounts })), [
+      "invalidLinkTurnCounts",
+    ]);
+  }
+});
+
+test("link phases entered for a stage turned into a link contest are kept", () => {
+  const custom = createCustomStage(Stages.getById(1), {
+    type: "linkContest",
+    turnCounts: [5, 3, 4],
+    firstTurns: [1, 0, 0],
+    criteria: [1, 0, 0],
+    linkTurnCounts: [2, 3, 7],
+    effects: [],
+  });
+  assert.deepEqual(new StageConfig(custom).linkPhaseChangeTurns, [2, 5, 12]);
 });

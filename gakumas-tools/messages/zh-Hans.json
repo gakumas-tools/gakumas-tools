@@ -439,7 +439,12 @@
     "criteria": "审查基准",
     "effects": "场地效果",
     "effectFormat": "语法格式",
-    "apply": "应用"
+    "apply": "应用",
+    "linkTurnCounts": "各链接阶段的回合数",
+    "linkPhase": "阶段 {phase}",
+    "invalidTurnCounts": "请至少设置1个回合",
+    "invalidFirstTurns": "仅为有回合的属性设置首回合比例",
+    "invalidLinkTurnCounts": "各阶段回合数之和须等于回合数"
   },
   "LoadoutSkillCardGroup": {
     "cost": "容量",

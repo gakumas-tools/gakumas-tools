@@ -439,7 +439,12 @@
     "criteria": "Criteria",
     "effects": "Effects",
     "effectFormat": "Effect format",
-    "apply": "Apply"
+    "apply": "Apply",
+    "linkTurnCounts": "Turns per link phase",
+    "linkPhase": "Phase {phase}",
+    "invalidTurnCounts": "Add at least 1 turn",
+    "invalidFirstTurns": "Set a first turn rate only for types with turns",
+    "invalidLinkTurnCounts": "Link phases must add up to the turn count"
   },
   "LoadoutSkillCardGroup": {
     "cost": "Cost",
