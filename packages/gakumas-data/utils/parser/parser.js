@@ -57,6 +57,14 @@ const COMPARISON_TOKENS = [
   TokenType.GE,
 ];
 
+const ARITHMETIC_TOKENS = [
+  TokenType.PLUS,
+  TokenType.MINUS,
+  TokenType.MUL,
+  TokenType.DIV,
+  TokenType.MOD,
+];
+
 const ASSIGNMENT_TOKENS = [
   TokenType.ASSIGN,
   TokenType.PLUS_ASSIGN,
@@ -550,12 +558,20 @@ export class Parser {
   }
 
   parseComparisonExpr() {
-    // Handle parenthesized conditions
+    // Handle parenthesized conditions. A group followed by a comparison or
+    // arithmetic operator (`(a+1)>2`) is arithmetic: reparse it as such.
     if (this.check(TokenType.LPAREN)) {
+      const start = this.pos;
       this.advance();
       const expr = this.parseCondition();
       this.expect(TokenType.RPAREN, "Expected ')' after condition");
-      return expr;
+      if (
+        !COMPARISON_TOKENS.includes(this.peek().type) &&
+        !ARITHMETIC_TOKENS.includes(this.peek().type)
+      ) {
+        return expr;
+      }
+      this.pos = start;
     }
 
     const left = this.parseAddExpr();
