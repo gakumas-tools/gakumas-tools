@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { FaChevronDown } from "react-icons/fa6";
+import Button from "@/components/Button";
 import Collapse from "@/components/Collapse";
 import Input from "@/components/Input";
 import Panel from "@/components/Panel";
@@ -34,16 +35,18 @@ export default function MemoryAttemptPlanner({ probability, stale }) {
 
   return (
     <Panel
-      label={
-        <button
-          type="button"
-          className={c(styles.plannerToggle, open && styles.open)}
-          onClick={() => setOpen(!open)}
-          aria-expanded={open}
+      className={styles.attemptPlanner}
+      label={t("title")}
+      headerAction={
+        <Button
+          style={open ? "secondary" : "default"}
+          size="sm"
+          pill
+          onClick={() => setOpen((v) => !v)}
         >
-          {t("title")}
-          <FaChevronDown className={styles.plannerCaret} aria-hidden="true" />
-        </button>
+          {open ? t("hide") : t("show")}
+          <FaChevronDown className={c(styles.caret, open && styles.open)} />
+        </Button>
       }
     >
       <Collapse
