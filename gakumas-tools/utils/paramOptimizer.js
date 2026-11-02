@@ -26,6 +26,10 @@ const PAIRS = [
   ["dance", "visual"],
 ];
 
+export function canOptimizeParams(stage, enterPercents = false) {
+  return stage?.type === "contest" && !enterPercents;
+}
+
 export function findOptimalParams({
   scoreStats,
   config,
@@ -34,6 +38,10 @@ export function findOptimalParams({
   if (!scoreStats || !scoreStats.numRuns) return null;
 
   const { stage, idol } = config;
+  // Percents aren't a budget to trade between types: each one is its own
+  // multiplier, so there's no allocation to optimize.
+  if (!canOptimizeParams(stage, enterPercents)) return null;
+
   const oldMult = config.typeMultipliers;
   const supportBonus = idol.supportBonus || 0;
 

@@ -28,7 +28,7 @@ import SimulationRunsContext from "@/contexts/SimulationRunsContext";
 import c from "@/utils/classNames";
 import { downloadBlob } from "@/utils/download";
 import { logEvent } from "@/utils/logging";
-import { findOptimalParams } from "@/utils/paramOptimizer";
+import { canOptimizeParams, findOptimalParams } from "@/utils/paramOptimizer";
 import { cellScores } from "@/utils/rehearsalComparison";
 import ScoreStats from "./ScoreStats";
 import SimulatorResultGraphs from "./SimulatorResultGraphs";
@@ -226,14 +226,16 @@ function SimulatorResult({
           <FaDownload />
           {t("downloadScores")}
         </Button>
-        <Button
-          fill
-          size="sm"
-          className={styles.optimize}
-          onClick={optimizeParams}
-        >
-          <OptimizeLabel feedback={optimizeFeedback} />
-        </Button>
+        {canOptimizeParams(run.config.stage, enterPercents) && (
+          <Button
+            fill
+            size="sm"
+            className={styles.optimize}
+            onClick={optimizeParams}
+          >
+            <OptimizeLabel feedback={optimizeFeedback} />
+          </Button>
+        )}
       </div>
 
       <div className={styles.details}>
