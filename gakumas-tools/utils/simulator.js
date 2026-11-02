@@ -44,6 +44,14 @@ export function knownStageId(stageId) {
   return null;
 }
 
+function knownPItemId(id) {
+  return PItems.getById(id) ? id : 0;
+}
+
+function knownSkillCardId(id) {
+  return SkillCards.getById(id) ? id : 0;
+}
+
 const SIMULATOR_BASE_URL = "https://gktools.ris.moe/simulator";
 
 export function getSimulatorUrl(loadout, loadouts) {
@@ -84,8 +92,10 @@ export function loadoutFromSearchParams(searchParams) {
   supportBonus = parseFloat(supportBonus);
   if (isNaN(supportBonus)) supportBonus = null;
   params = params ? deserializeIds(params) : getDefaultParams(getStage(stageId));
-  pItemIds = deserializeIds(pItemIds);
-  skillCardIdGroups = skillCardIdGroups.split("_").map(deserializeIds);
+  pItemIds = deserializeIds(pItemIds).map(knownPItemId);
+  skillCardIdGroups = skillCardIdGroups
+    .split("_")
+    .map((group) => deserializeIds(group).map(knownSkillCardId));
   customizationGroups = customizationGroups
     .split("_")
     .map(deserializeCustomizations);
@@ -137,7 +147,12 @@ export function loadoutsFromSearchParams(searchParams) {
   let loadouts = [];
   const loadoutParams = searchParams.getAll("loadout");
   for (let param of loadoutParams) {
-    const paramString = decodeURIComponent(param);
+    let paramString;
+    try {
+      paramString = decodeURIComponent(param);
+    } catch {
+      continue;
+    }
     const paramSearchParams = new URLSearchParams(paramString);
     const loadout = loadoutFromSearchParams(paramSearchParams);
     loadouts.push(loadout);

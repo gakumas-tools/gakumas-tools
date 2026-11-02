@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { Stages } from "gakumas-data";
-import { GRAPHED_FIELDS } from "gakumas-engine";
+import { PItems, Stages } from "gakumas-data";
+import { GRAPHED_FIELDS, IdolConfig } from "gakumas-engine";
 import { FALLBACK_STAGE } from "../../../../gakumas-tools/simulator/constants.js";
 import {
   getSimulatorUrl,
@@ -99,6 +99,37 @@ test("an unreadable support bonus loads as none", () => {
     const params = new URLSearchParams({ support_bonus: value });
     assert.equal(loadoutFromSearchParams(params).supportBonus, null);
   }
+});
+
+test("a malformed link phase is skipped and the others still load", () => {
+  const params = loadoutsToSearchParams([
+    loadout,
+    { ...loadout, params: [100, 200, 300, 40] },
+  ]);
+  params.append("loadout", "%");
+  params.append("loadout", "%E0%A4%A");
+  const restored = loadoutsFromSearchParams(
+    new URLSearchParams(params.toString()),
+  );
+  assert.deepEqual(
+    restored.map((l) => l.params),
+    [loadout.params, [100, 200, 300, 40]],
+  );
+});
+
+test("unknown card and item ids load as empty slots", () => {
+  const item = PItems.getAll()[0];
+  const params = new URLSearchParams({
+    stage: "187",
+    items: `${item.id}-${UNKNOWN_ID}-0`,
+    cards: `25-${UNKNOWN_ID}-0`,
+    customizations: "65x1-65x1-",
+  });
+  const restored = loadoutFromSearchParams(params);
+  assert.deepEqual(restored.pItemIds, [item.id, 0, 0]);
+  assert.deepEqual(restored.skillCardIdGroups, [[25, 0, 0]]);
+  assert.deepEqual(restored.customizationGroups, [[{ 65: 1 }, { 65: 1 }, {}]]);
+  assert.doesNotThrow(() => new IdolConfig(restored));
 });
 
 test("graph merge weighs each worker by its runs per turn", () => {
