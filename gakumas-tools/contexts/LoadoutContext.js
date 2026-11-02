@@ -18,6 +18,7 @@ import {
   knownStageId,
 } from "@/utils/simulator";
 import { setMemorySlot } from "@/utils/memorySlots";
+import { synchronizeLinkLoadouts } from "@/utils/linkLoadouts";
 import { fixCustomizations } from "@/utils/customizations";
 
 const LoadoutContext = createContext();
@@ -79,9 +80,11 @@ export function LoadoutContextProvider({ children }) {
   );
 
   const setLoadout = useCallback((loadout) => {
+    // Phase tabs set their own index right after this.
+    setCurrentLoadoutIndex(0);
     setStageId(knownStageId(loadout.stageId));
     if (loadout.stageId == "custom") {
-      let custom = loadout.customStage;
+      let custom = { ...loadout.customStage };
       if (Array.isArray(custom.firstTurns)) {
         const length = custom.firstTurns.length;
         custom.firstTurns = custom.firstTurns.reduce((acc, cur) => {
@@ -111,17 +114,6 @@ export function LoadoutContextProvider({ children }) {
     if (["sense", "logic", "anomaly"].includes(stage.plan)) {
       setPlan(stage.plan);
     }
-
-    if (stage.type !== "linkContest") return;
-    if (loadouts.length == stage.linkTurnCounts.length) return;
-
-    setLoadouts((cur) => {
-      const next = [...cur];
-      while (next.length < stage.linkTurnCounts.length) {
-        next.push(loadout);
-      }
-      return next;
-    });
   }, [stage]);
 
   // Update browser URL when the loadout changes
@@ -133,17 +125,15 @@ export function LoadoutContextProvider({ children }) {
   // Update link loadouts when loadout changes
   useEffect(() => {
     if (stage.type == "linkContest") {
-      setLoadouts((cur) => {
-        const next = [...cur];
-        next[currentLoadoutIndex] = loadout;
-        for (let i = 0; i < next.length; i++) {
-          next[i].stageId = loadout.stageId;
-          next[i].params = [...loadout.params.slice(0, 3), next[i].params[3]];
-        }
-        return next;
-      });
+      const phaseCount = Math.max(1, stage.linkTurnCounts.length);
+      setLoadouts((cur) =>
+        synchronizeLinkLoadouts(cur, loadout, currentLoadoutIndex, phaseCount)
+      );
+      if (currentLoadoutIndex >= phaseCount) {
+        setCurrentLoadoutIndex(phaseCount - 1);
+      }
     }
-  }, [loadout]);
+  }, [loadout, currentLoadoutIndex, stage]);
 
   useEffect(() => {
     // If fewer than 4 pItems, pad with 0s
