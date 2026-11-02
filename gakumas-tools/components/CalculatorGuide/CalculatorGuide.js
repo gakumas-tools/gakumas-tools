@@ -60,7 +60,7 @@ export default async function CalculatorGuide({ tool, path, ranks }) {
           </GuideSection>
         )}
 
-        <GuideSection title={common.formulaTitle}>
+        <GuideSection title={guide.formulaTitle ?? common.formulaTitle}>
           <p>{guide.formulaBody}</p>
         </GuideSection>
 
