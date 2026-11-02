@@ -1,0 +1,7 @@
+@use "../../../styles/tokens";
+
+.guide {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 0 tokens.$space-4 tokens.$space-6;
+}
