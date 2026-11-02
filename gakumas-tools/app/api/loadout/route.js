@@ -27,6 +27,7 @@ export async function POST(request) {
   const {
     name,
     stageId,
+    enterPercents,
     customStage,
     supportBonus,
     params,
@@ -46,6 +47,7 @@ export async function POST(request) {
   const result = await collection.insertOne({
     name,
     stageId,
+    enterPercents: !!enterPercents,
     customStage,
     supportBonus,
     params,

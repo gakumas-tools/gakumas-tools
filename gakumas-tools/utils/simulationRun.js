@@ -4,6 +4,7 @@ export const MAX_HISTORY = 20;
 
 const LOADOUT_FIELDS = [
   "stageId",
+  "enterPercents",
   "customStage",
   "supportBonus",
   "params",

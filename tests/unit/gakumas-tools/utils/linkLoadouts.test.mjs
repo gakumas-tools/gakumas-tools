@@ -5,6 +5,7 @@ import { synchronizeLinkLoadouts } from "../../../../gakumas-tools/utils/linkLoa
 function makeLoadout(n) {
   return {
     stageId: 121,
+    enterPercents: false,
     customStage: {},
     supportBonus: n / 100,
     params: [100 * n, 200 * n, 300 * n, 40 + n],
@@ -49,6 +50,13 @@ test("A custom stage reaches every phase and stays after switching phase", () =>
   const synced = synchronizeLinkLoadouts(phases, edited, 0, 3);
   const switched = synchronizeLinkLoadouts(synced, synced[2], 2, 3);
   assert.ok(switched.every((phase) => phase.customStage === customStage));
+});
+
+test("Percentage input is shared by every phase", () => {
+  const phases = [makeLoadout(1), makeLoadout(2), makeLoadout(3)];
+  const edited = { ...makeLoadout(1), enterPercents: true };
+  const synced = synchronizeLinkLoadouts(phases, edited, 0, 3);
+  assert.ok(synced.every((phase) => phase.enterPercents));
 });
 
 test("Fewer phases drops the extra ones and keeps the edited loadout", () => {
