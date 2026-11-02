@@ -39,6 +39,15 @@ const searchEntitiesSchema = z
   })
   .strict();
 
+const deck = {
+  pItemIds: z.array(id).max(4).default([]),
+  skillCardIdGroups: z.array(z.array(id).max(6)).min(1).max(4),
+  customizationGroups: z
+    .array(z.array(z.record(z.string(), z.number().int().min(0))))
+    .optional()
+    .describe("Customization ID to level, for each card slot"),
+};
+
 const simulateSchema = z
   .object({
     stageId: id,
@@ -62,12 +71,23 @@ const simulateSchema = z
       .max(1)
       .default(0)
       .describe("A fraction: 0.1 is 10%"),
-    pItemIds: z.array(id).max(4).default([]),
-    skillCardIdGroups: z.array(z.array(id).max(6)).min(1).max(4),
-    customizationGroups: z
-      .array(z.array(z.record(z.string(), z.number().int().min(0))))
-      .optional()
-      .describe("Customization ID to level, for each card slot"),
+    ...deck,
+    seed: z.number().int().min(0).max(0xffffffff),
+    runs: z.number().int().min(1).max(100).default(1),
+  })
+  .strict();
+
+const simulateLinkSchema = z
+  .object({
+    stageId: id,
+    params: z
+      .tuple([z.number().min(0), z.number().min(0), z.number().min(0)])
+      .describe("Vo, Da, Vi as displayed percentages, shared by every phase"),
+    phases: z
+      .array(
+        z.object({ stamina: z.number().int().min(0), ...deck }).strict(),
+      )
+      .min(1),
     seed: z.number().int().min(0).max(0xffffffff),
     runs: z.number().int().min(1).max(100).default(1),
   })
@@ -145,8 +165,8 @@ function checkLoadout({ pItemIds, skillCardIdGroups, customizationGroups }) {
   }
 }
 
-async function play(config, { seed, runs }, signal) {
-  const engine = new StageEngine(config);
+async function play(config, linkConfigs, { seed, runs }, signal) {
+  const engine = new StageEngine(config, linkConfigs);
   const strategy = new STRATEGIES.HeuristicStrategy(engine);
   engine.strategy = strategy;
 
@@ -175,7 +195,7 @@ async function simulate(loadout, signal) {
   }
   if (stage.type == "linkContest") {
     throw new Error(
-      `Stage ${stage.id} is a link contest and can't be simulated yet.`,
+      `Stage ${stage.id} is a link contest: use gakumas_simulate_link_loadout.`,
     );
   }
   checkLoadout(loadout);
@@ -185,7 +205,33 @@ async function simulate(loadout, signal) {
     new StageConfig(stage),
     loadout.enterPercents,
   );
-  return play(config, loadout, signal);
+  return play(config, null, loadout, signal);
+}
+
+async function simulateLink({ stageId, params, phases, ...seeded }, signal) {
+  const stage = getStage(stageId);
+  if (stage.preview) {
+    throw new Error(`Stage ${stage.id} is a preview and can't be simulated.`);
+  }
+  if (stage.type != "linkContest") {
+    throw new Error(`Stage ${stage.id} isn't a link contest.`);
+  }
+  if (phases.length != stage.linkTurnCounts.length) {
+    throw new Error(
+      `Stage ${stage.id} has ${stage.linkTurnCounts.length} phases.`,
+    );
+  }
+
+  const configs = phases.map((phase) => {
+    checkLoadout(phase);
+    const idol = new IdolConfig({
+      ...phase,
+      params: [...params, phase.stamina],
+      supportBonus: 0,
+    });
+    return new IdolStageConfig(idol, new StageConfig(stage), true);
+  });
+  return play(configs[0], configs, seeded, signal);
 }
 
 function json(data) {
@@ -238,6 +284,19 @@ export function createMcpServer() {
     },
     async (input, { signal }) =>
       json(await queueSimulation(() => simulate(input, signal))),
+  );
+
+  server.registerTool(
+    "gakumas_simulate_link_loadout",
+    {
+      title: "Simulate a link contest",
+      description:
+        "Play a link contest with HeuristicStrategy, one deck and stamina per phase, seeded as gakumas_simulate_loadout is.",
+      inputSchema: simulateLinkSchema,
+      annotations: READ_ONLY,
+    },
+    async (input, { signal }) =>
+      json(await queueSimulation(() => simulateLink(input, signal))),
   );
 
   server.registerTool(

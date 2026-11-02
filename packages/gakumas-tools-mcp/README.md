@@ -25,13 +25,14 @@ MCP messages.
 
 ## Tools
 
-| Tool                       | What it does                                        |
-| -------------------------- | --------------------------------------------------- |
-| `gakumas_list_stages`      | Searches stages by name or ID, type and plan        |
-| `gakumas_get_stage`        | Reads a stage's criteria, turn counts and effects   |
-| `gakumas_simulate_loadout` | Plays a loadout on a contest or event stage, seeded |
-| `gakumas_search_entities`  | Searches cards, items, idols and more by name or ID |
-| `gakumas_get_entity`       | Reads one of those with its parsed effects          |
+| Tool                            | What it does                                        |
+| ------------------------------- | --------------------------------------------------- |
+| `gakumas_list_stages`           | Searches stages by name or ID, type and plan        |
+| `gakumas_get_stage`             | Reads a stage's criteria, turn counts and effects   |
+| `gakumas_simulate_loadout`      | Plays a loadout on a contest or event stage, seeded |
+| `gakumas_simulate_link_loadout` | Plays a deck per phase on a link contest, seeded    |
+| `gakumas_search_entities`       | Searches cards, items, idols and more by name or ID |
+| `gakumas_get_entity`            | Reads one of those with its parsed effects          |
 
 A simulation takes the website's loadout fields:
 
@@ -49,6 +50,23 @@ A simulation takes the website's loadout fields:
 `params` are Vo, Da, Vi and stamina. Contest stages take raw parameters unless
 `enterPercents` is true; event stages always take percentages. `supportBonus`
 is a fraction. Zero IDs are empty slots.
+
+A link contest takes Vo, Da and Vi once, as displayed percentages, and a deck
+and stamina for each of the stage's phases:
+
+```json
+{
+  "stageId": 121,
+  "params": [1000, 800, 600],
+  "phases": [
+    { "stamina": 50, "skillCardIdGroups": [[15, 17, 1, 13]] },
+    { "stamina": 55, "skillCardIdGroups": [[19, 21, 13, 9]] },
+    { "stamina": 60, "skillCardIdGroups": [[370, 376, 13, 374]] }
+  ],
+  "seed": 12345,
+  "runs": 10
+}
+```
 
 Card and item IDs come from `gakumas_search_entities`, which searches the
 names in the data, mostly Japanese. A card's summary lists the customizations

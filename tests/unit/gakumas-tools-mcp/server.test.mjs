@@ -71,6 +71,50 @@ async function directScores({ seed, runs, ...loadout }) {
   return scores;
 }
 
+function linkLoadout(stageId = 121, extra = {}) {
+  const decks = [
+    [15, 17, 1, 13],
+    [19, 21, 13, 9],
+    [370, 376, 13, 374],
+  ];
+  return {
+    stageId,
+    params: [1000, 800, 600],
+    phases: decks.map((cardIds, i) => ({
+      stamina: 50 + i * 5,
+      skillCardIdGroups: [cardIds],
+    })),
+    seed: 0xffffffff,
+    runs: 3,
+    ...extra,
+  };
+}
+
+async function directLinkPlays({ stageId, params, phases, seed, runs }) {
+  const configs = phases.map(
+    (phase) =>
+      new IdolStageConfig(
+        new IdolConfig({
+          pItemIds: [],
+          ...phase,
+          params: [...params, phase.stamina],
+          supportBonus: 0,
+        }),
+        new StageConfig(Stages.getById(stageId)),
+        true,
+      ),
+  );
+  const plays = [];
+  for (let i = 0; i < runs; i++) {
+    resetRand((seed + i) >>> 0);
+    const engine = new StageEngine(configs[0], configs);
+    const strategy = new STRATEGIES.HeuristicStrategy(engine);
+    engine.strategy = strategy;
+    plays.push(await new StagePlayer(engine, strategy).play());
+  }
+  return plays;
+}
+
 test("stages page through every non-preview stage once", async (t) => {
   const client = await connect(t);
   const ids = [];
@@ -153,6 +197,43 @@ test("a loadout with an unknown ID or customization is refused", async (t) => {
       arguments: loadout(undefined, extra),
     });
     assert.equal(result.isError, true, JSON.stringify(extra));
+  }
+});
+
+test("each link contest plays its phases as the engine does", async (t) => {
+  const client = await connect(t);
+  for (const stageId of [121, 122, 123]) {
+    const args = linkLoadout(stageId);
+    const result = await call(client, "gakumas_simulate_link_loadout", args);
+    const plays = await directLinkPlays(args);
+    assert.deepEqual(result.scores, plays.map((play) => play.score));
+    for (const play of plays) {
+      const phaseChanges = play.logs
+        .filter((log) => log.logType == "linkPhaseChange")
+        .map((log) => log.data.phase);
+      assert.deepEqual(phaseChanges, [1, 2]);
+    }
+  }
+});
+
+test("a link loadout that doesn't fit its stage is refused", async (t) => {
+  const client = await connect(t);
+  const args = linkLoadout();
+  const [first, second, third] = args.phases;
+  const refused = [
+    { ...args, stageId: 187 },
+    { ...args, phases: [first, second] },
+    {
+      ...args,
+      phases: [first, second, { ...third, skillCardIdGroups: [[999999]] }],
+    },
+  ];
+  for (const input of refused) {
+    const result = await client.callTool({
+      name: "gakumas_simulate_link_loadout",
+      arguments: input,
+    });
+    assert.equal(result.isError, true, JSON.stringify(input));
   }
 });
 
