@@ -280,6 +280,15 @@
     "clear": "清除",
     "confirm": "您确定要清除这些技能卡吗？"
   },
+  "MemoryAttemptPlanner": {
+    "title": "重复尝试规划",
+    "assumption": "假设每次尝试的已获得卡牌和评价相同，且各次结果相互独立。使用上方的估算成功率，实际概率可能不同。",
+    "attempts": "尝试次数",
+    "atLeastOne": "至少成功一次的概率：",
+    "targetChance": "目标概率",
+    "attemptsNeeded": "需要尝试{count, number}次",
+    "beyondLimit": "在{limit, number}次内无法达到目标概率。"
+  },
   "TargetSkillCards": {
     "acquired": "已获得"
   },
