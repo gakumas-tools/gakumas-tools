@@ -12,6 +12,7 @@ const FIXTURES = [
   "training-lesson-full-power",
   "training-lesson-strength",
   "training-lesson-preservation",
+  "training-exam-full-power",
 ];
 
 function loadCapture(name) {
@@ -30,10 +31,13 @@ function getTypeMultipliers(capture) {
 }
 
 function createEngine(capture, play) {
+  const cardIds = play.actions.flatMap(
+    (action) => action.handCardIds ?? [action.cardId],
+  );
   const idol = new IdolConfig({
     params: [0, 0, 0, capture.initial.stamina],
     pItemIds: [],
-    skillCardIdGroups: [play.actions.map((action) => action.cardId)],
+    skillCardIdGroups: [cardIds],
   });
   const engine = new StageEngine({
     idol,
@@ -49,17 +53,48 @@ function createEngine(capture, play) {
   return engine;
 }
 
-function findCopy(state, cardId) {
+function findCopy(state, cardId, hand) {
   return state[S.cardMap].findIndex(
-    (c, index) => c.id == cardId && !state[S.removedCards].includes(index),
+    (c, index) =>
+      c.id == cardId &&
+      !state[S.removedCards].includes(index) &&
+      !state[S.heldCards].includes(index) &&
+      !hand.includes(index),
   );
 }
 
-function putInHand(state, card) {
-  for (const pile of [S.handCards, S.deckCards, S.discardedCards]) {
-    state[pile] = state[pile].filter((c) => c != card);
+function supplyHand(state, action, heldCard) {
+  if (action.useReturnedHeldCard) return [heldCard];
+
+  const hand = [];
+  for (const cardId of action.handCardIds ?? [action.cardId]) {
+    const card = findCopy(state, cardId, hand);
+    assert.ok(card >= 0, `no copy of card ${cardId} left`);
+    hand.push(card);
   }
-  state[S.handCards] = [card];
+  return hand;
+}
+
+function putInHand(state, hand) {
+  for (const pile of [S.handCards, S.deckCards, S.discardedCards]) {
+    state[pile] = state[pile].filter((c) => !hand.includes(c));
+  }
+  state[S.handCards] = hand;
+}
+
+function holdAsCaptured(hold, onHold) {
+  return {
+    pickCardsToHold(state, candidates, count, optional) {
+      assert.ok(hold, "held a card the capture didn't");
+      assert.equal(count, 1);
+      assert.equal(optional, false);
+      const candidateIds = candidates.map((c) => state[S.cardMap][c].id);
+      assert.deepEqual(candidateIds, hold.candidateIds);
+      const choice = candidateIds.indexOf(hold.selectedId);
+      onHold(candidates[choice]);
+      return [choice];
+    },
+  };
 }
 
 function replay(capture, play) {
@@ -73,17 +108,33 @@ function replay(capture, play) {
     assert.equal(state[S[field]], value, `initial ${field}`);
   }
 
+  let heldCard;
   for (const [i, action] of play.actions.entries()) {
     const turn = i + 1;
     assert.equal(SkillCards.getById(action.cardId).name, action.name);
 
-    const card = findCopy(state, action.cardId);
-    assert.ok(card >= 0, `no copy of ${action.name} left`);
-    putInHand(state, card);
+    const hand = supplyHand(state, action, heldCard);
+    const card = hand.find((c) => state[S.cardMap][c].id == action.cardId);
+    putInHand(state, hand);
+
+    let holds = 0;
+    engine.strategy = holdAsCaptured(action.hold, (held) => {
+      holds++;
+      heldCard = held;
+    });
     assert.ok(engine.isCardUsable(state, card), `turn ${turn}: usable`);
     state = engine.useCard(state, card);
 
+    assert.equal(holds, action.hold ? 1 : 0);
     assert.equal(state[S.turnsElapsed], action.turnsElapsed ?? turn);
+    if (action.heldCardIds) {
+      const heldIds = state[S.heldCards].map((c) => state[S.cardMap][c].id);
+      assert.deepEqual(heldIds, action.heldCardIds);
+    }
+    if (action.returnedHeldCardId) {
+      assert.equal(state[S.cardMap][heldCard].id, action.returnedHeldCardId);
+      assert.ok(state[S.handCards].includes(heldCard), "held card in hand");
+    }
     for (const [field, value] of Object.entries(action.expected)) {
       assert.equal(
         state[S[field]],
