@@ -14,6 +14,7 @@ import {
   FaWandMagicSparkles,
 } from "react-icons/fa6";
 import { Stages } from "gakumas-data";
+import Alert from "@/components/Alert";
 import Button from "@/components/Button";
 import ButtonGroup from "@/components/ButtonGroup";
 import useRehearsalParser from "@/components/Rehearsal/useRehearsalParser";
@@ -96,6 +97,7 @@ function SimulatorResult({
   pending,
   data,
   config,
+  stale,
   enterPercents,
   idolId,
   plan,
@@ -103,7 +105,7 @@ function SimulatorResult({
   const t = useTranslations("SimulatorResult");
   const { setParams } = useContext(LoadoutActionsContext);
   const { history } = useContext(SimulationRunsContext);
-  const currentRun = history[0] || null;
+  const currentRun = data.run || history[0] || null;
   // Default rendered during SSR / pre-hydration. Hydrated from localStorage
   // in the effect below so the initial markup matches between server and
   // client (avoids hydration mismatch warnings).
@@ -112,9 +114,6 @@ function SimulatorResult({
   const [optimizeFeedback, setOptimizeFeedback] = useState(null);
   const rehearsalParser = useRehearsalParser();
   const [rehearsalCell, setRehearsalCell] = useState(null);
-  const [run, setRun] = useState({ data, config });
-  if (run.data !== data) setRun({ data, config });
-  const isStale = config !== run.config;
 
   useEffect(() => {
     try {
@@ -156,7 +155,7 @@ function SimulatorResult({
 
     const result = findOptimalParams({
       scoreStats: data.scoreStats,
-      config: run.config,
+      config: data.input.config,
       enterPercents,
     });
     if (!result) {
@@ -186,7 +185,7 @@ function SimulatorResult({
     logEvent("simulator_params_optimize", {
       gain: Math.round(result.optimalScore - result.baseScore),
     });
-  }, [data.scoreStats, run.config, config, enterPercents, setParams]);
+  }, [data, config, enterPercents, setParams]);
 
   const isContest =
     Stages.getById(currentRun?.loadout?.stageId)?.type == "contest";
@@ -216,6 +215,7 @@ function SimulatorResult({
       className={c(styles.result, pending && styles.pending)}
       aria-busy={pending}
     >
+      {stale && <Alert>{t("staleResults")}</Alert>}
       <div className={styles.contents} data-comparison-export-hide="true">
         <ScoreStats data={data} />
 
@@ -232,8 +232,8 @@ function SimulatorResult({
           size="sm"
           className={styles.optimize}
           onClick={optimizeParams}
-          disabled={pending || isStale}
-          title={isStale ? t("optimizeNeedsSimulation") : undefined}
+          disabled={pending || stale}
+          title={stale ? t("optimizeNeedsSimulation") : undefined}
         >
           <OptimizeLabel feedback={optimizeFeedback} />
         </Button>

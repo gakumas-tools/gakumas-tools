@@ -506,6 +506,7 @@
     "optimizeAlready": "已是最优",
     "optimizeFailed": "无法优化",
     "optimizeNeedsSimulation": "请先模拟当前编成",
+    "staleResults": "这些结果来自修改前的编成",
     "rehearsal": "排练"
   },
   "CompareTab": {

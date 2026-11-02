@@ -40,6 +40,7 @@ import {
 } from "@/simulator/workerPool";
 import c from "@/utils/classNames";
 import { createProgressStore } from "@/utils/progressStore";
+import { extractLoadoutFields } from "@/utils/simulationRun";
 import { bucketScores, getMedianScore, mergeResults } from "@/utils/simulator";
 import usePersistedState from "@/utils/usePersistedState";
 import ManualPlay from "./ManualPlay";
@@ -124,24 +125,48 @@ export default function Simulator() {
     return retainWorkerPool();
   }, []);
 
+  useEffect(() => () => abortRef.current?.abort(), []);
+
   const setResult = useCallback(
-    (result) => {
+    (result, input) => {
       const { bucketedScores, bucketSize } = bucketScores(result.scores);
       const medianScore = getMedianScore(result.scores);
 
       console.timeEnd("simulation");
 
-      setSimulatorData({ bucketedScores, medianScore, bucketSize, ...result });
-      setRunning(false);
-
-      pushRun({
-        loadout,
-        loadouts: stage.type === "linkContest" ? loadouts : null,
+      const run = pushRun({
+        loadout: input.loadout,
+        loadouts: input.loadouts,
         scores: result.scores,
       });
+      setSimulatorData({
+        bucketedScores,
+        medianScore,
+        bucketSize,
+        ...result,
+        input,
+        run,
+      });
+      setRunning(false);
     },
-    [setSimulatorData, setRunning, pushRun, loadout, loadouts, stage],
+    [pushRun],
   );
+
+  function getInput() {
+    // Link loadouts get their stage and params replaced in place on edits.
+    return {
+      loadout: extractLoadoutFields(loadout),
+      loadouts:
+        stage.type === "linkContest"
+          ? loadouts.map(extractLoadoutFields)
+          : null,
+      config,
+      linkConfigs,
+      enterPercents,
+      idolId: config.idol.idolId || idolId,
+      plan: config.idol.plan || plan,
+    };
+  }
 
   function failSimulation(err) {
     console.error(err);
@@ -192,8 +217,10 @@ export default function Simulator() {
   const startSimulation = useCallback(() => runSimulationRef.current(), []);
 
   async function runSimulation() {
+    abortRef.current?.abort();
     const controller = new AbortController();
     abortRef.current = controller;
+    const input = getInput();
     setRunning(true);
     setSimError(null);
     progress.set(0);
@@ -204,8 +231,8 @@ export default function Simulator() {
       let result;
       if (SYNC) {
         result = await simulate(
-          config,
-          linkConfigs,
+          input.config,
+          input.linkConfigs,
           strategy,
           numRuns,
           (completed) => progress.set(completed),
@@ -213,8 +240,8 @@ export default function Simulator() {
       } else {
         const results = await runOnWorkers(
           {
-            idolStageConfig: config,
-            linkConfigs,
+            idolStageConfig: input.config,
+            linkConfigs: input.linkConfigs,
             strategyName: strategy,
             numRuns,
           },
@@ -223,7 +250,8 @@ export default function Simulator() {
         );
         result = mergeResults(results);
       }
-      startTransition(() => setResult(result));
+      if (controller.signal.aborted) return;
+      startTransition(() => setResult(result, input));
     } catch (err) {
       console.timeEnd("simulation");
       if (controller.signal.aborted) return;
@@ -390,9 +418,13 @@ export default function Simulator() {
           pending={running}
           data={simulatorData}
           config={config}
-          enterPercents={enterPercents}
-          idolId={config.idol.idolId || idolId}
-          plan={config.idol.plan || plan}
+          stale={
+            simulatorData.input.config !== config ||
+            simulatorData.input.linkConfigs !== linkConfigs
+          }
+          enterPercents={simulatorData.input.enterPercents}
+          idolId={simulatorData.input.idolId}
+          plan={simulatorData.input.plan}
         />
       )}
 

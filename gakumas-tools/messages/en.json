@@ -506,6 +506,7 @@
     "optimizeAlready": "Already optimal",
     "optimizeFailed": "Can't optimize",
     "optimizeNeedsSimulation": "Simulate the current loadout first",
+    "staleResults": "These results are from an earlier loadout",
     "rehearsal": "Rehearsal"
   },
   "CompareTab": {

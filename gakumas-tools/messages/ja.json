@@ -514,6 +514,7 @@
     "optimizeAlready": "最適化済み",
     "optimizeFailed": "最適化できません",
     "optimizeNeedsSimulation": "現在の編成でシミュレーションしてから最適化してください",
+    "staleResults": "この結果は変更前の編成のものです",
     "rehearsal": "リハーサル"
   },
   "CompareTab": {
