@@ -43,3 +43,9 @@ Covers direct score, good impression scoring at the end of the turn, gaining
 and extending good impression, costs paid partly or wholly with genki, and
 fractional scores at 250%. The first play's final score is hidden behind the
 result overlay, so it isn't recorded.
+
+## 【試験研修4】やる気
+
+Covers fixed stamina costs, costs paid with genki, gaining motivation, genki
+gains at several motivation values, and genki-based scores at 250% and 400%.
+Motivation doesn't count down, so each play's last `expected` checks it too.
