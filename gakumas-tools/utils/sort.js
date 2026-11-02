@@ -138,11 +138,15 @@ export function compareFilteredMemories(a, b) {
   }
 }
 
+function isFlaggedMemory(memory) {
+  return memory.name?.indexOf("(FIXME)") > -1;
+}
+
 export function compareUnfilteredMemories(a, b) {
-  if (b.name?.indexOf("(FIXME)") > -1) {
-    return 1;
-  } else if (a.name?.indexOf("(FIXME)") > -1) {
-    return -1;
+  const aFlagged = isFlaggedMemory(a);
+  const bFlagged = isFlaggedMemory(b);
+  if (aFlagged != bFlagged) {
+    return aFlagged ? -1 : 1;
   } else {
     return b.contestPower - a.contestPower;
   }
