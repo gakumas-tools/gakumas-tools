@@ -14,7 +14,8 @@ import {
 // The engine reports what it can't evaluate (unknown identifiers, actions,
 // operators, intermediates) with console.warn and carries on, so a bad
 // effect only shows up as a quietly wrong score. Play every skill card,
-// P-item and card customization once and fail on any warning or error.
+// P-item, stage and card customization once and fail on any warning or
+// error.
 
 const FILLER_CARD_IDS = [1, 3, 5, 7, 9];
 const PARAMS = [1500, 1500, 1500, 40];
@@ -29,7 +30,13 @@ for (const stage of Stages.getAll()) {
 const stageIdFor = (plan) =>
   latestStageIdByPlan[plan] ?? latestStageIdByPlan.free;
 
-async function play({ plan, pItemIds = [], skillCardIds, customizations = [] }) {
+async function play({
+  plan,
+  stageId = stageIdFor(plan),
+  pItemIds = [],
+  skillCardIds,
+  customizations = [],
+}) {
   resetRand();
   const idol = new IdolConfig({
     params: PARAMS,
@@ -38,7 +45,7 @@ async function play({ plan, pItemIds = [], skillCardIds, customizations = [] }) 
     skillCardIdGroups: [skillCardIds],
     customizationGroups: [customizations],
   });
-  const stage = new StageConfig(Stages.getById(stageIdFor(plan)));
+  const stage = new StageConfig(Stages.getById(stageId));
   const engine = new StageEngine(new IdolStageConfig(idol, stage));
   const strategy = new STRATEGIES.HeuristicStrategy(engine);
   engine.strategy = strategy;
@@ -79,6 +86,19 @@ test("every P-item plays without engine warnings", async () => {
     pItemIds: [pItem.id],
     skillCardIds: FILLER_CARD_IDS,
   }));
+  assert.deepEqual(await collectWarnings(cases), []);
+});
+
+// Link contests need one config per idol, which this harness doesn't build.
+test("every contest and event stage plays without engine warnings", async () => {
+  const cases = Stages.getAll()
+    .filter((stage) => stage.type !== "linkContest")
+    .map((stage) => ({
+      name: `stage ${stage.id} ${stage.name}`,
+      stageId: stage.id,
+      skillCardIds: FILLER_CARD_IDS,
+    }));
+  assert.ok(cases.length > 0);
   assert.deepEqual(await collectWarnings(cases), []);
 });
 
