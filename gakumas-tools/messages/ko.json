@@ -453,7 +453,21 @@
   },
   "SimulatorSubTools": {
     "costRanges": "코스트 범위",
-    "defaultCards": "기본 카드"
+    "defaultCards": "기본 카드",
+    "paramLayouts": "패러미터 배분"
+  },
+  "LoadoutOptimizer": {
+    "compare": "배분 비교",
+    "progress": "비교 중… {percent}%",
+    "cancel": "취소",
+    "noAlternatives": "다른 배분이 없습니다",
+    "cancelled": "취소했습니다",
+    "failed": "비교할 수 없습니다",
+    "improved": "더 좋은 배분이 있습니다",
+    "retained": "더 좋은 배분이 없습니다",
+    "validation": "평균 {baseline} → {candidate} (차이 {low}~{high})",
+    "apply": "적용",
+    "undo": "되돌리기"
   },
   "CostRanges": {
     "rank": "랭크",

@@ -461,7 +461,21 @@
   },
   "SimulatorSubTools": {
     "costRanges": "コスト範囲",
-    "defaultCards": "基本カード"
+    "defaultCards": "基本カード",
+    "paramLayouts": "パラメータ配分"
+  },
+  "LoadoutOptimizer": {
+    "compare": "配分を比較",
+    "progress": "比較中… {percent}%",
+    "cancel": "キャンセル",
+    "noAlternatives": "他の配分はありません",
+    "cancelled": "キャンセルしました",
+    "failed": "比較できません",
+    "improved": "より良い配分があります",
+    "retained": "より良い配分はありません",
+    "validation": "平均 {baseline} → {candidate}（差 {low}〜{high}）",
+    "apply": "適用",
+    "undo": "元に戻す"
   },
   "CostRanges": {
     "rank": "ランク",

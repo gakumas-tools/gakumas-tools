@@ -453,7 +453,21 @@
   },
   "SimulatorSubTools": {
     "costRanges": "Cost ranges",
-    "defaultCards": "Default cards"
+    "defaultCards": "Default cards",
+    "paramLayouts": "Param layouts"
+  },
+  "LoadoutOptimizer": {
+    "compare": "Compare layouts",
+    "progress": "Comparing… {percent}%",
+    "cancel": "Cancel",
+    "noAlternatives": "No other layouts",
+    "cancelled": "Cancelled",
+    "failed": "Can't compare",
+    "improved": "Found a better layout",
+    "retained": "No better layout found",
+    "validation": "Avg {baseline} → {candidate}, gain {low} to {high}",
+    "apply": "Apply",
+    "undo": "Undo"
   },
   "CostRanges": {
     "rank": "Rank",

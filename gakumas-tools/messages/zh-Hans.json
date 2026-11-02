@@ -453,7 +453,21 @@
   },
   "SimulatorSubTools": {
     "costRanges": "容量范围",
-    "defaultCards": "基本卡组"
+    "defaultCards": "基本卡组",
+    "paramLayouts": "参数分配"
+  },
+  "LoadoutOptimizer": {
+    "compare": "比较分配",
+    "progress": "比较中… {percent}%",
+    "cancel": "取消",
+    "noAlternatives": "没有其他分配",
+    "cancelled": "已取消",
+    "failed": "无法比较",
+    "improved": "找到更好的分配",
+    "retained": "没有更好的分配",
+    "validation": "平均 {baseline} → {candidate}（差 {low}至{high}）",
+    "apply": "应用",
+    "undo": "撤销"
   },
   "CostRanges": {
     "rank": "评级",

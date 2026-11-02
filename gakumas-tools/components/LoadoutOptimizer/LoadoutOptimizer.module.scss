@@ -1,0 +1,27 @@
+@use "../../styles/tokens";
+
+.optimizer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: tokens.$space-2;
+
+  p {
+    margin: 0;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: tokens.$space-2;
+}
+
+.params {
+  display: flex;
+  gap: tokens.$space-3;
+  margin: 0;
+
+  dd {
+    margin: 0;
+  }
+}

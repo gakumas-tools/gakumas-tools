@@ -313,7 +313,13 @@ export default function Simulator() {
         )}
 
         <div data-export-hide="true">
-          <SimulatorSubTools defaultCardIds={config.defaultCardIds} />
+          <SimulatorSubTools
+            defaultCardIds={config.defaultCardIds}
+            canCompareParams={
+              stage.id != "custom" && ["contest", "event"].includes(stage.type)
+            }
+            enterPercents={enterPercents}
+          />
         </div>
 
         <div className={styles.simControls} data-export-hide="true">

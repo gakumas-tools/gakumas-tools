@@ -4,10 +4,15 @@ import { FaChevronDown } from "react-icons/fa6";
 import Collapse from "@/components/Collapse";
 import CostRanges from "@/components/CostRanges";
 import DefaultCards from "@/components/DefaultCards";
+import LoadoutOptimizer from "@/components/LoadoutOptimizer";
 import c from "@/utils/classNames";
 import styles from "./Simulator.module.scss";
 
-function SimulatorSubTools({ defaultCardIds }) {
+function SimulatorSubTools({
+  defaultCardIds,
+  canCompareParams,
+  enterPercents,
+}) {
   const t = useTranslations("SimulatorSubTools");
   const [activeSubTool, setActiveSubTool] = useState(null);
 
@@ -36,6 +41,17 @@ function SimulatorSubTools({ defaultCardIds }) {
           {t("defaultCards")}
           <FaChevronDown aria-hidden="true" />
         </button>
+
+        {canCompareParams && (
+          <button
+            className={c(activeSubTool === "paramLayouts" && styles.expanded)}
+            onClick={() => toggleSubTool("paramLayouts")}
+            aria-expanded={activeSubTool === "paramLayouts"}
+          >
+            {t("paramLayouts")}
+            <FaChevronDown aria-hidden="true" />
+          </button>
+        )}
       </div>
 
       <Collapse
@@ -49,6 +65,12 @@ function SimulatorSubTools({ defaultCardIds }) {
         className={styles.subTool}
       >
         <DefaultCards skillCardIds={defaultCardIds} />
+      </Collapse>
+      <Collapse
+        open={activeSubTool == "paramLayouts" && canCompareParams}
+        className={styles.subTool}
+      >
+        <LoadoutOptimizer enterPercents={enterPercents} />
       </Collapse>
     </>
   );
