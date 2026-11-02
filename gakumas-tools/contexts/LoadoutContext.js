@@ -19,7 +19,7 @@ import {
 } from "@/utils/simulator";
 import { setMemorySlot } from "@/utils/memorySlots";
 import { synchronizeLinkLoadouts } from "@/utils/linkLoadouts";
-import { fixCustomizations } from "@/utils/customizations";
+import { fixCustomizationGroups } from "@/utils/customizations";
 
 const LoadoutContext = createContext();
 
@@ -105,15 +105,12 @@ export function LoadoutContextProvider({ children }) {
     setParams(loadout.params);
     setPItemIds(loadout.pItemIds);
     setSkillCardIdGroups(loadout.skillCardIdGroups);
-    if (loadout.customizationGroups) {
-      try {
-        setCustomizationGroups(
-          loadout.customizationGroups.map((g) => g.map(fixCustomizations))
-        );
-      } catch (e) {
-        console.error(e);
-      }
-    }
+    setCustomizationGroups(
+      fixCustomizationGroups(
+        loadout.skillCardIdGroups,
+        loadout.customizationGroups
+      )
+    );
   }, []);
 
   useEffect(() => {

@@ -128,8 +128,29 @@ test("unknown card and item ids load as empty slots", () => {
   const restored = loadoutFromSearchParams(params);
   assert.deepEqual(restored.pItemIds, [item.id, 0, 0]);
   assert.deepEqual(restored.skillCardIdGroups, [[25, 0, 0]]);
-  assert.deepEqual(restored.customizationGroups, [[{ 65: 1 }, { 65: 1 }, {}]]);
+  assert.deepEqual(restored.customizationGroups, [[{ 65: 1 }, {}, {}]]);
   assert.doesNotThrow(() => new IdolConfig(restored));
+});
+
+test("a URL loads only the customizations each card can have", () => {
+  const params = new URLSearchParams({
+    stage: "187",
+    cards: "25-25-1",
+    customizations: "65x1-65x10e21x1-65x1",
+  });
+  assert.deepEqual(loadoutFromSearchParams(params).customizationGroups, [
+    [{ 65: 1 }, {}, {}],
+  ]);
+});
+
+test("empty customization slots keep later cards' customizations in place", () => {
+  const source = {
+    ...loadout,
+    skillCardIdGroups: [[25, 25, 25]],
+    customizationGroups: [[null, { 65: 1 }, undefined]],
+  };
+  const restored = loadoutFromSearchParams(loadoutToSearchParams(source));
+  assert.deepEqual(restored.customizationGroups, [[{}, { 65: 1 }, {}]]);
 });
 
 test("graph merge weighs each worker by its runs per turn", () => {

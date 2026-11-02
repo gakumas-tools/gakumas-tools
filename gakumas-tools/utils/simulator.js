@@ -3,6 +3,7 @@ import { GRAPHED_FIELDS, S } from "gakumas-engine";
 import { FALLBACK_STAGE, MIN_BUCKET_SIZE } from "@/simulator/constants";
 import {
   deserializeCustomizations,
+  fixCustomizationGroups,
   serializeCustomizations,
 } from "./customizations";
 import { deserializeIds, serializeIds } from "./ids";
@@ -104,6 +105,10 @@ export function loadoutFromSearchParams(searchParams) {
   if (skillCardIdGroups.length != customizationGroups.length) {
     customizationGroups = skillCardIdGroups.map((g) => g.map(() => ({})));
   }
+  customizationGroups = fixCustomizationGroups(
+    skillCardIdGroups,
+    customizationGroups
+  );
 
   return {
     stageId,
