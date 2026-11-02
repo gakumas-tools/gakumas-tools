@@ -3,6 +3,7 @@ import { GRAPHED_FIELDS, S } from "gakumas-engine";
 import { FALLBACK_STAGE, MIN_BUCKET_SIZE } from "@/simulator/constants";
 import {
   deserializeCustomizations,
+  fixCustomizationGroups,
   serializeCustomizations,
 } from "./customizations";
 import { deserializeIds, serializeIds } from "./ids";
@@ -44,6 +45,14 @@ export function knownStageId(stageId) {
   return null;
 }
 
+function knownPItemId(id) {
+  return PItems.getById(id) ? id : 0;
+}
+
+function knownSkillCardId(id) {
+  return SkillCards.getById(id) ? id : 0;
+}
+
 const SIMULATOR_BASE_URL = "https://gktools.ris.moe/simulator";
 
 export function getSimulatorUrl(loadout, loadouts) {
@@ -65,8 +74,14 @@ export function loadoutFromSearchParams(searchParams) {
   let pItemIds = searchParams.get("items");
   let skillCardIdGroups = searchParams.get("cards");
   let customizationGroups = searchParams.get("customizations");
+  const enterPercents = searchParams.get("enter_percents") == "1";
   const hasDataFromParams =
-    stageId || params || pItemIds || skillCardIdGroups || customizationGroups;
+    stageId ||
+    params ||
+    pItemIds ||
+    skillCardIdGroups ||
+    customizationGroups ||
+    enterPercents;
 
   stageId = stageId || DEFAULTS.stageId;
   if (!searchParams.has("support_bonus")) supportBonus = DEFAULTS.supportBonus;
@@ -78,8 +93,10 @@ export function loadoutFromSearchParams(searchParams) {
   supportBonus = parseFloat(supportBonus);
   if (isNaN(supportBonus)) supportBonus = null;
   params = params ? deserializeIds(params) : getDefaultParams(getStage(stageId));
-  pItemIds = deserializeIds(pItemIds);
-  skillCardIdGroups = skillCardIdGroups.split("_").map(deserializeIds);
+  pItemIds = deserializeIds(pItemIds).map(knownPItemId);
+  skillCardIdGroups = skillCardIdGroups
+    .split("_")
+    .map((group) => deserializeIds(group).map(knownSkillCardId));
   customizationGroups = customizationGroups
     .split("_")
     .map(deserializeCustomizations);
@@ -88,9 +105,14 @@ export function loadoutFromSearchParams(searchParams) {
   if (skillCardIdGroups.length != customizationGroups.length) {
     customizationGroups = skillCardIdGroups.map((g) => g.map(() => ({})));
   }
+  customizationGroups = fixCustomizationGroups(
+    skillCardIdGroups,
+    customizationGroups
+  );
 
   return {
     stageId,
+    enterPercents,
     supportBonus,
     params,
     pItemIds,
@@ -103,6 +125,7 @@ export function loadoutFromSearchParams(searchParams) {
 export function loadoutToSearchParams(loadout) {
   const {
     stageId,
+    enterPercents,
     supportBonus,
     params,
     pItemIds,
@@ -111,6 +134,7 @@ export function loadoutToSearchParams(loadout) {
   } = loadout;
   const searchParams = new URLSearchParams();
   searchParams.set("stage", stageId);
+  if (enterPercents) searchParams.set("enter_percents", "1");
   if (supportBonus != null) {
     searchParams.set("support_bonus", supportBonus);
   }
@@ -128,7 +152,12 @@ export function loadoutsFromSearchParams(searchParams) {
   let loadouts = [];
   const loadoutParams = searchParams.getAll("loadout");
   for (let param of loadoutParams) {
-    const paramString = decodeURIComponent(param);
+    let paramString;
+    try {
+      paramString = decodeURIComponent(param);
+    } catch {
+      continue;
+    }
     const paramSearchParams = new URLSearchParams(paramString);
     const loadout = loadoutFromSearchParams(paramSearchParams);
     loadouts.push(loadout);

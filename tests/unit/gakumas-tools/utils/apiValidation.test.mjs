@@ -131,6 +131,7 @@ test("cleanMemories rejects non-arrays, empty arrays and oversized batches", () 
 test("validateLoadout accepts a saved run and rejects wrong field types", () => {
   assert.equal(validateLoadout(savedRun), null);
   assert.equal(validateLoadout({ ...savedRun, linkLoadouts: [savedRun] }), null);
+  assert.equal(validateLoadout({ ...savedRun, enterPercents: true }), null);
   for (const patch of [
     { name: 5 },
     { name: { $gt: "" } },
@@ -140,6 +141,7 @@ test("validateLoadout accepts a saved run and rejects wrong field types", () => 
     { stats: [1] },
     { derived: "x" },
     { customStage: 3 },
+    { enterPercents: "true" },
   ]) {
     assert.notEqual(validateLoadout({ ...savedRun, ...patch }), null, JSON.stringify(patch));
   }
