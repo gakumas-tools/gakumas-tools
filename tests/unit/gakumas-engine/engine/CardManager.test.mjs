@@ -37,6 +37,18 @@ test("Reductions in costs still count as costs", () => {
   );
 });
 
+test("a perfectConditionTurns cost must be payable", () => {
+  // 776 話題沸騰+: if:goodConditionTurns>=8, cost perfectConditionTurns-=1
+  const engine = createEngine({ params: [1000, 1000, 1000, 50], skillCardIds: [776] });
+  const state = engine.getInitialState();
+  const card = state[S.cardMap].findIndex((c) => c.id === 776);
+  state[S.goodConditionTurns] = 8;
+  state[S.perfectConditionTurns] = 0;
+  assert.equal(engine.cardManager.isCardUsable(state, card), false);
+  state[S.perfectConditionTurns] = 1;
+  assert.equal(engine.cardManager.isCardUsable(state, card), true);
+});
+
 test("holding a card triggers cardMovedToHeld", () => {
   // 787 グランドフィナーレ: at:cardMovedToHeld { if:movedCardId==787 {
   // target:held { g.scoreTimes+=1 } } }
