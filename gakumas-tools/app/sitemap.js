@@ -1,5 +1,6 @@
 import { routing } from "@/i18n/routing";
 import { alternateLanguages, localePath } from "@/utils/localeUrls";
+import { referencePaths } from "@/utils/referenceEntities";
 
 const PATHS = [
   "/",
@@ -23,7 +24,7 @@ const PATHS = [
 ];
 
 export default function sitemap() {
-  return PATHS.flatMap((path) =>
+  return [...PATHS, ...referencePaths()].flatMap((path) =>
     routing.locales.map((locale) => ({
       url: localePath(locale, path, { absolute: true }),
       priority: path === "/" ? 1.0 : 0.7,

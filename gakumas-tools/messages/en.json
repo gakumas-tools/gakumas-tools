@@ -759,5 +759,14 @@
         }
       ]
     }
+  },
+  "EntityPage": {
+    "metaDescription": "{name} in the {category} reference",
+    "back": "All {category}",
+    "open": "Open page",
+    "rarity": "Rarity",
+    "plan": "Plan",
+    "unlockPlv": "Unlock PLv",
+    "customizations": "Customizations"
   }
 }

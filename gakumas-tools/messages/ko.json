@@ -759,5 +759,14 @@
         }
       ]
     }
+  },
+  "EntityPage": {
+    "metaDescription": "{category} 도감의 {name}",
+    "back": "{category} 목록",
+    "open": "페이지 열기",
+    "rarity": "레어리티",
+    "plan": "플랜",
+    "unlockPlv": "해금 PLv",
+    "customizations": "커스터마이즈"
   }
 }

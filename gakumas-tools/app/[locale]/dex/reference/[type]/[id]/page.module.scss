@@ -1,0 +1,62 @@
+@use "../../../../../../styles/mixins";
+@use "../../../../../../styles/tokens";
+
+.page {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: tokens.$space-3;
+  padding: tokens.$space-4;
+  @include mixins.card;
+
+  h1 {
+    @include mixins.heading;
+  }
+
+  h2 {
+    font-size: tokens.$text-md;
+    margin-bottom: tokens.$space-2;
+  }
+}
+
+.back {
+  font-size: tokens.$text-sm;
+  @include mixins.link-pill;
+}
+
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: tokens.$space-4;
+
+  dt {
+    color: tokens.$surface-ink-muted;
+    font-size: tokens.$text-xs;
+  }
+
+  dd {
+    font-weight: tokens.$weight-bold;
+  }
+}
+
+.details {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+}
+
+.customizations {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$space-2;
+  list-style: none;
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    gap: tokens.$space-3;
+  }
+}

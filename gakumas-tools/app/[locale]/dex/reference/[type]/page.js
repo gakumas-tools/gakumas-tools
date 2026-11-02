@@ -2,18 +2,12 @@ import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import EntityReference from "@/components/EntityReference";
 import { routing } from "@/i18n/routing";
-import { EntityTypes } from "@/utils/entities";
 import { generateMetadataForTool } from "@/utils/metadata";
-
-const TYPE_BY_SLUG = {
-  "skill-cards": EntityTypes.SKILL_CARD,
-  "p-items": EntityTypes.P_ITEM,
-  "p-drinks": EntityTypes.P_DRINK,
-};
+import { REFERENCE_SLUGS, referenceType } from "@/utils/referenceEntities";
 
 export function generateStaticParams() {
   return routing.locales.flatMap((locale) =>
-    Object.keys(TYPE_BY_SLUG).map((type) => ({ locale, type })),
+    REFERENCE_SLUGS.map((type) => ({ locale, type })),
   );
 }
 
@@ -31,7 +25,7 @@ export default async function ReferencePage({ params }) {
   const { locale, type } = await params;
   setRequestLocale(locale);
 
-  const entityType = TYPE_BY_SLUG[type];
+  const entityType = referenceType(type);
   if (!entityType) notFound();
 
   return <EntityReference type={entityType} />;

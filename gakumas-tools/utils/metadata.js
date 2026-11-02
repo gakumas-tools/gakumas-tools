@@ -32,6 +32,25 @@ export async function generateMetadataForTool(tool, locale, path) {
   });
 }
 
+export async function generateMetadataForReference(entity, slug, locale) {
+  const t_meta = await getTranslations({ locale, namespace: "metadata" });
+  const t_dex = await getTranslations({ locale, namespace: "Dex" });
+  const t_page = await getTranslations({ locale, namespace: "EntityPage" });
+  const category = t_dex(`tabs.${slug}`);
+  const description = t_page("metaDescription", {
+    name: entity.name,
+    category,
+  });
+  return buildMetadata({
+    locale,
+    path: `/dex/reference/${slug}/${entity.id}`,
+    title: `${entity.name} | ${category} - ${t_meta("title")}`,
+    description,
+    ogDescription: description,
+    twitterCard: "summary_large_image",
+  });
+}
+
 function buildMetadata({
   locale,
   path,
