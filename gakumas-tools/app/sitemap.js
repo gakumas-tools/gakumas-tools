@@ -23,9 +23,11 @@ const PATHS = [
 ];
 
 export default function sitemap() {
-  return PATHS.map((path) => ({
-    url: localePath(routing.defaultLocale, path, { absolute: true }),
-    priority: path === "/" ? 1.0 : 0.7,
-    alternates: { languages: alternateLanguages(path) },
-  }));
+  return PATHS.flatMap((path) =>
+    routing.locales.map((locale) => ({
+      url: localePath(locale, path, { absolute: true }),
+      priority: path === "/" ? 1.0 : 0.7,
+      alternates: { languages: alternateLanguages(path) },
+    })),
+  );
 }
