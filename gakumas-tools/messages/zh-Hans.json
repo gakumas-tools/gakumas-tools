@@ -764,9 +764,6 @@
     "metaDescription": "{category}图鉴中的{name}",
     "back": "全部{category}",
     "open": "打开页面",
-    "rarity": "稀有度",
-    "plan": "计划",
-    "unlockPlv": "解锁PLv",
     "customizations": "自定义"
   }
 }

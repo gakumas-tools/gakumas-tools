@@ -772,9 +772,6 @@
     "metaDescription": "{category}図鑑の「{name}」",
     "back": "{category}一覧",
     "open": "ページを開く",
-    "rarity": "レアリティ",
-    "plan": "プラン",
-    "unlockPlv": "解放PLv",
     "customizations": "カスタマイズ"
   }
 }
