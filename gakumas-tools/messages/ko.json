@@ -450,7 +450,12 @@
     "criteria": "심사 기준",
     "effects": "스테이지 효과",
     "effectFormat": "효과 형식",
-    "apply": "적용"
+    "apply": "적용",
+    "linkTurnCounts": "링크 파트별 턴 수",
+    "linkPhase": "파트 {phase}",
+    "invalidTurnCounts": "턴을 1개 이상 설정하세요",
+    "invalidFirstTurns": "첫 턴 비율은 턴이 있는 속성에만 설정하세요",
+    "invalidLinkTurnCounts": "파트별 턴 수의 합을 턴 수와 맞추세요"
   },
   "LoadoutSkillCardGroup": {
     "cost": "코스트",

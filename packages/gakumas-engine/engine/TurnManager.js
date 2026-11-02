@@ -50,12 +50,15 @@ export default class TurnManager extends EngineComponent {
     if (rand > firstTurns.vocal + firstTurns.dance) firstTurn = "visual";
     remainingTurns[firstTurn]--;
 
-    // Pick last 3 turns based on stage criteria
+    // Pick last turns based on stage criteria, one of each type with turns left
     const sortedTypes = Object.keys(criteria).sort(
       (a, b) => criteria[b] - criteria[a]
     );
-    const lastThreeTurns = sortedTypes.slice().reverse();
-    lastThreeTurns.forEach((t) => remainingTurns[t]--);
+    const lastTurns = sortedTypes
+      .slice()
+      .reverse()
+      .filter((type) => remainingTurns[type] > 0);
+    lastTurns.forEach((t) => remainingTurns[t]--);
 
     let randomTurns = [];
     for (let k in remainingTurns) {
@@ -65,7 +68,7 @@ export default class TurnManager extends EngineComponent {
     }
     shuffle(randomTurns);
 
-    return [firstTurn, ...randomTurns, ...lastThreeTurns];
+    return [firstTurn, ...randomTurns, ...lastTurns];
   }
 
   startTurn(state, forceInitialHand = false) {

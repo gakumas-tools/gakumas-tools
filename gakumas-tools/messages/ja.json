@@ -458,7 +458,12 @@
     "criteria": "審査基準",
     "effects": "ステージ効果",
     "effectFormat": "効果形式",
-    "apply": "適用"
+    "apply": "適用",
+    "linkTurnCounts": "リンクの各パートのターン数",
+    "linkPhase": "パート{phase}",
+    "invalidTurnCounts": "ターン数を1以上にしてください",
+    "invalidFirstTurns": "初手ターン率はターンのある属性にだけ設定してください",
+    "invalidLinkTurnCounts": "各パートのターン数の合計をターン数に合わせてください"
   },
   "LoadoutSkillCardGroup": {
     "cost": "コスト",
