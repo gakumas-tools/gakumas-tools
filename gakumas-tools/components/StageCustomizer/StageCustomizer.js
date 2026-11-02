@@ -27,7 +27,7 @@ function StageCustomizer({ initialStage, onApply }) {
     Object.values(initialStage.criteria)
   );
   const [effects, setEffects] = useState(
-    serializeEffectSequence(initialStage.effects).replaceAll(";", ";\n")
+    serializeEffectSequence(initialStage.effects)
   );
   const [linkTurnCounts, setLinkTurnCounts] = useState(
     initialStage.type == "linkContest" && initialStage.linkTurnCounts.length
