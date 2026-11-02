@@ -17,3 +17,23 @@ pnpm bench:choices --output /tmp/choice-study --candidates 1024 --train-runs 200
 ```
 
 Training stops after `--max-minutes`, and validation then runs on the profiles tried so far. Each finished profile is appended to `training.jsonl`, so a stopped run can be continued with `--resume` and the same options. `metadata.json` records the options, the decks and a hash of the data, engine and study sources; a resume with any of them changed is refused, and so is one after `validation.json` is written.
+
+## Result of 2026-11-02
+
+220 of 1 024 profiles were tried in the time given. The [report](reports/choice-weight-study-20261102.json) has the source hash, the decks, the selected profiles and every validation deck's result. Weights are buff / score / stamina / hand / cards used.
+
+| Plan | Profile | Weights | Validation decks | Mean relative gain | 95 % interval | Worst deck | Engine gate |
+| --- | ---: | --- | ---: | ---: | --- | ---: | --- |
+| Sense | 162 | 1 / 1 / 4 / 2 / 0.25 | 111 | -0.1973 % | -0.5229 % to +0.1284 % | -8.3679 % | fail |
+| Logic | 181 | 1 / 1 / 2 / 1 / 4 | 99 | +0.2877 % | +0.1008 % to +0.4746 % | -1.0730 % | pass |
+| Anomaly | 53 | 1 / 0.5 / 4 / 2 / 1 | 57 | +0.8484 % | -0.4644 % to +2.1612 % | -16.8794 % | fail |
+
+The Logic profile raised 67 deck means and lowered 32, by +43.08 points a deck on average. These are engine results only; nothing has been checked in game, and the default strategy is unchanged.
+
+To try the same 220 profiles again:
+
+```sh
+pnpm bench:choices --output /tmp/choice-study-220 --candidates 220 --train-runs 200 --validation-runs 1000 --max-minutes 300
+```
+
+The study code has been rewritten since the report was made, so a new run records a different source hash.
