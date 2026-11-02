@@ -17,6 +17,7 @@ import Table from "@/components/Table";
 import { usePopOnChange } from "@/utils/usePop";
 import WorkspaceContext from "@/contexts/WorkspaceContext";
 import c from "@/utils/classNames";
+import { exactFloor } from "@/utils/exactFloor";
 import { getRank, TARGET_RATING_BY_RANK } from "@/utils/produceRank";
 import {
   BALANCE_BY_IDOL,
@@ -154,7 +155,7 @@ export default function NiaCalculator() {
   const totalVotes = votes + gainedVotes;
   const voteRank = getVoteRank(totalVotes);
 
-  const paramRating = Math.floor(
+  const paramRating = exactFloor(
     postAuditionParams.reduce((acc, cur) => acc + cur, 0) * 2.3,
   );
 

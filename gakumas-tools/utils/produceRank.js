@@ -1,3 +1,5 @@
+import { exactFloor } from "@/utils/exactFloor";
+
 export const MAX_PARAMS_BY_DIFFICULTY = {
   regular: 1000,
   pro: 1500,
@@ -93,7 +95,7 @@ export function calculateRatingExExamScore(
       : PARAM_BONUS_BY_PLACE;
   const placeParamBonus = PARAM_BONUS_BY_PLACE_USED[place];
   const placeRating = RATING_BY_PLACE[place];
-  const paramRating = Math.floor(
+  const paramRating = exactFloor(
     params.reduce(
       (acc, cur) => acc + Math.min(cur + placeParamBonus, maxParams),
       0,

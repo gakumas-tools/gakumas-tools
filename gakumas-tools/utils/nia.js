@@ -1,4 +1,5 @@
 import { TARGET_RATING_BY_RANK } from "@/utils/produceRank";
+import { exactFloor } from "@/utils/exactFloor";
 
 export const MAX_PARAMS_BY_DIFFICULTY = {
   pro: 2000,
@@ -308,7 +309,7 @@ export function calculateGainedVotes(voteRegimes, affection, score) {
   for (let j = 0; j < voteRegimes.length; j++) {
     const { threshold, multiplier, constant } = voteRegimes[j];
     if (score > threshold) {
-      return Math.floor(
+      return exactFloor(
         Math.ceil(score * multiplier + constant) *
           (1 + 0.05 * (affection - 10)),
       );
@@ -422,7 +423,7 @@ export function calculateRecommendedScores(
     );
     const postAuditionVotes = votes + gainedVotes;
 
-    const currentParamRating = Math.floor(
+    const currentParamRating = exactFloor(
       postAuditionParams.reduce((acc, cur) => acc + cur, 0) * 2.3,
     );
 

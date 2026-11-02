@@ -6,6 +6,7 @@ import Input from "@/components/Input";
 import Panel from "@/components/Panel";
 import ParametersInput from "@/components/ParametersInput";
 import c from "@/utils/classNames";
+import { exactFloor } from "@/utils/exactFloor";
 import { LESSONS_BY_DIFFICULTY } from "@/utils/lessons";
 import styles from "./LessonCalculator.module.scss";
 
@@ -98,7 +99,7 @@ function LessonCalculator() {
                                 param == lessonParam && styles.main
                               )}
                             >
-                              {Math.floor(
+                              {exactFloor(
                                 (param == lessonParam ? main : sub) *
                                   (1 + paramRates[j] / 100)
                               )}
@@ -109,7 +110,7 @@ function LessonCalculator() {
                             colSpan={3}
                             className={c(styles[lessonParam], styles.main)}
                           >
-                            {Math.floor(
+                            {exactFloor(
                               (score + limitIncrease) *
                                 (1 + paramRates[i] / 100)
                             )}
