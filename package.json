@@ -21,6 +21,8 @@
     "regression:bootstrap": "node --loader ./scripts/extensionless-loader.mjs ./tests/generate-suite.mjs",
     "regression:coverage": "node --loader ./scripts/extensionless-loader.mjs ./tests/coverage.mjs",
     "fidelity": "node --no-warnings --loader ./scripts/extensionless-loader.mjs ./tests/fidelity.mjs",
+    "optimize:loadout": "node --no-warnings --loader ./scripts/extensionless-loader.mjs ./scripts/optimize-loadout.mjs",
+    "bench:loadout-optimizer": "node --no-warnings --loader ./scripts/extensionless-loader.mjs ./tests/benchmarkLoadoutOptimizer.mjs",
     "bench": "node --loader ./scripts/extensionless-loader.mjs ./tests/bench.mjs",
     "validate:data": "node --loader ./scripts/extensionless-loader.mjs ./scripts/validate-data.mjs",
     "changelog": "node ./scripts/changelog.js",

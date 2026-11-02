@@ -55,6 +55,15 @@ Users can share simulator-vs-rehearsal comparisons from the simulator's Rehearsa
 pnpm fidelity comparisons.jsonl --runs 500   # re-simulate on the current engine, rank gaps by z-score
 ```
 
+### Comparing loadouts
+
+```sh
+pnpm optimize:loadout candidates.json --runs 50 --validation-runs 200 --seed 610397104 --min-gain 0
+pnpm bench:loadout-optimizer   # each suite plan's first loadout against its other Vo/Da/Vi orders
+```
+
+`candidates.json` holds `baseline: {id, loadout}`, `candidates: [{id, loadout}, ...]` and an optional `enterPercents`. Every loadout is on the same contest or event stage with the same Vo/Da/Vi total. Each loadout plays the same `--runs` seeds, then the best one and the baseline play `--validation-runs` fresh seeds. The best one is selected only if the low end of the 95% interval of its gain over the baseline is above `--min-gain`; otherwise the baseline stays. Report the validation gain, not the selection means, which favor the winner.
+
 ## Bootstrap (one-shot)
 
 ```sh
