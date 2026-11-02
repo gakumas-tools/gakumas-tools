@@ -78,3 +78,11 @@ play their last two cards in either order; in full power, scores of 15 and 9
 become 45 and 27. The third play reaches only 7, stays out of full power and
 gets one card in the last turn. Both full power plays clear at the cap of
 160, so their final scores aren't checked.
+
+## 【基礎8】強気
+
+A vocal lesson starting at 100. 挨拶の基本 enters 強気 at no cost, which
+doubles scores and costs (9 and 4 become 18 and 8, 2 and 3 become 4 and 6).
+Costs are paid with stamina alone or split with genki, and genki is gained
+after the cost is paid. Only base 強気 is captured, not 強気2. The first play
+clears at the cap of 125, so its final score isn't checked.
