@@ -505,6 +505,8 @@
     "optimizeGain": "평균 +{gain}",
     "optimizeAlready": "이미 최적",
     "optimizeFailed": "최적화 불가",
+    "optimizeNeedsSimulation": "현재 편성으로 시뮬레이션한 후 최적화하세요",
+    "staleResults": "변경 전 편성의 결과입니다",
     "rehearsal": "리허설"
   },
   "CompareTab": {
