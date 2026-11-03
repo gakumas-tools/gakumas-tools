@@ -1,0 +1,173 @@
+{
+  "date": "2026-11-03",
+  "gameVersion": "3.5.0",
+  "stage": "【基礎1】好調",
+  "sourceDirectory": "screenshots/sources/ingame/",
+  "initialAttribute": 100,
+  "targetGain": 40,
+  "initial": {
+    "score": 0,
+    "stamina": 30,
+    "genki": 0,
+    "goodConditionTurns": 0
+  },
+  "turnTypes": [
+    "dance",
+    "dance",
+    "dance",
+    "dance"
+  ],
+  "replayMultipliers": {
+    "dance": 1
+  },
+  "initialCaptures": [
+    "campaign-condition-20261103-r1-initial.png",
+    "campaign-condition-20261103-r2-initial.png",
+    "campaign-condition-20261103-r3-initial.png"
+  ],
+  "plays": [
+    {
+      "id": "guided-condition-first",
+      "actions": [
+        {
+          "cardId": 24,
+          "name": "軽い足取り",
+          "expected": {
+            "score": 6,
+            "stamina": 26,
+            "genki": 0,
+            "goodConditionTurns": 2
+          },
+          "capture": "campaign-condition-20261103-r1-turn2.png"
+        },
+        {
+          "cardId": 30,
+          "name": "ファンサ",
+          "expected": {
+            "score": 21,
+            "stamina": 24,
+            "genki": 0,
+            "goodConditionTurns": 1
+          },
+          "capture": "campaign-condition-20261103-r1-turn3.png"
+        },
+        {
+          "cardId": 74,
+          "name": "アドリブ",
+          "expected": {
+            "score": 29,
+            "stamina": 20,
+            "genki": 0,
+            "goodConditionTurns": 3
+          },
+          "capture": "campaign-condition-20261103-r1-turn4.png"
+        },
+        {
+          "cardId": 72,
+          "name": "決めポーズ",
+          "expected": {
+            "stamina": 17,
+            "genki": 0
+          },
+          "capture": "campaign-condition-20261103-r1-final-a.png"
+        }
+      ]
+    },
+    {
+      "id": "genki-paid-late-condition",
+      "actions": [
+        {
+          "cardId": 13,
+          "name": "表現の基本",
+          "expected": {
+            "score": 0,
+            "stamina": 30,
+            "genki": 4,
+            "goodConditionTurns": 0
+          },
+          "capture": "campaign-condition-20261103-r2-turn2.png"
+        },
+        {
+          "cardId": 3,
+          "name": "ポーズの基本",
+          "expected": {
+            "score": 2,
+            "stamina": 30,
+            "genki": 3,
+            "goodConditionTurns": 0
+          },
+          "capture": "campaign-condition-20261103-r2-turn3.png"
+        },
+        {
+          "cardId": 24,
+          "name": "軽い足取り",
+          "expected": {
+            "score": 8,
+            "stamina": 29,
+            "genki": 0,
+            "goodConditionTurns": 2
+          },
+          "capture": "campaign-condition-20261103-r2-turn4.png"
+        },
+        {
+          "cardId": 1,
+          "name": "アピールの基本",
+          "expected": {
+            "score": 22,
+            "stamina": 25,
+            "genki": 0
+          },
+          "capture": "campaign-condition-20261103-r2-final-a.png"
+        }
+      ]
+    },
+    {
+      "id": "score-before-condition",
+      "actions": [
+        {
+          "cardId": 30,
+          "name": "ファンサ",
+          "expected": {
+            "score": 10,
+            "stamina": 28,
+            "genki": 0,
+            "goodConditionTurns": 0
+          },
+          "capture": "campaign-condition-20261103-r3-turn2.png"
+        },
+        {
+          "cardId": 1,
+          "name": "アピールの基本",
+          "expected": {
+            "score": 19,
+            "stamina": 24,
+            "genki": 0,
+            "goodConditionTurns": 0
+          },
+          "capture": "campaign-condition-20261103-r3-turn3.png"
+        },
+        {
+          "cardId": 24,
+          "name": "軽い足取り",
+          "expected": {
+            "score": 25,
+            "stamina": 20,
+            "genki": 0,
+            "goodConditionTurns": 2
+          },
+          "capture": "campaign-condition-20261103-r3-turn4.png"
+        },
+        {
+          "cardId": 3,
+          "name": "ポーズの基本",
+          "expected": {
+            "score": 28,
+            "stamina": 17,
+            "genki": 2
+          },
+          "capture": "campaign-condition-20261103-r3-final-a.png"
+        }
+      ]
+    }
+  ]
+}
