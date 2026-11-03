@@ -3,7 +3,6 @@
   "gameVersion": "3.5.0",
   "stage": "【基礎7】全力",
   "sourceDirectory": "screenshots/sources/ingame/",
-  "scope": "Conditional action replay; synthetic unit multiplier, gain above dance100. No raw-parameter, deck/draw or lesson cap claim.",
   "initialAttribute": 100,
   "targetGain": 60,
   "initial": {
@@ -44,7 +43,13 @@
             "halfCostTurns": 0,
             "stance": "none"
           },
-          "capture": "campaign-fullpower-r1-turn2-guide.png"
+          "capture": "campaign-fullpower-r1-turn2-guide.png",
+          "handCardIds": [
+            50,
+            402,
+            3
+          ],
+          "handCapture": "campaign-fullpower-r1-turn1.png"
         },
         {
           "cardId": 374,
@@ -57,7 +62,13 @@
             "halfCostTurns": 0,
             "stance": "none"
           },
-          "capture": "campaign-fullpower-r1-turn3.png"
+          "capture": "campaign-fullpower-r1-turn3.png",
+          "handCardIds": [
+            374,
+            13,
+            382
+          ],
+          "handCapture": "campaign-fullpower-r1-turn2-guide.png"
         },
         {
           "cardId": 449,
@@ -71,7 +82,13 @@
             "stance": "fullPower",
             "cardUsesRemaining": 2
           },
-          "capture": "campaign-fullpower-r1-turn4-guide.png"
+          "capture": "campaign-fullpower-r1-turn4-guide.png",
+          "handCardIds": [
+            13,
+            449,
+            374
+          ],
+          "handCapture": "campaign-fullpower-r1-turn3.png"
         },
         {
           "cardId": 384,
@@ -86,7 +103,13 @@
             "stance": "fullPower",
             "cardUsesRemaining": 1
           },
-          "capture": "campaign-fullpower-r1-turn4b.png"
+          "capture": "campaign-fullpower-r1-turn4b.png",
+          "handCardIds": [
+            1,
+            384,
+            3
+          ],
+          "handCapture": "campaign-fullpower-r1-turn4-guide.png"
         },
         {
           "cardId": 1,
@@ -97,7 +120,12 @@
             "genki": 0,
             "fullPowerCharge": 0
           },
-          "capture": "campaign-fullpower-r1-final-b.png"
+          "capture": "campaign-fullpower-r1-final-b.png",
+          "handCardIds": [
+            1,
+            3
+          ],
+          "handCapture": "campaign-fullpower-r1-turn4b.png"
         }
       ],
       "terminalAttribute": 160,
@@ -117,7 +145,13 @@
             "halfCostTurns": 0,
             "stance": "none"
           },
-          "capture": "campaign-fullpower-r2-turn2.png"
+          "capture": "campaign-fullpower-r2-turn2.png",
+          "handCardIds": [
+            50,
+            402,
+            3
+          ],
+          "handCapture": "campaign-fullpower-r2-turn1.png"
         },
         {
           "cardId": 374,
@@ -130,7 +164,13 @@
             "halfCostTurns": 0,
             "stance": "none"
           },
-          "capture": "campaign-fullpower-r2-turn3.png"
+          "capture": "campaign-fullpower-r2-turn3.png",
+          "handCardIds": [
+            374,
+            13,
+            382
+          ],
+          "handCapture": "campaign-fullpower-r2-turn2.png"
         },
         {
           "cardId": 449,
@@ -144,7 +184,13 @@
             "stance": "fullPower",
             "cardUsesRemaining": 2
           },
-          "capture": "campaign-fullpower-r2-turn4-guide1.png"
+          "capture": "campaign-fullpower-r2-turn4-guide1.png",
+          "handCardIds": [
+            13,
+            449,
+            374
+          ],
+          "handCapture": "campaign-fullpower-r2-turn3.png"
         },
         {
           "cardId": 1,
@@ -159,7 +205,13 @@
             "stance": "fullPower",
             "cardUsesRemaining": 1
           },
-          "capture": "campaign-fullpower-r2-turn4b.png"
+          "capture": "campaign-fullpower-r2-turn4b.png",
+          "handCardIds": [
+            1,
+            384,
+            3
+          ],
+          "handCapture": "campaign-fullpower-r2-turn4-guide1.png"
         },
         {
           "cardId": 384,
@@ -170,7 +222,12 @@
             "genki": 0,
             "fullPowerCharge": 0
           },
-          "capture": "campaign-fullpower-r2-final-b.png"
+          "capture": "campaign-fullpower-r2-final-b.png",
+          "handCardIds": [
+            384,
+            3
+          ],
+          "handCapture": "campaign-fullpower-r2-turn4b.png"
         }
       ],
       "terminalAttribute": 160,
@@ -191,7 +248,13 @@
             "halfCostTurns": 0,
             "stance": "none"
           },
-          "capture": "campaign-fullpower-r3-turn2.png"
+          "capture": "campaign-fullpower-r3-turn2.png",
+          "handCardIds": [
+            50,
+            402,
+            3
+          ],
+          "handCapture": "campaign-fullpower-r3-turn1.png"
         },
         {
           "cardId": 374,
@@ -205,7 +268,13 @@
             "halfCostTurns": 0,
             "stance": "none"
           },
-          "capture": "campaign-fullpower-r3-turn3.png"
+          "capture": "campaign-fullpower-r3-turn3.png",
+          "handCardIds": [
+            374,
+            13,
+            382
+          ],
+          "handCapture": "campaign-fullpower-r3-turn2.png"
         },
         {
           "cardId": 449,
@@ -220,7 +289,13 @@
             "stance": "none",
             "cardUsesRemaining": 1
           },
-          "capture": "campaign-fullpower-r3-turn4.png"
+          "capture": "campaign-fullpower-r3-turn4.png",
+          "handCardIds": [
+            13,
+            449,
+            374
+          ],
+          "handCapture": "campaign-fullpower-r3-turn3.png"
         },
         {
           "cardId": 384,
@@ -233,23 +308,31 @@
             "costReduction": 1,
             "stance": "none"
           },
-          "capture": "campaign-fullpower-r3-final-b.png"
+          "capture": "campaign-fullpower-r3-final-b.png",
+          "handCardIds": [
+            1,
+            384,
+            3
+          ],
+          "handCapture": "campaign-fullpower-r3-turn4.png"
         }
       ],
       "terminalAttribute": 115,
       "terminalScoreCompared": true
     }
   ],
-  "verification": {
-    "plays": 3,
-    "checkpoints": 14,
-    "outcomeFields": 86,
-    "maxAbsoluteNumericError": 0,
-    "categoricalMatches": "all recorded stances"
-  },
-  "limits": [
-    "First two terminal scores hit cap160 and are excluded. Only terminal resources and charge are checked.",
-    "Third terminal attribute115 is uncapped and settled. Terminal halfCost duration is pre-transition and excluded.",
-    "The replay supplies selected-card availability, with no full-deck/draw/hold or raw-parameter formula claim."
+  "drawCardIds": [
+    50,
+    402,
+    3,
+    374,
+    13,
+    382,
+    13,
+    449,
+    374,
+    1,
+    384,
+    3
   ]
 }
