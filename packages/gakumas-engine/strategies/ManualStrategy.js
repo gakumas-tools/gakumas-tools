@@ -2,12 +2,14 @@ import { S } from "../constants";
 import BaseStrategy from "./BaseStrategy";
 
 export class HoldSelectionRequest extends Error {
-  constructor(state, cards, num) {
+  constructor(state, cards, num, optional = false) {
     super("Hold selection required");
     this.name = "HoldSelectionRequest";
     this.state = state;
     this.cards = cards;
     this.num = num;
+    // Whether fewer than `num` cards (even none) may be picked.
+    this.optional = optional;
   }
 }
 
@@ -90,11 +92,11 @@ export default class ManualStrategy extends BaseStrategy {
   // Answers to this card use's selection prompts, in the order the use asks
   // them. A prompt aborts the use; once it's answered, the use replays from
   // the start and earlier prompts take their answers from here.
-  nextAnswer(RequestType, state, cards, num) {
+  nextAnswer(RequestType, state, cards, num, optional) {
     if (this.answerCursor < this.answers.length) {
       return this.answers[this.answerCursor++];
     }
-    throw new RequestType(state, cards, num);
+    throw new RequestType(state, cards, num, optional);
   }
 
   pickCardsToMoveToHand(state, cards, num = 1) {
@@ -105,8 +107,8 @@ export default class ManualStrategy extends BaseStrategy {
     return this.nextAnswer(MoveToTopOfDeckSelectionRequest, state, cards, num);
   }
 
-  pickCardsToHold(state, cards, num = 1) {
-    return this.nextAnswer(HoldSelectionRequest, state, cards, num);
+  pickCardsToHold(state, cards, num = 1, optional = false) {
+    return this.nextAnswer(HoldSelectionRequest, state, cards, num, optional);
   }
 
   pickCardsToUseFree(state, cards, num = 1) {
@@ -124,6 +126,7 @@ export default class ManualStrategy extends BaseStrategy {
       state: exception.state,
       cards: exception.cards,
       num: exception.num,
+      optional: !!exception.optional,
     });
     this.answers.push(selectedIndices);
 
