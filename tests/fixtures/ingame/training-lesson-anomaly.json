@@ -1,0 +1,496 @@
+{
+  "date": "2026-11-03",
+  "gameVersion": "3.5.0",
+  "stage": "【応用5】プラン：アノマリー",
+  "sourceDirectory": "screenshots/sources/ingame/",
+  "initialAttribute": 100,
+  "targetGain": 280,
+  "initial": {
+    "score": 0,
+    "stamina": 30,
+    "genki": 0,
+    "stance": "none",
+    "fullPowerCharge": 0,
+    "enthusiasm": 0
+  },
+  "turnTypes": [
+    "visual",
+    "visual",
+    "visual",
+    "visual",
+    "visual",
+    "visual",
+    "visual"
+  ],
+  "replayMultipliers": {
+    "visual": 1
+  },
+  "initialCaptures": [
+    "campaign-lesson-anomaly-r1-initial.png",
+    "campaign-lesson-anomaly-r2-initial.png",
+    "campaign-lesson-anomaly-r3-initial.png"
+  ],
+  "plays": [
+    {
+      "id": "guided-preservation2",
+      "actions": [
+        {
+          "cardId": 392,
+          "name": "ハッピー♪",
+          "expected": {
+            "score": 0,
+            "stamina": 27,
+            "genki": 7,
+            "stance": "preservation",
+            "enthusiasm": 0,
+            "fullPowerCharge": 0
+          },
+          "capture": "campaign-lesson-anomaly-r1-turn2.png"
+        },
+        {
+          "cardId": 418,
+          "name": "カウントダウン",
+          "expected": {
+            "score": 0,
+            "stamina": 27,
+            "genki": 14,
+            "stance": "preservation2",
+            "enthusiasm": 0,
+            "fullPowerCharge": 0
+          },
+          "capture": "campaign-lesson-anomaly-r1-turn3.png"
+        },
+        {
+          "cardId": 400,
+          "name": "せーのっ！",
+          "turnsElapsed": 2,
+          "expected": {
+            "score": 40,
+            "stamina": 27,
+            "genki": 17,
+            "stance": "strength",
+            "enthusiasm": 8,
+            "cardUsesRemaining": 1
+          },
+          "capture": "campaign-lesson-anomaly-r1-extra1.png"
+        },
+        {
+          "cardId": 382,
+          "name": "スターライト",
+          "turnsElapsed": 3,
+          "expected": {
+            "score": 83,
+            "stamina": 27,
+            "genki": 5,
+            "stance": "strength2",
+            "enthusiasm": 0
+          },
+          "capture": "campaign-lesson-anomaly-r1-turn4.png"
+        },
+        {
+          "cardId": 396,
+          "name": "涙の思い出",
+          "turnsElapsed": 4,
+          "expected": {
+            "score": 83,
+            "stamina": 26,
+            "genki": 3,
+            "stance": "preservation",
+            "fullPowerCharge": 3
+          },
+          "capture": "campaign-lesson-anomaly-r1-turn5.png"
+        },
+        {
+          "cardId": 416,
+          "name": "潜在能力",
+          "turnsElapsed": 5,
+          "handCardIds": [
+            416,
+            2,
+            384
+          ],
+          "hold": {
+            "candidateIds": [
+              2,
+              384
+            ],
+            "selectedId": 384,
+            "choiceCapture": "campaign-lesson-anomaly-r1-hold-choice.png",
+            "selectedCapture": "campaign-lesson-anomaly-r1-hold-selected.png"
+          },
+          "heldCardIds": [
+            384
+          ],
+          "expected": {
+            "score": 83,
+            "stamina": 26,
+            "genki": 10,
+            "stance": "preservation",
+            "fullPowerCharge": 6
+          },
+          "capture": "campaign-lesson-anomaly-r1-turn6.png",
+          "handCapture": "campaign-lesson-anomaly-r1-hold-hand.png"
+        },
+        {
+          "cardId": 448,
+          "name": "王者の御出まし",
+          "turnsElapsed": 6,
+          "heldCardIds": [],
+          "returnedHeldCardId": 384,
+          "expected": {
+            "score": 83,
+            "stamina": 26,
+            "genki": 8,
+            "stance": "fullPower",
+            "fullPowerCharge": 0,
+            "halfCostTurns": 2,
+            "enthusiasm": 5,
+            "cardUsesRemaining": 3
+          },
+          "capture": "campaign-lesson-anomaly-r1-turn7.png"
+        },
+        {
+          "cardId": 384,
+          "name": "一歩",
+          "turnsElapsed": 6,
+          "useReturnedHeldCard": true,
+          "expected": {
+            "score": 143,
+            "stamina": 26,
+            "genki": 6,
+            "stance": "fullPower",
+            "enthusiasm": 5,
+            "cardUsesRemaining": 2,
+            "halfCostTurns": 2
+          },
+          "capture": "campaign-lesson-anomaly-r1-final-extra1.png"
+        },
+        {
+          "cardId": 385,
+          "name": "一歩+",
+          "turnsElapsed": 6,
+          "expected": {
+            "score": 227,
+            "stamina": 26,
+            "genki": 4,
+            "stance": "fullPower",
+            "enthusiasm": 5,
+            "cardUsesRemaining": 1,
+            "halfCostTurns": 2
+          },
+          "capture": "campaign-lesson-anomaly-r1-final-extra2.png"
+        },
+        {
+          "cardId": 1,
+          "name": "アピールの基本",
+          "turnsElapsed": 7,
+          "expected": {
+            "score": 269,
+            "stamina": 26,
+            "genki": 2,
+            "fullPowerCharge": 0
+          },
+          "capture": "campaign-lesson-anomaly-r1-final-a.png"
+        }
+      ]
+    },
+    {
+      "id": "below-full-power-threshold",
+      "actions": [
+        {
+          "cardId": 13,
+          "name": "表現の基本",
+          "expected": {
+            "score": 0,
+            "stamina": 30,
+            "genki": 4,
+            "stance": "none",
+            "fullPowerCharge": 0
+          },
+          "capture": "campaign-lesson-anomaly-r2-turn2.png"
+        },
+        {
+          "cardId": 418,
+          "name": "カウントダウン",
+          "expected": {
+            "score": 0,
+            "stamina": 30,
+            "genki": 10,
+            "stance": "preservation",
+            "fullPowerCharge": 0
+          },
+          "capture": "campaign-lesson-anomaly-r2-turn3.png"
+        },
+        {
+          "cardId": 390,
+          "name": "精一杯",
+          "turnsElapsed": 2,
+          "expected": {
+            "score": 44,
+            "stamina": 30,
+            "genki": 7,
+            "stance": "strength",
+            "enthusiasm": 5,
+            "cardUsesRemaining": 1
+          },
+          "capture": "campaign-lesson-anomaly-r2-extra1.png"
+        },
+        {
+          "cardId": 382,
+          "name": "スターライト",
+          "turnsElapsed": 3,
+          "expected": {
+            "score": 79,
+            "stamina": 25,
+            "genki": 0,
+            "stance": "strength2",
+            "enthusiasm": 0
+          },
+          "capture": "campaign-lesson-anomaly-r2-turn4.png"
+        },
+        {
+          "cardId": 50,
+          "name": "ファーストステップ",
+          "turnsElapsed": 4,
+          "expected": {
+            "score": 79,
+            "stamina": 24,
+            "genki": 3,
+            "stance": "strength2",
+            "costReduction": 1,
+            "fullPowerCharge": 0
+          },
+          "capture": "campaign-lesson-anomaly-r2-turn5.png"
+        },
+        {
+          "cardId": 416,
+          "name": "潜在能力",
+          "turnsElapsed": 5,
+          "handCardIds": [
+            416,
+            2,
+            384
+          ],
+          "hold": {
+            "candidateIds": [
+              2,
+              384
+            ],
+            "selectedId": 2,
+            "choiceCapture": "campaign-lesson-anomaly-r2-hold-choice.png",
+            "selectedCapture": "campaign-lesson-anomaly-r2-hold-selected.png"
+          },
+          "heldCardIds": [
+            2
+          ],
+          "expected": {
+            "score": 79,
+            "stamina": 15,
+            "genki": 10,
+            "stance": "strength2",
+            "fullPowerCharge": 3,
+            "costReduction": 1
+          },
+          "capture": "campaign-lesson-anomaly-r2-turn6.png",
+          "handCapture": "campaign-lesson-anomaly-r2-turn5.png"
+        },
+        {
+          "cardId": 448,
+          "name": "王者の御出まし",
+          "turnsElapsed": 6,
+          "heldCardIds": [
+            2
+          ],
+          "expected": {
+            "score": 79,
+            "stamina": 14,
+            "genki": 5,
+            "stance": "strength2",
+            "fullPowerCharge": 7,
+            "halfCostTurns": 2,
+            "costReduction": 1,
+            "cardUsesRemaining": 1
+          },
+          "capture": "campaign-lesson-anomaly-r2-turn7.png"
+        },
+        {
+          "cardId": 385,
+          "name": "一歩+",
+          "turnsElapsed": 7,
+          "heldCardIds": [
+            2
+          ],
+          "expected": {
+            "score": 137,
+            "stamina": 13,
+            "genki": 2,
+            "stance": "strength2",
+            "fullPowerCharge": 7,
+            "costReduction": 1
+          },
+          "capture": "campaign-lesson-anomaly-r2-final-a.png"
+        }
+      ]
+    },
+    {
+      "id": "multihit-hold-upgraded-appeal",
+      "actions": [
+        {
+          "cardId": 392,
+          "name": "ハッピー♪",
+          "expected": {
+            "score": 0,
+            "stamina": 27,
+            "genki": 7,
+            "stance": "preservation",
+            "fullPowerCharge": 0
+          },
+          "capture": "campaign-lesson-anomaly-r3-turn2.png"
+        },
+        {
+          "cardId": 418,
+          "name": "カウントダウン",
+          "expected": {
+            "score": 0,
+            "stamina": 27,
+            "genki": 14,
+            "stance": "preservation2",
+            "fullPowerCharge": 0
+          },
+          "capture": "campaign-lesson-anomaly-r3-turn3.png"
+        },
+        {
+          "cardId": 390,
+          "name": "精一杯",
+          "turnsElapsed": 2,
+          "expected": {
+            "score": 56,
+            "stamina": 27,
+            "genki": 17,
+            "stance": "strength",
+            "enthusiasm": 8,
+            "cardUsesRemaining": 1
+          },
+          "capture": "campaign-lesson-anomaly-r3-extra1.png"
+        },
+        {
+          "cardId": 400,
+          "name": "せーのっ！",
+          "turnsElapsed": 3,
+          "expected": {
+            "score": 106,
+            "stamina": 27,
+            "genki": 7,
+            "stance": "strength2",
+            "enthusiasm": 0
+          },
+          "capture": "campaign-lesson-anomaly-r3-turn4.png"
+        },
+        {
+          "cardId": 396,
+          "name": "涙の思い出",
+          "turnsElapsed": 4,
+          "expected": {
+            "score": 106,
+            "stamina": 26,
+            "genki": 5,
+            "stance": "preservation",
+            "fullPowerCharge": 3
+          },
+          "capture": "campaign-lesson-anomaly-r3-turn5.png"
+        },
+        {
+          "cardId": 416,
+          "name": "潜在能力",
+          "turnsElapsed": 5,
+          "handCardIds": [
+            416,
+            2,
+            384
+          ],
+          "hold": {
+            "candidateIds": [
+              2,
+              384
+            ],
+            "selectedId": 2,
+            "choiceCapture": "campaign-lesson-anomaly-r3-hold-choice.png",
+            "selectedCapture": "campaign-lesson-anomaly-r3-hold-selected.png"
+          },
+          "heldCardIds": [
+            2
+          ],
+          "expected": {
+            "score": 106,
+            "stamina": 26,
+            "genki": 12,
+            "stance": "preservation",
+            "fullPowerCharge": 6
+          },
+          "capture": "campaign-lesson-anomaly-r3-turn6.png",
+          "handCapture": "campaign-lesson-anomaly-r3-turn5-hand.png"
+        },
+        {
+          "cardId": 448,
+          "name": "王者の御出まし",
+          "turnsElapsed": 6,
+          "heldCardIds": [],
+          "returnedHeldCardId": 2,
+          "expected": {
+            "score": 106,
+            "stamina": 26,
+            "genki": 10,
+            "stance": "fullPower",
+            "fullPowerCharge": 0,
+            "halfCostTurns": 2,
+            "enthusiasm": 5,
+            "cardUsesRemaining": 3
+          },
+          "capture": "campaign-lesson-anomaly-r3-turn7.png"
+        },
+        {
+          "cardId": 2,
+          "name": "アピールの基本+",
+          "turnsElapsed": 6,
+          "useReturnedHeldCard": true,
+          "expected": {
+            "score": 163,
+            "stamina": 26,
+            "genki": 8,
+            "stance": "fullPower",
+            "enthusiasm": 5,
+            "cardUsesRemaining": 2,
+            "halfCostTurns": 2
+          },
+          "capture": "campaign-lesson-anomaly-r3-final-extra1.png"
+        },
+        {
+          "cardId": 385,
+          "name": "一歩+",
+          "turnsElapsed": 6,
+          "expected": {
+            "score": 247,
+            "stamina": 26,
+            "genki": 6,
+            "stance": "fullPower",
+            "enthusiasm": 5,
+            "cardUsesRemaining": 1,
+            "halfCostTurns": 2
+          },
+          "capture": "campaign-lesson-anomaly-r3-final-extra2.png"
+        },
+        {
+          "cardId": 1,
+          "name": "アピールの基本",
+          "turnsElapsed": 7,
+          "expected": {
+            "stamina": 26,
+            "genki": 4,
+            "fullPowerCharge": 0
+          },
+          "capture": "campaign-lesson-anomaly-r3-final-b.png"
+        }
+      ]
+    }
+  ]
+}

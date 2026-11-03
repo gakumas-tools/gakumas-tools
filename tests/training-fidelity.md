@@ -123,3 +123,18 @@ The first play switches from 強気 through 温存 and back, gaining 5 熱意
 and an extra use. The third reaches 温存2 first; leaving it grants 5 genki,
 8 熱意 and an extra use. Its last two scores each rise by 184 at 400%.
 Terminal 熱意 is omitted because the screenshot precedes its end-turn reset.
+
+## 【応用5】プラン：アノマリー
+
+A visual lesson starting at 100, with a target gain of 280. Covers both tiers
+of preservation and strength, enthusiasm on multiple score actions, and
+holding a card through full-power entry. Leaving preservation when full power
+starts gives three card uses in the last turn. The first play stays below
+the lesson cap through all three actions.
+
+The second play reaches only 7 charge and keeps its card held. It also checks
+the strength 2 stamina drain with half costs and a reduction of 1. The third
+holds and plays アピールの基本+ instead of 一歩. Its last score reaches the
+lesson cap, so only its resources are compared after the last card.
+Terminal full-power stance, enthusiasm and half-cost durations are omitted
+because the screenshots precede their end-turn changes.
