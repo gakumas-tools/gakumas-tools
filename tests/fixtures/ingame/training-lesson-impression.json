@@ -38,7 +38,13 @@
             "genki": 2,
             "goodImpressionTurns": 3
           },
-          "capture": "campaign-impression-20261103-r1-turn2.png"
+          "capture": "campaign-impression-20261103-r1-turn2.png",
+          "handCardIds": [
+            13,
+            58,
+            1
+          ],
+          "handCapture": "campaign-impression-20261103-r1-ready.png"
         },
         {
           "cardId": 122,
@@ -49,7 +55,13 @@
             "genki": 3,
             "goodImpressionTurns": 6
           },
-          "capture": "campaign-impression-20261103-r1-turn3.png"
+          "capture": "campaign-impression-20261103-r1-turn3.png",
+          "handCardIds": [
+            58,
+            122,
+            1
+          ],
+          "handCapture": "campaign-impression-20261103-r1-turn2.png"
         },
         {
           "cardId": 38,
@@ -60,7 +72,13 @@
             "genki": 0,
             "goodImpressionTurns": 8
           },
-          "capture": "campaign-impression-20261103-r1-turn4.png"
+          "capture": "campaign-impression-20261103-r1-turn4.png",
+          "handCardIds": [
+            3,
+            38,
+            88
+          ],
+          "handCapture": "campaign-impression-20261103-r1-turn3.png"
         },
         {
           "cardId": 9,
@@ -69,7 +87,13 @@
             "stamina": 17,
             "genki": 0
           },
-          "capture": "campaign-impression-20261103-r1-final-c.png"
+          "capture": "campaign-impression-20261103-r1-final-c.png",
+          "handCardIds": [
+            13,
+            9,
+            3
+          ],
+          "handCapture": "campaign-impression-20261103-r1-turn4.png"
         }
       ]
     },
@@ -85,7 +109,13 @@
             "genki": 4,
             "goodImpressionTurns": 0
           },
-          "capture": "campaign-impression-20261103-r2-turn2.png"
+          "capture": "campaign-impression-20261103-r2-turn2.png",
+          "handCardIds": [
+            13,
+            58,
+            1
+          ],
+          "handCapture": "campaign-impression-20261103-r2-initial.png"
         },
         {
           "cardId": 58,
@@ -96,7 +126,13 @@
             "genki": 2,
             "goodImpressionTurns": 3
           },
-          "capture": "campaign-impression-20261103-r2-turn3.png"
+          "capture": "campaign-impression-20261103-r2-turn3.png",
+          "handCardIds": [
+            58,
+            122,
+            1
+          ],
+          "handCapture": "campaign-impression-20261103-r2-turn2.png"
         },
         {
           "cardId": 88,
@@ -107,7 +143,13 @@
             "genki": 0,
             "goodImpressionTurns": 6
           },
-          "capture": "campaign-impression-20261103-r2-turn4.png"
+          "capture": "campaign-impression-20261103-r2-turn4.png",
+          "handCardIds": [
+            3,
+            38,
+            88
+          ],
+          "handCapture": "campaign-impression-20261103-r2-turn3.png"
         },
         {
           "cardId": 3,
@@ -117,7 +159,13 @@
             "stamina": 24,
             "genki": 2
           },
-          "capture": "campaign-impression-20261103-r2-final-b.png"
+          "capture": "campaign-impression-20261103-r2-final-b.png",
+          "handCardIds": [
+            13,
+            9,
+            3
+          ],
+          "handCapture": "campaign-impression-20261103-r2-turn4.png"
         }
       ]
     },
@@ -133,7 +181,13 @@
             "genki": 0,
             "goodImpressionTurns": 0
           },
-          "capture": "campaign-impression-20261103-r3-turn2.png"
+          "capture": "campaign-impression-20261103-r3-turn2.png",
+          "handCardIds": [
+            13,
+            58,
+            1
+          ],
+          "handCapture": "campaign-impression-20261103-r3-initial.png"
         },
         {
           "cardId": 1,
@@ -144,7 +198,13 @@
             "genki": 0,
             "goodImpressionTurns": 0
           },
-          "capture": "campaign-impression-20261103-r3-turn3.png"
+          "capture": "campaign-impression-20261103-r3-turn3.png",
+          "handCardIds": [
+            58,
+            122,
+            1
+          ],
+          "handCapture": "campaign-impression-20261103-r3-turn2.png"
         },
         {
           "cardId": 3,
@@ -155,7 +215,13 @@
             "genki": 2,
             "goodImpressionTurns": 0
           },
-          "capture": "campaign-impression-20261103-r3-turn4.png"
+          "capture": "campaign-impression-20261103-r3-turn4.png",
+          "handCardIds": [
+            3,
+            38,
+            88
+          ],
+          "handCapture": "campaign-impression-20261103-r3-turn3.png"
         },
         {
           "cardId": 9,
@@ -164,9 +230,29 @@
             "stamina": 16,
             "genki": 0
           },
-          "capture": "campaign-impression-20261103-r3-final-a.png"
+          "capture": "campaign-impression-20261103-r3-final-a.png",
+          "handCardIds": [
+            13,
+            9,
+            3
+          ],
+          "handCapture": "campaign-impression-20261103-r3-turn4.png"
         }
       ]
     }
+  ],
+  "drawCardIds": [
+    13,
+    58,
+    1,
+    58,
+    122,
+    1,
+    3,
+    38,
+    88,
+    13,
+    9,
+    3
   ]
 }
