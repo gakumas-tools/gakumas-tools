@@ -6,6 +6,7 @@ import { IdolConfig, StageEngine, S } from "gakumas-engine";
 
 const FIXTURES = [
   "training-exam-impression",
+  "training-exam-motivation",
 ];
 
 function loadCapture(name) {
