@@ -806,5 +806,11 @@
         }
       ]
     }
+  },
+  "EntityPage": {
+    "metaDescription": "{category}図鑑の「{name}」",
+    "back": "{category}一覧",
+    "open": "ページを開く",
+    "customizations": "カスタマイズ"
   }
 }

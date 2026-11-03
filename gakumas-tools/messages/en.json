@@ -798,5 +798,11 @@
         }
       ]
     }
+  },
+  "EntityPage": {
+    "metaDescription": "{name} in the {category} reference",
+    "back": "All {category}",
+    "open": "Open page",
+    "customizations": "Customizations"
   }
 }

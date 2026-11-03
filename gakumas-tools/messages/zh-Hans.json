@@ -798,5 +798,11 @@
         }
       ]
     }
+  },
+  "EntityPage": {
+    "metaDescription": "{category}图鉴中的{name}",
+    "back": "全部{category}",
+    "open": "打开页面",
+    "customizations": "自定义"
   }
 }

@@ -1,4 +1,5 @@
 @use "../../styles/mixins";
+@use "../../styles/tokens";
 
 .reference {
   flex: 1;
@@ -7,4 +8,11 @@
   flex-direction: column;
   overflow: hidden;
   @include mixins.card;
+}
+
+.open {
+  align-self: flex-end;
+  margin: 0 tokens.$space-2;
+  font-size: tokens.$text-sm;
+  @include mixins.link-pill;
 }
