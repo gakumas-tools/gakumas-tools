@@ -123,7 +123,7 @@
       ]
     },
     {
-      "id": "score-first-observed-prefix",
+      "id": "score-first-multihit",
       "actions": [
         {
           "cardId": 30,
@@ -157,6 +157,17 @@
             "concentration": 2
           },
           "capture": "campaign-concentration-20261103-r3-turn4.png"
+        },
+        {
+          "cardId": 7,
+          "name": "試行錯誤",
+          "expected": {
+            "score": 32,
+            "stamina": 20,
+            "genki": 0,
+            "concentration": 2
+          },
+          "capture": "campaign-concentration-20261103-r3-final-c.png"
         }
       ]
     }
