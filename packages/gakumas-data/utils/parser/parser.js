@@ -264,6 +264,17 @@ export class Parser {
         }
         if (effect.type === "action") {
           const actions = [effect];
+          const flushActions = () => {
+            if (actions.length === 1) {
+              patches.push({ op: "append", effect: actions[0] });
+            } else if (actions.length > 1) {
+              patches.push({
+                op: "append",
+                effect: { type: "actionBlock", body: actions.slice() },
+              });
+            }
+            actions.length = 0;
+          };
           while (!this.isAtEnd()) {
             // Skip semicolons.
             while (this.match(TokenType.SEMICOLON)) {}
@@ -282,24 +293,13 @@ export class Parser {
             if (next.type !== "action") {
               // Non-action bare effect — flush collected actions as one
               // patch, then emit this one separately.
-              patches.push({
-                op: "append",
-                effect: { type: "actionBlock", body: actions },
-              });
+              flushActions();
               patches.push({ op: "append", effect: next });
-              actions.length = 0;
               break;
             }
             actions.push(next);
           }
-          if (actions.length === 1) {
-            patches.push({ op: "append", effect: actions[0] });
-          } else if (actions.length > 1) {
-            patches.push({
-              op: "append",
-              effect: { type: "actionBlock", body: actions },
-            });
-          }
+          flushActions();
         } else {
           patches.push({ op: "append", effect });
         }
