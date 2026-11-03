@@ -23,6 +23,7 @@ const FIXTURES = [
   "training-exam-good-condition",
   "training-exam-concentration",
   "training-lesson-sense",
+  "training-lesson-logic",
 ];
 
 function loadCapture(name) {
