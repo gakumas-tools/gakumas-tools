@@ -162,3 +162,11 @@ its countdown on later turns, and scores with and without its 50% bonus.
 from 2 to 3. One play pays costs with genki before stamina. The first play
 clears at the cap of 140, so its last score is omitted. The other plays
 finish below the cap, with terminal good-condition durations omitted.
+
+## 【基礎2】集中
+
+A vocal lesson starting at 100. Covers scores at concentration 0, 3 and 5,
+gaining concentration after scoring, and costs paid with genki. The first
+play reaches the cap of 140; the second final score is obscured during its
+two-hit animation, so both final scores are omitted. The third play records
+the prefix up to the last hand.
