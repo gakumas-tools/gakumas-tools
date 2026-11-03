@@ -17,6 +17,7 @@ const FIXTURES = [
   "training-lesson-anomaly",
   "training-lesson-growth",
   "training-lesson-good-condition",
+  "training-lesson-concentration",
 ];
 
 function loadCapture(name) {

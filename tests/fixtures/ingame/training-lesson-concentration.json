@@ -1,0 +1,164 @@
+{
+  "date": "2026-11-03",
+  "gameVersion": "3.5.0",
+  "stage": "【基礎2】集中",
+  "sourceDirectory": "screenshots/sources/ingame/",
+  "initialAttribute": 100,
+  "targetGain": 40,
+  "initial": {
+    "score": 0,
+    "stamina": 30,
+    "genki": 0,
+    "concentration": 0
+  },
+  "turnTypes": [
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal"
+  ],
+  "replayMultipliers": {
+    "vocal": 1
+  },
+  "initialCaptures": [
+    "campaign-concentration-20261103-r1-initial.png",
+    "campaign-concentration-20261103-r2-initial.png",
+    "campaign-concentration-20261103-r3-initial.png"
+  ],
+  "plays": [
+    {
+      "id": "guided-concentration-first",
+      "actions": [
+        {
+          "cardId": 76,
+          "name": "情熱ターン",
+          "expected": {
+            "score": 11,
+            "stamina": 24,
+            "genki": 0,
+            "concentration": 3
+          },
+          "capture": "campaign-concentration-20261103-r1-turn2.png"
+        },
+        {
+          "cardId": 30,
+          "name": "ファンサ",
+          "expected": {
+            "score": 24,
+            "stamina": 22,
+            "genki": 0,
+            "concentration": 3
+          },
+          "capture": "campaign-concentration-20261103-r1-turn3.png"
+        },
+        {
+          "cardId": 28,
+          "name": "準備運動",
+          "expected": {
+            "score": 33,
+            "stamina": 18,
+            "genki": 0,
+            "concentration": 5
+          },
+          "capture": "campaign-concentration-20261103-r1-turn4.png"
+        },
+        {
+          "cardId": 7,
+          "name": "試行錯誤",
+          "expected": {
+            "stamina": 11,
+            "genki": 0,
+            "concentration": 5
+          },
+          "capture": "campaign-concentration-20261103-r1-final-a.png"
+        }
+      ]
+    },
+    {
+      "id": "genki-paid-multihit",
+      "actions": [
+        {
+          "cardId": 13,
+          "name": "表現の基本",
+          "expected": {
+            "score": 0,
+            "stamina": 30,
+            "genki": 4,
+            "concentration": 0
+          },
+          "capture": "campaign-concentration-20261103-r2-turn2.png"
+        },
+        {
+          "cardId": 3,
+          "name": "ポーズの基本",
+          "expected": {
+            "score": 2,
+            "stamina": 30,
+            "genki": 3,
+            "concentration": 0
+          },
+          "capture": "campaign-concentration-20261103-r2-turn3.png"
+        },
+        {
+          "cardId": 17,
+          "name": "表情の基本",
+          "expected": {
+            "score": 2,
+            "stamina": 30,
+            "genki": 3,
+            "concentration": 2
+          },
+          "capture": "campaign-concentration-20261103-r2-turn4.png"
+        },
+        {
+          "cardId": 7,
+          "name": "試行錯誤",
+          "expected": {
+            "stamina": 26,
+            "genki": 0,
+            "concentration": 2
+          },
+          "capture": "campaign-concentration-20261103-r2-final-a.png"
+        }
+      ]
+    },
+    {
+      "id": "score-first-observed-prefix",
+      "actions": [
+        {
+          "cardId": 30,
+          "name": "ファンサ",
+          "expected": {
+            "score": 10,
+            "stamina": 28,
+            "genki": 0,
+            "concentration": 0
+          },
+          "capture": "campaign-concentration-20261103-r3-turn2.png"
+        },
+        {
+          "cardId": 3,
+          "name": "ポーズの基本",
+          "expected": {
+            "score": 12,
+            "stamina": 25,
+            "genki": 2,
+            "concentration": 0
+          },
+          "capture": "campaign-concentration-20261103-r3-turn3.png"
+        },
+        {
+          "cardId": 17,
+          "name": "表情の基本",
+          "expected": {
+            "score": 12,
+            "stamina": 25,
+            "genki": 2,
+            "concentration": 2
+          },
+          "capture": "campaign-concentration-20261103-r3-turn4.png"
+        }
+      ]
+    }
+  ]
+}
