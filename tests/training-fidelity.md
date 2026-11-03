@@ -171,6 +171,9 @@ and an extra card use. Their scores remain below the cap. The last play pays
 part of 総合芸術's cost with stamina. Growth gained by its own stance change applies after the
 current action sequence, so that use adds 54 before the follow-up card.
 
+This fixture supplies selected cards. The unique 総合芸術 appears in the
+first and third hands; the intervening deck order and reshuffle are unknown.
+
 ## 【基礎1】好調
 
 A dance lesson starting at 100. Covers gaining and extending good condition,
