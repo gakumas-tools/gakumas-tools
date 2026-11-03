@@ -168,5 +168,6 @@ finish below the cap, with terminal good-condition durations omitted.
 A vocal lesson starting at 100. Covers scores at concentration 0, 3 and 5,
 gaining concentration after scoring, and costs paid with genki. The first
 play reaches the cap of 140; the second final score is obscured during its
-two-hit animation, so both final scores are omitted. The third play records
-the prefix up to the last hand.
+two-hit animation, so both final scores are omitted. The third play captures
+both hits at concentration 2, with a total gain of 20 and a final attribute
+of 132.
