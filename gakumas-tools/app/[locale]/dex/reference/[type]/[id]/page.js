@@ -1,7 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { FaChevronLeft } from "react-icons/fa6";
-import { Customizations } from "gakumas-data";
+import { Customizations, Descriptions } from "gakumas-data";
 import gkImg from "gakumas-images";
 import Image from "@/components/Image";
 import { Link } from "@/i18n/routing";
@@ -29,6 +29,7 @@ export default async function EntityPage({ params }) {
   const t_dex = await getTranslations({ locale, namespace: "Dex" });
   const category = t_dex(`tabs.${type}`);
   const { icon, details } = gkImg(entity);
+  const description = Descriptions.get(entity);
   const customizations = (entity.availableCustomizations || []).map(
     Customizations.getById,
   );
@@ -72,11 +73,15 @@ export default async function EntityPage({ params }) {
         </div>
       </header>
 
-      {details && (
+      {(description || details) && (
         <div className={styles.description}>
-          <div className={styles.crop}>
-            <Image src={details} alt={entity.name} width={500} height={215} />
-          </div>
+          {description ? (
+            description.split("\n").map((line, i) => <p key={i}>{line}</p>)
+          ) : (
+            <div className={styles.crop}>
+              <Image src={details} alt={entity.name} width={500} height={215} />
+            </div>
+          )}
         </div>
       )}
 

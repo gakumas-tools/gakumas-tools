@@ -64,11 +64,17 @@
   gap: 3px;
 }
 
-// The description is the in-game details screen, cropped to its text as the dex shows it.
+// The game's description, a line per effect. Without one, the in-game details screen cropped to its text.
 .description {
-  padding: tokens.$space-3;
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$space-1;
+  padding: tokens.$space-3 tokens.$space-4;
   border-radius: tokens.$radius-lg;
   background-color: tokens.$surface-alt;
+  color: tokens.$surface-ink;
+  font-size: tokens.$text-md;
+  line-height: 1.6;
 }
 
 .crop {
