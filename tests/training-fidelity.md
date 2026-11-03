@@ -198,3 +198,12 @@ both. At 250%, アピールの基本 scores 23 without good condition and 35
 with it; 愛嬌 scores 50 with good condition. The plays finish at scores
 230, 97 and 160. Terminal good-condition durations are omitted because
 the screenshots precede their end-turn countdown.
+
+## 【試験研修2】集中
+
+Covers concentration gained through 表情の基本, 眼力, バランス感覚,
+情熱ターン and 準備運動, with costs paid from genki, stamina or both.
+情熱ターン scores before gaining concentration. At 250%, its score is
+28, 35 or 43 at concentration 0, 3 or 6. The final 試行錯誤 scores twice
+at 400%, adding 136, 120 or 112 at concentration 9, 7 or 6. Both hits
+are captured, with final scores 233, 162 and 189.
