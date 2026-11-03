@@ -197,7 +197,9 @@ export function bucketScores(scores) {
   const keys = Object.keys(data);
   const minKey = Math.min(...keys);
   const maxKey = Math.max(...keys);
-  for (let i = minKey - 1; i <= maxKey + 1; i++) {
+  // Pad an empty bucket on each side, but none below 0: scores aren't
+  // negative, and a "-1" key would be listed after every positive one.
+  for (let i = Math.max(minKey - 1, 0); i <= maxKey + 1; i++) {
     if (!data[i]) data[i] = 0;
   }
 
@@ -421,6 +423,12 @@ export function accumulateCardUsage(logs, cardUsage) {
         turnData[key] = { id, c: c || null, use: 0, draw: 0 };
       }
       turnData[key].use++;
+      // The played copy has left the hand, so a copy drawn later this turn
+      // counts as a new draw.
+      drawCountThisTurn.set(
+        key,
+        Math.max(0, (drawCountThisTurn.get(key) || 0) - 1),
+      );
     }
 
     if (selectedIndex == null) {
