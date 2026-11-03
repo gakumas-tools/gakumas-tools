@@ -146,7 +146,9 @@ function replay(capture, play) {
       hand = supplyHand(state, action, heldCard);
       putInHand(state, hand);
     }
-    const card = hand.find((c) => state[S.cardMap][c].id == action.cardId);
+    const card = action.useReturnedHeldCard
+      ? heldCard
+      : hand.find((c) => state[S.cardMap][c].id == action.cardId);
     for (const [field, value] of Object.entries(action.growthBefore ?? {})) {
       assert.equal(
         state[S.cardMap][card].growth[G[field]],

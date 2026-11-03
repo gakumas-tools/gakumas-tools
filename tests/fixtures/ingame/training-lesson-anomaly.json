@@ -45,7 +45,13 @@
             "enthusiasm": 0,
             "fullPowerCharge": 0
           },
-          "capture": "campaign-lesson-anomaly-r1-turn2.png"
+          "capture": "campaign-lesson-anomaly-r1-turn2.png",
+          "handCardIds": [
+            392,
+            13,
+            1
+          ],
+          "handCapture": "campaign-lesson-anomaly-r1-initial.png"
         },
         {
           "cardId": 418,
@@ -58,7 +64,13 @@
             "enthusiasm": 0,
             "fullPowerCharge": 0
           },
-          "capture": "campaign-lesson-anomaly-r1-turn3.png"
+          "capture": "campaign-lesson-anomaly-r1-turn3.png",
+          "handCardIds": [
+            374,
+            418,
+            384
+          ],
+          "handCapture": "campaign-lesson-anomaly-r1-turn2.png"
         },
         {
           "cardId": 400,
@@ -72,7 +84,13 @@
             "enthusiasm": 8,
             "cardUsesRemaining": 1
           },
-          "capture": "campaign-lesson-anomaly-r1-extra1.png"
+          "capture": "campaign-lesson-anomaly-r1-extra1.png",
+          "handCardIds": [
+            400,
+            382,
+            390
+          ],
+          "handCapture": "campaign-lesson-anomaly-r1-turn3.png"
         },
         {
           "cardId": 382,
@@ -85,7 +103,12 @@
             "stance": "strength2",
             "enthusiasm": 0
           },
-          "capture": "campaign-lesson-anomaly-r1-turn4.png"
+          "capture": "campaign-lesson-anomaly-r1-turn4.png",
+          "handCardIds": [
+            382,
+            390
+          ],
+          "handCapture": "campaign-lesson-anomaly-r1-extra1.png"
         },
         {
           "cardId": 396,
@@ -98,7 +121,13 @@
             "stance": "preservation",
             "fullPowerCharge": 3
           },
-          "capture": "campaign-lesson-anomaly-r1-turn5.png"
+          "capture": "campaign-lesson-anomaly-r1-turn5.png",
+          "handCardIds": [
+            396,
+            13,
+            50
+          ],
+          "handCapture": "campaign-lesson-anomaly-r1-turn4.png"
         },
         {
           "cardId": 416,
@@ -147,7 +176,13 @@
             "enthusiasm": 5,
             "cardUsesRemaining": 3
           },
-          "capture": "campaign-lesson-anomaly-r1-turn7.png"
+          "capture": "campaign-lesson-anomaly-r1-turn7.png",
+          "handCardIds": [
+            3,
+            448,
+            13
+          ],
+          "handCapture": "campaign-lesson-anomaly-r1-turn6.png"
         },
         {
           "cardId": 384,
@@ -163,7 +198,14 @@
             "cardUsesRemaining": 2,
             "halfCostTurns": 2
           },
-          "capture": "campaign-lesson-anomaly-r1-final-extra1.png"
+          "capture": "campaign-lesson-anomaly-r1-final-extra1.png",
+          "handCardIds": [
+            1,
+            385,
+            48,
+            384
+          ],
+          "handCapture": "campaign-lesson-anomaly-r1-turn7.png"
         },
         {
           "cardId": 385,
@@ -178,7 +220,13 @@
             "cardUsesRemaining": 1,
             "halfCostTurns": 2
           },
-          "capture": "campaign-lesson-anomaly-r1-final-extra2.png"
+          "capture": "campaign-lesson-anomaly-r1-final-extra2.png",
+          "handCardIds": [
+            1,
+            385,
+            48
+          ],
+          "handCapture": "campaign-lesson-anomaly-r1-final-extra1.png"
         },
         {
           "cardId": 1,
@@ -190,7 +238,12 @@
             "genki": 2,
             "fullPowerCharge": 0
           },
-          "capture": "campaign-lesson-anomaly-r1-final-a.png"
+          "capture": "campaign-lesson-anomaly-r1-final-a.png",
+          "handCardIds": [
+            1,
+            48
+          ],
+          "handCapture": "campaign-lesson-anomaly-r1-final-extra2.png"
         }
       ]
     },
@@ -207,7 +260,13 @@
             "stance": "none",
             "fullPowerCharge": 0
           },
-          "capture": "campaign-lesson-anomaly-r2-turn2.png"
+          "capture": "campaign-lesson-anomaly-r2-turn2.png",
+          "handCardIds": [
+            392,
+            13,
+            1
+          ],
+          "handCapture": "campaign-lesson-anomaly-r2-initial.png"
         },
         {
           "cardId": 418,
@@ -219,7 +278,13 @@
             "stance": "preservation",
             "fullPowerCharge": 0
           },
-          "capture": "campaign-lesson-anomaly-r2-turn3.png"
+          "capture": "campaign-lesson-anomaly-r2-turn3.png",
+          "handCardIds": [
+            374,
+            418,
+            384
+          ],
+          "handCapture": "campaign-lesson-anomaly-r2-turn2.png"
         },
         {
           "cardId": 390,
@@ -233,7 +298,13 @@
             "enthusiasm": 5,
             "cardUsesRemaining": 1
           },
-          "capture": "campaign-lesson-anomaly-r2-extra1.png"
+          "capture": "campaign-lesson-anomaly-r2-extra1.png",
+          "handCardIds": [
+            400,
+            382,
+            390
+          ],
+          "handCapture": "campaign-lesson-anomaly-r2-turn3.png"
         },
         {
           "cardId": 382,
@@ -246,7 +317,12 @@
             "stance": "strength2",
             "enthusiasm": 0
           },
-          "capture": "campaign-lesson-anomaly-r2-turn4.png"
+          "capture": "campaign-lesson-anomaly-r2-turn4.png",
+          "handCardIds": [
+            400,
+            382
+          ],
+          "handCapture": "campaign-lesson-anomaly-r2-extra1.png"
         },
         {
           "cardId": 50,
@@ -260,7 +336,13 @@
             "costReduction": 1,
             "fullPowerCharge": 0
           },
-          "capture": "campaign-lesson-anomaly-r2-turn5.png"
+          "capture": "campaign-lesson-anomaly-r2-turn5.png",
+          "handCardIds": [
+            396,
+            13,
+            50
+          ],
+          "handCapture": "campaign-lesson-anomaly-r2-turn4.png"
         },
         {
           "cardId": 416,
@@ -311,7 +393,13 @@
             "costReduction": 1,
             "cardUsesRemaining": 1
           },
-          "capture": "campaign-lesson-anomaly-r2-turn7.png"
+          "capture": "campaign-lesson-anomaly-r2-turn7.png",
+          "handCardIds": [
+            3,
+            448,
+            13
+          ],
+          "handCapture": "campaign-lesson-anomaly-r2-turn6.png"
         },
         {
           "cardId": 385,
@@ -328,7 +416,13 @@
             "fullPowerCharge": 7,
             "costReduction": 1
           },
-          "capture": "campaign-lesson-anomaly-r2-final-a.png"
+          "capture": "campaign-lesson-anomaly-r2-final-a.png",
+          "handCardIds": [
+            1,
+            385,
+            48
+          ],
+          "handCapture": "campaign-lesson-anomaly-r2-turn7.png"
         }
       ]
     },
@@ -345,7 +439,13 @@
             "stance": "preservation",
             "fullPowerCharge": 0
           },
-          "capture": "campaign-lesson-anomaly-r3-turn2.png"
+          "capture": "campaign-lesson-anomaly-r3-turn2.png",
+          "handCardIds": [
+            392,
+            13,
+            1
+          ],
+          "handCapture": "campaign-lesson-anomaly-r3-initial.png"
         },
         {
           "cardId": 418,
@@ -357,7 +457,13 @@
             "stance": "preservation2",
             "fullPowerCharge": 0
           },
-          "capture": "campaign-lesson-anomaly-r3-turn3.png"
+          "capture": "campaign-lesson-anomaly-r3-turn3.png",
+          "handCardIds": [
+            374,
+            418,
+            384
+          ],
+          "handCapture": "campaign-lesson-anomaly-r3-turn2.png"
         },
         {
           "cardId": 390,
@@ -371,7 +477,13 @@
             "enthusiasm": 8,
             "cardUsesRemaining": 1
           },
-          "capture": "campaign-lesson-anomaly-r3-extra1.png"
+          "capture": "campaign-lesson-anomaly-r3-extra1.png",
+          "handCardIds": [
+            400,
+            382,
+            390
+          ],
+          "handCapture": "campaign-lesson-anomaly-r3-turn3.png"
         },
         {
           "cardId": 400,
@@ -384,7 +496,12 @@
             "stance": "strength2",
             "enthusiasm": 0
           },
-          "capture": "campaign-lesson-anomaly-r3-turn4.png"
+          "capture": "campaign-lesson-anomaly-r3-turn4.png",
+          "handCardIds": [
+            400,
+            382
+          ],
+          "handCapture": "campaign-lesson-anomaly-r3-extra1.png"
         },
         {
           "cardId": 396,
@@ -397,7 +514,13 @@
             "stance": "preservation",
             "fullPowerCharge": 3
           },
-          "capture": "campaign-lesson-anomaly-r3-turn5.png"
+          "capture": "campaign-lesson-anomaly-r3-turn5.png",
+          "handCardIds": [
+            396,
+            13,
+            50
+          ],
+          "handCapture": "campaign-lesson-anomaly-r3-turn4.png"
         },
         {
           "cardId": 416,
@@ -446,7 +569,13 @@
             "enthusiasm": 5,
             "cardUsesRemaining": 3
           },
-          "capture": "campaign-lesson-anomaly-r3-turn7.png"
+          "capture": "campaign-lesson-anomaly-r3-turn7.png",
+          "handCardIds": [
+            3,
+            448,
+            13
+          ],
+          "handCapture": "campaign-lesson-anomaly-r3-turn6.png"
         },
         {
           "cardId": 2,
@@ -462,7 +591,14 @@
             "cardUsesRemaining": 2,
             "halfCostTurns": 2
           },
-          "capture": "campaign-lesson-anomaly-r3-final-extra1.png"
+          "capture": "campaign-lesson-anomaly-r3-final-extra1.png",
+          "handCardIds": [
+            1,
+            385,
+            48,
+            2
+          ],
+          "handCapture": "campaign-lesson-anomaly-r3-turn7.png"
         },
         {
           "cardId": 385,
@@ -477,7 +613,13 @@
             "cardUsesRemaining": 1,
             "halfCostTurns": 2
           },
-          "capture": "campaign-lesson-anomaly-r3-final-extra2.png"
+          "capture": "campaign-lesson-anomaly-r3-final-extra2.png",
+          "handCardIds": [
+            1,
+            385,
+            48
+          ],
+          "handCapture": "campaign-lesson-anomaly-r3-final-extra1.png"
         },
         {
           "cardId": 1,
@@ -488,9 +630,37 @@
             "genki": 4,
             "fullPowerCharge": 0
           },
-          "capture": "campaign-lesson-anomaly-r3-final-b.png"
+          "capture": "campaign-lesson-anomaly-r3-final-b.png",
+          "handCardIds": [
+            1,
+            48
+          ],
+          "handCapture": "campaign-lesson-anomaly-r3-final-extra2.png"
         }
       ]
     }
+  ],
+  "drawCardIds": [
+    392,
+    13,
+    1,
+    374,
+    418,
+    384,
+    400,
+    382,
+    390,
+    396,
+    13,
+    50,
+    416,
+    2,
+    384,
+    3,
+    448,
+    13,
+    1,
+    385,
+    48
   ]
 }
