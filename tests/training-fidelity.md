@@ -226,7 +226,8 @@ Covers concentration gained through 表情の基本, 眼力, バランス感覚,
 情熱ターン scores before gaining concentration. At 250%, its score is
 28, 35 or 43 at concentration 0, 3 or 6. The final 試行錯誤 scores twice
 at 400%, adding 136, 120 or 112 at concentration 9, 7 or 6. Both hits
-are captured, with final scores 233, 162 and 189.
+are captured, with final scores 233, 162 and 189. Hands are checked against
+the captured draw sequence.
 
 ## 【応用1】プラン：センス
 
@@ -241,7 +242,8 @@ before use. 盛装の華形 scores twice with condition and once without it.
 The plays also cover half costs and a cost reduction of 1. The first reaches
 the cap of 220, so its last score is omitted; the others finish at attributes
 136 and 150. Terminal condition and half-cost durations are omitted because
-the screenshots precede their end-turn countdowns.
+the screenshots precede their end-turn countdowns. Hands are checked against
+the captured draw sequence, including the P-item triggers at turn start.
 
 ## 【応用2】プラン：ロジック
 
