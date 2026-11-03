@@ -22,6 +22,7 @@ const FIXTURES = [
   "training-lesson-motivation",
   "training-exam-good-condition",
   "training-exam-concentration",
+  "training-lesson-sense",
 ];
 
 function loadCapture(name) {
@@ -45,7 +46,7 @@ function createEngine(capture, play) {
   );
   const idol = new IdolConfig({
     params: [0, 0, 0, capture.initial.stamina],
-    pItemIds: [],
+    pItemIds: capture.pItemIds ?? [],
     skillCardIdGroups: [cardIds],
   });
   const engine = new StageEngine({

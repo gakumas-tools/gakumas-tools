@@ -17,6 +17,8 @@ NPC scores or rank thresholds. Comparing whole stages and loadouts is `pnpm fide
 
 ## Fixtures
 
+- `pItemIds`: the P-items captured in the training; their effects run as
+  the recorded cards are played.
 - `initial`: the state before the first turn, checked before any card is
   played. Its genki is given to the engine, as some lessons start with it.
 - `turnTypes`: the turn order the game showed.
@@ -207,3 +209,18 @@ Covers concentration gained through 表情の基本, 眼力, バランス感覚,
 28, 35 or 43 at concentration 0, 3 or 6. The final 試行錯誤 scores twice
 at 400%, adding 136, 120 or 112 at concentration 9, 7 or 6. Both hits
 are captured, with final scores 233, 162 and 189.
+
+## 【応用1】プラン：センス
+
+A visual lesson starting at 100, with a target gain of 120. Its P-item,
+内なる光の耳飾り, grants 2 concentration and 1 genki at the start of a
+turn with good condition, up to twice. One play triggers both uses early;
+another delays condition until turn 4; the third stays without condition
+and retains both uses.
+
+楽観的 grants its concentration bonus when condition was already present
+before use. 盛装の華形 scores twice with condition and once without it.
+The plays also cover half costs and a cost reduction of 1. The first reaches
+the cap of 220, so its last score is omitted; the others finish at attributes
+136 and 150. Terminal condition and half-cost durations are omitted because
+the screenshots precede their end-turn countdowns.
