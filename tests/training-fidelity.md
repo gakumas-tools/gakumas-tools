@@ -171,3 +171,13 @@ play reaches the cap of 140; the second final score is obscured during its
 two-hit animation, so both final scores are omitted. The third play captures
 both hits at concentration 2, with a total gain of 20 and a final attribute
 of 132.
+
+## 【基礎3】好印象
+
+A visual lesson starting at 100. Covers good impression gained early or late,
+its countdown, end-turn scoring, and scores based on its current value.
+One play pays リスタート's full cost with genki and ends below the cap at
+attribute 123. The first play reaches the cap of 140; the third final capture
+precedes the last end-turn score, so both final scores are omitted. Terminal
+good-impression durations are omitted because the screenshots precede the
+next countdown.

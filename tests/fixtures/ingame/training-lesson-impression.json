@@ -1,0 +1,172 @@
+{
+  "date": "2026-11-03",
+  "gameVersion": "3.5.0",
+  "stage": "【基礎3】好印象",
+  "sourceDirectory": "screenshots/sources/ingame/",
+  "initialAttribute": 100,
+  "targetGain": 40,
+  "initial": {
+    "score": 0,
+    "stamina": 30,
+    "genki": 0,
+    "goodImpressionTurns": 0
+  },
+  "turnTypes": [
+    "visual",
+    "visual",
+    "visual",
+    "visual"
+  ],
+  "replayMultipliers": {
+    "visual": 1
+  },
+  "initialCaptures": [
+    "campaign-impression-20261103-r1-ready.png",
+    "campaign-impression-20261103-r2-initial.png",
+    "campaign-impression-20261103-r3-initial.png"
+  ],
+  "plays": [
+    {
+      "id": "early-impression",
+      "actions": [
+        {
+          "cardId": 58,
+          "name": "リスタート",
+          "expected": {
+            "score": 3,
+            "stamina": 26,
+            "genki": 2,
+            "goodImpressionTurns": 3
+          },
+          "capture": "campaign-impression-20261103-r1-turn2.png"
+        },
+        {
+          "cardId": 122,
+          "name": "ふれあい",
+          "expected": {
+            "score": 10,
+            "stamina": 23,
+            "genki": 3,
+            "goodImpressionTurns": 6
+          },
+          "capture": "campaign-impression-20261103-r1-turn3.png"
+        },
+        {
+          "cardId": 38,
+          "name": "今日もおはよう",
+          "expected": {
+            "score": 26,
+            "stamina": 22,
+            "genki": 0,
+            "goodImpressionTurns": 8
+          },
+          "capture": "campaign-impression-20261103-r1-turn4.png"
+        },
+        {
+          "cardId": 9,
+          "name": "可愛い仕草",
+          "expected": {
+            "stamina": 17,
+            "genki": 0
+          },
+          "capture": "campaign-impression-20261103-r1-final-c.png"
+        }
+      ]
+    },
+    {
+      "id": "genki-first",
+      "actions": [
+        {
+          "cardId": 13,
+          "name": "表現の基本",
+          "expected": {
+            "score": 0,
+            "stamina": 30,
+            "genki": 4,
+            "goodImpressionTurns": 0
+          },
+          "capture": "campaign-impression-20261103-r2-turn2.png"
+        },
+        {
+          "cardId": 58,
+          "name": "リスタート",
+          "expected": {
+            "score": 3,
+            "stamina": 30,
+            "genki": 2,
+            "goodImpressionTurns": 3
+          },
+          "capture": "campaign-impression-20261103-r2-turn3.png"
+        },
+        {
+          "cardId": 88,
+          "name": "ラブリーウインク",
+          "expected": {
+            "score": 15,
+            "stamina": 27,
+            "genki": 0,
+            "goodImpressionTurns": 6
+          },
+          "capture": "campaign-impression-20261103-r2-turn4.png"
+        },
+        {
+          "cardId": 3,
+          "name": "ポーズの基本",
+          "expected": {
+            "score": 23,
+            "stamina": 24,
+            "genki": 2
+          },
+          "capture": "campaign-impression-20261103-r2-final-b.png"
+        }
+      ]
+    },
+    {
+      "id": "late-impression",
+      "actions": [
+        {
+          "cardId": 1,
+          "name": "アピールの基本",
+          "expected": {
+            "score": 9,
+            "stamina": 26,
+            "genki": 0,
+            "goodImpressionTurns": 0
+          },
+          "capture": "campaign-impression-20261103-r3-turn2.png"
+        },
+        {
+          "cardId": 1,
+          "name": "アピールの基本",
+          "expected": {
+            "score": 18,
+            "stamina": 22,
+            "genki": 0,
+            "goodImpressionTurns": 0
+          },
+          "capture": "campaign-impression-20261103-r3-turn3.png"
+        },
+        {
+          "cardId": 3,
+          "name": "ポーズの基本",
+          "expected": {
+            "score": 20,
+            "stamina": 19,
+            "genki": 2,
+            "goodImpressionTurns": 0
+          },
+          "capture": "campaign-impression-20261103-r3-turn4.png"
+        },
+        {
+          "cardId": 9,
+          "name": "可愛い仕草",
+          "expected": {
+            "stamina": 16,
+            "genki": 0
+          },
+          "capture": "campaign-impression-20261103-r3-final-a.png"
+        }
+      ]
+    }
+  ]
+}
