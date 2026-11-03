@@ -190,6 +190,7 @@ export default function NiaCalculator() {
             if (diff === "master") {
               setStage("finale");
               setAffection(20);
+              setChallengeParamBonus(55);
             } else {
               setChallengeParamBonus(null);
             }
