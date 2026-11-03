@@ -111,3 +111,15 @@ other two cards in hand: 一歩 in one play, 表現の基本 in the other. The h
 card comes back to hand when full power starts, and that same copy is played
 next, though the last hand of the second play has two 表現の基本. This uses
 base 王者の御出まし (448), where 【基礎7】全力 used 王者の御出まし+ (449).
+
+## 【試験研修6】強気
+
+スターライト enters 強気 before scoring, while paying its cost in the
+previous stance. From 強気, せーのっ！ enters 強気2; the extra stamina drain
+starts with the next card. The plays cover costs paid with stamina and genki,
+and a cost reduction of 1 applied after the stance multiplier.
+
+The first play switches from 強気 through 温存 and back, gaining 5 熱意
+and an extra use. The third reaches 温存2 first; leaving it grants 5 genki,
+8 熱意 and an extra use. Its last two scores each rise by 184 at 400%.
+Terminal 熱意 is omitted because the screenshot precedes its end-turn reset.
