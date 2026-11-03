@@ -10,15 +10,25 @@ compares the engine's state at the next playable moment with what the game
 showed. State carries over from card to card; nothing is reset to a recorded
 value.
 
-The harness builds the deck from the cards the play used, one copy for each
-card played or captured in hand, and puts each in hand as its turn comes, so
-draws and deck composition aren't checked, and neither are raw parameters,
-NPC scores or rank thresholds. Comparing whole stages and loadouts is `pnpm fidelity`'s job.
+Fixtures with a captured draw sequence build the deck from that sequence
+and set its order before the stage starts. The engine draws and discards
+normally, and the harness compares the full hand before every card use,
+including extra uses in the same turn. The sequence covers observed draws;
+unseen deck contents and random shuffling aren't checked.
+
+Other fixtures build the deck from the cards the play used, one copy for
+each card played or captured in hand, and put each in hand as its turn comes.
+Their draws aren't checked. Neither mode checks raw parameters, NPC scores
+or rank thresholds. Comparing whole stages and loadouts is
+`pnpm fidelity`'s job.
 
 ## Fixtures
 
 - `pItemIds`: the P-items captured in the training; their effects run as
   the recorded cards are played.
+- `drawCardIds`: the captured draw sequence, used to order the deck once
+  before the stage starts. Each action then has `handCardIds` and a
+  `handCapture`, checked against the hand the engine draws.
 - `initial`: the state before the first turn, checked before any card is
   played. Its genki is given to the engine, as some lessons start with it.
 - `turnTypes`: the turn order the game showed.
@@ -163,7 +173,10 @@ its countdown on later turns, and scores with and without its 50% bonus.
 ファンサ rises from 10 to 15, アドリブ from 5 to 8, and ポーズの基本
 from 2 to 3. One play pays costs with genki before stamina. The first play
 clears at the cap of 140, so its last score is omitted. The other plays
-finish below the cap, with terminal good-condition durations omitted.
+finish below the cap, with terminal good-condition durations omitted. A fourth
+play lets condition expire before its final アピールの基本 and ends at
+attribute 118. Its hands and those of 【応用2】プラン：ロジック are checked
+against the captured draw sequences.
 
 ## 【基礎2】集中
 
