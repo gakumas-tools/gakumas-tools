@@ -1,0 +1,149 @@
+{
+  "date": "2026-11-05",
+  "gameVersion": "3.5.0",
+  "stageId": 190,
+  "startingStamina": 30,
+  "initial": {
+    "score": 0,
+    "stamina": 30,
+    "concentration": 3
+  },
+  "pItemIds": [
+    55
+  ],
+  "stage": "Contest S55 stage 1 (センス) third rehearsal: owned memory Tame-Lie-One-Step 紫雲清夏 5415",
+  "skillCardIds": [
+    1,
+    104,
+    54,
+    24,
+    24,
+    17,
+    230,
+    5,
+    24,
+    1
+  ],
+  "turnTypes": [
+    "visual",
+    "visual",
+    "vocal",
+    "visual",
+    "vocal",
+    "visual",
+    "dance",
+    "dance",
+    "vocal",
+    "visual"
+  ],
+  "displayedPercents": {
+    "vocal": 327,
+    "dance": 459,
+    "visual": 450
+  },
+  "scope": "Contest rehearsal replay with the panel's type %; excludes deck draws, the % calculation from parameters (#373) and the stage's ranking bonus.",
+  "note": "Expected values are after the action's turn ends. One card a turn, so the stage's effect never fires.",
+  "sourceDirectory": "screenshots/sources/ingame/",
+  "plays": [
+    {
+      "id": "rehearsal-20261105-seika-5415-3",
+      "actions": [
+        {
+          "turn": 1,
+          "cardId": 1,
+          "name": "アピールの基本",
+          "expected": {
+            "score": 54
+          },
+          "capture": "campaign-s26-sei-log-4.png"
+        },
+        {
+          "turn": 2,
+          "cardId": 104,
+          "name": "大声援",
+          "expected": {
+            "score": 54,
+            "genki": 6,
+            "goodConditionTurns": 3
+          },
+          "capture": "campaign-s26-sei-log-4.png"
+        },
+        {
+          "turn": 3,
+          "cardId": 54,
+          "name": "楽観的",
+          "expected": {
+            "score": 54,
+            "concentration": 4
+          },
+          "capture": "campaign-s26-sei-log-4.png"
+        },
+        {
+          "turn": 4,
+          "cardId": 24,
+          "name": "軽い足取り",
+          "expected": {
+            "score": 122
+          },
+          "capture": "campaign-s26-sei-log-3.png"
+        },
+        {
+          "turn": 5,
+          "cardId": 24,
+          "name": "軽い足取り",
+          "expected": {
+            "score": 172
+          },
+          "capture": "campaign-s26-sei-log-3.png"
+        },
+        {
+          "turn": 6,
+          "cardId": 17,
+          "name": "表情の基本",
+          "expected": {
+            "score": 172,
+            "genki": 1,
+            "concentration": 6
+          },
+          "capture": "campaign-s26-sei-log-3.png"
+        },
+        {
+          "turn": 7,
+          "cardId": 230,
+          "name": "ワンモアステップ",
+          "expected": {
+            "score": 448
+          },
+          "capture": "campaign-s26-sei-log-2.png"
+        },
+        {
+          "turn": 8,
+          "cardId": 5,
+          "name": "挑戦",
+          "expected": {
+            "score": 664
+          },
+          "capture": "campaign-s26-sei-log-2.png"
+        },
+        {
+          "turn": 9,
+          "cardId": 24,
+          "name": "軽い足取り",
+          "expected": {
+            "score": 723
+          },
+          "capture": "campaign-s26-sei-log-1.png"
+        },
+        {
+          "turn": 10,
+          "cardId": 1,
+          "name": "アピールの基本",
+          "expected": {
+            "score": 827
+          },
+          "capture": "campaign-s26-sei-log-1.png"
+        }
+      ]
+    }
+  ]
+}
