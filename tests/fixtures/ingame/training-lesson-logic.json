@@ -32,7 +32,7 @@
   "initialCaptures": [
     "campaign-logic-20261103-r1-start.png",
     "campaign-logic-20261103-r2-start.png",
-    "campaign-logic-20261103-r3-start.png"
+    "campaign-logic-20261104-r4-initial.png"
   ],
   "plays": [
     {
@@ -284,6 +284,7 @@
     },
     {
       "id": "late-threshold-extra-use",
+      "date": "2026-11-04",
       "actions": [
         {
           "cardId": 3,
@@ -295,13 +296,13 @@
             "goodImpressionTurns": 0,
             "motivation": 0
           },
-          "capture": "campaign-logic-20261103-r3-turn2.png",
+          "capture": "campaign-logic-20261104-r4-turn2.png",
           "handCardIds": [
             58,
             42,
             3
           ],
-          "handCapture": "campaign-logic-20261103-r3-start.png"
+          "handCapture": "campaign-logic-20261104-r4-initial.png"
         },
         {
           "cardId": 120,
@@ -313,13 +314,13 @@
             "goodImpressionTurns": 0,
             "motivation": 4
           },
-          "capture": "campaign-logic-20261103-r3-turn3.png",
+          "capture": "campaign-logic-20261104-r4-turn3.png",
           "handCardIds": [
             124,
             122,
             120
           ],
-          "handCapture": "campaign-logic-20261103-r3-turn2.png"
+          "handCapture": "campaign-logic-20261104-r4-turn2.png"
         },
         {
           "cardId": 64,
@@ -331,13 +332,13 @@
             "goodImpressionTurns": 3,
             "motivation": 4
           },
-          "capture": "campaign-logic-20261103-r3-turn4.png",
+          "capture": "campaign-logic-20261104-r4-turn4-ready.png",
           "handCardIds": [
             41,
             64,
             13
           ],
-          "handCapture": "campaign-logic-20261103-r3-turn3.png"
+          "handCapture": "campaign-logic-20261104-r4-turn3.png"
         },
         {
           "cardId": 3,
@@ -349,13 +350,13 @@
             "goodImpressionTurns": 2,
             "motivation": 4
           },
-          "capture": "campaign-logic-20261103-r3-turn5.png",
+          "capture": "campaign-logic-20261104-r4-turn5.png",
           "handCardIds": [
             3,
             222,
             90
           ],
-          "handCapture": "campaign-logic-20261103-r3-turn4.png"
+          "handCapture": "campaign-logic-20261104-r4-turn4-ready.png"
         },
         {
           "cardId": 88,
@@ -369,13 +370,13 @@
             "motivation": 4,
             "cardUsesRemaining": 1
           },
-          "capture": "campaign-logic-20261103-r3-turn5-extra.png",
+          "capture": "campaign-logic-20261104-r4-turn5-extra.png",
           "handCardIds": [
             91,
             88,
             1
           ],
-          "handCapture": "campaign-logic-20261103-r3-turn5.png"
+          "handCapture": "campaign-logic-20261104-r4-turn5.png"
         },
         {
           "cardId": 91,
@@ -388,31 +389,33 @@
             "goodImpressionTurns": 8,
             "motivation": 4
           },
-          "capture": "campaign-logic-20261103-r3-turn6.png",
+          "capture": "campaign-logic-20261104-r4-turn6.png",
           "handCardIds": [
             91,
             1
           ],
-          "handCapture": "campaign-logic-20261103-r3-turn5-extra.png"
+          "handCapture": "campaign-logic-20261104-r4-turn5-extra.png"
         },
         {
           "cardId": 9,
           "name": "可愛い仕草",
           "turnsElapsed": 6,
           "expected": {
+            "score": 55,
             "stamina": 20,
             "genki": 11,
             "motivation": 4
           },
-          "capture": "campaign-logic-20261103-r3-final-b.png",
+          "capture": "campaign-logic-20261104-r4-final-d.png",
           "handCardIds": [
             3,
             9,
             93
           ],
-          "handCapture": "campaign-logic-20261103-r3-turn6.png"
+          "handCapture": "campaign-logic-20261104-r4-turn6.png"
         }
-      ]
+      ],
+      "terminalAttribute": 155
     }
   ],
   "drawCardIds": [
