@@ -7,6 +7,8 @@ import { IdolConfig, StageEngine, S } from "gakumas-engine";
 const FIXTURES = [
   "training-exam-impression",
   "training-exam-motivation",
+  "contest-rehearsal-s55-temari",
+  "contest-rehearsal-s55-seika",
 ];
 
 function loadCapture(name) {
@@ -25,9 +27,9 @@ function getTypeMultipliers(capture) {
 function createEngine(capture, play) {
   const cardIds = new Set(play.actions.map((action) => action.cardId));
   const idol = new IdolConfig({
-    params: [0, 0, 0, capture.initial.stamina],
-    pItemIds: [],
-    skillCardIdGroups: [[...cardIds]],
+    params: [0, 0, 0, capture.startingStamina ?? capture.initial.stamina],
+    pItemIds: capture.pItemIds ?? [],
+    skillCardIdGroups: [capture.skillCardIds ?? [...cardIds]],
   });
   const engine = new StageEngine({
     idol,
@@ -63,8 +65,11 @@ function replay(capture, play) {
     const turn = i + 1;
     assert.equal(SkillCards.getById(action.cardId).name, action.name);
 
-    const card = state[S.cardMap].findIndex((c) => c.id == action.cardId);
-    assert.ok(!state[S.removedCards].includes(card), `${action.name} removed`);
+    // Once-per-stage cards used twice come from two copies in the deck.
+    const card = state[S.cardMap].findIndex(
+      (c, i) => c.id == action.cardId && !state[S.removedCards].includes(i),
+    );
+    assert.ok(card >= 0, `${action.name} removed`);
     putInHand(state, card);
     assert.ok(engine.isCardUsable(state, card), `turn ${turn}: usable`);
     state = engine.useCard(state, card);

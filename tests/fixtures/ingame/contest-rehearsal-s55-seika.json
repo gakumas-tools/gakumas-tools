@@ -1,0 +1,138 @@
+{
+  "date": "2026-11-05",
+  "gameVersion": "3.5.0",
+  "stage": "Contest S55 stage 1 (センス) rehearsal: Tame-Lie-One-Step 紫雲清夏 5541",
+  "startingStamina": 30,
+  "initial": {
+    "score": 0,
+    "stamina": 30,
+    "concentration": 3
+  },
+  "pItemIds": [
+    55
+  ],
+  "skillCardIds": [
+    54,
+    76,
+    17,
+    104,
+    5,
+    1
+  ],
+  "turnTypes": [
+    "visual",
+    "visual",
+    "dance",
+    "visual",
+    "vocal",
+    "vocal",
+    "visual",
+    "dance",
+    "vocal",
+    "visual"
+  ],
+  "displayedPercents": {
+    "vocal": 319,
+    "dance": 482,
+    "visual": 402
+  },
+  "scope": "Contest rehearsal replay with the panel's type %; excludes deck draws, the % calculation from parameters (#373) and the stage's ranking bonus.",
+  "sourceDirectory": "screenshots/sources/ingame/",
+  "plays": [
+    {
+      "id": "rehearsal-20261105",
+      "actions": [
+        {
+          "cardId": 54,
+          "name": "楽観的",
+          "expected": {
+            "score": 0,
+            "concentration": 3
+          },
+          "capture": "campaign-s19-reh-s1log-seika-d.png"
+        },
+        {
+          "cardId": 76,
+          "name": "情熱ターン",
+          "expected": {
+            "score": 85,
+            "concentration": 6
+          },
+          "capture": "campaign-s19-reh-s1log-seika-d.png"
+        },
+        {
+          "cardId": 17,
+          "name": "表情の基本",
+          "expected": {
+            "score": 85,
+            "genki": 1,
+            "concentration": 8
+          },
+          "capture": "campaign-s19-reh-s1log-seika-d.png"
+        },
+        {
+          "cardId": 104,
+          "name": "大声援",
+          "expected": {
+            "score": 85,
+            "genki": 6
+          },
+          "capture": "campaign-s19-reh-s1log-seika-e.png"
+        },
+        {
+          "cardId": 17,
+          "name": "表情の基本",
+          "expected": {
+            "score": 85,
+            "genki": 6,
+            "concentration": 10
+          },
+          "capture": "campaign-s19-reh-s1log-seika-e.png"
+        },
+        {
+          "cardId": 54,
+          "name": "楽観的",
+          "expected": {
+            "score": 85,
+            "concentration": 11
+          },
+          "capture": "campaign-s19-reh-s1log-seika-e.png"
+        },
+        {
+          "cardId": 76,
+          "name": "情熱ターン",
+          "expected": {
+            "score": 218,
+            "concentration": 14
+          },
+          "capture": "campaign-s19-reh-s1log-seika-b.png"
+        },
+        {
+          "cardId": 5,
+          "name": "挑戦",
+          "expected": {
+            "score": 503
+          },
+          "capture": "campaign-s19-reh-s1log-seika-b.png"
+        },
+        {
+          "cardId": 1,
+          "name": "アピールの基本",
+          "expected": {
+            "score": 615
+          },
+          "capture": "campaign-s19-reh-s1log-seika-b.png"
+        },
+        {
+          "cardId": 76,
+          "name": "情熱ターン",
+          "expected": {
+            "score": 768,
+            "concentration": 17
+          },
+          "capture": "campaign-s19-reh-s1log-seika-a.png"
+        }
+      ]
+    }
+  ]
+}
