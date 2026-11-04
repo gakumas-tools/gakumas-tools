@@ -350,8 +350,8 @@ id,name,rarity,upgraded,plan,mode,sourceType,pIdolId,welfare,effects
 349,水も滴る王子様,SSR,FALSE,sense,stage,pIdol,115,FALSE,at:afterCardUsed[active] { goodConditionTurns+=concentration*0.5; concentration+=1; limit:1 }
 350,水も滴る王子様+,SSR,TRUE,sense,stage,pIdol,115,FALSE,at:afterCardUsed[active] { goodConditionTurns+=concentration*0.5; concentration+=3; limit:1 }
 351,おひるねブランケット,SR,FALSE,sense,produce,support,,FALSE,
-352,はばたくブローチ,R,FALSE,anomaly,stage,pIdol,116,FALSE,at:stanceChanged { if:isDirectEffect { setEnthusiasmBonus(3) }; limit:1 }
-353,はばたくブローチ+,R,TRUE,anomaly,stage,pIdol,116,FALSE,at:stanceChanged { if:isDirectEffect { setEnthusiasmBonus(5) }; limit:1 }
+352,はばたくブローチ,R,FALSE,anomaly,stage,pIdol,116,FALSE,at:stanceChanged { if:isDirectEffect & isStrength { setEnthusiasmBonus(3) }; limit:1 }
+353,はばたくブローチ+,R,TRUE,anomaly,stage,pIdol,116,FALSE,at:stanceChanged { if:isDirectEffect & isStrength { setEnthusiasmBonus(5) }; limit:1 }
 354,一筆入魂,SR,FALSE,logic,stage,pIdol,117,FALSE,at:motivationIncreased { if:isDirectEffect & goodImpressionTurns>=6 { prideTurns+=2; motivation+=4 }; limit:1 }
 355,一筆入魂+,SR,TRUE,logic,stage,pIdol,117,FALSE,at:motivationIncreased { if:isDirectEffect & goodImpressionTurns>=6 { prideTurns+=3; motivation+=5 }; limit:1 }
 356,ふさわしい、私,SSR,FALSE,logic,stage,pIdol,118,FALSE,at:motivationIncreased { if:isDirectEffect & genki>=7 { motivation+=4; genki+=1; fixedStamina-=2 }; limit:2 }
