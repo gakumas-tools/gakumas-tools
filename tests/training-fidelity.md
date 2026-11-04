@@ -203,7 +203,9 @@ one to trigger the stage's effect: turn 6's 練習再開！+ draws the deck's ot
 準備運動, which as the turn's second card with 5 turns left gains 集中 14 → 18
 and 集中強化 before its own 18 → 20. The `-temari-5319-4` fixture is a fourth
 rehearsal ending at 1,666, another negative case: 練習再開！+ comes on turn 3,
-and its extra use plays ファンサ with 8 turns left.
+and its extra use plays ファンサ with 8 turns left. The `-temari-5319-5`
+fixture (1,291) is a third negative case: the extra use plays 準備運動 on turn 4
+with 7 turns left, and turn 10 is skipped.
 
 `contest-rehearsal-s55-seika-5469` is stage 1 played by the owned memory
 Tame-Lie-One-Step 紫雲清夏 5469 alone (225/834/300, 体力 30; panel
