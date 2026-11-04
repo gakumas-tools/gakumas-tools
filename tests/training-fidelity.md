@@ -222,4 +222,6 @@ extra card use on the first dance turn (turn 4: 軽い足取り, then 挑戦 237
 with 7 turns left, so the stage's effect stays off. Turns 9 and 10 are skipped
 at 体力 0, and the play ends at 885. The `-seika-5469-2` fixture is the same
 rehearsal's second play (other draws), where the extra use comes on turn 3 with
-8 turns left, ending at 957.
+8 turns left, ending at 957. The `-seika-5469-3` fixture is a third play where
+the first dance turn is turn 7, with 4 turns left: the extra use's 決めポーズ
+triggers the stage's effect (集中 7 → 11 and 集中強化), ending at 769.
