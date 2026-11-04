@@ -85,7 +85,10 @@ on turns 7 and 12 and doubles their good impression ticks, ending at 1,759.
 `contest-rehearsal-s55-kotone-4536` fixture is the same idol's 4536 memory
 (242/519/385, 体力 27; panel 376/363/442%) with お気にのスニーカー and upgraded
 Colorful Cute!+ and 思い出し笑い+. The stage's effect fires on turns 4 and 10, and
-the replay matches every turn to the final 2,029.
+the replay matches every turn to the final 2,029. The
+`contest-rehearsal-s55-kotone-5334-alone` fixture is the 5334 memory without
+the 5364 sub (269/627/444, 体力 36; panel 411/422/498%); the stage's effect
+fires on turns 6 and 10, ending at 2,142.
 
 `contest-rehearsal-s55-tsubame-2` is the same rehearsal's stage 3 (`stageId`
 192), played by the default memory 学園生活 雨夜燕 with はばたくブローチ. Turns 5,
