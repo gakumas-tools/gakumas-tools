@@ -234,3 +234,8 @@ triggers the stage's effect (集中 7 → 11 and 集中強化), ending at 769. T
 `-seika-5469-4` fixture is its negative twin: the first dance turn is turn 5,
 with 6 turns left, so 決めポーズ as the turn's second card gets no 集中, ending
 at 1,071.
+
+`contest-rehearsal-s55-seika-5415` is stage 1 played by another owned 清夏
+memory, 5415, alone (281/780/338, 体力 30; panel 327/459/450%) with
+ゲーセンの戦利品 only. One card a turn, ending at 713; 楽観的's 好調 3 on turn
+1 isn't counted down that turn (大声援 takes it 3 → 6 on turn 2).
