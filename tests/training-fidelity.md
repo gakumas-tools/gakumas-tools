@@ -228,7 +228,8 @@ with 7 turns left, and turn 10 is skipped. The `-temari-5319-6` fixture
 2), and turn 8 is skipped. The `-temari-5319-7` fixture (1,403) is a fifth:
 練習再開！+ on turn 2, with 大声援 as its extra use and 9 turns left. The
 `-temari-5319-8` fixture (1,335) is a sixth: 準備運動 as turn 4's extra use with
-7 turns left.
+7 turns left. The `-temari-5319-9` fixture (1,773) is a seventh: 大声援 as turn
+4's extra use with 7 turns left.
 
 `contest-rehearsal-s55-seika-5469` is stage 1 played by the owned memory
 Tame-Lie-One-Step 紫雲清夏 5469 alone (225/834/300, 体力 30; panel
