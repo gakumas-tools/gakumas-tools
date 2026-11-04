@@ -150,3 +150,7 @@ turn matches, to the final 588.
 (集中 9 → 13 and 集中強化, then 13 → 16), and the boosted concentration carries
 ローン・ウルフ (412 → 1,234) and the rest to the final 2,000. Without the
 stage's effect the replay gives 1,654.
+
+The `-temari-5319-2` fixture is a second rehearsal with the same formation and
+other draws, ending at 1,380. Here 練習再開！+ comes on turn 5. Its extra use
+plays アドリブ with 6 turns left, so the stage's effect doesn't fire.
