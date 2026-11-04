@@ -1,0 +1,161 @@
+{
+  "date": "2026-11-05",
+  "gameVersion": "3.5.0",
+  "stageId": 190,
+  "startingStamina": 35,
+  "initial": {
+    "score": 0,
+    "concentration": 3
+  },
+  "pItemIds": [
+    27
+  ],
+  "stage": "Contest S55 stage 1 (センス) eighth rehearsal: owned memory 一匹狼 月村手毬 5319 + sub 学園生活 月村手毬",
+  "skillCardIds": [
+    184,
+    15,
+    24,
+    475,
+    28,
+    52,
+    74,
+    24,
+    104,
+    5,
+    52,
+    102,
+    202
+  ],
+  "turnTypes": [
+    "visual",
+    "dance",
+    "vocal",
+    "visual",
+    "visual",
+    "vocal",
+    "visual",
+    "dance",
+    "vocal",
+    "visual"
+  ],
+  "displayedPercents": {
+    "vocal": 873,
+    "dance": 284,
+    "visual": 576
+  },
+  "scope": "Contest rehearsal replay with the panel's type %; excludes deck draws, the % calculation from parameters (#373) and the stage's ranking bonus.",
+  "note": "Expected values are after the action's turn ends. 練習再開！+ comes on turn 4 and its extra use plays 準備運動 with 7 turns left, so the stage's effect stays off. 私の「初」の楽譜 fires at the start of turns 1 and 2, so turn 1's values include turn 2's start.",
+  "sourceDirectory": "screenshots/sources/ingame/",
+  "plays": [
+    {
+      "id": "rehearsal-20261105-temari-5319-8",
+      "actions": [
+        {
+          "turn": 1,
+          "cardId": 184,
+          "name": "意地っ張り",
+          "expected": {
+            "score": 58,
+            "stamina": 27,
+            "concentration": 9
+          },
+          "capture": "campaign-s25-tem8-log-5.png"
+        },
+        {
+          "turn": 2,
+          "cardId": 15,
+          "name": "振る舞いの基本",
+          "expected": {
+            "score": 58
+          },
+          "capture": "campaign-s25-tem8-log-5.png"
+        },
+        {
+          "turn": 3,
+          "cardId": 24,
+          "name": "軽い足取り",
+          "expected": {
+            "score": 259
+          },
+          "capture": "campaign-s25-tem8-log-4.png"
+        },
+        {
+          "turn": 4,
+          "cardId": 475,
+          "name": "練習再開！+",
+          "expected": {
+            "score": 259
+          },
+          "capture": "campaign-s25-tem8-log-4.png"
+        },
+        {
+          "turn": 4,
+          "cardId": 28,
+          "name": "準備運動",
+          "expected": {
+            "score": 392,
+            "concentration": 11
+          },
+          "capture": "campaign-s25-tem8-log-3.png"
+        },
+        {
+          "turn": 5,
+          "cardId": 52,
+          "name": "バランス感覚",
+          "expected": {
+            "score": 392,
+            "concentration": 14
+          },
+          "capture": "campaign-s25-tem8-log-3.png"
+        },
+        {
+          "turn": 6,
+          "cardId": 74,
+          "name": "アドリブ",
+          "expected": {
+            "score": 646
+          },
+          "capture": "campaign-s25-tem8-log-3.png"
+        },
+        {
+          "turn": 7,
+          "cardId": 24,
+          "name": "軽い足取り",
+          "expected": {
+            "score": 819
+          },
+          "capture": "campaign-s25-tem8-log-2.png"
+        },
+        {
+          "turn": 8,
+          "cardId": 104,
+          "name": "大声援",
+          "expected": {
+            "score": 819,
+            "genki": 6
+          },
+          "capture": "campaign-s25-tem8-log-1.png"
+        },
+        {
+          "turn": 9,
+          "cardId": 5,
+          "name": "挑戦",
+          "expected": {
+            "score": 1335
+          },
+          "capture": "campaign-s25-tem8-log-1.png"
+        },
+        {
+          "turn": 10,
+          "cardId": 52,
+          "name": "バランス感覚",
+          "expected": {
+            "score": 1335,
+            "concentration": 17
+          },
+          "capture": "campaign-s25-tem8-log-1.png"
+        }
+      ]
+    }
+  ]
+}
