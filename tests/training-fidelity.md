@@ -88,7 +88,9 @@ Colorful Cute!+ and 思い出し笑い+. The stage's effect fires on turns 4 and
 the replay matches every turn to the final 2,029. The
 `contest-rehearsal-s55-kotone-5334-alone` fixture is the 5334 memory without
 the 5364 sub (269/627/444, 体力 36; panel 411/422/498%); the stage's effect
-fires on turns 6 and 10, ending at 2,142.
+fires on turns 6 and 10, ending at 2,142. Its `-2` fixture is a second play
+of the same formation, with different draws and turn types (表現の基本 on turn
+3); the effect again fires on turns 6 and 10, ending at 2,249.
 
 `contest-rehearsal-s55-tsubame-2` is the same rehearsal's stage 3 (`stageId`
 192), played by the default memory 学園生活 雨夜燕 with はばたくブローチ. Turns 5,
