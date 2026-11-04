@@ -110,6 +110,11 @@ use or enthusiasm; ティーキャディー adds 33 score and restores 1 stamina
 Later it covers 温存 level 2 changing to 強気 (5 genki and 8 enthusiasm)
 and the 強気 level 2 score multiplier.
 
+The `-sena-3` fixture is a third rehearsal with the same memory and other
+draws and turn types, ending at 692. ティーキャディー fires once, after
+turn 2's はげしく (130 → 195). The play has five two-card turns and a
+スパート held on turn 5, and four イメージの基本 change 強気 back to 温存.
+
 `contest-rehearsal-s55-saki` is stage 1 played by an owned memory, Fighting My
 Way 花海咲季 5289 (343/434/499, 体力 32; panel 462/362/775%), in a rehearsal
 on 2026-11-05. It covers 星のリトルプリンス's 元気 +2 at the start of each
