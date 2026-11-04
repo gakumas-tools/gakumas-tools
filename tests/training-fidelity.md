@@ -232,6 +232,12 @@ with 7 turns left, and turn 10 is skipped. The `-temari-5319-6` fixture
 7 turns left. The `-temari-5319-9` fixture (1,773) is a seventh: 大声援 as turn
 4's extra use with 7 turns left.
 
+`contest-rehearsal-s55-temari-5613` is stage 1 played by another owned 一匹狼
+月村手毬 memory, 5613, with the same 学園生活 sub (858/480/308, 体力 35; panel
+882/351/462%, campaign-s26-mari5613-panel.png). It plays one card a turn, so the
+stage's effect stays off; 飛躍 with concentration 12 under 好調 hits twice
+(286 → 622 → 984) and the play ends at 1,786.
+
 `contest-rehearsal-s55-seika-5469` is stage 1 played by the owned memory
 Tame-Lie-One-Step 紫雲清夏 5469 alone (225/834/300, 体力 30; panel
 272/463/394%) with ゲーセンの戦利品 and 夢にあふれた大荷物. The latter gives an
