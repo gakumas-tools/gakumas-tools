@@ -142,3 +142,11 @@ the final 424.
 turn 4's 振る舞いの基本 lets the item add 117 at the start of turn 5 (44 → 161),
 and 試行錯誤's two hits there use concentration 9 under 好調 (161 → 425). Every
 turn matches, to the final 588.
+
+`contest-rehearsal-s55-temari-5319` is stage 1 (`stageId` 190) played by 一匹狼
+月村手毬 5319 with a 学園生活 手毬 sub (819/339/392, 体力 35; panel
+873/284/576%). Its turn 6 plays 練習再開！+ (hand exchange, extra use) and then
+バランス感覚 with 5 turns left. That second card triggers the stage's effect
+(集中 9 → 13 and 集中強化, then 13 → 16), and the boosted concentration carries
+ローン・ウルフ (412 → 1,234) and the rest to the final 2,000. Without the
+stage's effect the replay gives 1,654.
