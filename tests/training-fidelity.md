@@ -144,7 +144,10 @@ after turn 6 (296, with turn 7's switch from 強気 to 全力): on turn 7, a voc
 turn, 休憩中のおやつ adds 58 after イメージの基本 at a cumulative 全力値 of 13
 (379 → 437), where the engine adds 66. 13 × 0.6 = 7.8, and 7 fits the game
 (7 × 3 × 2.74 = 57.5) while 8 doesn't, so the game doesn't round to nearest
-either.
+either. The `-misuzu-rehearsal-27` fixture is replayed to its final 911: turn
+9's アッチェレランド takes 全力値 to 12, and the switch to 全力 at the start of
+turn 10 keeps the extra 2 (12 → 2). No preservation card is played under 全力,
+so 休憩中のおやつ never fires.
 
 `contest-rehearsal-s55-sena` replays an owned 学園生活 十王星南 memory with
 ティーキャディー in stage 3. It checks the item's score and stamina recovery
