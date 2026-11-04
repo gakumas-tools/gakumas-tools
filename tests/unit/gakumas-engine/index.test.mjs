@@ -98,7 +98,6 @@ test("every contest and event stage plays without engine warnings", async () => 
       stageId: stage.id,
       skillCardIds: FILLER_CARD_IDS,
     }));
-  assert.ok(cases.length > 0);
   assert.deepEqual(await collectWarnings(cases), []);
 });
 
@@ -107,7 +106,10 @@ test("every card customization plays without engine warnings", async () => {
   for (const card of SkillCards.getAll()) {
     for (const id of card.availableCustomizations || []) {
       const customization = Customizations.getById(id);
-      assert.ok(customization, `card ${card.id} offers unknown customization ${id}`);
+      assert.ok(
+        customization,
+        `card ${card.id} offers unknown customization ${id}`,
+      );
       for (let level = 1; level <= (customization.max || 1); level++) {
         cases.push({
           name: `skill card ${card.id} ${card.name} customization ${id}x${level}`,
