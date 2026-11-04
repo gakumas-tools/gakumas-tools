@@ -77,6 +77,12 @@ and 10, and the game ticks good impression twice on turns 6–7 and 10–11.
 `expected` is read after the next turn's start: 手毬's turn 1 concentration is
 9 because 私の「初」の楽譜 adds 3 again at the start of turn 2.
 
+`contest-rehearsal-s55-kotone-4866` is stage 2 played by the owned memory
+カワイイ♡はじめました 藤田ことね 4866 alone (204/483/518, 体力 27; panel
+329/341/551%) with お気にのスニーカー and 寝心地は良好. The stage's effect fires
+on turns 7 and 12 and doubles their good impression ticks, ending at 1,759.
+寝心地は良好 never fires in the log, and the engine agrees.
+
 `contest-rehearsal-s55-tsubame-2` is the same rehearsal's stage 3 (`stageId`
 192), played by the default memory 学園生活 雨夜燕 with はばたくブローチ. Turns 5,
 7 and 11 use several cards, so its actions give their `turn`, and a held card
