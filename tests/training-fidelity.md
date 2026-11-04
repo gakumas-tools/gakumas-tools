@@ -146,7 +146,10 @@ final 501): テクノドッグ fires on turn 1, three えいえいおー build m
 and 気分転換 with 164 元気 scores 412. The log's 元気 「before」 value is
 after the card's cost is paid (turn 3: 7 − 2 = 5 → 14). The `-ume-3663-3`
 fixture is a third rehearsal ending at 800, where ありがとうの言葉 (24 → 183) and
-気分転換 with 156 元気 (189 → 796) carry the score.
+気分転換 with 156 元気 (189 → 796) carry the score. The `-ume-3663-4` fixture
+is a fourth rehearsal ending at 616: テクノドッグ fires after turn 1's もう少しだけ,
+未完の大器 raises 元気 39 → 82, 気分転換 with 106 元気 scores 289 (78 → 367)
+and ありがとうの言葉 adds 249.
 
 `contest-rehearsal-s55-saki-3663` is stage 1 played by 学園生活 花海咲季 3663
 (200/300/400, 体力 25; panel 258/236/505%) with ばくおんライオン. 好調 from
