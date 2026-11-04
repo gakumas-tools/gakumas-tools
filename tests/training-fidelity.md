@@ -244,4 +244,5 @@ at 1,071.
 `contest-rehearsal-s55-seika-5415` is stage 1 played by another owned 清夏
 memory, 5415, alone (281/780/338, 体力 30; panel 327/459/450%) with
 ゲーセンの戦利品 only. One card a turn, ending at 713; 楽観的's 好調 3 on turn
-1 isn't counted down that turn (大声援 takes it 3 → 6 on turn 2).
+1 isn't counted down that turn (大声援 takes it 3 → 6 on turn 2). Its `-2`
+fixture is a second play, ending at 850.
