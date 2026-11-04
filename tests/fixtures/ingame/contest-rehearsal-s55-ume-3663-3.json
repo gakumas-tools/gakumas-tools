@@ -1,0 +1,182 @@
+{
+  "date": "2026-11-05",
+  "gameVersion": "3.5.0",
+  "stage": "Contest S55 stage 2 (ロジック) third rehearsal: owned memory 学園生活 花海佑芽 3663",
+  "stageId": 191,
+  "startingStamina": 25,
+  "initial": {
+    "score": 0,
+    "stamina": 25
+  },
+  "pItemIds": [
+    83
+  ],
+  "skillCardIds": [
+    21,
+    21,
+    21,
+    60,
+    120,
+    120,
+    19,
+    19,
+    268,
+    13,
+    90,
+    11
+  ],
+  "turnTypes": [
+    "vocal",
+    "visual",
+    "vocal",
+    "visual",
+    "dance",
+    "vocal",
+    "visual",
+    "vocal",
+    "vocal",
+    "dance",
+    "visual",
+    "vocal"
+  ],
+  "displayedPercents": {
+    "vocal": 389,
+    "dance": 272,
+    "visual": 251
+  },
+  "scope": "Contest rehearsal replay with the panel's type %; excludes deck draws, the % calculation from parameters (#373) and the stage's ranking bonus.",
+  "note": "Expected values are after the action's turn ends, so they include the end-of-turn 好印象 score. The log's 元気 「before」 value is after the card's cost.",
+  "sourceDirectory": "screenshots/sources/ingame/",
+  "plays": [
+    {
+      "id": "rehearsal-20261105-ume-3663-3",
+      "actions": [
+        {
+          "turn": 1,
+          "cardId": 21,
+          "name": "意識の基本",
+          "expected": {
+            "score": 0,
+            "genki": 1,
+            "motivation": 2
+          },
+          "capture": "campaign-s23-ume5-log-2.png"
+        },
+        {
+          "turn": 2,
+          "cardId": 21,
+          "name": "意識の基本",
+          "expected": {
+            "score": 0,
+            "genki": 3,
+            "motivation": 6
+          },
+          "capture": "campaign-s23-ume5-log-2.png"
+        },
+        {
+          "turn": 3,
+          "cardId": 60,
+          "name": "えいえいおー",
+          "expected": {
+            "score": 0,
+            "genki": 8,
+            "motivation": 9
+          },
+          "capture": "campaign-s23-ume5-log-3.png"
+        },
+        {
+          "turn": 4,
+          "cardId": 120,
+          "name": "あふれる思い出",
+          "expected": {
+            "score": 0,
+            "genki": 16,
+            "motivation": 13
+          },
+          "capture": "campaign-s23-ume5-log-3.png"
+        },
+        {
+          "turn": 5,
+          "cardId": 21,
+          "name": "意識の基本",
+          "expected": {
+            "score": 0,
+            "genki": 28,
+            "motivation": 15
+          },
+          "capture": "campaign-s23-ume5-log-3.png"
+        },
+        {
+          "turn": 6,
+          "cardId": 19,
+          "name": "目線の基本",
+          "expected": {
+            "score": 8,
+            "genki": 42
+          },
+          "capture": "campaign-s23-ume5-log-4.png"
+        },
+        {
+          "turn": 7,
+          "cardId": 268,
+          "name": "未完の大器",
+          "expected": {
+            "score": 14,
+            "genki": 77
+          },
+          "capture": "campaign-s23-ume5-log-4.png"
+        },
+        {
+          "turn": 8,
+          "cardId": 13,
+          "name": "表現の基本",
+          "expected": {
+            "score": 18,
+            "genki": 96
+          },
+          "capture": "campaign-s23-ume5-log-4.png"
+        },
+        {
+          "turn": 9,
+          "cardId": 120,
+          "name": "あふれる思い出",
+          "expected": {
+            "score": 18,
+            "genki": 110,
+            "motivation": 19
+          },
+          "capture": "campaign-s23-ume5-log-5.png"
+        },
+        {
+          "turn": 10,
+          "cardId": 19,
+          "name": "目線の基本",
+          "expected": {
+            "score": 24,
+            "genki": 128
+          },
+          "capture": "campaign-s23-ume5-log-5.png"
+        },
+        {
+          "turn": 11,
+          "cardId": 90,
+          "name": "ありがとうの言葉",
+          "expected": {
+            "score": 189,
+            "genki": 156
+          },
+          "capture": "campaign-s23-ume5-log-1.png"
+        },
+        {
+          "turn": 12,
+          "cardId": 11,
+          "name": "気分転換",
+          "expected": {
+            "score": 800
+          },
+          "capture": "campaign-s23-ume5-log-1.png"
+        }
+      ]
+    }
+  ]
+}
