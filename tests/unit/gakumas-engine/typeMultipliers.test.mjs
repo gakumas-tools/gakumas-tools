@@ -33,4 +33,7 @@ test("season 55 bonus shrinks for each param below 900 × its criterion", () => 
   assert.deepEqual(percents(2, [237, 589, 560]), [370, 398, 595]);
   // stage 3: dance 200 < 405
   assert.deepEqual(percents(3, [300, 200, 400]), [250, 324, 448]);
+  // stage 3, all three short: the rehearsal's default memory 学園生活 雨夜燕
+  // (2026-11-05, predicted before reading the game)
+  assert.deepEqual(percents(3, [100, 100, 100]), [127, 158, 146]);
 });
