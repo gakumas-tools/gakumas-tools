@@ -90,7 +90,9 @@ the replay matches every turn to the final 2,029. The
 the 5364 sub (269/627/444, 体力 36; panel 411/422/498%); the stage's effect
 fires on turns 6 and 10, ending at 2,142. Its `-2` fixture is a second play
 of the same formation, with different draws and turn types (表現の基本 on turn
-3); the effect again fires on turns 6 and 10, ending at 2,249.
+3); the effect again fires on turns 6 and 10, ending at 2,249. The `-3` fixture
+is a third play where the effect fires only on turn 6, ending at 1,735 with
+元気な挨拶 and 気分転換.
 
 `contest-rehearsal-s55-tsubame-2` is the same rehearsal's stage 3 (`stageId`
 192), played by the default memory 学園生活 雨夜燕 with はばたくブローチ. Turns 5,
