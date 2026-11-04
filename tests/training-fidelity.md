@@ -118,6 +118,13 @@ engine, which rounds 12 × 0.6 = 7.2 up to 8 before 全力's ×3, where the game
 69 fits 7 (7 × 3 × 3.28 = 68.9). One reading can't tell floor from round, so
 the engine is unchanged.
 
+`contest-rehearsal-s55-misuzu-rehearsal-20` is a later play of the same memory,
+replayed to the end of turn 8 (164, with turn 9's switch to 全力). On turn 9
+休憩中のおやつ adds 63 after each of two イメージの基本 in the game
+(164 → 227 → 290) but 72 in the engine: again 12 × 0.6 = 7.2, where 7 fits the
+game (7 × 3 × 2.96 = 62.2) and the engine's 8 doesn't. The fixture stops there,
+and the engine is unchanged in this branch.
+
 `contest-rehearsal-s55-sena` replays an owned 学園生活 十王星南 memory with
 ティーキャディー in stage 3. It checks the item's score and stamina recovery
 after a 強気 active card, the two score hits of 学園一のアイドル, repeated
