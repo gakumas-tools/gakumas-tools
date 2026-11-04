@@ -81,7 +81,11 @@ and 10, and the game ticks good impression twice on turns 6–7 and 10–11.
 カワイイ♡はじめました 藤田ことね 4866 alone (204/483/518, 体力 27; panel
 329/341/551%) with お気にのスニーカー and 寝心地は良好. The stage's effect fires
 on turns 7 and 12 and doubles their good impression ticks, ending at 1,759.
-寝心地は良好 never fires in the log, and the engine agrees.
+寝心地は良好 never fires in the log, and the engine agrees. The
+`contest-rehearsal-s55-kotone-4536` fixture is the same idol's 4536 memory
+(242/519/385, 体力 27; panel 376/363/442%) with お気にのスニーカー and upgraded
+Colorful Cute!+ and 思い出し笑い+. The stage's effect fires on turns 4 and 10, and
+the replay matches every turn to the final 2,029.
 
 `contest-rehearsal-s55-tsubame-2` is the same rehearsal's stage 3 (`stageId`
 192), played by the default memory 学園生活 雨夜燕 with はばたくブローチ. Turns 5,
