@@ -1,0 +1,147 @@
+{
+  "date": "2026-11-05",
+  "gameVersion": "3.5.0",
+  "stage": "Contest S55 stage 3 (アノマリー) rehearsal (01:05): owned memory 学園生活 秦谷美鈴 3663 (400/200/300, St 25)",
+  "stageId": 192,
+  "startingStamina": 25,
+  "initial": {
+    "score": 0,
+    "stamina": 25
+  },
+  "pItemIds": [
+    261
+  ],
+  "skillCardIds": [
+    418,
+    392,
+    374,
+    540,
+    402,
+    370,
+    376,
+    380,
+    372,
+    1
+  ],
+  "turnTypes": [
+    "dance",
+    "vocal",
+    "dance",
+    "dance",
+    "visual",
+    "visual",
+    "dance",
+    "dance",
+    "visual",
+    "vocal",
+    "visual",
+    "dance"
+  ],
+  "displayedPercents": {
+    "vocal": 274,
+    "dance": 296,
+    "visual": 328
+  },
+  "scope": "Contest rehearsal replay with the panel's type %; excludes deck draws, the % calculation from parameters (#373) and the stage's ranking bonus.",
+  "sourceDirectory": "screenshots/sources/ingame/",
+  "plays": [
+    {
+      "id": "rehearsal-20261105-3",
+      "actions": [
+        {
+          "cardId": 418,
+          "name": "カウントダウン",
+          "expected": {
+            "score": 0,
+            "genki": 8
+          },
+          "capture": "campaign-s21-reh-s3log-7.png",
+          "turn": 1
+        },
+        {
+          "cardId": 392,
+          "name": "ハッピー♪",
+          "expected": {
+            "score": 0,
+            "genki": 13
+          },
+          "capture": "campaign-s21-reh-s3log-7.png",
+          "turn": 2
+        },
+        {
+          "cardId": 374,
+          "name": "メントレの基本",
+          "expected": {
+            "score": 0,
+            "genki": 14,
+            "fullPowerCharge": 2
+          },
+          "capture": "campaign-s21-reh-s3log-7.png",
+          "turn": 3
+        },
+        {
+          "cardId": 540,
+          "name": "のんびり屋さん",
+          "expected": {
+            "score": 0,
+            "fullPowerCharge": 3
+          },
+          "capture": "campaign-s21-reh-s3log-6.png",
+          "turn": 4
+        },
+        {
+          "cardId": 402,
+          "name": "アッチェレランド",
+          "expected": {
+            "score": 0,
+            "fullPowerCharge": 6
+          },
+          "capture": "campaign-s21-reh-s3log-6.png",
+          "turn": 5
+        },
+        {
+          "cardId": 370,
+          "name": "はげしく",
+          "expected": {
+            "score": 164,
+            "genki": 17
+          },
+          "capture": "campaign-s21-reh-s3log-5.png",
+          "turn": 6
+        },
+        {
+          "cardId": 376,
+          "name": "イメージの基本",
+          "expected": {
+            "score": 164,
+            "genki": 15
+          },
+          "capture": "campaign-s21-reh-s3log-5.png",
+          "turn": 6
+        },
+        {
+          "cardId": 374,
+          "name": "メントレの基本",
+          "expected": {
+            "score": 164,
+            "genki": 17,
+            "fullPowerCharge": 8
+          },
+          "capture": "campaign-s21-reh-s3log-4.png",
+          "turn": 7
+        },
+        {
+          "cardId": 374,
+          "name": "メントレの基本",
+          "expected": {
+            "score": 164,
+            "genki": 24,
+            "fullPowerCharge": 0
+          },
+          "capture": "campaign-s21-reh-s3log-4.png",
+          "turn": 8
+        }
+      ]
+    }
+  ]
+}

@@ -82,3 +82,16 @@ and 10, and the game ticks good impression twice on turns 6–7 and 10–11.
 (スパート, held on turn 2, used on turn 11) is taken from the held pile. Covers
 温存/強気/全力 stance changes, preservation's 熱意 and extra card uses, full
 power charge, and the brooch's 熱意追加 on the first direct switch to 強気.
+
+`contest-rehearsal-s55-misuzu` and `-misuzu-2` are stage 3 played by an owned
+memory, 学園生活 秦谷美鈴 3663 (400/200/300, 体力 25; panel 274/296/328%), with
+休憩中のおやつ, in two rehearsals (2026-11-05 01:05 and 01:10; one fixture each,
+since their turn types differ). They cover のんびり屋さん's
+温存 → のんびり at each turn's start, のんびり's zero cost and zero score
+(アッチェレランド scores 0), leaving のんびり for 強気 (元気 +5, 熱意 +10) and
+for 全力 (元気 +5), and a card held under のんびり (スパート) used in the 全力
+turn. The second play is replayed to its final 867. The first stops after
+turn 8: on turn 9 休憩中のおやつ adds 69 in the game (410 → 479) but 79 in the
+engine, which rounds 12 × 0.6 = 7.2 up to 8 before 全力's ×3, where the game's
+69 fits 7 (7 × 3 × 3.28 = 68.9). One reading can't tell floor from round, so
+the engine is unchanged.

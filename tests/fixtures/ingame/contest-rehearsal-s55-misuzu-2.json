@@ -1,0 +1,206 @@
+{
+  "date": "2026-11-05",
+  "gameVersion": "3.5.0",
+  "stage": "Contest S55 stage 3 (アノマリー) rehearsal (01:10): owned memory 学園生活 秦谷美鈴 3663 (400/200/300, St 25)",
+  "stageId": 192,
+  "startingStamina": 25,
+  "initial": {
+    "score": 0,
+    "stamina": 25
+  },
+  "pItemIds": [
+    261
+  ],
+  "skillCardIds": [
+    418,
+    392,
+    374,
+    540,
+    402,
+    370,
+    376,
+    380,
+    372,
+    1
+  ],
+  "turnTypes": [
+    "dance",
+    "dance",
+    "dance",
+    "dance",
+    "visual",
+    "vocal",
+    "visual",
+    "dance",
+    "visual",
+    "vocal",
+    "visual",
+    "dance"
+  ],
+  "displayedPercents": {
+    "vocal": 274,
+    "dance": 296,
+    "visual": 328
+  },
+  "scope": "Contest rehearsal replay with the panel's type %; excludes deck draws, the % calculation from parameters (#373) and the stage's ranking bonus.",
+  "sourceDirectory": "screenshots/sources/ingame/",
+  "plays": [
+    {
+      "id": "rehearsal-20261105-4",
+      "actions": [
+        {
+          "cardId": 540,
+          "name": "のんびり屋さん",
+          "expected": {
+            "score": 0,
+            "fullPowerCharge": 1
+          },
+          "capture": "campaign-s21-reh2-s3log-8.png",
+          "turn": 1
+        },
+        {
+          "cardId": 418,
+          "name": "カウントダウン",
+          "expected": {
+            "score": 0,
+            "genki": 8
+          },
+          "capture": "campaign-s21-reh2-s3log-8.png",
+          "turn": 2
+        },
+        {
+          "cardId": 372,
+          "name": "スパート",
+          "expected": {
+            "score": 0,
+            "fullPowerCharge": 2
+          },
+          "capture": "campaign-s21-reh2-s3log-7.png",
+          "turn": 3
+        },
+        {
+          "cardId": 370,
+          "name": "はげしく",
+          "expected": {
+            "score": 148,
+            "genki": 13,
+            "enthusiasm": 10
+          },
+          "capture": "campaign-s21-reh2-s3log-7.png",
+          "turn": 4
+        },
+        {
+          "cardId": 392,
+          "name": "ハッピー♪",
+          "expected": {
+            "score": 148,
+            "genki": 14
+          },
+          "capture": "campaign-s21-reh2-s3log-6.png",
+          "turn": 4
+        },
+        {
+          "cardId": 380,
+          "name": "ジャストアピール",
+          "expected": {
+            "score": 148,
+            "fullPowerCharge": 4
+          },
+          "capture": "campaign-s21-reh2-s3log-6.png",
+          "turn": 5
+        },
+        {
+          "cardId": 402,
+          "name": "アッチェレランド",
+          "expected": {
+            "score": 148,
+            "fullPowerCharge": 7
+          },
+          "capture": "campaign-s21-reh2-s3log-5.png",
+          "turn": 6
+        },
+        {
+          "cardId": 374,
+          "name": "メントレの基本",
+          "expected": {
+            "score": 148,
+            "genki": 16,
+            "fullPowerCharge": 9
+          },
+          "capture": "campaign-s21-reh2-s3log-5.png",
+          "turn": 7
+        },
+        {
+          "cardId": 402,
+          "name": "アッチェレランド",
+          "expected": {
+            "score": 148,
+            "genki": 21,
+            "fullPowerCharge": 2
+          },
+          "capture": "campaign-s21-reh2-s3log-4.png",
+          "turn": 8
+        },
+        {
+          "cardId": 1,
+          "name": "アピールの基本",
+          "expected": {
+            "score": 335
+          },
+          "capture": "campaign-s21-reh2-s3log-3.png",
+          "turn": 9
+        },
+        {
+          "cardId": 1,
+          "name": "アピールの基本",
+          "expected": {
+            "score": 522
+          },
+          "capture": "campaign-s21-reh2-s3log-3.png",
+          "turn": 9
+        },
+        {
+          "cardId": 372,
+          "name": "スパート",
+          "expected": {
+            "score": 867,
+            "fullPowerCharge": 3
+          },
+          "capture": "campaign-s21-reh2-s3log-3.png",
+          "turn": 9
+        },
+        {
+          "cardId": 376,
+          "name": "イメージの基本",
+          "expected": {
+            "score": 867,
+            "genki": 8
+          },
+          "capture": "campaign-s21-reh2-s3log-2.png",
+          "turn": 10
+        },
+        {
+          "cardId": 376,
+          "name": "イメージの基本",
+          "expected": {
+            "score": 867,
+            "genki": 10
+          },
+          "capture": "campaign-s21-reh2-s3log-2.png",
+          "turn": 11
+        },
+        {
+          "cardId": 374,
+          "name": "メントレの基本",
+          "expected": {
+            "score": 867,
+            "genki": 12,
+            "fullPowerCharge": 5
+          },
+          "capture": "campaign-s21-reh2-s3log-1.png",
+          "turn": 12
+        }
+      ]
+    }
+  ]
+}
