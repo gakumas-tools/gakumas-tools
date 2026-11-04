@@ -167,4 +167,8 @@ stage's effect the replay gives 1,654.
 
 The `-temari-5319-2` fixture is a second rehearsal with the same formation and
 other draws, ending at 1,380. Here 練習再開！+ comes on turn 5. Its extra use
-plays アドリブ with 6 turns left, so the stage's effect doesn't fire.
+plays アドリブ with 6 turns left, so the stage's effect doesn't fire. The
+`-temari-5319-3` fixture is a third rehearsal ending at 2,490, and the second
+one to trigger the stage's effect: turn 6's 練習再開！+ draws the deck's other
+準備運動, which as the turn's second card with 5 turns left gains 集中 14 → 18
+and 集中強化 before its own 18 → 20.
