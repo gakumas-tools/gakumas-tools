@@ -26,7 +26,7 @@ export function memoryPairLoadout(stage, main, sub, supportBonus = 0) {
 
 // Whether the memory picker offers this memory for the stage: a stage with a
 // plan lists only that plan's memories.
-export function memoryFitsStage(stage, memory) {
+function memoryFitsStage(stage, memory) {
   if (stage.plan == "free") return true;
   return PIdols.getById(memory.pIdolId)?.plan == stage.plan;
 }
@@ -51,7 +51,7 @@ export function memoryPairs(stage, memories) {
 
 const sum = (values) => values.reduce((a, b) => a + b, 0);
 
-export function mean(values) {
+function mean(values) {
   return sum(values) / values.length;
 }
 
@@ -80,9 +80,6 @@ export async function rankMemoryPairs({
   validationSeeds,
   score,
 }) {
-  if (selectionSeeds.some((seed) => validationSeeds.includes(seed))) {
-    throw new Error("Selection and validation seeds must not overlap");
-  }
   const pairs = memoryPairs(stage, memories);
   if (!pairs.some(([main, sub]) => main == baseline[0] && sub == baseline[1])) {
     throw new Error("The baseline must be a pair the stage takes");

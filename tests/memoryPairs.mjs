@@ -32,7 +32,7 @@ import { silenceConsole } from "./lib.mjs";
 
 const VALIDATION_SEED_OFFSET = 1_000_000;
 
-export async function scoreLoadout(loadout, seed) {
+async function scoreLoadout(loadout, seed) {
   resetRand(seed);
   const idol = new IdolConfig(loadout);
   const stage = new StageConfig(Stages.getById(loadout.stageId));

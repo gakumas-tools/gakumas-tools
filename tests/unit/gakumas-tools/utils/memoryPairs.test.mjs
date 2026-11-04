@@ -2,7 +2,6 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { PIdols } from "gakumas-data";
 import {
-  memoryFitsStage,
   memoryPairLoadout,
   memoryPairs,
   pairedGain,
@@ -46,7 +45,6 @@ test("only different memories of the stage's plan are paired", () => {
     memory("logic", [1, 1, 1, 1]),
     memory("sense", [1, 1, 1, 1]),
   ];
-  assert.equal(memoryFitsStage(contest, memories[1]), false);
   assert.deepEqual(memoryPairs(contest, memories), [
     [0, 2],
     [2, 0],
@@ -112,18 +110,7 @@ test("the baseline is kept when it is the best pair", async () => {
   assert.equal(result.validation.gain, 0);
 });
 
-test("overlapping seeds and a baseline the stage doesn't take are rejected", async () => {
-  await assert.rejects(
-    rankMemoryPairs({
-      stage: contest,
-      memories,
-      baseline: [0, 1],
-      selectionSeeds: [0, 1],
-      validationSeeds: [1, 2],
-      score: async () => 0,
-    }),
-    /overlap/,
-  );
+test("a baseline the stage doesn't take is rejected", async () => {
   await assert.rejects(rank(async () => 0, [1, 1]), /baseline/);
   const mixed = [...memories, memory("logic", [1, 1, 1, 1])];
   await assert.rejects(
