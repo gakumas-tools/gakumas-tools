@@ -109,3 +109,30 @@ draws, ending at 687. Its first stance is 強気, which gives no extra card
 use or enthusiasm; ティーキャディー adds 33 score and restores 1 stamina.
 Later it covers 温存 level 2 changing to 強気 (5 genki and 8 enthusiasm)
 and the 強気 level 2 score multiplier.
+
+`contest-rehearsal-s55-saki` is stage 1 played by an owned memory, Fighting My
+Way 花海咲季 5289 (343/434/499, 体力 32; panel 462/362/775%), in a rehearsal
+on 2026-11-05 02:30. It covers 星のリトルプリンス's 元気 +2 at the start of each
+visual turn, 共に戦うタオル's extra card use and 好調 +1 after the first active
+card (turn 3 plays 情熱ターン and then 振る舞いの基本), 元気 paying a cost
+before 体力, and 好調 counting down from 5 to 0 by turn 8. Every turn's score
+matches, to the final 1,140.
+
+The `-saki-2` fixture is a second rehearsal (02:40) with other draws and turn
+types, ending at 899. タオル fires after ファンサ on turn 2, and the extra use
+plays 挑戦 under 好調 (56 → 246); 眼力's 元気 +6 then pays for later costs.
+
+`contest-rehearsal-s55-ume` is stage 2 (`stageId` 191) played by an owned
+memory, アイドル、はじめっ！ 花海佑芽 3741 (266/311/249, 体力 30; panel
+360/236/290%), in a rehearsal on 2026-11-05 02:45. It covers 天川ラーメン巡り's
+extra card use on the first vocal turn, 柴犬ポシェット's 元気 +5 at the start of
+turns 2 and 4 plus motivation's bonus (9 → 18), 打倒お姉ちゃん and 気分転換
+scoring from 元気, and the stage's effect on turn 8 (好印象 +7, then a doubled
+tick, 82 → 170). Every turn's score matches, to the final 656.
+
+`contest-rehearsal-s55-ume-3663` is the same stage played by 学園生活 花海佑芽
+3663 (300/400/200, 体力 25; panel 389/272/251%) with テクノドッグ, at 02:50.
+The item adds 2 motivation after turn 2's あふれる思い出 (6 → 8). Motivation then
+builds to 20, and ありがとうの言葉 (16 → 122), 気分転換 with 95 元気
+(130 → 389) and 未完の大器 (90 → 145) all read 元気. Every turn matches, to
+the final 424.
