@@ -49,6 +49,7 @@ const FIXTURES = [
   "contest-rehearsal-s55-temari-5319-3",
   "contest-rehearsal-s55-temari-5319-4",
   "contest-rehearsal-s55-temari-5319-6",
+  "contest-rehearsal-s55-temari-5319-7",
   "contest-rehearsal-s55-temari-5319-5",
 ];
 
