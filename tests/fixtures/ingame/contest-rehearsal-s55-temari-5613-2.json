@@ -1,0 +1,148 @@
+{
+  "date": "2026-11-05",
+  "gameVersion": "3.5.0",
+  "stage": "Contest S55 stage 1 (センス) second rehearsal: owned memory 一匹狼 月村手毬 5613 + sub 学園生活 月村手毬",
+  "stageId": 190,
+  "startingStamina": 35,
+  "initial": {
+    "score": 0,
+    "concentration": 3
+  },
+  "pItemIds": [
+    27
+  ],
+  "skillCardIds": [
+    52,
+    1,
+    17,
+    184,
+    7,
+    74,
+    203,
+    15,
+    78,
+    52
+  ],
+  "turnTypes": [
+    "visual",
+    "dance",
+    "visual",
+    "visual",
+    "vocal",
+    "visual",
+    "vocal",
+    "dance",
+    "vocal",
+    "visual"
+  ],
+  "displayedPercents": {
+    "vocal": 882,
+    "dance": 351,
+    "visual": 462
+  },
+  "scope": "Contest rehearsal replay with the panel's type %; excludes deck draws, the % calculation from parameters (#373) and the stage's ranking bonus.",
+  "note": "Expected values are after the action's turn ends. One card a turn, so the stage's effect stays off. 私の「初」の楽譜 fires at the start of turns 1 and 2, so turn 1's values include turn 2's start.",
+  "sourceDirectory": "screenshots/sources/ingame/",
+  "plays": [
+    {
+      "id": "rehearsal-20261105-temari-5613-2",
+      "actions": [
+        {
+          "turn": 1,
+          "cardId": 52,
+          "name": "バランス感覚",
+          "expected": {
+            "score": 0,
+            "stamina": 31,
+            "concentration": 9
+          },
+          "capture": "campaign-s26-tm2-log-6.png"
+        },
+        {
+          "turn": 2,
+          "cardId": 1,
+          "name": "アピールの基本",
+          "expected": {
+            "score": 64
+          },
+          "capture": "campaign-s26-tm2-log-6.png"
+        },
+        {
+          "turn": 3,
+          "cardId": 17,
+          "name": "表情の基本",
+          "expected": {
+            "score": 64,
+            "concentration": 11
+          },
+          "capture": "campaign-s26-tm2-log-7.png"
+        },
+        {
+          "turn": 4,
+          "cardId": 184,
+          "name": "意地っ張り",
+          "expected": {
+            "score": 148,
+            "concentration": 14
+          },
+          "capture": "campaign-s26-tm2-log-7.png"
+        },
+        {
+          "turn": 5,
+          "cardId": 7,
+          "name": "試行錯誤",
+          "expected": {
+            "score": 538
+          },
+          "capture": "campaign-s26-tm2-log-2.png"
+        },
+        {
+          "turn": 6,
+          "cardId": 74,
+          "name": "アドリブ",
+          "expected": {
+            "score": 626
+          },
+          "capture": "campaign-s26-tm2-log-2.png"
+        },
+        {
+          "turn": 7,
+          "cardId": 203,
+          "name": "ローン・ウルフ+",
+          "expected": {
+            "score": 1314
+          },
+          "capture": "campaign-s26-tm2-log-3.png"
+        },
+        {
+          "turn": 8,
+          "cardId": 15,
+          "name": "振る舞いの基本",
+          "expected": {
+            "score": 1314
+          },
+          "capture": "campaign-s26-tm2-log-3.png"
+        },
+        {
+          "turn": 9,
+          "cardId": 78,
+          "name": "飛躍",
+          "expected": {
+            "score": 2065
+          },
+          "capture": "campaign-s26-tm2-log-1.png"
+        },
+        {
+          "turn": 10,
+          "cardId": 52,
+          "name": "バランス感覚",
+          "expected": {
+            "score": 2065,
+            "concentration": 17
+          },
+          "capture": "campaign-s26-tm2-log-1.png"
+        }
+      ]
+    }
+  ]
+}

@@ -238,7 +238,8 @@ with 7 turns left, and turn 10 is skipped. The `-temari-5319-6` fixture
 月村手毬 memory, 5613, with the same 学園生活 sub (858/480/308, 体力 35; panel
 882/351/462%, campaign-s26-mari5613-panel.png). It plays one card a turn, so the
 stage's effect stays off; 飛躍 with concentration 12 under 好調 hits twice
-(286 → 622 → 984) and the play ends at 1,786.
+(286 → 622 → 984) and the play ends at 1,786. Its `-2` fixture is a second
+play ending at 2,065, with 飛躍 on turn 9 at concentration 14 (1,314 → 2,065).
 
 `contest-rehearsal-s55-seika-5469` is stage 1 played by the owned memory
 Tame-Lie-One-Step 紫雲清夏 5469 alone (225/834/300, 体力 30; panel
