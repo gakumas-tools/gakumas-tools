@@ -90,8 +90,8 @@ since their turn types differ). They cover のんびり屋さん's
 温存 → のんびり at each turn's start, のんびり's zero cost and zero score
 (アッチェレランド scores 0), leaving のんびり for 強気 (元気 +5, 熱意 +10) and
 for 全力 (元気 +5), and a card held under のんびり (スパート) used in the 全力
-turn. The second play is replayed to its final 867. The first stops after
-turn 8: on turn 9 休憩中のおやつ adds 69 in the game (410 → 479) but 79 in the
-engine, which rounds 12 × 0.6 = 7.2 up to 8 before 全力's ×3, where the game's
-69 fits 7 (7 × 3 × 3.28 = 68.9). One reading can't tell floor from round, so
-the engine is unchanged.
+turn. The first and second plays are replayed to their final scores of 942
+and 867. The `-3` and `-7` fixtures cover two more rehearsals. Together they
+check that 休憩中のおやつ rounds 60% of cumulative full power down before
+全力 and the turn multiplier: cumulative values of 12, 11 and 13 give base
+scores of 7, 6 and 7, for score gains of 69, 54 and 63.

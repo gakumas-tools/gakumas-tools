@@ -11,6 +11,11 @@ All notable changes to the contest simulator will be documented in this file.
 
 
 
+
+## 2026-11-04
+
+- Fix break-time snack score rounding
+
 ## 2026-11-02
 
 - Confirm contest season 55 stages

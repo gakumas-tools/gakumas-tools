@@ -141,6 +141,9 @@ drawCard(2)
 
 Assignment operators: `=`, `+=`, `-=`, `*=`, `/=`, `%=`.
 
+`floor(expression)` rounds a value down before score modifiers are applied,
+for example `score+=floor(cumulativeFullPowerCharge*0.6)`.
+
 ### Special actions (non-assignment)
 
 | Action                                    | DSL                                                                      |

@@ -5,6 +5,13 @@ import { validateEffectAst } from "gakumas-data/utils/validator";
 
 const errors = (src) => validateEffectAst(parseEffects(src));
 
+test("floor accepts expressions with readable values", () => {
+  assert.deepEqual(errors("score+=floor(cumulativeFullPowerCharge*0.6)"), []);
+  assert.deepEqual(errors("score+=floor(fixedStamina)"), [
+    "Unknown identifier: fixedStamina",
+  ]);
+});
+
 test("expressions only accept names the Evaluator can resolve", () => {
   // Special actions run as statements, not as values.
   assert.deepEqual(errors("if:drawCard() { score+=1 }"), [

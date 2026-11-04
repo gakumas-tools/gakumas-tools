@@ -42,7 +42,6 @@
     "dance": 296,
     "visual": 328
   },
-  "scope": "Contest rehearsal replay with the panel's type %; excludes deck draws, the % calculation from parameters (#373) and the stage's ranking bonus.",
   "sourceDirectory": "screenshots/sources/ingame/",
   "plays": [
     {
@@ -55,7 +54,7 @@
             "score": 0,
             "genki": 2
           },
-          "capture": "campaign-s21-reh7-s3log-9.png",
+          "capture": "campaign-s22-start.png",
           "turn": 1
         },
         {
@@ -66,7 +65,7 @@
             "genki": 0,
             "fullPowerCharge": 1
           },
-          "capture": "campaign-s21-reh7-s3log-8.png",
+          "capture": "campaign-s22-start.png",
           "turn": 2
         },
         {
@@ -76,7 +75,7 @@
             "score": 0,
             "genki": 7
           },
-          "capture": "campaign-s21-reh7-s3log-8.png",
+          "capture": "campaign-s22-log-6.png",
           "turn": 3
         },
         {
@@ -87,7 +86,7 @@
             "genki": 12,
             "enthusiasm": 10
           },
-          "capture": "campaign-s21-reh7-s3log-7.png",
+          "capture": "campaign-s22-log-7.png",
           "turn": 4
         },
         {
@@ -98,7 +97,7 @@
             "genki": 8,
             "fullPowerCharge": 3
           },
-          "capture": "campaign-s21-reh7-s3log-7.png",
+          "capture": "campaign-s22-log-7.png",
           "turn": 4
         },
         {
@@ -108,7 +107,7 @@
             "score": 214,
             "fullPowerCharge": 6
           },
-          "capture": "campaign-s21-reh7-s3log-6.png",
+          "capture": "campaign-s22-log-7.png",
           "turn": 5
         },
         {
@@ -118,7 +117,7 @@
             "score": 214,
             "genki": 2
           },
-          "capture": "campaign-s21-reh7-s3log-6.png",
+          "capture": "campaign-s22-log-8.png",
           "turn": 6
         },
         {
@@ -129,7 +128,7 @@
             "genki": 4,
             "fullPowerCharge": 8
           },
-          "capture": "campaign-s21-reh7-s3log-5.png",
+          "capture": "campaign-s22-log-8.png",
           "turn": 7
         },
         {
@@ -140,7 +139,7 @@
             "genki": 11,
             "fullPowerCharge": 0
           },
-          "capture": "campaign-s21-reh7-s3log-5.png",
+          "capture": "campaign-s22-log-9.png",
           "turn": 8
         },
         {
@@ -149,7 +148,7 @@
           "expected": {
             "score": 383
           },
-          "capture": "campaign-s21-reh7-s3log-4.png",
+          "capture": "campaign-s22-log-11.png",
           "turn": 9
         },
         {
@@ -159,7 +158,7 @@
             "score": 561,
             "fullPowerCharge": 3
           },
-          "capture": "campaign-s21-reh7-s3log-3.png",
+          "capture": "campaign-s22-log-11.png",
           "turn": 9
         },
         {
@@ -169,7 +168,7 @@
             "score": 624,
             "genki": 2
           },
-          "capture": "campaign-s21-reh7-s3log-3.png",
+          "capture": "campaign-s22-log-11.png",
           "turn": 9
         },
         {
@@ -179,7 +178,7 @@
             "score": 624,
             "genki": 2
           },
-          "capture": "campaign-s21-reh7-s3log-2.png",
+          "capture": "campaign-s22-log-12.png",
           "turn": 10
         },
         {
@@ -189,8 +188,18 @@
             "score": 624,
             "genki": 10
           },
-          "capture": "campaign-s21-reh7-s3log-2.png",
+          "capture": "campaign-s22-log-12.png",
           "turn": 11
+        },
+        {
+          "cardId": 380,
+          "name": "ジャストアピール",
+          "expected": {
+            "score": 624,
+            "fullPowerCharge": 5
+          },
+          "capture": "campaign-s22-log-13.png",
+          "turn": 12
         }
       ]
     }

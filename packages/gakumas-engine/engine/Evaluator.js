@@ -142,6 +142,11 @@ export default class Evaluator extends EngineComponent {
   compileCall(node) {
     const { name, target, args } = node;
 
+    if (name === "floor") {
+      const value = this.compileChild(args[0]);
+      return (state) => Math.floor(value(state));
+    }
+
     if (!(name in this.variableResolvers)) {
       return warning(`Unknown function: ${name}`);
     }
