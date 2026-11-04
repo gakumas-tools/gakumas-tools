@@ -70,6 +70,8 @@ async function main() {
 
   const stage = Stages.getById(parseInt(values.stage, 10));
   if (!stage) fail(`Unknown stage ${values.stage}`);
+  // A link contest plays a deck per phase from linked loadouts, not one pair.
+  if (stage.type == "linkContest") fail("Link contests aren't supported");
   const baseline = (values.baseline || "").split(",").map((n) => n - 1);
   if (
     baseline.length != 2 ||
@@ -121,4 +123,6 @@ async function main() {
   console.log(`Recommended: ${label(result.recommended)}`);
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) main();
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main().catch((e) => fail(e.message));
+}
