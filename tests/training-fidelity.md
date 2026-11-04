@@ -208,4 +208,6 @@ Tame-Lie-One-Step 紫雲清夏 5469 alone (225/834/300, 体力 30; panel
 272/463/394%) with ゲーセンの戦利品 and 夢にあふれた大荷物. The latter gives an
 extra card use on the first dance turn (turn 4: 軽い足取り, then 挑戦 237 → 446),
 with 7 turns left, so the stage's effect stays off. Turns 9 and 10 are skipped
-at 体力 0, and the play ends at 885.
+at 体力 0, and the play ends at 885. The `-seika-5469-2` fixture is the same
+rehearsal's second play (other draws), where the extra use comes on turn 3 with
+8 turns left, ending at 957.
