@@ -20,6 +20,7 @@ const FIXTURES = [
   "contest-rehearsal-s55-sena-2",
   "contest-rehearsal-s55-sena-3",
   "contest-rehearsal-s55-sena-4",
+  "contest-rehearsal-s55-sena-5",
   "contest-rehearsal-s55-saki",
   "contest-rehearsal-s55-saki-2",
   "contest-rehearsal-s55-ume",

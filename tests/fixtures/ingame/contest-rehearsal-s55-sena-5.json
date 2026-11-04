@@ -1,0 +1,216 @@
+{
+  "date": "2026-11-05",
+  "gameVersion": "3.5.0",
+  "stage": "Contest S55 stage 3 (アノマリー) fifth rehearsal: owned memory 学園生活 十王星南 3663",
+  "stageId": 192,
+  "startingStamina": 25,
+  "initial": {
+    "score": 0,
+    "stamina": 25
+  },
+  "pItemIds": [
+    168
+  ],
+  "skillCardIds": [
+    382,
+    376,
+    376,
+    370,
+    418,
+    382,
+    392,
+    400,
+    376,
+    372,
+    446,
+    376,
+    376,
+    382,
+    400,
+    374
+  ],
+  "turnTypes": [
+    "dance",
+    "dance",
+    "dance",
+    "dance",
+    "visual",
+    "visual",
+    "dance",
+    "vocal",
+    "visual",
+    "vocal",
+    "visual",
+    "dance"
+  ],
+  "displayedPercents": {
+    "vocal": 250,
+    "dance": 324,
+    "visual": 448
+  },
+  "sourceDirectory": "screenshots/sources/ingame/",
+  "plays": [
+    {
+      "id": "rehearsal-20261105-sena-5",
+      "actions": [
+        {
+          "turn": 1,
+          "cardId": 382,
+          "name": "スターライト",
+          "expected": {
+            "score": 92,
+            "stamina": 20
+          },
+          "capture": "campaign-s24-sena2-log-7.png"
+        },
+        {
+          "turn": 2,
+          "cardId": 376,
+          "name": "イメージの基本",
+          "expected": {
+            "score": 92
+          },
+          "capture": "campaign-s24-sena2-log-7.png"
+        },
+        {
+          "turn": 3,
+          "cardId": 376,
+          "name": "イメージの基本",
+          "expected": {
+            "score": 92
+          },
+          "capture": "campaign-s24-sena2-log-6.png"
+        },
+        {
+          "turn": 4,
+          "cardId": 370,
+          "name": "はげしく",
+          "expected": {
+            "score": 242,
+            "enthusiasm": 8
+          },
+          "capture": "campaign-s24-sena2-log-5.png"
+        },
+        {
+          "turn": 4,
+          "cardId": 418,
+          "name": "カウントダウン",
+          "expected": {
+            "score": 242
+          },
+          "capture": "campaign-s24-sena2-log-5.png"
+        },
+        {
+          "turn": 5,
+          "cardId": 382,
+          "name": "スターライト",
+          "expected": {
+            "score": 368
+          },
+          "capture": "campaign-s24-sena2-log-5.png"
+        },
+        {
+          "turn": 5,
+          "cardId": 392,
+          "name": "ハッピー♪",
+          "expected": {
+            "score": 368
+          },
+          "capture": "campaign-s24-sena2-log-4.png"
+        },
+        {
+          "turn": 6,
+          "cardId": 400,
+          "name": "せーのっ！",
+          "expected": {
+            "score": 521
+          },
+          "capture": "campaign-s24-sena2-log-4.png"
+        },
+        {
+          "turn": 6,
+          "cardId": 376,
+          "name": "イメージの基本",
+          "expected": {
+            "score": 521
+          },
+          "capture": "campaign-s24-sena2-log-4.png"
+        },
+        {
+          "turn": 7,
+          "cardId": 372,
+          "name": "スパート",
+          "expected": {
+            "score": 521,
+            "fullPowerCharge": 1
+          },
+          "capture": "campaign-s24-sena2-log-3.png"
+        },
+        {
+          "turn": 8,
+          "cardId": 446,
+          "name": "学園一のアイドル",
+          "expected": {
+            "score": 591
+          },
+          "capture": "campaign-s24-sena2-log-3.png"
+        },
+        {
+          "turn": 8,
+          "cardId": 376,
+          "name": "イメージの基本",
+          "expected": {
+            "score": 591
+          },
+          "capture": "campaign-s24-sena2-log-3.png"
+        },
+        {
+          "turn": 9,
+          "cardId": 376,
+          "name": "イメージの基本",
+          "expected": {
+            "score": 591
+          },
+          "capture": "campaign-s24-sena2-log-2.png"
+        },
+        {
+          "turn": 10,
+          "cardId": 382,
+          "name": "スターライト",
+          "expected": {
+            "score": 676
+          },
+          "capture": "campaign-s24-sena2-log-2.png"
+        },
+        {
+          "turn": 10,
+          "cardId": 400,
+          "name": "せーのっ！",
+          "expected": {
+            "score": 801
+          },
+          "capture": "campaign-s24-sena2-log-2.png"
+        },
+        {
+          "turn": 11,
+          "cardId": 374,
+          "name": "メントレの基本",
+          "expected": {
+            "score": 801,
+            "fullPowerCharge": 3
+          },
+          "capture": "campaign-s24-sena2-log-1.png"
+        },
+        {
+          "turn": 12,
+          "cardId": null,
+          "expected": {
+            "score": 801,
+            "stamina": 2
+          },
+          "capture": "campaign-s24-sena2-log-1.png"
+        }
+      ]
+    }
+  ]
+}
