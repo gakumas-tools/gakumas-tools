@@ -65,6 +65,6 @@ formation panel. Covers concentration, good condition's ×1.5, P-items at the
 start of the stage and of a turn, multi-hit cards, and a once-per-stage card
 taken from both the main and the sub memory's deck. Stage 2 adds good
 impression at the end of each turn, motivation's genki bonus, and the
-stage's own effect (`stageId` 191), which every third direct good impression
-gain adds 7 and doubles the next tick. The ranking bonus added to the top
+stage's own effect (`stageId` 191), which on every fourth direct good
+impression gain adds 7 and doubles the next tick. The ranking bonus added to the top
 unit isn't part of the replay.
