@@ -93,7 +93,8 @@ of the same formation, with different draws and turn types (表現の基本 on t
 3); the effect again fires on turns 6 and 10, ending at 2,249. The `-3` fixture
 is a third play where the effect fires only on turn 6, ending at 1,735 with
 元気な挨拶 and 気分転換. The `-4` fixture is a fourth play with the effect on
-turns 6 and 10, ending at 2,062.
+turns 6 and 10, ending at 2,062. The `-5` fixture is a fifth, with four
+幸せな時間 and the effect on turns 6 and 10, ending at 2,536.
 
 `contest-rehearsal-s55-tsubame-2` is the same rehearsal's stage 3 (`stageId`
 192), played by the default memory 学園生活 雨夜燕 with はばたくブローチ. Turns 5,
