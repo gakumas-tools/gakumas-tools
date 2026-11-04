@@ -155,7 +155,9 @@ and 試行錯誤's two hits there use concentration 9 under 好調 (161 → 425)
 turn matches, to the final 588. The `-saki-3663-2` fixture is a second
 rehearsal with other draws and turn types, ending at 635. ばくおんライオン adds
 55 at the start of turn 5 (56 → 111), and 挑戦 with concentration 12 scores
-283.
+283. The `-saki-3663-3` fixture is a third rehearsal ending at 593: 好調 from
+turn 2's 振る舞いの基本 lets ばくおんライオン add 61 at the start of turn 3, and
+挑戦 with concentration 5 under 好調 scores 228 (61 → 289).
 
 `contest-rehearsal-s55-temari-5319` is stage 1 (`stageId` 190) played by 一匹狼
 月村手毬 5319 with a 学園生活 手毬 sub (819/339/392, 体力 35; panel
