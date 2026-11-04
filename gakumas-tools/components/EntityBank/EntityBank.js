@@ -8,50 +8,16 @@ import {
 } from "react";
 import { useTranslations } from "next-intl";
 import { FaCheck, FaFilter, FaXmark } from "react-icons/fa6";
-import { PIdols } from "gakumas-data";
 import EntityIcon from "@/components/EntityIcon";
 import PlanIdolSelects from "@/components/PlanIdolSelects";
 import WorkspaceContext from "@/contexts/WorkspaceContext";
 import c from "@/utils/classNames";
-import {
-  COMPARE_FN_BY_TYPE,
-  ENTITY_DATA_BY_TYPE,
-  EntityTypes,
-  isEntityHidden,
-} from "@/utils/entities";
+import { getBankEntities, isEntityHidden } from "@/utils/entities";
 import { usePopOnActivate } from "@/utils/usePop";
 import styles from "./EntityBank.module.scss";
 
 const INITIAL_RENDER_COUNT = 96;
 const NO_FILTERS = [];
-
-function getEntities(type, { filter, plan, idolId }) {
-  const Entities = ENTITY_DATA_BY_TYPE[type];
-  const compareFn = COMPARE_FN_BY_TYPE[type];
-
-  if (!filter) return [...Entities.getAll()].sort(compareFn);
-
-  let signatureEntities = [];
-  if (type !== EntityTypes.P_DRINK) {
-    const pIdolIds = PIdols.getFiltered({
-      idolIds: [idolId],
-      plans: [plan],
-    }).map((pi) => pi.id);
-    signatureEntities = Entities.getFiltered({
-      pIdolIds,
-    });
-  }
-
-  const nonSignatureEntities = Entities.getFiltered({
-    rarities: ["R", "SR", "SSR", "L"],
-    plans: [plan, "free"],
-    modes: ["stage"],
-    sourceTypes: ["default", "produce", "support"],
-    pIdolIds: [null],
-  }).sort(compareFn);
-
-  return signatureEntities.concat(nonSignatureEntities);
-}
 
 function FilterChip({ on, icon, onToggle, children }) {
   const pop = usePopOnActivate(on);
@@ -93,7 +59,7 @@ function EntityBank({
   }, [renderAll]);
 
   const entities = useMemo(() => {
-    let result = getEntities(type, { filter, plan, idolId }).filter(
+    let result = getBankEntities(type, { filter, plan, idolId }).filter(
       (e) => !isEntityHidden(type, e.id),
     );
     for (let customFilter of filters) {

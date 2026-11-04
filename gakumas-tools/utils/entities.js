@@ -48,6 +48,38 @@ export function isEntityHidden(type, id) {
   return false;
 }
 
+// Entities an EntityBank offers. With the plan/idol filter on: the idol's
+// signature entities for the plan, then everything else a Stage memory can
+// hold for that plan.
+export function getBankEntities(type, { filter, plan, idolId }) {
+  const Entities = ENTITY_DATA_BY_TYPE[type];
+  const compareFn = COMPARE_FN_BY_TYPE[type];
+
+  if (!filter) return [...Entities.getAll()].sort(compareFn);
+
+  let signatureEntities = [];
+  if (type !== EntityTypes.P_DRINK) {
+    const pIdolIds = PIdols.getFiltered({
+      idolIds: [idolId],
+      plans: [plan],
+    }).map((pi) => pi.id);
+    signatureEntities = Entities.getFiltered({
+      pIdolIds,
+    });
+  }
+
+  const nonSignatureEntities = Entities.getFiltered({
+    // Default cards are all N, and a memory's Stage deck can hold them.
+    rarities: ["N", "R", "SR", "SSR", "L"],
+    plans: [plan, "free"],
+    modes: ["stage"],
+    sourceTypes: ["default", "produce", "support"],
+    pIdolIds: [null],
+  }).sort(compareFn);
+
+  return signatureEntities.concat(nonSignatureEntities);
+}
+
 // Resolve a renderable icon for an entity. P-idols without their own portrait
 // fall back to their signature skill card.
 export function resolveEntityIcon(entity, idolId) {
