@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { S } from "gakumas-engine";
+import { S, resetRand } from "gakumas-engine";
 import ManualStrategy, {
   MoveToTopOfDeckSelectionRequest,
 } from "../../../../packages/gakumas-engine/strategies/ManualStrategy.js";
@@ -115,6 +115,43 @@ test("先生でアイドル！ into 潜在能力 resolves after three prompts", 
     "HOLD_SELECTION",
   ]);
   assert.equal(state[S.heldCards].length, 2);
+});
+
+test("a prompt after a reshuffle holds the card it showed", async () => {
+  // 789 uses 対戦お願いします！ (528) twice; with the deck empty, its draw
+  // reshuffles the discards between the two hold prompts. Each replay must
+  // reshuffle the same way, or the answer lands on another card.
+  for (let seed = 0; seed < 10; seed++) {
+    resetRand(seed);
+    const engine = createEngine({
+      skillCardIds: [789, 528, 19, 20, 21, 22, 23, 24],
+    });
+    let state = engine.startStage(engine.getInitialState());
+    const idx = (id) => state[S.cardMap].findIndex((c) => c.id === id);
+    const rest = [
+      ...state[S.handCards],
+      ...state[S.deckCards],
+      ...state[S.discardedCards],
+    ].filter((c) => c !== idx(789) && c !== idx(528));
+    state[S.handCards] = [idx(789), rest[0]];
+    state[S.deckCards] = [idx(528)];
+    state[S.discardedCards] = rest.slice(1);
+
+    const shown = [];
+    const strategy = new ManualStrategy(engine, async (request) => {
+      if (request.type === "CARD_SELECTION") return idx(789);
+      if (request.type === "USE_CARD_FREE_SELECTION") {
+        return [request.cards.indexOf(idx(528))];
+      }
+      shown.push(request.cards[0]);
+      return [0];
+    });
+    engine.strategy = strategy;
+
+    state = await play(strategy, engine, state, await strategy.evaluate(state));
+    assert.equal(shown.length, 2);
+    assert.deepEqual([...state[S.heldCards]].sort(), [...shown].sort());
+  }
 });
 
 // Plays `cardId` with a single card left in the deck and returns the
