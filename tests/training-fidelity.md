@@ -114,7 +114,9 @@ The `-sena-3` fixture is a third rehearsal with the same memory and other
 draws and turn types, ending at 692. ティーキャディー fires once, after
 turn 2's はげしく (130 → 195). The play has five two-card turns and a
 スパート held on turn 5, and イメージの基本 changes 強気 back to 温存 on turns
-7, 9 and 11.
+7, 9 and 11. The `-sena-4` fixture is a fourth rehearsal ending at 790, with
+ティーキャディー after turn 2's せーのっ！ (85 → 135, 体力 22 → 23), six
+two-card turns and a skipped extra use on turn 11 (体力 5 → 7).
 
 `contest-rehearsal-s55-saki` is stage 1 played by an owned memory, Fighting My
 Way 花海咲季 5289 (343/434/499, 体力 32; panel 462/362/775%), in a rehearsal
