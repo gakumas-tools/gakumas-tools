@@ -69,7 +69,9 @@ stage's own effect (`stageId` 191), which on every fourth direct good
 impression gain adds 7 and doubles the next tick. The ranking bonus added to the top
 unit isn't part of the replay.
 
-`contest-rehearsal-s55-kotone-2` is a second rehearsal with the same formation
-(2026-11-05 00:35), with other draws and turn types. Its stage effect fires on
-turns 6 and 10, and the game ticks good impression twice on turns 6–7 and
-10–11; the replay gives all twelve turn scores (final 2,915) exactly.
+The `-2` fixtures are a second rehearsal with the same formation (2026-11-05
+00:35), with other draws and turn types; the replay gives every turn's score
+exactly (手毬 1,477, 清夏 967, ことね 2,915). Stage 2's effect fires on turns 6
+and 10, and the game ticks good impression twice on turns 6–7 and 10–11.
+`expected` is read after the next turn's start: 手毬's turn 1 concentration is
+9 because 私の「初」の楽譜 adds 3 again at the start of turn 2.
