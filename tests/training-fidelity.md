@@ -230,4 +230,7 @@ at 体力 0, and the play ends at 885. The `-seika-5469-2` fixture is the same
 rehearsal's second play (other draws), where the extra use comes on turn 3 with
 8 turns left, ending at 957. The `-seika-5469-3` fixture is a third play where
 the first dance turn is turn 7, with 4 turns left: the extra use's 決めポーズ
-triggers the stage's effect (集中 7 → 11 and 集中強化), ending at 769.
+triggers the stage's effect (集中 7 → 11 and 集中強化), ending at 769. The
+`-seika-5469-4` fixture is its negative twin: the first dance turn is turn 5,
+with 6 turns left, so 決めポーズ as the turn's second card gets no 集中, ending
+at 1,071.
