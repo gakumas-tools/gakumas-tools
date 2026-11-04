@@ -103,3 +103,9 @@ after a 強気 active card, the two score hits of 学園一のアイドル, repe
 温存 → 強気 transitions, and a スパート moved to the held pile. Skipped
 actions end the turn and restore stamina, including after a card leaves an
 extra use available. The replay reaches the recorded final score of 794.
+
+The `-sena-2` fixture uses the same memory with a different turn order and
+draws, ending at 687. Its first stance is 強気, which gives no extra card
+use or enthusiasm; ティーキャディー adds 33 score and restores 1 stamina.
+Later it covers 温存 level 2 changing to 強気 (5 genki and 8 enthusiasm)
+and the 強気 level 2 score multiplier.
