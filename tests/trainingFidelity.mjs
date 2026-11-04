@@ -97,8 +97,12 @@ function replay(capture, play) {
 
     assert.equal(state[S.turnsElapsed], endsTurn ? turn : turn - 1);
     for (const [field, value] of Object.entries(action.expected)) {
-      assert.equal(
-        state[S[field]],
+      let actual = state[S[field]];
+      if (field === "heldCards") {
+        actual = actual.map((card) => state[S.cardMap][card].id);
+      }
+      assert.deepEqual(
+        actual,
         value,
         `turn ${turn} ${field} (${action.capture})`,
       );

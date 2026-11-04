@@ -29,7 +29,7 @@ thresholds. Comparing whole stages and loadouts is `pnpm fidelity`'s job.
 - `plays[].actions[]`: each card played, by `cardId` and `name`, or a skipped
   action with `cardId: null`; `expected`,
   the state read from the screenshot after it; and `capture`, that
-  screenshot's name.
+  screenshot's name. In `expected`, `heldCards` lists card IDs.
 
 Screenshots stay out of git, under `screenshots/sources/ingame/`.
 

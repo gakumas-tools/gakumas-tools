@@ -141,7 +141,10 @@
           "name": "スパート",
           "expected": {
             "score": 548,
-            "fullPowerCharge": 1
+            "fullPowerCharge": 1,
+            "heldCards": [
+              372
+            ]
           },
           "capture": "campaign-s22-sena-log-5.png"
         },
