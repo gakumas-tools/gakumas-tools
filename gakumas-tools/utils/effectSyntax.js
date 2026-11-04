@@ -48,9 +48,16 @@ const LEXEMES = {
   [TokenType.NOT]: ["!", "operator"],
 };
 
-function classify(token) {
+// A number token's `value` is parsed ("1.50" becomes 1.5), so read its text.
+const NUMBER = /-?\d+(?:\.\d*)?/g;
+
+function classify(token, input, cursor) {
   if (KEYWORD_TYPES.has(token.type)) return [String(token.value), "keyword"];
-  if (token.type === TokenType.NUMBER) return [String(token.value), "number"];
+  if (token.type === TokenType.NUMBER) {
+    NUMBER.lastIndex = cursor;
+    const match = NUMBER.exec(input);
+    return match && [match[0], "number"];
+  }
   if (token.type === TokenType.IDENTIFIER) return [token.value, "identifier"];
   return LEXEMES[token.type] || null;
 }
@@ -71,7 +78,7 @@ export function highlightEffects(input) {
   let cursor = 0;
 
   for (const token of tokens) {
-    const hit = classify(token);
+    const hit = classify(token, input, cursor);
     if (!hit) continue;
     const [text, className] = hit;
 
