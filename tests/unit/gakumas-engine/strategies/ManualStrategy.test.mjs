@@ -119,8 +119,7 @@ test("先生でアイドル！ into 潜在能力 resolves after three prompts", 
 
 test("a prompt after a reshuffle holds the card it showed", async () => {
   // 789 uses 対戦お願いします！ (528) twice; with the deck empty, its draw
-  // reshuffles the discards between the two hold prompts. Each replay must
-  // reshuffle the same way, or the answer lands on another card.
+  // reshuffles the discards between the two hold prompts.
   for (let seed = 0; seed < 10; seed++) {
     resetRand(seed);
     const engine = createEngine({

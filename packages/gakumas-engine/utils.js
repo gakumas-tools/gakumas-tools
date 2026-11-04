@@ -29,8 +29,8 @@ export function getRand() {
   return _getRand();
 }
 
-// Record the draws from here on, so a card use replayed from the start
-// (manual play, after each selection prompt) rolls what it rolled before.
+// Record the draws from here on, so a card use replayed from the start rolls
+// what it rolled before.
 export function recordRand() {
   _randTape = [];
   _randTapePos = 0;

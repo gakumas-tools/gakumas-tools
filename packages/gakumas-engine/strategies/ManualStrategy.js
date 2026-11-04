@@ -88,8 +88,7 @@ export default class ManualStrategy extends BaseStrategy {
       usableCards,
     });
 
-    // A selection prompt replays this use; it must draw what it drew when
-    // the prompt's cards were shown.
+    // Selection prompts replay this use with the draws it made.
     recordRand();
     return { card: selectedCard };
   }
