@@ -83,7 +83,9 @@ and 10, and the game ticks good impression twice on turns 6–7 and 10–11.
 on turns 7 and 12 and doubles their good impression ticks, ending at 1,759.
 寝心地は良好 never fires in the log, and the engine agrees. Its `-2` fixture is
 a second play, where the effect fires on turns 4 and 8 (with ラブリーウインク
-both times) and the play ends at 1,930. The
+both times) and the play ends at 1,930. Its `-3` fixture is a third, with the
+effect on turns 6 and 10 (ラブリーウインク again) and お気にのスニーカー on turn
+4, ending at 2,184. The
 `contest-rehearsal-s55-kotone-4536` fixture is the same idol's 4536 memory
 (242/519/385, 体力 27; panel 376/363/442%) with お気にのスニーカー and upgraded
 Colorful Cute!+ and 思い出し笑い+. The stage's effect fires on turns 4 and 10, and
