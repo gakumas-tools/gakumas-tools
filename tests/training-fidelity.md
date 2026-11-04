@@ -133,7 +133,10 @@ play can't tell floor from rounding up. The `-misuzu-rehearsal-22` fixture
 stops after turn 8 (119, with turn 9's switch to 全力): on turn 9, a visual
 turn, 休憩中のおやつ adds 69 after ハッピー♪ at a cumulative 全力値 of 12
 (119 → 188), where the engine adds 79. 7 fits the game (7 × 3 × 3.28 = 68.9)
-and the engine's 8 doesn't.
+and the engine's 8 doesn't. The `-misuzu-rehearsal-23` fixture is replayed to
+its final 808: 全力 comes on the last turn, where the held スパート scores
+311 (497 → 808), and no preservation card is played under 全力, so
+休憩中のおやつ never fires.
 
 `contest-rehearsal-s55-sena` replays an owned 学園生活 十王星南 memory with
 ティーキャディー in stage 3. It checks the item's score and stamina recovery
