@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { SkillCards } from "gakumas-data";
+import { SkillCards, Stages } from "gakumas-data";
 import { IdolConfig, StageEngine, S } from "gakumas-engine";
 
 const FIXTURES = [
@@ -9,6 +9,7 @@ const FIXTURES = [
   "training-exam-motivation",
   "contest-rehearsal-s55-temari",
   "contest-rehearsal-s55-seika",
+  "contest-rehearsal-s55-kotone",
 ];
 
 function loadCapture(name) {
@@ -38,7 +39,8 @@ function createEngine(capture, play) {
     stage: {
       type: "capturedTraining",
       turnCount: capture.turnTypes.length,
-      effects: [],
+      // A contest stage's own effects, e.g. S55 stage 2's 好印象 bonus.
+      effects: capture.stageId ? Stages.getById(capture.stageId).effects : [],
     },
   });
   engine.turnManager.generateTurnTypes = () => [...capture.turnTypes];
