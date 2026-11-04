@@ -26,7 +26,8 @@ thresholds. Comparing whole stages and loadouts is `pnpm fidelity`'s job.
   twice from two copies. Otherwise one copy of each card the play used.
 - `turnTypes`: the turn order the game showed.
 - `displayedPercents`: the multiplier the game showed for each turn type.
-- `plays[].actions[]`: each card played, by `cardId` and `name`; `expected`,
+- `plays[].actions[]`: each card played, by `cardId` and `name`, or a skipped
+  action with `cardId: null`; `expected`,
   the state read from the screenshot after it; and `capture`, that
   screenshot's name.
 
@@ -95,3 +96,10 @@ turn 8: on turn 9 休憩中のおやつ adds 69 in the game (410 → 479) but 79
 engine, which rounds 12 × 0.6 = 7.2 up to 8 before 全力's ×3, where the game's
 69 fits 7 (7 × 3 × 3.28 = 68.9). One reading can't tell floor from round, so
 the engine is unchanged.
+
+`contest-rehearsal-s55-sena` replays an owned 学園生活 十王星南 memory with
+ティーキャディー in stage 3. It checks the item's score and stamina recovery
+after a 強気 active card, the two score hits of 学園一のアイドル, repeated
+温存 → 強気 transitions, and a スパート moved to the held pile. Skipped
+actions end the turn and restore stamina, including after a card leaves an
+extra use available. The replay reaches the recorded final score of 794.

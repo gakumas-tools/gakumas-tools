@@ -16,6 +16,7 @@ const FIXTURES = [
   "contest-rehearsal-s55-tsubame-2",
   "contest-rehearsal-s55-misuzu",
   "contest-rehearsal-s55-misuzu-2",
+  "contest-rehearsal-s55-sena",
 ];
 
 function loadCapture(name) {
@@ -32,7 +33,9 @@ function getTypeMultipliers(capture) {
 }
 
 function createEngine(capture, play) {
-  const cardIds = new Set(play.actions.map((action) => action.cardId));
+  const cardIds = new Set(
+    play.actions.map((action) => action.cardId).filter((id) => id !== null),
+  );
   const idol = new IdolConfig({
     params: [0, 0, 0, capture.startingStamina ?? capture.initial.stamina],
     pItemIds: capture.pItemIds ?? [],
@@ -60,6 +63,21 @@ function putInHand(state, card) {
   state[S.handCards] = [card];
 }
 
+function playAction(engine, state, action, turn) {
+  if (action.cardId === null) return engine.endTurn(state);
+
+  assert.equal(SkillCards.getById(action.cardId).name, action.name);
+
+  // Once-per-stage cards used twice come from two copies in the deck.
+  const card = state[S.cardMap].findIndex(
+    (c, i) => c.id == action.cardId && !state[S.removedCards].includes(i),
+  );
+  assert.ok(card >= 0, `${action.name} removed`);
+  putInHand(state, card);
+  assert.ok(engine.isCardUsable(state, card), `turn ${turn}: usable`);
+  return engine.useCard(state, card);
+}
+
 function replay(capture, play) {
   const engine = createEngine(capture, play);
   let state = engine.startStage(engine.getInitialState());
@@ -70,20 +88,11 @@ function replay(capture, play) {
   }
 
   for (const [i, action] of play.actions.entries()) {
-    // One card a turn unless the action names its turn.
+    // One action a turn unless the action names its turn.
     const turn = action.turn ?? i + 1;
     const next = play.actions[i + 1];
     const endsTurn = !next || (next.turn ?? i + 2) != turn;
-    assert.equal(SkillCards.getById(action.cardId).name, action.name);
-
-    // Once-per-stage cards used twice come from two copies in the deck.
-    const card = state[S.cardMap].findIndex(
-      (c, i) => c.id == action.cardId && !state[S.removedCards].includes(i),
-    );
-    assert.ok(card >= 0, `${action.name} removed`);
-    putInHand(state, card);
-    assert.ok(engine.isCardUsable(state, card), `turn ${turn}: usable`);
-    state = engine.useCard(state, card);
+    state = playAction(engine, state, action, turn);
 
     assert.equal(state[S.turnsElapsed], endsTurn ? turn : turn - 1);
     for (const [field, value] of Object.entries(action.expected)) {
