@@ -140,6 +140,66 @@
           },
           "capture": "campaign-s21-reh-s3log-4.png",
           "turn": 8
+        },
+        {
+          "cardId": 380,
+          "name": "ジャストアピール",
+          "expected": {
+            "score": 410,
+            "fullPowerCharge": 2
+          },
+          "capture": "campaign-s21-reh-s3log-3.png",
+          "turn": 9
+        },
+        {
+          "cardId": 376,
+          "name": "イメージの基本",
+          "expected": {
+            "score": 479,
+            "genki": 17
+          },
+          "capture": "campaign-s21-reh-s3log-2.png",
+          "turn": 9
+        },
+        {
+          "cardId": 372,
+          "name": "スパート",
+          "expected": {
+            "score": 824,
+            "fullPowerCharge": 3
+          },
+          "capture": "campaign-s21-reh-s3log-2.png",
+          "turn": 9
+        },
+        {
+          "cardId": 402,
+          "name": "アッチェレランド",
+          "expected": {
+            "score": 879,
+            "fullPowerCharge": 6
+          },
+          "capture": "campaign-s21-reh-s3log-1.png",
+          "turn": 10
+        },
+        {
+          "cardId": 1,
+          "name": "アピールの基本",
+          "expected": {
+            "score": 942
+          },
+          "capture": "campaign-s21-reh-s3log-1.png",
+          "turn": 11
+        },
+        {
+          "cardId": 374,
+          "name": "メントレの基本",
+          "expected": {
+            "score": 942,
+            "genki": 2,
+            "fullPowerCharge": 8
+          },
+          "capture": "campaign-s21-reh-s3log-1.png",
+          "turn": 12
         }
       ]
     }
