@@ -13,6 +13,7 @@ const FIXTURES = [
   "contest-rehearsal-s55-temari-2",
   "contest-rehearsal-s55-seika-2",
   "contest-rehearsal-s55-kotone-2",
+  "contest-rehearsal-s55-tsubame-2",
 ];
 
 function loadCapture(name) {
@@ -51,7 +52,7 @@ function createEngine(capture, play) {
 }
 
 function putInHand(state, card) {
-  for (const pile of [S.handCards, S.deckCards, S.discardedCards]) {
+  for (const pile of [S.handCards, S.deckCards, S.discardedCards, S.heldCards]) {
     state[pile] = state[pile].filter((c) => c != card);
   }
   state[S.handCards] = [card];
@@ -67,7 +68,10 @@ function replay(capture, play) {
   }
 
   for (const [i, action] of play.actions.entries()) {
-    const turn = i + 1;
+    // One card a turn unless the action names its turn.
+    const turn = action.turn ?? i + 1;
+    const next = play.actions[i + 1];
+    const endsTurn = !next || (next.turn ?? i + 2) != turn;
     assert.equal(SkillCards.getById(action.cardId).name, action.name);
 
     // Once-per-stage cards used twice come from two copies in the deck.
@@ -79,7 +83,7 @@ function replay(capture, play) {
     assert.ok(engine.isCardUsable(state, card), `turn ${turn}: usable`);
     state = engine.useCard(state, card);
 
-    assert.equal(state[S.turnsElapsed], turn);
+    assert.equal(state[S.turnsElapsed], endsTurn ? turn : turn - 1);
     for (const [field, value] of Object.entries(action.expected)) {
       assert.equal(
         state[S[field]],

@@ -75,3 +75,10 @@ exactly (手毬 1,477, 清夏 967, ことね 2,915). Stage 2's effect fires on t
 and 10, and the game ticks good impression twice on turns 6–7 and 10–11.
 `expected` is read after the next turn's start: 手毬's turn 1 concentration is
 9 because 私の「初」の楽譜 adds 3 again at the start of turn 2.
+
+`contest-rehearsal-s55-tsubame-2` is the same rehearsal's stage 3 (`stageId`
+192), played by the default memory 学園生活 雨夜燕 with はばたくブローチ. Turns 5,
+7 and 11 use several cards, so its actions give their `turn`, and a held card
+(スパート, held on turn 2, used on turn 11) is taken from the held pile. Covers
+温存/強気/全力 stance changes, preservation's 熱意 and extra card uses, full
+power charge, and the brooch's 熱意追加 on the first direct switch to 強気.
