@@ -50,6 +50,11 @@ or rank thresholds. Comparing whole stages and loadouts is
 
 Screenshots stay out of git, under `screenshots/sources/ingame/`.
 
+`terminalAttribute` checks a lesson's final displayed attribute. It is the
+initial attribute plus the engine's score, capped at the lesson's target
+gain. Capped attributes check that the replay reaches the target; the exact
+score above the target isn't visible in the game.
+
 ## Capturing
 
 Record only settled values, never a score still counting up or a preview.
@@ -170,6 +175,10 @@ The other plays use one stance change before playing 総合芸術. One enters
 and an extra card use. Their scores remain below the cap. The last play pays
 part of 総合芸術's cost with stamina. Growth gained by its own stance change applies after the
 current action sequence, so that use adds 54 before the follow-up card.
+
+Another play retains 強気 after leaving 温存 and enters 強気2 with
+総合芸術. It shows 30 added score before use and finishes at the cap of
+200, with stamina 23 and genki 0.
 
 This fixture supplies selected cards. The unique 総合芸術 appears in the
 first and third hands; the intervening deck order and reshuffle are unknown.

@@ -144,7 +144,8 @@
           ],
           "handCapture": "campaign-sense-20261103-r1-turn6.png"
         }
-      ]
+      ],
+      "terminalAttribute": 220
     },
     {
       "id": "late-condition-half-costs",

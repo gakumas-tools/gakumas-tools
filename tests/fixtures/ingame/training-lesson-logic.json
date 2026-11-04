@@ -167,7 +167,8 @@
           ],
           "handCapture": "campaign-logic-20261103-r1-turn6.png"
         }
-      ]
+      ],
+      "terminalAttribute": 220
     },
     {
       "id": "motivation-without-impression",

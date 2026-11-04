@@ -24,7 +24,8 @@
     "campaign-growth-20261103-r1-initial.png",
     "campaign-growth-20261103-r2-ready.png",
     "campaign-growth-20261103-r3-initial.png",
-    "campaign-growth-20261103-r4-initial.png"
+    "campaign-growth-20261103-r4-initial.png",
+    "campaign-growth-20261104-r5-initial.png"
   ],
   "plays": [
     {
@@ -83,7 +84,8 @@
           },
           "growthCapture": "campaign-growth-20261103-r1-growth-detail.png"
         }
-      ]
+      ],
+      "terminalAttribute": 200
     },
     {
       "id": "strength-without-preservation",
@@ -242,6 +244,66 @@
           "capture": "campaign-growth-20261103-r4-final-a.png"
         }
       ]
+    },
+    {
+      "id": "retained-strength-cap",
+      "date": "2026-11-04",
+      "actions": [
+        {
+          "cardId": 418,
+          "name": "カウントダウン",
+          "expected": {
+            "score": 0,
+            "stamina": 28,
+            "genki": 8,
+            "stance": "preservation",
+            "enthusiasm": 0
+          },
+          "capture": "campaign-growth-20261104-r5-turn2.png"
+        },
+        {
+          "cardId": 382,
+          "name": "スターライト",
+          "expected": {
+            "score": 28,
+            "stamina": 28,
+            "genki": 5,
+            "stance": "strength",
+            "enthusiasm": 5,
+            "cardUsesRemaining": 1
+          },
+          "capture": "campaign-growth-20261104-r5-extra1.png",
+          "turnsElapsed": 1
+        },
+        {
+          "cardId": 13,
+          "name": "表現の基本",
+          "expected": {
+            "score": 28,
+            "stamina": 28,
+            "genki": 9,
+            "stance": "strength",
+            "enthusiasm": 0
+          },
+          "capture": "campaign-growth-20261104-r5-turn3.png",
+          "turnsElapsed": 2
+        },
+        {
+          "cardId": 430,
+          "name": "総合芸術",
+          "expected": {
+            "stamina": 23,
+            "genki": 0
+          },
+          "capture": "campaign-growth-20261104-r5-final-b.png",
+          "growthBefore": {
+            "g.score": 30
+          },
+          "growthCapture": "campaign-growth-20261104-r5-growth-detail.png",
+          "turnsElapsed": 3
+        }
+      ],
+      "terminalAttribute": 200
     }
   ]
 }
