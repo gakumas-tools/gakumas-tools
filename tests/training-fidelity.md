@@ -136,7 +136,10 @@ fixture is a fifth rehearsal ending at 801: ティーキャディー fires after
 1's スターライト (59 → 92, 体力 19 → 20), and turn 12 is skipped at 体力 0
 (0 → 2). The `-sena-6` fixture is a sixth rehearsal ending at 841, with
 ティーキャディー after turn 4's せーのっ！ (130 → 215, 体力 21 → 22) and a
-skipped last turn.
+skipped last turn. The `-sena-7` fixture is a seventh rehearsal ending at 708:
+ティーキャディー after turn 3's せーのっ！ (153 → 243, 体力 21 → 22), three
+two-card turns, スパート held on turn 8 and never used, and a skipped turn 10
+(0 → 2).
 
 `contest-rehearsal-s55-saki` is stage 1 played by an owned memory, Fighting My
 Way 花海咲季 5289 (343/434/499, 体力 32; panel 462/362/775%), in a rehearsal
