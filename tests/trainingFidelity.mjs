@@ -62,6 +62,7 @@ const FIXTURES = [
   "contest-rehearsal-s55-temari-5319-9",
   "contest-rehearsal-s55-temari-5319-5",
   "contest-rehearsal-s55-temari-5613",
+  "contest-rehearsal-s55-kotone-4866-2",
 ];
 
 function loadCapture(name) {
