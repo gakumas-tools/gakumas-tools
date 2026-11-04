@@ -145,7 +145,10 @@ two-card turns, スパート held on turn 8 and never used, and a skipped turn 1
 (0 → 2). The `-sena-8` fixture is an eighth rehearsal ending at 734:
 ティーキャディー inside turn 3's はげしく (130 → 195, 体力 22 → 23), six
 two-card turns, スパート held on turn 7, a skipped extra use on turn 10 and a
-skipped turn 11.
+skipped turn 11. The `-sena-9` fixture is a ninth rehearsal ending at 778:
+ティーキャディー inside turn 2's はげしく, スターライト from 温存 stage 2 on turn
+5 (熱意 8), スパート held on turn 6, and the last extra use and turn 12
+skipped.
 
 `contest-rehearsal-s55-saki` is stage 1 played by an owned memory, Fighting My
 Way 花海咲季 5289 (343/434/499, 体力 32; panel 462/362/775%), in a rehearsal
