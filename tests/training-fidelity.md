@@ -68,3 +68,8 @@ impression at the end of each turn, motivation's genki bonus, and the
 stage's own effect (`stageId` 191), which on every fourth direct good
 impression gain adds 7 and doubles the next tick. The ranking bonus added to the top
 unit isn't part of the replay.
+
+`contest-rehearsal-s55-kotone-2` is a second rehearsal with the same formation
+(2026-11-05 00:35), with other draws and turn types. Its stage effect fires on
+turns 6 and 10, and the game ticks good impression twice on turns 6–7 and
+10–11; the replay gives all twelve turn scores (final 2,915) exactly.
