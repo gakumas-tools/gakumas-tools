@@ -113,7 +113,8 @@ and the 強気 level 2 score multiplier.
 The `-sena-3` fixture is a third rehearsal with the same memory and other
 draws and turn types, ending at 692. ティーキャディー fires once, after
 turn 2's はげしく (130 → 195). The play has five two-card turns and a
-スパート held on turn 5, and four イメージの基本 change 強気 back to 温存.
+スパート held on turn 5, and イメージの基本 changes 強気 back to 温存 on turns
+7, 9 and 11.
 
 `contest-rehearsal-s55-saki` is stage 1 played by an owned memory, Fighting My
 Way 花海咲季 5289 (343/434/499, 体力 32; panel 462/362/775%), in a rehearsal
@@ -139,7 +140,7 @@ tick, 82 → 170). Every turn's score matches, to the final 656.
 3663 (300/400/200, 体力 25; panel 389/272/251%) with テクノドッグ.
 The item adds 2 motivation after turn 2's あふれる思い出 (6 → 8). Motivation then
 builds to 20, and ありがとうの言葉 (16 → 122), 気分転換 with 95 元気
-(130 → 389) and 未完の大器 (90 → 145) all read 元気. Every turn matches, to
+(130 → 395 with the tick) and 未完の大器 (元気 145 at the end) all read 元気. Every turn matches, to
 the final 424. The `-ume-3663-2` fixture is a second rehearsal (other draws,
 final 501): テクノドッグ fires on turn 1, three えいえいおー build motivation to 23,
 and 気分転換 with 164 元気 scores 412. The log's 元気 「before」 value is
