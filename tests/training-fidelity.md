@@ -125,7 +125,11 @@ replayed to the end of turn 8 (164, with turn 9's switch to 全力). On turn 9
 休憩中のおやつ adds 63 after each of two イメージの基本 in the game
 (164 → 227 → 290) but 72 in the engine: again 12 × 0.6 = 7.2, where 7 fits the
 game (7 × 3 × 2.96 = 62.2) and the engine's 8 doesn't. The fixture stops there,
-and the engine is unchanged in this branch.
+and the engine is unchanged in this branch. The `-misuzu-rehearsal-21` fixture
+is replayed to its final 733: スパート is held on turn 4 and used in turn 9's
+全力 turn (342 → 653), and 休憩中のおやつ adds 80 after that turn's
+イメージの基本 at a cumulative 全力値 of 15. 15 × 0.6 = 9 is whole, so this
+play can't tell floor from rounding up.
 
 `contest-rehearsal-s55-sena` replays an owned 学園生活 十王星南 memory with
 ティーキャディー in stage 3. It checks the item's score and stamina recovery
