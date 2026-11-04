@@ -247,6 +247,8 @@ with 7 turns left, and turn 10 is skipped. The `-temari-5319-6` fixture
 stage's effect stays off; 飛躍 with concentration 12 under 好調 hits twice
 (286 → 622 → 984) and the play ends at 1,786. Its `-2` fixture is a second
 play ending at 2,065, with 飛躍 on turn 9 at concentration 14 (1,314 → 2,065).
+Its `-3` fixture is a third, ending at 1,444: three バランス感覚 build
+concentration to 18 before トークタイム (395 → 995) and 飛躍.
 
 `contest-rehearsal-s55-seika-5469` is stage 1 played by the owned memory
 Tame-Lie-One-Step 紫雲清夏 5469 alone (225/834/300, 体力 30; panel
