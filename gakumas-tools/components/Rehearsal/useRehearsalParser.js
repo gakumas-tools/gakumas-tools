@@ -69,78 +69,70 @@ export default function useRehearsalParser() {
   }, []);
 
   const processVideo = useCallback(
-    async (videoFile) => {
+    async (videoFile, frameUnits) => {
       setProcessingStatus(t("analyzingVideo"));
       // Frames are OCR'd while scanning continues. Capping the frames in
       // flight keeps peak memory flat however long the video is.
       const pool = getOcrPool();
       const scan = new AbortController();
       let found = 0;
-      // The video was initially allocated 1 unit in the total; the scan
-      // expands that to `frameTotal` so the progress bar tracks per-frame.
-      let allocated = 1;
-      let ticked = 0;
       let lastStatusAt = 0;
-      try {
-        const { streamCandidateFrames, getScoresFromImage } =
-          await loadOcrModules();
-        const frames = streamCandidateFrames(videoFile, {
-          signal: scan.signal,
-          intervalMs: FRAME_INTERVAL_MS,
-          brightnessThreshold: BRIGHTNESS_THRESHOLD,
-          onProgress: (analyzed, frameTotal) => {
-            if (!ticked) {
-              allocated = frameTotal;
-              setTotal((cur) => cur + frameTotal - 1);
-            }
-            ticked++;
-            setProgress((p) => p + 1);
-            // Throttle status updates to ~4/sec — seeking can fire every
-            // ~50ms on desktop.
-            const now = performance.now();
-            if (now - lastStatusAt < 250 && analyzed !== frameTotal) return;
-            lastStatusAt = now;
-            setProcessingStatus(
-              t("scanningVideo", {
-                analyzed,
-                total: frameTotal,
-                found,
-              }),
+      const { streamCandidateFrames, getScoresFromImage } =
+        await loadOcrModules();
+      const frames = streamCandidateFrames(videoFile, {
+        signal: scan.signal,
+        intervalMs: FRAME_INTERVAL_MS,
+        brightnessThreshold: BRIGHTNESS_THRESHOLD,
+        onProgress: (analyzed, frameTotal) => {
+          if (!frameUnits.ticked) {
+            // The video was initially allocated 1 unit in the total; expand
+            // that to `frameTotal` so the progress bar tracks per-frame.
+            frameUnits.allocated = frameTotal;
+            setTotal((cur) => cur + frameTotal - 1);
+          }
+          frameUnits.ticked++;
+          setProgress((p) => p + 1);
+          // Throttle status updates to ~4/sec — seeking can fire every
+          // ~50ms on desktop.
+          const now = performance.now();
+          if (now - lastStatusAt < 250 && analyzed !== frameTotal) return;
+          lastStatusAt = now;
+          setProcessingStatus(
+            t("scanningVideo", {
+              analyzed,
+              total: frameTotal,
+              found,
+            }),
+          );
+        },
+      });
+      const scored = await mapWithLimit(
+        frames,
+        getOcrPoolSize() * 2,
+        async (canvas) => {
+          try {
+            const { scores, flags, icons } = await pool.run((worker) =>
+              getScoresFromImage(canvas, worker),
             );
-          },
-        });
-        const scored = await mapWithLimit(
-          frames,
-          getOcrPoolSize() * 2,
-          async (canvas) => {
-            try {
-              const { scores, flags, icons } = await pool.run((worker) =>
-                getScoresFromImage(canvas, worker),
-              );
-              if (!scores?.some((stage) => stage.some((v) => v))) return null;
-              found++;
-              return {
-                scores,
-                flags,
-                icons,
-                src: await canvasToObjectURL(canvas),
-              };
-            } catch (err) {
-              scan.abort(err);
-              throw err;
-            } finally {
-              canvas.width = canvas.height = 0;
-            }
-          },
-        );
-        const results = scored.filter(Boolean);
-        setProcessingStatus(t("videoComplete", { count: results.length }));
-        return results;
-      } finally {
-        // Close out the units the scan never ticked: all of them when the
-        // video failed to load, the rest of the frames when OCR aborted it.
-        if (ticked < allocated) setProgress((p) => p + allocated - ticked);
-      }
+            if (!scores?.some((stage) => stage.some((v) => v))) return null;
+            found++;
+            return {
+              scores,
+              flags,
+              icons,
+              src: await canvasToObjectURL(canvas),
+            };
+          } catch (err) {
+            scan.abort(err);
+            throw err;
+          } finally {
+            canvas.width = canvas.height = 0;
+          }
+        },
+      );
+      const results = scored.filter(Boolean);
+      setProcessingStatus(t("videoComplete", { count: results.length }));
+      return results;
     },
     [getOcrPool, t],
   );
@@ -206,12 +198,17 @@ export default function useRehearsalParser() {
       // Videos and images share the OCR worker pool, so they run sequentially.
       const ocrPromise = (async () => {
         for (const videoFile of videos) {
+          const frameUnits = { allocated: 1, ticked: 0 };
           try {
-            results.push(...(await processVideo(videoFile)));
+            results.push(...(await processVideo(videoFile, frameUnits)));
           } catch (err) {
             console.error(`Error processing ${videoFile.name}:`, err);
             setProcessingStatus(t("videoError", { message: err.message }));
           }
+          // Close out the units the scan never ticked: all of them when the
+          // video failed to load, the rest of the frames when OCR aborted it.
+          const unticked = frameUnits.allocated - frameUnits.ticked;
+          if (unticked > 0) setProgress((p) => p + unticked);
         }
         if (images.length) {
           const { results: imgResults, failures } = await processImages(images);
