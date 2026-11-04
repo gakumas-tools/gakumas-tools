@@ -139,7 +139,12 @@ its final 808: 全力 comes on the last turn, where the held スパート scores
 休憩中のおやつ never fires. The `-misuzu-rehearsal-24` fixture stops after turn
 8 (247, with turn 9's switch to 全力): on turn 9, a visual turn, 休憩中のおやつ
 adds 69 after イメージの基本 at a cumulative 全力値 of 12 (493 → 562), where the
-engine adds 79, as in rehearsal 22.
+engine adds 79, as in rehearsal 22. The `-misuzu-rehearsal-25` fixture stops
+after turn 6 (296, with turn 7's switch from 強気 to 全力): on turn 7, a vocal
+turn, 休憩中のおやつ adds 58 after イメージの基本 at a cumulative 全力値 of 13
+(379 → 437), where the engine adds 66. 13 × 0.6 = 7.8, and 7 fits the game
+(7 × 3 × 2.74 = 57.5) while 8 doesn't, so the game doesn't round to nearest
+either.
 
 `contest-rehearsal-s55-sena` replays an owned 学園生活 十王星南 memory with
 ティーキャディー in stage 3. It checks the item's score and stamina recovery
