@@ -135,7 +135,10 @@ tick, 82 → 170). Every turn's score matches, to the final 656.
 The item adds 2 motivation after turn 2's あふれる思い出 (6 → 8). Motivation then
 builds to 20, and ありがとうの言葉 (16 → 122), 気分転換 with 95 元気
 (130 → 389) and 未完の大器 (90 → 145) all read 元気. Every turn matches, to
-the final 424.
+the final 424. The `-ume-3663-2` fixture is a second rehearsal (other draws,
+final 501): テクノドッグ fires on turn 1, three えいえいおー build motivation to 23,
+and 気分転換 with 164 元気 scores 412. The log's 元気 「before」 value is
+after the card's cost is paid (turn 3: 7 − 2 = 5 → 14).
 
 `contest-rehearsal-s55-saki-3663` is stage 1 played by 学園生活 花海咲季 3663
 (200/300/400, 体力 25; panel 258/236/505%) with ばくおんライオン. 好調 from
