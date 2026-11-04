@@ -31,6 +31,12 @@ function memoryFitsStage(stage, memory) {
   return PIdols.getById(memory.pIdolId)?.plan == stage.plan;
 }
 
+// Contest formation offers as sub only memories of the main memory's idol.
+function isSameIdol(main, sub) {
+  const mainIdolId = PIdols.getById(main.pIdolId)?.idolId;
+  return mainIdolId == PIdols.getById(sub.pIdolId)?.idolId;
+}
+
 // Every ordered pair of two different memories the stage takes: a memory is
 // used once.
 export function memoryPairs(stage, memories) {
@@ -40,7 +46,8 @@ export function memoryPairs(stage, memories) {
       if (
         i !== j &&
         memoryFitsStage(stage, main) &&
-        memoryFitsStage(stage, sub)
+        memoryFitsStage(stage, sub) &&
+        isSameIdol(main, sub)
       ) {
         pairs.push([i, j]);
       }

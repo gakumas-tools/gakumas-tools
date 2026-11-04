@@ -13,7 +13,8 @@
  * pIdolId, params [Vo, Da, Vi, stamina], pItemIds, skillCardIds and
  * optionally customizations and name. --baseline is the 1-based main,sub
  * positions. Only memories of the stage's plan are paired, as the simulator's
- * memory picker lists them.
+ * memory picker lists them, and a sub only with a main of the same idol, as
+ * contest formation offers them.
  */
 import { readFileSync } from "node:fs";
 import { parseArgs } from "node:util";

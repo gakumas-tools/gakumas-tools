@@ -8,7 +8,8 @@ import {
   rankMemoryPairs,
 } from "../../../../gakumas-tools/utils/memoryPairs.js";
 
-const pIdolOfPlan = (plan) => PIdols.getAll().find((p) => p.plan == plan).id;
+const pIdolOfPlan = (plan) =>
+  PIdols.getAll().find((p) => p.idolId == 1 && p.plan == plan).id;
 
 const memory = (plan, params, extra = {}) => ({
   pIdolId: pIdolOfPlan(plan),
@@ -50,6 +51,21 @@ test("only different memories of the stage's plan are paired", () => {
     [2, 0],
   ]);
   assert.equal(memoryPairs({ ...contest, plan: "free" }, memories).length, 6);
+});
+
+test("a sub memory is of the main memory's idol", () => {
+  const otherIdol = PIdols.getAll().find(
+    (p) => p.plan == "sense" && p.idolId != 1,
+  );
+  const memories = [
+    memory("sense", [1, 1, 1, 1]),
+    memory("sense", [1, 1, 1, 1], { pIdolId: otherIdol.id }),
+    memory("sense", [1, 1, 1, 1]),
+  ];
+  assert.deepEqual(memoryPairs(contest, memories), [
+    [0, 2],
+    [2, 0],
+  ]);
 });
 
 test("paired gain has a 95% margin from the gains' spread", () => {
