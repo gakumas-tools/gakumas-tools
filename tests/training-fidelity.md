@@ -183,7 +183,10 @@ at a cumulative 全力値 of 15 (151 → 231). 15 × 0.6 = 9 is whole, so the en
 agrees, as in rehearsal 21. The `-misuzu-rehearsal-105` fixture is replayed to
 its final 832 with 全力 only on the last turn (12, dance): アッチェレランド and
 the スパート held since turn 8 score 489, then 休憩中のおやつ adds 80 after
-イメージの基本 at a cumulative 全力値 of 15 (752 → 832).
+イメージの基本 at a cumulative 全力値 of 15 (752 → 832). The
+`-misuzu-rehearsal-111` fixture is replayed to its final 654: no 温存 card is
+used in turn 9's 全力, so おやつ never fires, and after 全力 the stance goes
+through 温存 to のんびり, where turn 11's アピールの基本 scores 0.
 
 `contest-rehearsal-s55-sena` replays an owned 学園生活 十王星南 memory with
 ティーキャディー in stage 3. It checks the item's score and stamina recovery
