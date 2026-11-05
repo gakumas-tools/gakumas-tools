@@ -34,6 +34,7 @@ const FIXTURES = [
   "contest-rehearsal-s55-misuzu-75",
   "contest-rehearsal-s55-misuzu-110",
   "contest-rehearsal-s55-misuzu-112",
+  "contest-rehearsal-s55-misuzu-115",
 ];
 
 function loadCapture(name) {
