@@ -147,7 +147,10 @@ turn, 休憩中のおやつ adds 58 after イメージの基本 at a cumulative 
 either. The `-misuzu-rehearsal-27` fixture is replayed to its final 911: turn
 9's アッチェレランド takes 全力値 to 12, and the switch to 全力 at the start of
 turn 10 keeps the extra 2 (12 → 2). No preservation card is played under 全力,
-so 休憩中のおやつ never fires.
+so 休憩中のおやつ never fires. The `-misuzu-rehearsal-30` fixture is replayed to
+its final 1,070: turn 9's アッチェレランド takes 全力値 to exactly 10, the
+held スパート scores 288 in the 全力 turn (659 → 947), and again no
+preservation card is played under 全力.
 
 `contest-rehearsal-s55-sena` replays an owned 学園生活 十王星南 memory with
 ティーキャディー in stage 3. It checks the item's score and stamina recovery
