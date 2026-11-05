@@ -103,5 +103,6 @@ carries state from the first turn; one stops after turn 8, before skipped
 actions its harness cannot replay.
 
 The item also scores with a base of 8.4 on different full-power turns, at
-296% and 328%, and 13.2 after two full-power entries. The latter keeps cumulative charge across
+296% and 328%, and 13.2 after two full-power entries. One vocal turn triggers
+it twice, at 7.2 and then 7.8, and both give 58. The latter keeps cumulative charge across
 both entries and checks card growth applied at each switch.
