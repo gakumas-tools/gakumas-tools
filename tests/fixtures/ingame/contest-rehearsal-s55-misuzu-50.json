@@ -1,0 +1,192 @@
+{
+  "date": "2026-11-05",
+  "gameVersion": "3.5.0",
+  "stage": "Contest S55 stage 3 (アノマリー) rehearsal 50: owned memory 学園生活 秦谷美鈴 3663 (400/200/300, St 25)",
+  "stageId": 192,
+  "startingStamina": 25,
+  "initial": {
+    "score": 0,
+    "stamina": 25
+  },
+  "pItemIds": [
+    261
+  ],
+  "turnTypes": [
+    "dance",
+    "dance",
+    "visual",
+    "vocal",
+    "dance",
+    "visual",
+    "visual",
+    "dance",
+    "dance",
+    "vocal",
+    "visual",
+    "dance"
+  ],
+  "displayedPercents": {
+    "vocal": 274,
+    "dance": 296,
+    "visual": 328
+  },
+  "sourceDirectory": "screenshots/sources/ingame/",
+  "plays": [
+    {
+      "id": "rehearsal-20261105-misuzu-50",
+      "actions": [
+        {
+          "turn": 1,
+          "cardId": 418,
+          "name": "カウントダウン",
+          "expected": {
+            "score": 0,
+            "genki": 8
+          },
+          "capture": "campaign-s29-mis1-log-8.png"
+        },
+        {
+          "turn": 2,
+          "cardId": 374,
+          "name": "メントレの基本",
+          "expected": {
+            "score": 0,
+            "genki": 8,
+            "fullPowerCharge": 2
+          },
+          "capture": "campaign-s29-mis1-log-8.png"
+        },
+        {
+          "turn": 3,
+          "cardId": 540,
+          "name": "のんびり屋さん",
+          "expected": {
+            "score": 0,
+            "fullPowerCharge": 3
+          },
+          "capture": "campaign-s29-mis1-log-8.png"
+        },
+        {
+          "turn": 4,
+          "cardId": 402,
+          "name": "アッチェレランド",
+          "expected": {
+            "score": 0,
+            "fullPowerCharge": 6
+          },
+          "capture": "campaign-s29-mis1-log-8b.png"
+        },
+        {
+          "turn": 5,
+          "cardId": 370,
+          "name": "はげしく",
+          "expected": {
+            "score": 148,
+            "enthusiasm": 10
+          },
+          "capture": "campaign-s29-mis1-log-7.png"
+        },
+        {
+          "turn": 5,
+          "cardId": 392,
+          "name": "ハッピー♪",
+          "expected": {
+            "score": 148,
+            "genki": 11
+          },
+          "capture": "campaign-s29-mis1-log-6.png"
+        },
+        {
+          "turn": 6,
+          "cardId": 402,
+          "name": "アッチェレランド",
+          "expected": {
+            "score": 148,
+            "fullPowerCharge": 9
+          },
+          "capture": "campaign-s29-mis1-log-6b.png"
+        },
+        {
+          "turn": 7,
+          "cardId": 376,
+          "name": "イメージの基本",
+          "expected": {
+            "score": 148,
+            "genki": 13
+          },
+          "capture": "campaign-s29-mis1-log-6b.png"
+        },
+        {
+          "turn": 8,
+          "cardId": 402,
+          "name": "アッチェレランド",
+          "expected": {
+            "score": 148,
+            "genki": 18,
+            "fullPowerCharge": 2
+          },
+          "capture": "campaign-s29-mis1-log-5.png"
+        },
+        {
+          "turn": 9,
+          "cardId": 1,
+          "name": "アピールの基本",
+          "expected": {
+            "score": 317
+          },
+          "capture": "campaign-s29-mis1-log-3.png"
+        },
+        {
+          "turn": 9,
+          "cardId": 374,
+          "name": "メントレの基本",
+          "expected": {
+            "score": 317,
+            "genki": 13,
+            "fullPowerCharge": 4
+          },
+          "capture": "campaign-s29-mis1-log-4.png"
+        },
+        {
+          "turn": 9,
+          "cardId": 376,
+          "name": "イメージの基本",
+          "expected": {
+            "score": 389
+          },
+          "capture": "campaign-s29-mis1-log-4.png"
+        },
+        {
+          "turn": 10,
+          "cardId": 376,
+          "name": "イメージの基本",
+          "expected": {
+            "score": 389,
+            "genki": 13
+          },
+          "capture": "campaign-s29-mis1-log-2.png"
+        },
+        {
+          "turn": 11,
+          "cardId": 402,
+          "name": "アッチェレランド",
+          "expected": {
+            "score": 389,
+            "fullPowerCharge": 7
+          },
+          "capture": "campaign-s29-mis1-log-1.png"
+        },
+        {
+          "turn": 12,
+          "cardId": 376,
+          "name": "イメージの基本",
+          "expected": {
+            "score": 389,
+            "genki": 15
+          },
+          "capture": "campaign-s29-mis1-log-1.png"
+        }
+      ]
+    }
+  ]
+}
