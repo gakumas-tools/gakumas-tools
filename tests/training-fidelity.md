@@ -188,7 +188,9 @@ the スパート held since turn 8 score 489, then 休憩中のおやつ adds 80
 used in turn 9's 全力, so おやつ never fires, and after 全力 the stance goes
 through 温存 to のんびり, where turn 11's アピールの基本 scores 0. The `-misuzu-rehearsal-113` fixture is
 replayed to its final 866: turn 9's 全力 is a visual turn, and アピールの基本,
-アッチェレランド and the スパート held since turn 6 score 729 with no おやつ.
+アッチェレランド and the スパート held since turn 6 score 729 with no おやつ. The `-misuzu-rehearsal-114` fixture is replayed to
+its final 898: turn 10's 全力 is a vocal turn (610 with no おやつ), and
+アッチェレランド and ジャストアピール still score on turns 11 and 12 (758 → 898).
 
 `contest-rehearsal-s55-sena` replays an owned 学園生活 十王星南 memory with
 ティーキャディー in stage 3. It checks the item's score and stamina recovery
