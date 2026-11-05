@@ -158,7 +158,10 @@ replayed to its final 926: turn 8's メントレの基本 takes 全力値 to 11,
 switch to 全力 on turn 9 keeps the extra 1, and that turn's three cards score
 778 (148 → 926). The `-misuzu-rehearsal-33` fixture also ends at 573, with
 another play: 全力 on turn 7 again, where the held スパート scores 222 (351 →
-573) and the extra card use is skipped at 体力 0 (0 → 2).
+573) and the extra card use is skipped at 体力 0 (0 → 2). The `-misuzu-rehearsal-34`
+fixture is replayed to its final 766: ジャストアピール scores 0 under のんびり
+on turn 6, and in turn 9's 全力 two アピールの基本 and the held スパート score
+602 (164 → 766).
 
 `contest-rehearsal-s55-sena` replays an owned 学園生活 十王星南 memory with
 ティーキャディー in stage 3. It checks the item's score and stamina recovery
