@@ -194,7 +194,10 @@ its final 898: turn 10's 全力 is a vocal turn (610 with no おやつ), and
 is replayed to its final 871: on turn 9, a visual turn, 休憩中のおやつ adds 60
 after イメージの基本 at a cumulative 全力値 of exactly 10 (164 → 224), whole. The
 `-misuzu-rehearsal-118` fixture is replayed to its final 848: turn 10's 全力
-(vocal) scores 445 with no おやつ, then turns 11 and 12 add 142.
+(vocal) scores 445 with no おやつ, then turns 11 and 12 add 142. The
+`-misuzu-rehearsal-119` fixture is replayed to its final 922: turn 2's
+カウントダウン raises 温存 to stage 2, turn 4 goes from 温存 stage 2 to のんびり,
+and turn 10's 全力 (vocal) scores 651 with no おやつ.
 
 `contest-rehearsal-s55-sena` replays an owned 学園生活 十王星南 memory with
 ティーキャディー in stage 3. It checks the item's score and stamina recovery
