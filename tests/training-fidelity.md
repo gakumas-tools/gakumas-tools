@@ -173,7 +173,9 @@ turn 9's switch to 全力, 全力値 12 → 2): on turn 9, a dance turn, 休憩�
 adds 63 after ハッピー♪ at a cumulative 全力値 of 12 (301 → 364), where the
 engine adds 72, as in rehearsal 20. The `-misuzu-rehearsal-38` fixture is
 replayed to its final 916: turn 2's ハッピー♪ raises 温存 to stage 2, so turn
-3's はげしく gives 熱意 8, and turn 10's 全力 (全力値 11 → 1) scores 659.
+3's はげしく gives 熱意 8, and turn 10's 全力 (全力値 11 → 1) scores 659. The `-misuzu-rehearsal-39`
+fixture is replayed to its final 759: two アピールの基本 and the held スパート
+score 649 in turn 9's 全力.
 
 `contest-rehearsal-s55-sena` replays an owned 学園生活 十王星南 memory with
 ティーキャディー in stage 3. It checks the item's score and stamina recovery
