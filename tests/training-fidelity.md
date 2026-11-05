@@ -168,7 +168,10 @@ keeps the extra 1, and that turn's アピールの基本 and held スパート s
 全力): on turn 9, a visual turn, 休憩中のおやつ adds 69 after イメージの基本 at a
 cumulative 全力値 of 13 (464 → 533), where the engine adds 79. 13 × 0.6 = 7.8,
 and 7 fits the game (7 × 3 × 3.28 = 68.9) while 8 doesn't, as in rehearsal 25
-at vocal.
+at vocal. The `-misuzu-rehearsal-37` fixture stops after turn 8 (132, with
+turn 9's switch to 全力, 全力値 12 → 2): on turn 9, a dance turn, 休憩中のおやつ
+adds 63 after ハッピー♪ at a cumulative 全力値 of 12 (301 → 364), where the
+engine adds 72, as in rehearsal 20.
 
 `contest-rehearsal-s55-sena` replays an owned 学園生活 十王星南 memory with
 ティーキャディー in stage 3. It checks the item's score and stamina recovery
