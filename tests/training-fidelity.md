@@ -95,3 +95,9 @@ and 867. The `-3` and `-7` fixtures cover two more rehearsals. Together they
 check that 休憩中のおやつ rounds 60% of cumulative full power down before
 全力 and the turn multiplier: cumulative values of 12, 11 and 13 give base
 scores of 7, 6 and 7, for score gains of 69, 54 and 63.
+
+Further 美鈴 rehearsals exercise the same item with cumulative full power
+values of 12 and 13 across all three turn types. A base of 7.8 gives 58 at
+274% and 69 at 328%, separating floor from round-to-nearest. Each replay
+carries state from the first turn; one stops after turn 8, before skipped
+actions its harness cannot replay.
