@@ -11,6 +11,11 @@ All notable changes to the contest simulator will be documented in this file.
 
 
 
+
+## 2026-11-05
+
+- Add preview of garakutaroad support item
+
 ## 2026-11-02
 
 - Confirm contest season 55 stages
