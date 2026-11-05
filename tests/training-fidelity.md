@@ -180,7 +180,10 @@ its final 430: はげしく on turn 2 goes straight from no stance to 強気 (0 
 and turn 9's 全力 scores 347. The `-misuzu-rehearsal-41` fixture is replayed to
 its final 231: on turn 9, a dance turn, 休憩中のおやつ adds 80 after イメージの基本
 at a cumulative 全力値 of 15 (151 → 231). 15 × 0.6 = 9 is whole, so the engine
-agrees, as in rehearsal 21.
+agrees, as in rehearsal 21. The `-misuzu-rehearsal-105` fixture is replayed to
+its final 832 with 全力 only on the last turn (12, dance): アッチェレランド and
+the スパート held since turn 8 score 489, then 休憩中のおやつ adds 80 after
+イメージの基本 at a cumulative 全力値 of 15 (752 → 832).
 
 `contest-rehearsal-s55-sena` replays an owned 学園生活 十王星南 memory with
 ティーキャディー in stage 3. It checks the item's score and stamina recovery
