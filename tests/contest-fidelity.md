@@ -3,7 +3,8 @@
 `pnpm fidelity:contest` replays free contest rehearsals read from ステージ詳細 →
 詳細ログ, and checks that the engine reaches every recorded state exactly.
 
-Each fixture in `fixtures/ingame/` named `contest-rehearsal-*` is one unit's
+Each fixture in `fixtures/ingame/`, a folder outside git, named
+`contest-rehearsal-*` is one unit's
 play. The harness fixes the turn order and the multipliers the game showed, and
 plays the recorded cards in order. State carries over from card to card. It
 hands the engine each card the play used, so draws aren't checked here; the
@@ -26,7 +27,7 @@ training replay in `training-fidelity.md` checks those.
   the state read from the screenshot after it; and `capture`, that
   screenshot's name. In `expected`, `heldCards` lists card IDs.
 
-Screenshots stay out of git, under `screenshots/sources/ingame/`.
+The tests skip when the folder isn't there.
 
 ## Capturing
 
@@ -310,7 +311,7 @@ with 7 turns left, and turn 10 is skipped. The `-temari-5319-6` fixture
 
 `contest-rehearsal-s55-temari-5613` is stage 1 played by another owned 一匹狼
 月村手毬 memory, 5613, with the same 学園生活 sub (858/480/308, 体力 35; panel
-882/351/462%, campaign-s26-mari5613-panel.png). It plays one card a turn, so the
+882/351/462%). It plays one card a turn, so the
 stage's effect stays off; 飛躍 with concentration 12 under 好調 hits twice
 (286 → 622 → 984) and the play ends at 1,786. Its `-2` fixture is a second
 play ending at 2,065, with 飛躍 on turn 9 at concentration 14 (1,314 → 2,065).

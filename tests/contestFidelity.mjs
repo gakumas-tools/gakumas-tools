@@ -1,8 +1,8 @@
-import { readFileSync } from "node:fs";
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { SkillCards, Stages } from "gakumas-data";
 import { IdolConfig, StageEngine, S } from "gakumas-engine";
+import { hasIngameFixtures, loadIngameFixture } from "./ingameFixtures.mjs";
 
 const FIXTURES = [
   "contest-rehearsal-s55-temari",
@@ -117,11 +117,6 @@ const FIXTURES = [
   "contest-rehearsal-s55-misuzu-75",
 ];
 
-function loadCapture(name) {
-  const url = new URL(`./fixtures/ingame/${name}.json`, import.meta.url);
-  return JSON.parse(readFileSync(url, "utf8"));
-}
-
 function getTypeMultipliers(capture) {
   const typeMultipliers = {};
   for (const [type, percent] of Object.entries(capture.displayedPercents)) {
@@ -207,7 +202,7 @@ function replay(capture, play) {
   }
 }
 
-for (const capture of FIXTURES.map(loadCapture)) {
+for (const capture of hasIngameFixtures ? FIXTURES.map(loadIngameFixture) : []) {
   for (const play of capture.plays) {
     test(`in-game ${capture.stage}: ${play.id}`, () => replay(capture, play));
   }

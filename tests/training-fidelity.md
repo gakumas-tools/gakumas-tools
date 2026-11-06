@@ -3,7 +3,7 @@
 `pnpm fidelity:training` replays plays captured in the game's trainings and
 checks that the engine reaches every recorded state exactly.
 
-Each fixture in `fixtures/ingame/` is one training. For each play the harness
+Each fixture in `fixtures/ingame/`, a folder outside git, is one training. For each play the harness
 starts from the captured initial state, fixes the turn order and multipliers
 the game showed, and plays the recorded cards in order. After each card it
 compares the engine's state at the next playable moment with what the game
@@ -46,7 +46,7 @@ or rank thresholds. Comparing whole stages and loadouts is
   sets `useReturnedHeldCard`. Holds are checked only against a hand captured
   in full.
 
-Screenshots stay out of git, under `screenshots/sources/ingame/`.
+The tests skip when the folder isn't there.
 
 `terminalAttribute` checks a lesson's final displayed attribute. It is the
 initial attribute plus the engine's score, capped at the lesson's target
