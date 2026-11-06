@@ -20,5 +20,6 @@ export default function usePersistedState(key, initial) {
     } catch {}
   }, [key, state, loaded]);
 
-  return [state, setState];
+  // `loaded` turns true once the stored value (if any) has been read.
+  return [state, setState, loaded];
 }

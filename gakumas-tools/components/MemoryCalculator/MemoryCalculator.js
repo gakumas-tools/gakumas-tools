@@ -25,6 +25,7 @@ import {
 } from "@/utils/skillCardLottery";
 import AcquiredSkillCards from "./AcquiredSkillCards";
 import DraftPick from "./DraftPick";
+import MemoryAttemptPlanner from "./MemoryAttemptPlanner";
 import MemoryCalculatorResultList from "./MemoryCalculatorResultList";
 import TargetSkillCards from "./TargetSkillCards";
 import styles from "./MemoryCalculator.module.scss";
@@ -213,6 +214,8 @@ function MemoryCalculator() {
           />
         </div>
       </Panel>
+
+      <MemoryAttemptPlanner probability={onTargetProbability} stale={stale} />
     </div>
   );
 }

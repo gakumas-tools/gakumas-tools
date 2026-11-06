@@ -1,4 +1,13 @@
+import { SkillCards } from "gakumas-data";
 import { getMemoryParamContribution } from "@/utils/stamina";
+
+// A memory's skill cards without its empty slots. Customizations are stored
+// by slot, so each card keeps the slot it came from.
+export function getFilledSkillCardSlots(skillCardIds) {
+  return skillCardIds
+    .map((id, slot) => ({ skillCard: SkillCards.getById(id), slot }))
+    .filter(({ skillCard }) => skillCard);
+}
 
 export function setMemorySlot(
   { params, slots },

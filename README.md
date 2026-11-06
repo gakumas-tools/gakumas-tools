@@ -8,4 +8,5 @@ This monorepo contains the Gakumas Tools web app and related packages. For infor
 - packages/
   - [gakumas-data](https://github.com/gakumas-tools/gakumas-tools/blob/master/packages/gakumas-data/README.md)
   - [gakumas-engine](https://github.com/gakumas-tools/gakumas-tools/blob/master/packages/gakumas-engine/README.md)
+  - [gakumas-tools-mcp](https://github.com/gakumas-tools/gakumas-tools/blob/master/packages/gakumas-tools-mcp/README.md)
   - [gakumas-images](https://github.com/gakumas-tools/gakumas-tools/blob/master/packages/gakumas-images/README.md)

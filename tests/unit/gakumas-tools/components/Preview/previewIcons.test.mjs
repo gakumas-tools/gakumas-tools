@@ -1,7 +1,12 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { PItems, SkillCards } from "gakumas-data";
-import { collectIcons } from "../../../../../gakumas-tools/components/Preview/previewIcons.js";
+import { IdolConfig } from "gakumas-engine";
+import {
+  boundPreviewLoadout,
+  collectIcons,
+} from "../../../../../gakumas-tools/components/Preview/previewIcons.js";
+import { loadoutFromSearchParams } from "../../../../../gakumas-tools/utils/simulator.js";
 
 const lookups = {
   itemIcon: (item) => `https://cdn.test/items/${item.id}.png`,
@@ -49,4 +54,18 @@ test("resolves bundled icons against the request origin", () => {
       ],
     ],
   );
+});
+
+test("a preview loadout keeps the slots it draws, with unknown ids emptied", () => {
+  const cards = Array(100).fill("999999-1-2-3-4-5-6-7").join("_");
+  const loadout = boundPreviewLoadout(
+    loadoutFromSearchParams(
+      new URLSearchParams({ items: "999999-1-2-3-4", cards }),
+    ),
+  );
+  assert.deepEqual(loadout.pItemIds, [0, 1, 2, 3]);
+  assert.equal(loadout.skillCardIdGroups.length, 4);
+  assert.deepEqual(loadout.skillCardIdGroups[0], [0, 1, 2, 3, 4, 5]);
+  assert.equal(loadout.customizationGroups[0].length, 6);
+  assert.doesNotThrow(() => new IdolConfig(loadout));
 });
