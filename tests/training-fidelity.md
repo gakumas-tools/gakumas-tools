@@ -11,9 +11,9 @@ showed. State carries over from card to card; nothing is reset to a recorded
 value.
 
 The harness builds the deck from the cards the play used, one copy for each
-card played, and puts each in hand as its turn comes, so draws and deck
-composition aren't checked, and neither are raw parameters, NPC scores or rank
-thresholds. Comparing whole stages and loadouts is `pnpm fidelity`'s job.
+card played or captured in hand, and puts each in hand as its turn comes, so
+draws and deck composition aren't checked, and neither are raw parameters,
+NPC scores or rank thresholds. Comparing whole stages and loadouts is `pnpm fidelity`'s job.
 
 ## Fixtures
 
@@ -27,6 +27,12 @@ thresholds. Comparing whole stages and loadouts is `pnpm fidelity`'s job.
   the state read from the screenshot after it; and `capture`, that
   screenshot's name. A card that gives an extra use leaves the turn open, so
   the next action records `turnsElapsed` where it isn't one turn per card.
+- For a card that holds another from the hand, the action records the whole
+  hand (`handCardIds`), the candidates and the pick (`hold`), and the held
+  pile after it (`heldCardIds`). The action where the held card comes back to
+  hand records it as `returnedHeldCardId`, and the action playing that copy
+  sets `useReturnedHeldCard`. Holds are checked only against a hand captured
+  in full.
 
 Screenshots stay out of git, under `screenshots/sources/ingame/`.
 
@@ -96,3 +102,12 @@ game does. Two plays then switch from 温存 to 強気 with 挨拶の基本, whi
 resets at the end of a turn, so the last card of each play leaves it out. Only
 base 温存 is captured, not 温存2. The first play clears at the cap of 130, so
 its final score isn't checked.
+
+## 【試験研修5】全力
+
+Two plays reach 10 full power charge and get an extra card use in the last
+turn; the third reaches 7 and doesn't. Before that, 潜在能力 holds one of the
+other two cards in hand: 一歩 in one play, 表現の基本 in the other. The held
+card comes back to hand when full power starts, and that same copy is played
+next, though the last hand of the second play has two 表現の基本. This uses
+base 王者の御出まし (448), where 【基礎7】全力 used 王者の御出まし+ (449).
