@@ -48,14 +48,12 @@ export async function getMemoryFromFile(
 
   const powerCandidates = extractPower(engWhiteResult);
   const blackLines = extractLines(engBlackResult);
-  let paramsLineIndex = blackLines.findIndex(({ text }) =>
-    PARAMS_REGEXP.test(text)
+  const imageData = getImageData(img);
+  const { index: paramsLineIndex, params } = findParams(
+    blackLines,
+    imageData,
+    img.width
   );
-  if (paramsLineIndex < 0) {
-    paramsLineIndex = blackLines.findIndex(
-      (line) => extractParams(line, img.width).length === 4
-    );
-  }
   const paramsLine = blackLines[paramsLineIndex];
   const pItemsLabelLine = blackLines[paramsLineIndex + 1];
   if (!paramsLine || !pItemsLabelLine) {
@@ -87,8 +85,6 @@ export async function getMemoryFromFile(
     ]);
   }
 
-  const imageData = getImageData(img);
-  const params = readParams(imageData, paramsLine, img.width);
   const pItems = await extractEntities(
     img,
     pItemBoxes,
@@ -175,12 +171,35 @@ export function extractParams(line, width) {
   return (paramWords(line, width) || []).map((word) => parseInt(word.text, 10));
 }
 
-// The OCR words holding Vo, Da, Vi, stamina, or null if a column is missing
-function paramWords(line, width) {
+// Find the Vo/Da/Vi/stamina line: a line of four numbers, then one with a
+// number in each column, then, loosely, one with a digit in each column.
+export function findParams(lines, imageData, width) {
+  const passes = [
+    (line) =>
+      PARAMS_REGEXP.test(line.text) ? readParams(imageData, line, width) : [],
+    (line) => readParams(imageData, line, width),
+    (line) => readParams(imageData, line, width, true),
+  ];
+  for (const pass of passes) {
+    for (let index = 0; index < lines.length; index++) {
+      const params = pass(lines[index]);
+      if (params.length === 4) return { index, params };
+    }
+  }
+  return { index: -1, params: [] };
+}
+
+// The OCR words holding Vo, Da, Vi, stamina, or null if a column is missing.
+// Loosely, any word with a digit counts, since in small screenshots OCR
+// glues stray marks and the next column's rank badge onto a value. Such a
+// word is cut short of that badge.
+function paramWords(line, width, loose = false) {
   const numbers = (line.words || []).filter((word) =>
-    /^\d+$/.test(word.text.trim())
+    (loose ? /\d/ : /^\d+$/).test(word.text.trim())
   );
-  if (PARAMS_REGEXP.test(line.text) && numbers.length === 4) return numbers;
+  if (!loose && PARAMS_REGEXP.test(line.text) && numbers.length === 4) {
+    return numbers;
+  }
   if (!width) return null;
 
   // Rank icons sit left of the values in the first three columns.
@@ -190,7 +209,15 @@ function paramWords(line, width) {
     if (column < 3 && word.bbox.x1 < ((column + 0.6) * width) / 4) {
       continue;
     }
-    words[column] = word;
+    words[column] = loose
+      ? {
+          ...word,
+          bbox: {
+            ...word.bbox,
+            x1: Math.min(word.bbox.x1, ((column + 1.1) * width) / 4),
+          },
+        }
+      : word;
   }
   return words.every((word) => word !== null) ? words : null;
 }
@@ -201,12 +228,13 @@ const isParamInk = (r, g, b) =>
 // OCR misreads small numerals (Vo 65 as 85 in a 540 px wide screenshot), so
 // each value is reread from its glyphs inside the OCR word's box. A rank
 // badge merged into the word sits left of the value, so only the rightmost
-// run of glyphs is read.
-export function readParams(imageData, line, width) {
-  const words = paramWords(line, width);
-  if (!words) return extractParams(line, width);
+// run of glyphs is read. Loose words have no OCR number to fall back on, so
+// they read only if every value's glyphs do.
+export function readParams(imageData, line, width, loose = false) {
+  const words = paramWords(line, width, loose);
+  if (!words) return loose ? [] : extractParams(line, width);
   const pad = Math.ceil((line.bbox.y1 - line.bbox.y0) * 0.15);
-  return words.map((word) => {
+  const params = words.map((word) => {
     const value = readNumber(
       segmentGlyphs(
         imageData,
@@ -221,8 +249,9 @@ export function readParams(imageData, line, width) {
       ),
       DIGIT_TEMPLATES.value
     );
-    return Number.isInteger(value) ? value : parseInt(word.text, 10);
+    return Number.isInteger(value) || loose ? value : parseInt(word.text, 10);
   });
+  return params.every(Number.isInteger) ? params : [];
 }
 
 export async function extractEntities(img, boxes, session, classes) {

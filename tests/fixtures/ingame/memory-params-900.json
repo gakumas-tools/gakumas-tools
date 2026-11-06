@@ -1,0 +1,61 @@
+{
+  "date": "2026-11-06",
+  "gameVersion": "3.5.3",
+  "screen": "メモリー詳細 → ステージ",
+  "capture": "campaign-s55-memory-11-stage.png",
+  "note": "Resized to 900 px wide and cropped to rows 979-1066; line from Tesseract on the resized screenshot, shifted into the crop",
+  "width": 900,
+  "params": [
+    242,
+    519,
+    385,
+    27
+  ],
+  "line": {
+    "text": "242 51¢9 385 27\n",
+    "bbox": {
+      "x0": 174,
+      "y0": 22,
+      "x1": 793,
+      "y1": 65
+    },
+    "words": [
+      {
+        "text": "242",
+        "bbox": {
+          "x0": 174,
+          "y0": 26,
+          "x1": 242,
+          "y1": 54
+        }
+      },
+      {
+        "text": "51¢9",
+        "bbox": {
+          "x0": 380,
+          "y0": 22,
+          "x1": 450,
+          "y1": 65
+        }
+      },
+      {
+        "text": "385",
+        "bbox": {
+          "x0": 586,
+          "y0": 26,
+          "x1": 654,
+          "y1": 55
+        }
+      },
+      {
+        "text": "27",
+        "bbox": {
+          "x0": 748,
+          "y0": 26,
+          "x1": 793,
+          "y1": 54
+        }
+      }
+    ]
+  }
+}

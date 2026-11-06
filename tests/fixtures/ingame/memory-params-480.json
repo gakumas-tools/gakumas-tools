@@ -1,0 +1,61 @@
+{
+  "date": "2026-11-06",
+  "gameVersion": "3.5.3",
+  "screen": "メモリー詳細 → ステージ",
+  "capture": "campaign-s55-memory-19-stage.png",
+  "note": "Resized to 480 px wide and cropped to rows 518-562; line from Tesseract on the resized screenshot, shifted into the crop",
+  "width": 480,
+  "params": [
+    65,
+    86,
+    140,
+    32
+  ],
+  "line": {
+    "text": "F657 86! 140 32\n",
+    "bbox": {
+      "x0": 49,
+      "y0": 11,
+      "x1": 422,
+      "y1": 33
+    },
+    "words": [
+      {
+        "text": "F657",
+        "bbox": {
+          "x0": 49,
+          "y0": 11,
+          "x1": 180,
+          "y1": 33
+        }
+      },
+      {
+        "text": "86!",
+        "bbox": {
+          "x0": 209,
+          "y0": 15,
+          "x1": 290,
+          "y1": 33
+        }
+      },
+      {
+        "text": "140",
+        "bbox": {
+          "x0": 313,
+          "y0": 18,
+          "x1": 349,
+          "y1": 33
+        }
+      },
+      {
+        "text": "32",
+        "bbox": {
+          "x0": 399,
+          "y0": 18,
+          "x1": 422,
+          "y1": 33
+        }
+      }
+    ]
+  }
+}

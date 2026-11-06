@@ -26,10 +26,7 @@ import sharp from "sharp";
 import * as ort from "onnxruntime-node";
 import { createWorker } from "tesseract.js";
 import { PItems, SkillCards } from "gakumas-data";
-import {
-  extractParams,
-  readParams,
-} from "../gakumas-tools/utils/imageProcessing/memory.js";
+import { findParams } from "../gakumas-tools/utils/imageProcessing/memory.js";
 import {
   getPItemBoundingBoxes,
   getSkillCardBoundingBoxes,
@@ -54,8 +51,6 @@ const SKILL_CARD_MODEL = join(PUBLIC, "skill_card_model.onnx");
 const SKILL_CARD_CLASSES = join(PUBLIC, "skill_card_classes.json");
 const P_ITEM_MODEL = join(PUBLIC, "p_item_model.onnx");
 const P_ITEM_CLASSES = join(PUBLIC, "p_item_classes.json");
-
-const PARAMS_REGEXP = /^\s*\d+\s+\d+\s+\d+\s+\d+\s*$/;
 
 const args = process.argv.slice(2);
 const UPDATE = args.includes("--update");
@@ -178,10 +173,11 @@ async function detectMemory(image, ocrWorker) {
   const ocrInput = await binarizeForOcr(image);
   const result = await ocrWorker.recognize(ocrInput, {}, { blocks: true });
   const lines = extractLines(result);
-  let idx = lines.findIndex((l) => PARAMS_REGEXP.test(l.text));
-  if (idx < 0) {
-    idx = lines.findIndex((line) => extractParams(line, image.width).length === 4);
-  }
+  const { index: idx, params } = findParams(
+    lines,
+    { ...image, data: image.pixels },
+    image.width,
+  );
   if (idx < 0 || !lines[idx + 1]) {
     throw new Error(
       "Could not locate the Vo/Da/Vi/stamina parameter line. Is this a memory screenshot?",
@@ -192,7 +188,7 @@ async function detectMemory(image, ocrWorker) {
   const contentWidth = paramsLine.bbox.x1 - pItemsLabelLine.bbox.x0;
   const anchor = { x: pItemsLabelLine.bbox.x0, y: pItemsLabelLine.bbox.y1 };
   return {
-    params: readParams({ ...image, data: image.pixels }, paramsLine, image.width),
+    params,
     pItemBoxes: getPItemBoundingBoxes(anchor, contentWidth),
     skillCardBoxes: getSkillCardBoundingBoxes(anchor, contentWidth),
     paramsBbox: paramsLine.bbox,
