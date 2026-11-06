@@ -7,6 +7,7 @@ import { IdolConfig, StageEngine, S } from "gakumas-engine";
 const FIXTURES = [
   "training-exam-impression",
   "training-exam-motivation",
+  "training-lesson-cost-reduction",
 ];
 
 function loadCapture(name) {
@@ -15,6 +16,8 @@ function loadCapture(name) {
 }
 
 function getTypeMultipliers(capture) {
+  if (capture.replayMultipliers) return capture.replayMultipliers;
+
   const typeMultipliers = {};
   for (const [type, percent] of Object.entries(capture.displayedPercents)) {
     typeMultipliers[type] = percent / 100;
