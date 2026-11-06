@@ -209,3 +209,20 @@ The plays also cover half costs and a cost reduction of 1. The first reaches
 the cap of 220, so its last score is omitted; the others finish at attributes
 136 and 150. Terminal condition and half-cost durations are omitted because
 the screenshots precede their end-turn countdowns.
+
+## 【応用2】プラン：ロジック
+
+A dance lesson starting at 100, with a target gain of 120. Its P-item,
+ピッグドリーム貯金箱, grants 3 good impression and an extra card use
+when a card finishes with at least 6 good impression, once per lesson.
+Two plays trigger it early or late; the other keeps good impression at zero.
+The extra use delays the end-turn score and countdown until the next card.
+
+ラブリーウインク scores before the P-item grants more good impression.
+思い出し笑い checks its motivation condition before use. The plays also
+cover motivation-based genki gains, fixed stamina costs and ハートの合図+'s
+genki-based score and halving. The first reaches the cap of 220 before the
+halving is visible, so its last score and genki are omitted. The second
+finishes at attribute 183. The third final capture precedes the end-turn
+score, so its last score is omitted. Terminal good-impression durations are
+omitted because the screenshots precede their countdowns.
