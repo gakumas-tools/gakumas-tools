@@ -20,6 +20,14 @@ export function buildBoxPlotData(data) {
   }, init);
 }
 
+// How many scores each stage's box plot draws: flagged stages and blank
+// cells are left out, so this can be fewer than the number of rows.
+export function stageSampleSizes(boxPlotData) {
+  return Array.from({ length: NUM_STAGES }, (_, stage) =>
+    Math.max(...boxPlotData.map(({ data }) => data[stage].length)),
+  );
+}
+
 // `selected` encodes (stage, param) as stage * NUM_PARAMS + param.
 export function scoresForSelected(boxPlotData, selected) {
   const param = selected % NUM_PARAMS;

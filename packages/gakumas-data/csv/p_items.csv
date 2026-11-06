@@ -508,3 +508,4 @@ id,name,rarity,upgraded,plan,mode,sourceType,pIdolId,welfare,effects
 507,夢見る輝き+,SSR,TRUE,anomaly,stage,pIdol,162,FALSE,at:afterCardUsed { if:usedCardBaseId==917 { moveRandomToTopOfDeck[removed & baseId(917)]; genki+=2 }; limit:3 }
 508,星々を統べる輝き,SSR,FALSE,logic,stage,pIdol,163,FALSE,"at:goodImpressionTurnsIncreased { if:isDirectEffect { effectCounter+=1; if:effectCounter%4==3 { setGoodImpressionTurnsTimesBuff(1,2); setGoodImpressionTurnsEffectBuff(0.1,2); fixedStamina-=1 } } }"
 509,星々を統べる輝き+,SSR,TRUE,logic,stage,pIdol,163,FALSE,"at:goodImpressionTurnsIncreased { if:isDirectEffect { effectCounter+=1; if:effectCounter%4==3 { setGoodImpressionTurnsTimesBuff(1,2); setGoodImpressionTurnsEffectBuff(0.1,2) } } }"
+510,過激め？チョイス,SSR,FALSE,logic,produce,support,,FALSE,
