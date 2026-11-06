@@ -46,9 +46,14 @@ export async function getMemoryFromFile(
 
   const powerCandidates = extractPower(engWhiteResult);
   const blackLines = extractLines(engBlackResult);
-  const paramsLineIndex = blackLines.findIndex(({ text }) =>
+  let paramsLineIndex = blackLines.findIndex(({ text }) =>
     PARAMS_REGEXP.test(text)
   );
+  if (paramsLineIndex < 0) {
+    paramsLineIndex = blackLines.findIndex(
+      (line) => extractParams(line, img.width).length === 4
+    );
+  }
   const paramsLine = blackLines[paramsLineIndex];
   const pItemsLabelLine = blackLines[paramsLineIndex + 1];
   if (!paramsLine || !pItemsLabelLine) {
@@ -80,7 +85,7 @@ export async function getMemoryFromFile(
     ]);
   }
 
-  const params = extractParams(paramsLine);
+  const params = extractParams(paramsLine, img.width);
   const pItems = await extractEntities(
     img,
     pItemBoxes,
@@ -161,8 +166,23 @@ export function extractPower(result) {
 }
 
 // Read Vo, Da, Vi, stamina from line
-export function extractParams(line) {
-  return (line.text.match(/\d+/g) || []).map((t) => parseInt(t, 10));
+export function extractParams(line, width) {
+  if (PARAMS_REGEXP.test(line.text)) {
+    return line.text.match(/\d+/g).map((t) => parseInt(t, 10));
+  }
+  if (!line.words || !width) return [];
+
+  // Rank icons precede the value in each parameter column.
+  const params = Array(4).fill(null);
+  for (const word of line.words) {
+    if (!/^\d+$/.test(word.text.trim())) continue;
+    const column = Math.floor((word.bbox.x0 / width) * 4);
+    if (column < 3 && word.bbox.x1 < ((column + 0.6) * width) / 4) {
+      continue;
+    }
+    params[column] = parseInt(word.text, 10);
+  }
+  return params.every((value) => value !== null) ? params : [];
 }
 
 export async function extractEntities(img, boxes, session, classes) {
