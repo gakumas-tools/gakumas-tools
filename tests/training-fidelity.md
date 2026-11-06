@@ -10,14 +10,15 @@ compares the engine's state at the next playable moment with what the game
 showed. State carries over from card to card; nothing is reset to a recorded
 value.
 
-The harness hands the engine each card the play used, so draws and deck
+The harness builds the deck from the cards the play used, one copy for each
+card played, and puts each in hand as its turn comes, so draws and deck
 composition aren't checked, and neither are raw parameters, NPC scores or rank
 thresholds. Comparing whole stages and loadouts is `pnpm fidelity`'s job.
 
 ## Fixtures
 
 - `initial`: the state before the first turn, checked before any card is
-  played.
+  played. Its genki is given to the engine, as some lessons start with it.
 - `turnTypes`: the turn order the game showed.
 - `displayedPercents`: the multiplier the game showed for each turn type, in
   an exam. Lessons show none, so their fixtures set `replayMultipliers` to 1
@@ -59,3 +60,11 @@ A visual lesson starting at 100. Covers テレビ出演's halved costs counting 
 condition. The first play clears at the cap of 140, and the other two end on
 the retry screen while the last score is still counting, so the last card of
 each checks only stamina, genki and concentration.
+
+## 【基礎6】消費体力削減
+
+A visual lesson starting at 100, with 7 stamina and 20 genki. Covers
+叶えたい夢+'s cost reduction of 2 on costs paid from genki, and direct stamina
+costs, which bypass genki. One play uses two copies of ありがとうの言葉, which
+can be used once each. The first play clears at the cap of 140, so its final
+score isn't checked.
