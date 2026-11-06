@@ -143,7 +143,11 @@ export default class EffectManager extends EngineComponent {
     }
     if (!anyMatch) return;
 
-    state[S.parentPhase] = state[S.phase];
+    // Restore both on exit: a nested trigger of another phase overwrites
+    // parentPhase, so it can't be relied on to hold this call's outer phase.
+    const outerPhase = state[S.phase];
+    const outerParentPhase = state[S.parentPhase];
+    state[S.parentPhase] = outerPhase;
     state[S.phase] = phase;
 
     // Pair each matched effect ref with its index via parallel arrays so
@@ -210,7 +214,8 @@ export default class EffectManager extends EngineComponent {
       }
     }
 
-    state[S.phase] = state[S.parentPhase];
+    state[S.phase] = outerPhase;
+    state[S.parentPhase] = outerParentPhase;
   }
 
   triggerPhaseGroup(state, effectList, effects, indices, conditionState) {

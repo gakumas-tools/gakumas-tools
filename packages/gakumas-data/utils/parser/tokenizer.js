@@ -3,6 +3,14 @@
  */
 import { TokenType, KEYWORDS } from "./tokens";
 
+// Tokens that can end an operand, after which `-` is subtraction.
+const OPERAND_END_TOKENS = new Set([
+  TokenType.NUMBER,
+  TokenType.IDENTIFIER,
+  TokenType.RPAREN,
+  TokenType.RBRACKET,
+]);
+
 export class Tokenizer {
   constructor(input) {
     this.input = input;
@@ -156,8 +164,9 @@ export class Tokenizer {
     };
 
     if (char === "-") {
-      // Could be minus or negative number
-      if (/\d/.test(this.peek(1))) {
+      // Could be minus or negative number. After an operand (`a-1`,
+      // `2-1`, `(x)-1`) it can only be a minus.
+      if (/\d/.test(this.peek(1)) && !OPERAND_END_TOKENS.has(this.prevType)) {
         return this.readNumber();
       }
       this.advance();
@@ -190,6 +199,7 @@ export class Tokenizer {
     do {
       token = this.nextToken();
       tokens.push(token);
+      this.prevType = token.type;
     } while (token.type !== TokenType.EOF);
     return tokens;
   }

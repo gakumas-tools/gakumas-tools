@@ -95,6 +95,57 @@
   height: 1px;
 }
 
+.attemptPlanner > span:first-child {
+  margin-bottom: 0;
+}
+
+.caret {
+  @include mixins.caret;
+}
+
+.open {
+  @include mixins.caret-open;
+}
+
+.planner {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$space-3;
+  padding-top: tokens.$space-3;
+  transition: opacity tokens.$duration-base;
+
+  &.stale {
+    opacity: 0.5;
+  }
+}
+
+.plannerHelp {
+  color: tokens.$surface-ink-muted;
+  font-size: tokens.$text-sm;
+}
+
+.plannerRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: tokens.$space-2;
+
+  input {
+    width: 130px;
+  }
+}
+
+.plannerResult {
+  font-size: tokens.$text-sm;
+
+  strong {
+    color: tokens.$surface-ink;
+    font-weight: tokens.$weight-bold;
+    @include mixins.numeric;
+  }
+}
+
 .result {
   display: flex;
   align-items: center;

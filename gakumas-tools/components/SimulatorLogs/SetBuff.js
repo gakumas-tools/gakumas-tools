@@ -10,7 +10,7 @@ function SetBuff({ label, amount, turns, flat }) {
       {label}{" "}
       <span className={styles.value}>
         {amount >= 0 ? "+" : ""}
-        {flat ? amount : `${amount * 100}%`}
+        {flat ? amount : `${parseFloat((amount * 100).toFixed(2))}%`}
       </span>{" "}
       {turns ? (
         <span className={styles.turns}>

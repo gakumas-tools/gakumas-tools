@@ -1,4 +1,5 @@
 export { default as Customizations } from "./data/customizations";
+export { default as Descriptions } from "./data/descriptions";
 export { default as Idols } from "./data/idols";
 export { default as PDrinks } from "./data/pDrinks";
 export { default as PIdols } from "./data/pIdols";
@@ -12,6 +13,7 @@ export {
   deserializeEffectSequence,
   deserializePatchSequence,
 } from "./utils/effects";
+export { HIDDEN_CARD_IDS, HIDDEN_ITEM_IDS } from "./utils/hidden";
 export { parseEffects, parsePatches } from "./utils/parser";
 export {
   calculateMemoryStamina,
