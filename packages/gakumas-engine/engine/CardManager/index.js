@@ -484,11 +484,10 @@ export default class CardManager extends EngineComponent {
     }
 
     const cost = this.getCostActions(state, card);
-    const growth = state[S.cardMap][card].growth;
     const previewState = shallowCopy(state);
     previewState[S.phase] = "checkCost";
     for (let i = 0; i < cost.length; i++) {
-      this.engine.executor.executeAction(previewState, cost[i], growth);
+      this.engine.executor.executeAction(previewState, cost[i], card);
     }
     for (let i = 0; i < COST_FIELDS.length; i++) {
       if (previewState[COST_FIELDS[i]] < 0) return false;

@@ -1,14 +1,12 @@
+import { turnSegments } from "./turnSegments";
 import styles from "./TurnIndicator.module.scss";
 
 export default function TurnIndicator({ turn }) {
-  const { types, remaining, multiplier } = turn;
-  const totalTurns = types.length;
-  const turnsElapsed = totalTurns - remaining;
+  const { remaining, multiplier } = turn;
+  const { turnsElapsed, totalTurns, remainingTurns, currentTurnType } =
+    turnSegments(turn);
   const gapAngle = 5;
   const segmentAngle = 360 / totalTurns;
-
-  const remainingTurns = types.slice(turnsElapsed);
-  const currentTurnType = types[turnsElapsed];
 
   return (
     <div className={styles.turnIndicatorContainer}>
