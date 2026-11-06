@@ -1,5 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { Stages } from "gakumas-data";
 import { calculateTypeMultipliers, getParamCap } from "gakumas-engine";
 import { findOptimalParams } from "../../../../gakumas-tools/utils/paramOptimizer.js";
 
@@ -44,5 +45,36 @@ test("raw contest params stay within the season cap", () => {
     const { vocal, dance, visual } = result.params;
     assert.equal(vocal + dance + visual, 3000);
     assert.ok(Math.max(vocal, dance, visual) <= getParamCap(season));
+  }
+});
+
+const cappedStage = Stages.getAll().find(
+  (s) => s.type === "contest" && s.season >= 39,
+);
+const cap = getParamCap(cappedStage.season);
+
+function optimizeEvenly(params) {
+  return optimize({
+    stage: cappedStage,
+    params,
+    scoreByType: { vocal: 100000, dance: 100000, visual: 100000 },
+  });
+}
+
+test("moves points above the param cap to other types", () => {
+  const params = { vocal: cap + 240, dance: 1000, visual: 1000 };
+  const result = optimizeEvenly(params);
+  assert.ok(result.params.vocal <= cap);
+  assert.equal(
+    result.params.vocal + result.params.dance + result.params.visual,
+    params.vocal + params.dance + params.visual,
+  );
+  assert.ok(result.optimalScore > result.baseScore);
+});
+
+test("a type just under the cap is raised at most to the cap", () => {
+  const result = optimizeEvenly({ vocal: cap - 10, dance: 3000, visual: 3000 });
+  for (const type of ["vocal", "dance", "visual"]) {
+    assert.ok(result.params[type] <= cap, `${type} ${result.params[type]}`);
   }
 });
