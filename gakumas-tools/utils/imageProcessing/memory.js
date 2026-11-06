@@ -172,7 +172,7 @@ export function extractParams(line, width) {
   }
   if (!line.words || !width) return [];
 
-  // Rank icons precede the value in each parameter column.
+  // Rank icons sit left of the values in the first three columns.
   const params = Array(4).fill(null);
   for (const word of line.words) {
     if (!/^\d+$/.test(word.text.trim())) continue;

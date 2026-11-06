@@ -25,7 +25,7 @@ test("rank badges read as numbers are excluded from the captured parameters", ()
 
 test("the captured row reads the same after resizing the screenshot", () => {
   const line = {
-    ...fixture.line,
+    text: fixture.line.text,
     words: fixture.line.words.map((word) => ({
       ...word,
       bbox: {
@@ -40,13 +40,16 @@ test("the captured row reads the same after resizing the screenshot", () => {
 });
 
 test("a noisy row missing a parameter column is rejected", () => {
-  const line = { ...fixture.line, words: fixture.line.words.slice(0, -1) };
+  const line = {
+    text: fixture.line.text.replace(" 32", ""),
+    words: fixture.line.words.slice(0, -1),
+  };
   assert.deepEqual(extractParams(line, fixture.width), []);
 });
 
 test("a rank digit does not fill a missing dance parameter", () => {
   const line = {
-    ...fixture.line,
+    text: fixture.line.text.replace(" 86", ""),
     words: fixture.line.words.filter((word) => word.text !== "86"),
   };
   assert.deepEqual(extractParams(line, fixture.width), []);
