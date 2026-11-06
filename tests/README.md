@@ -37,6 +37,14 @@ When `pnpm test:regression` fails, each mismatched line prints the expected and 
 
 Add a loadout to the suite whenever a user reports a bug: it becomes a pinned test that prevents re-regression.
 
+### Contest power
+
+`pnpm test` checks memory contest power against captured Stage panels in
+[`fixtures/ingame/contest-power.json`](fixtures/ingame/contest-power.json).
+Each case records the displayed total, parameters, P-items and skill cards.
+The fixture names its source screenshots, game version and capture date.
+Screenshots stay under `screenshots/sources/ingame/`, outside git.
+
 ### Performance
 
 ```sh
