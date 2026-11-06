@@ -1,43 +1,28 @@
 import { readFileSync } from "node:fs";
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { SkillCards, Stages } from "gakumas-data";
+import { SkillCards } from "gakumas-data";
 import { IdolConfig, StageEngine, S } from "gakumas-engine";
 
 const FIXTURES = [
   "training-exam-impression",
   "training-exam-motivation",
-  "contest-rehearsal-s55-temari",
-  "contest-rehearsal-s55-seika",
-  "contest-rehearsal-s55-kotone",
-  "contest-rehearsal-s55-temari-2",
-  "contest-rehearsal-s55-seika-2",
-  "contest-rehearsal-s55-kotone-2",
-  "contest-rehearsal-s55-tsubame-2",
-  "contest-rehearsal-s55-misuzu",
-  "contest-rehearsal-s55-misuzu-2",
-  "contest-rehearsal-s55-misuzu-3",
-  "contest-rehearsal-s55-misuzu-7",
-  "contest-rehearsal-s55-misuzu-20",
-  "contest-rehearsal-s55-misuzu-22",
-  "contest-rehearsal-s55-misuzu-24",
-  "contest-rehearsal-s55-misuzu-25",
-  "contest-rehearsal-s55-misuzu-36",
-  "contest-rehearsal-s55-misuzu-37",
-  "contest-rehearsal-s55-misuzu-42",
-  "contest-rehearsal-s55-misuzu-45",
-  "contest-rehearsal-s55-misuzu-46",
-  "contest-rehearsal-s55-misuzu-48",
-  "contest-rehearsal-s55-misuzu-50",
-  "contest-rehearsal-s55-misuzu-63",
-  "contest-rehearsal-s55-misuzu-70",
-  "contest-rehearsal-s55-misuzu-75",
-  "contest-rehearsal-s55-misuzu-110",
-  "contest-rehearsal-s55-misuzu-112",
-  "contest-rehearsal-s55-misuzu-115",
-  "contest-rehearsal-s55-misuzu-117",
-  "contest-rehearsal-s55-misuzu-120",
-  "contest-rehearsal-s55-misuzu-131",
+  "training-lesson-cost-reduction",
+  "training-lesson-flat-cost-reduction",
+  "training-lesson-full-power",
+  "training-lesson-strength",
+  "training-lesson-preservation",
+  "training-exam-full-power",
+  "training-exam-strength",
+  "training-lesson-anomaly",
+  "training-lesson-good-condition",
+  "training-lesson-concentration",
+  "training-lesson-impression",
+  "training-lesson-motivation",
+  "training-exam-good-condition",
+  "training-exam-concentration",
+  "training-lesson-sense",
+  "training-lesson-logic",
 ];
 
 function loadCapture(name) {
@@ -46,6 +31,8 @@ function loadCapture(name) {
 }
 
 function getTypeMultipliers(capture) {
+  if (capture.replayMultipliers) return capture.replayMultipliers;
+
   const typeMultipliers = {};
   for (const [type, percent] of Object.entries(capture.displayedPercents)) {
     typeMultipliers[type] = percent / 100;
@@ -54,11 +41,13 @@ function getTypeMultipliers(capture) {
 }
 
 function createEngine(capture, play) {
-  const cardIds = new Set(play.actions.map((action) => action.cardId));
+  const cardIds =
+    capture.drawCardIds ??
+    play.actions.flatMap((action) => action.handCardIds ?? [action.cardId]);
   const idol = new IdolConfig({
-    params: [0, 0, 0, capture.startingStamina ?? capture.initial.stamina],
+    params: [0, 0, 0, capture.initial.stamina],
     pItemIds: capture.pItemIds ?? [],
-    skillCardIdGroups: [capture.skillCardIds ?? [...cardIds]],
+    skillCardIdGroups: [cardIds],
   });
   const engine = new StageEngine({
     idol,
@@ -67,47 +56,117 @@ function createEngine(capture, play) {
     stage: {
       type: "capturedTraining",
       turnCount: capture.turnTypes.length,
-      // A contest stage's own effects, e.g. S55 stage 2's 好印象 bonus.
-      effects: capture.stageId ? Stages.getById(capture.stageId).effects : [],
+      effects: [],
     },
   });
   engine.turnManager.generateTurnTypes = () => [...capture.turnTypes];
   return engine;
 }
 
-function putInHand(state, card) {
-  for (const pile of [S.handCards, S.deckCards, S.discardedCards, S.heldCards]) {
-    state[pile] = state[pile].filter((c) => c != card);
+function findCopy(state, cardId, hand) {
+  return state[S.cardMap].findIndex(
+    (c, index) =>
+      c.id == cardId &&
+      !state[S.removedCards].includes(index) &&
+      !state[S.heldCards].includes(index) &&
+      !hand.includes(index),
+  );
+}
+
+function supplyHand(state, action, heldCard) {
+  if (action.useReturnedHeldCard) return [heldCard];
+
+  const hand = [];
+  for (const cardId of action.handCardIds ?? [action.cardId]) {
+    const card = findCopy(state, cardId, hand);
+    assert.ok(card >= 0, `no copy of card ${cardId} left`);
+    hand.push(card);
   }
-  state[S.handCards] = [card];
+  return hand;
+}
+
+function putInHand(state, hand) {
+  for (const pile of [S.handCards, S.deckCards, S.discardedCards]) {
+    state[pile] = state[pile].filter((c) => !hand.includes(c));
+  }
+  state[S.handCards] = hand;
+}
+
+function holdAsCaptured(hold, onHold) {
+  return {
+    pickCardsToHold(state, candidates, count, optional) {
+      assert.ok(hold, "held a card the capture didn't");
+      assert.equal(count, 1);
+      assert.equal(optional, false);
+      const candidateIds = candidates.map((c) => state[S.cardMap][c].id);
+      assert.deepEqual(candidateIds, hold.candidateIds);
+      const choice = candidateIds.indexOf(hold.selectedId);
+      onHold(candidates[choice]);
+      return [choice];
+    },
+  };
 }
 
 function replay(capture, play) {
   const engine = createEngine(capture, play);
-  let state = engine.startStage(engine.getInitialState());
+  const initialState = engine.getInitialState();
+  initialState[S.genki] = capture.initial.genki;
+  if (capture.drawCardIds) {
+    const deck = [];
+    for (const cardId of capture.drawCardIds) {
+      const card = findCopy(initialState, cardId, deck);
+      assert.ok(card >= 0, `no copy of card ${cardId} left`);
+      deck.push(card);
+    }
+    initialState[S.deckCards] = deck.reverse();
+  }
+  let state = engine.startStage(initialState);
   engine.logger.disable();
 
   for (const [field, value] of Object.entries(capture.initial)) {
     assert.equal(state[S[field]], value, `initial ${field}`);
   }
 
+  let heldCard;
   for (const [i, action] of play.actions.entries()) {
-    // One card a turn unless the action names its turn.
-    const turn = action.turn ?? i + 1;
-    const next = play.actions[i + 1];
-    const endsTurn = !next || (next.turn ?? i + 2) != turn;
+    const turn = i + 1;
     assert.equal(SkillCards.getById(action.cardId).name, action.name);
 
-    // Once-per-stage cards used twice come from two copies in the deck.
-    const card = state[S.cardMap].findIndex(
-      (c, i) => c.id == action.cardId && !state[S.removedCards].includes(i),
-    );
-    assert.ok(card >= 0, `${action.name} removed`);
-    putInHand(state, card);
+    let hand;
+    if (capture.drawCardIds) {
+      hand = state[S.handCards];
+      const cardIds = hand.map((c) => state[S.cardMap][c].id);
+      assert.deepEqual(
+        cardIds,
+        action.handCardIds,
+        `turn ${turn} hand (${action.handCapture})`,
+      );
+    } else {
+      hand = supplyHand(state, action, heldCard);
+      putInHand(state, hand);
+    }
+    const card = action.useReturnedHeldCard
+      ? heldCard
+      : hand.find((c) => state[S.cardMap][c].id == action.cardId);
+
+    let holds = 0;
+    engine.strategy = holdAsCaptured(action.hold, (held) => {
+      holds++;
+      heldCard = held;
+    });
     assert.ok(engine.isCardUsable(state, card), `turn ${turn}: usable`);
     state = engine.useCard(state, card);
 
-    assert.equal(state[S.turnsElapsed], endsTurn ? turn : turn - 1);
+    assert.equal(holds, action.hold ? 1 : 0);
+    assert.equal(state[S.turnsElapsed], action.turnsElapsed ?? turn);
+    if (action.heldCardIds) {
+      const heldIds = state[S.heldCards].map((c) => state[S.cardMap][c].id);
+      assert.deepEqual(heldIds, action.heldCardIds);
+    }
+    if (action.returnedHeldCardId) {
+      assert.equal(state[S.cardMap][heldCard].id, action.returnedHeldCardId);
+      assert.ok(state[S.handCards].includes(heldCard), "held card in hand");
+    }
     for (const [field, value] of Object.entries(action.expected)) {
       assert.equal(
         state[S[field]],
@@ -115,6 +174,12 @@ function replay(capture, play) {
         `turn ${turn} ${field} (${action.capture})`,
       );
     }
+  }
+
+  if (play.terminalAttribute !== undefined) {
+    const attribute =
+      capture.initialAttribute + Math.min(state[S.score], capture.targetGain);
+    assert.equal(attribute, play.terminalAttribute, "terminal attribute");
   }
 }
 

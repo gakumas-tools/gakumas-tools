@@ -1,0 +1,296 @@
+{
+  "date": "2026-11-02",
+  "gameVersion": "3.5.0",
+  "stage": "【基礎5】消費体力減少",
+  "sourceDirectory": "screenshots/sources/ingame/",
+  "initial": {
+    "score": 0,
+    "stamina": 10,
+    "genki": 0,
+    "concentration": 0,
+    "halfCostTurns": 0,
+    "goodConditionTurns": 0
+  },
+  "turnTypes": [
+    "visual",
+    "visual",
+    "visual",
+    "visual"
+  ],
+  "initialAttribute": 100,
+  "targetGain": 40,
+  "plays": [
+    {
+      "id": "reduction-first",
+      "actions": [
+        {
+          "cardId": 154,
+          "name": "テレビ出演",
+          "expected": {
+            "score": 0,
+            "stamina": 9,
+            "genki": 3,
+            "concentration": 0,
+            "halfCostTurns": 4,
+            "goodConditionTurns": 0
+          },
+          "capture": "campaign-cost-r1-turn2.png",
+          "handCardIds": [
+            13,
+            154,
+            1
+          ],
+          "handCapture": "campaign-cost-r1-turn1.png"
+        },
+        {
+          "cardId": 76,
+          "name": "情熱ターン",
+          "expected": {
+            "score": 11,
+            "stamina": 9,
+            "genki": 0,
+            "concentration": 3,
+            "halfCostTurns": 3,
+            "goodConditionTurns": 0
+          },
+          "capture": "campaign-cost-r1-turn3.png",
+          "handCardIds": [
+            76,
+            1,
+            3
+          ],
+          "handCapture": "campaign-cost-r1-turn2.png"
+        },
+        {
+          "cardId": 74,
+          "name": "アドリブ",
+          "expected": {
+            "score": 19,
+            "stamina": 7,
+            "genki": 0,
+            "concentration": 3,
+            "halfCostTurns": 2,
+            "goodConditionTurns": 3
+          },
+          "capture": "campaign-cost-r1-turn4.png",
+          "handCardIds": [
+            13,
+            3,
+            74
+          ],
+          "handCapture": "campaign-cost-r1-turn3.png"
+        },
+        {
+          "cardId": 7,
+          "name": "試行錯誤",
+          "expected": {
+            "stamina": 3,
+            "genki": 0,
+            "concentration": 3
+          },
+          "capture": "campaign-cost-r1-final-b.png",
+          "handCardIds": [
+            7,
+            52,
+            13
+          ],
+          "handCapture": "campaign-cost-r1-turn4.png"
+        }
+      ],
+      "terminalAttribute": 140,
+      "terminalScoreCompared": false,
+      "resultCapture": "campaign-cost-r1-clear.png"
+    },
+    {
+      "id": "genki-retained",
+      "actions": [
+        {
+          "cardId": 154,
+          "name": "テレビ出演",
+          "expected": {
+            "score": 0,
+            "stamina": 9,
+            "genki": 3,
+            "concentration": 0,
+            "halfCostTurns": 4,
+            "goodConditionTurns": 0
+          },
+          "capture": "campaign-cost-r2-turn2.png",
+          "handCardIds": [
+            13,
+            154,
+            1
+          ],
+          "handCapture": "campaign-cost-r2-turn1.png"
+        },
+        {
+          "cardId": 3,
+          "name": "ポーズの基本",
+          "expected": {
+            "score": 2,
+            "stamina": 9,
+            "genki": 3,
+            "concentration": 0,
+            "halfCostTurns": 3,
+            "goodConditionTurns": 0
+          },
+          "capture": "campaign-cost-r2-turn3.png",
+          "handCardIds": [
+            76,
+            1,
+            3
+          ],
+          "handCapture": "campaign-cost-r2-turn2.png"
+        },
+        {
+          "cardId": 74,
+          "name": "アドリブ",
+          "expected": {
+            "score": 7,
+            "stamina": 9,
+            "genki": 1,
+            "concentration": 0,
+            "halfCostTurns": 2,
+            "goodConditionTurns": 3
+          },
+          "capture": "campaign-cost-r2-turn4.png",
+          "handCardIds": [
+            13,
+            3,
+            74
+          ],
+          "handCapture": "campaign-cost-r2-turn3.png"
+        },
+        {
+          "cardId": 7,
+          "name": "試行錯誤",
+          "expected": {
+            "stamina": 6,
+            "genki": 0,
+            "concentration": 0
+          },
+          "capture": "campaign-cost-r2-final-a.png",
+          "handCardIds": [
+            7,
+            52,
+            13
+          ],
+          "handCapture": "campaign-cost-r2-turn4.png"
+        }
+      ],
+      "terminalAttributeVisible": 131,
+      "terminalScoreCompared": false,
+      "result": "retry offered; below target",
+      "resultCapture": "campaign-cost-r2-final-b.png",
+      "limits": [
+        "Terminal image still shows the last-hit animation; compare already-paid resources, not terminal score or duration-buff transition."
+      ]
+    },
+    {
+      "id": "mixed-costs",
+      "actions": [
+        {
+          "cardId": 154,
+          "name": "テレビ出演",
+          "expected": {
+            "score": 0,
+            "stamina": 9,
+            "genki": 3,
+            "concentration": 0,
+            "halfCostTurns": 4,
+            "goodConditionTurns": 0
+          },
+          "capture": "campaign-cost-r3-turn2.png",
+          "handCardIds": [
+            13,
+            154,
+            1
+          ],
+          "handCapture": "campaign-cost-r3-turn1.png"
+        },
+        {
+          "cardId": 1,
+          "name": "アピールの基本",
+          "expected": {
+            "score": 9,
+            "stamina": 9,
+            "genki": 1,
+            "concentration": 0,
+            "halfCostTurns": 3,
+            "goodConditionTurns": 0
+          },
+          "capture": "campaign-cost-r3-turn3.png",
+          "handCardIds": [
+            76,
+            1,
+            3
+          ],
+          "handCapture": "campaign-cost-r3-turn2.png"
+        },
+        {
+          "cardId": 3,
+          "name": "ポーズの基本",
+          "expected": {
+            "score": 11,
+            "stamina": 8,
+            "genki": 2,
+            "concentration": 0,
+            "halfCostTurns": 2,
+            "goodConditionTurns": 0
+          },
+          "capture": "campaign-cost-r3-turn4.png",
+          "handCardIds": [
+            13,
+            3,
+            74
+          ],
+          "handCapture": "campaign-cost-r3-turn3.png"
+        },
+        {
+          "cardId": 7,
+          "name": "試行錯誤",
+          "expected": {
+            "stamina": 6,
+            "genki": 0,
+            "concentration": 0
+          },
+          "capture": "campaign-cost-r3-final-a.png",
+          "handCardIds": [
+            7,
+            52,
+            13
+          ],
+          "handCapture": "campaign-cost-r3-turn4.png"
+        }
+      ],
+      "terminalScoreCompared": false,
+      "result": "retry offered; below target",
+      "resultCapture": "campaign-cost-r3-final-b.png",
+      "limits": [
+        "Terminal score still animating; only already-paid resources and persistent concentration compared."
+      ]
+    }
+  ],
+  "replayMultipliers": {
+    "visual": 1
+  },
+  "initialCaptures": [
+    "campaign-cost-r1-turn1.png",
+    "campaign-cost-r2-turn1.png",
+    "campaign-cost-r3-turn1.png"
+  ],
+  "drawCardIds": [
+    13,
+    154,
+    1,
+    76,
+    1,
+    3,
+    13,
+    3,
+    74,
+    7,
+    52,
+    13
+  ]
+}

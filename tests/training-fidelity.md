@@ -10,27 +10,48 @@ compares the engine's state at the next playable moment with what the game
 showed. State carries over from card to card; nothing is reset to a recorded
 value.
 
-The harness hands the engine each card the play used, so draws and deck
-composition aren't checked, and neither are raw parameters, NPC scores or rank
-thresholds. Comparing whole stages and loadouts is `pnpm fidelity`'s job.
+Fixtures with a captured draw sequence build the deck from that sequence
+and set its order before the stage starts. The engine draws and discards
+normally, and the harness compares the full hand before every card use,
+including extra uses in the same turn. The sequence covers observed draws;
+unseen deck contents and random shuffling aren't checked.
+
+Other fixtures build the deck from the cards the play used, one copy for
+each card played or captured in hand, and put each in hand as its turn comes.
+Their draws aren't checked. Neither mode checks raw parameters, NPC scores
+or rank thresholds. Comparing whole stages and loadouts is
+`pnpm fidelity`'s job.
 
 ## Fixtures
 
-- `initial`: the state before the first card, after the first turn's start
-  effects, checked before any card is played.
-- `startingStamina` (optional): the stamina parameter, when start effects
-  already spent some of it, so `initial.stamina` differs.
-- `pItemIds` (optional): the P-items the play had.
-- `stageId` (optional): a stage whose own effects apply, from `stages.csv`.
-- `skillCardIds` (optional): the deck, when a once-per-stage card was played
-  twice from two copies. Otherwise one copy of each card the play used.
+- `pItemIds`: the P-items captured in the training; their effects run as
+  the recorded cards are played.
+- `drawCardIds`: the captured draw sequence, used to order the deck once
+  before the stage starts. Each action then has `handCardIds` and a
+  `handCapture`, checked against the hand the engine draws.
+- `initial`: the state before the first turn, checked before any card is
+  played. Its genki is given to the engine, as some lessons start with it.
 - `turnTypes`: the turn order the game showed.
-- `displayedPercents`: the multiplier the game showed for each turn type.
+- `displayedPercents`: the multiplier the game showed for each turn type, in
+  an exam. Lessons show none, so their fixtures set `replayMultipliers` to 1
+  and record score as the gain over the lesson's starting attribute.
 - `plays[].actions[]`: each card played, by `cardId` and `name`; `expected`,
   the state read from the screenshot after it; and `capture`, that
-  screenshot's name.
+  screenshot's name. A card that gives an extra use leaves the turn open, so
+  the next action records `turnsElapsed` where it isn't one turn per card.
+- For a card that holds another from the hand, the action records the whole
+  hand (`handCardIds`), the candidates and the pick (`hold`), and the held
+  pile after it (`heldCardIds`). The action where the held card comes back to
+  hand records it as `returnedHeldCardId`, and the action playing that copy
+  sets `useReturnedHeldCard`. Holds are checked only against a hand captured
+  in full.
 
 Screenshots stay out of git, under `screenshots/sources/ingame/`.
+
+`terminalAttribute` checks a lesson's final displayed attribute. It is the
+initial attribute plus the engine's score, capped at the lesson's target
+gain. Capped attributes check that the replay reaches the target; the exact
+score above the target isn't visible in the game.
 
 ## Capturing
 
@@ -56,53 +77,176 @@ Covers fixed stamina costs, costs paid with genki, gaining motivation, genki
 gains at several motivation values, and genki-based scores at 250% and 400%.
 Motivation doesn't count down, so each play's last `expected` checks it too.
 
-## Contest S55 rehearsals
+## 【基礎5】消費体力減少
 
-Three units from one free contest rehearsal (ver 3.5.0, 2026-11-05), read from
-ステージ詳細 → 詳細ログ, which shows each turn's type %, the card used and the
-score and buffs before and after. `displayedPercents` is the % on the
-formation panel. Covers concentration, good condition's ×1.5, P-items at the
-start of the stage and of a turn, multi-hit cards, and a once-per-stage card
-taken from both the main and the sub memory's deck. Stage 2 adds good
-impression at the end of each turn, motivation's genki bonus, and the
-stage's own effect (`stageId` 191), which on every fourth direct good
-impression gain adds 7 and doubles the next tick. The ranking bonus added to the top
-unit isn't part of the replay.
+A visual lesson starting at 100. Covers テレビ出演's halved costs counting down
+4, 3, 2, paid with genki, stamina or both, along with concentration and good
+condition. The first play clears at the cap of 140, and the other two end on
+the retry screen while the last score is still counting, so the last card of
+each checks only stamina, genki and concentration.
 
-The `-2` fixtures are a second rehearsal with the same formation (2026-11-05
-00:35), with other draws and turn types; the replay gives every turn's score
-exactly (手毬 1,477, 清夏 967, ことね 2,915). Stage 2's effect fires on turns 6
-and 10, and the game ticks good impression twice on turns 6–7 and 10–11.
-`expected` is read after the next turn's start: 手毬's turn 1 concentration is
-9 because 私の「初」の楽譜 adds 3 again at the start of turn 2.
+## 【基礎6】消費体力削減
 
-`contest-rehearsal-s55-tsubame-2` is the same rehearsal's stage 3 (`stageId`
-192), played by the default memory 学園生活 雨夜燕 with はばたくブローチ. Turns 5,
-7 and 11 use several cards, so its actions give their `turn`, and a held card
-(スパート, held on turn 2, used on turn 11) is taken from the held pile. Covers
-温存/強気/全力 stance changes, preservation's 熱意 and extra card uses, full
-power charge, and the brooch's 熱意追加 on the first direct switch to 強気.
+A visual lesson starting at 100, with 7 stamina and 20 genki. Covers
+叶えたい夢+'s cost reduction of 2 on costs paid from genki, and direct stamina
+costs, which bypass genki. One play uses two copies of ありがとうの言葉, which
+can be used once each. The first play clears at the cap of 140, so its final
+score isn't checked.
 
-`contest-rehearsal-s55-misuzu` and `-misuzu-2` are stage 3 played by an owned
-memory, 学園生活 秦谷美鈴 3663 (400/200/300, 体力 25; panel 274/296/328%), with
-休憩中のおやつ, in two rehearsals (2026-11-05 01:05 and 01:10; one fixture each,
-since their turn types differ). They cover のんびり屋さん's
-温存 → のんびり at each turn's start, のんびり's zero cost and zero score
-(アッチェレランド scores 0), leaving のんびり for 強気 (元気 +5, 熱意 +10) and
-for 全力 (元気 +5), and a card held under のんびり (スパート) used in the 全力
-turn. The first and second plays are replayed to their final scores of 942
-and 867. The `-3` and `-7` fixtures cover two more rehearsals. Together they
-check that 休憩中のおやつ rounds 60% of cumulative full power down before
-全力 and the turn multiplier: cumulative values of 12, 11 and 13 give base
-scores of 7, 6 and 7, for score gains of 69, 54 and 63.
+## 【基礎7】全力
 
-Further 美鈴 rehearsals exercise the same item with cumulative full power
-values of 12 and 13 across all three turn types. A base of 7.8 gives 58 at
-274% and 69 at 328%, separating floor from round-to-nearest. Each replay
-carries state from the first turn; one stops after turn 8, before skipped
-actions its harness cannot replay.
+A dance lesson starting at 100. Two plays reach 10 full power charge, which
+enters full power at the start of the next turn with one extra card use, and
+play their last two cards in either order; in full power, scores of 15 and 9
+become 45 and 27. The third play reaches only 7, stays out of full power and
+gets one card in the last turn. Both full power plays clear at the cap of
+160, so their final scores aren't checked.
 
-The item also scores with a base of 8.4 on different full-power turns, at
-all three turn types, and 13.2 after two full-power entries. One vocal turn triggers
-it twice, at 7.2 and then 7.8, and both give 58. The latter keeps cumulative charge across
-both entries and checks card growth applied at each switch.
+## 【基礎8】強気
+
+A vocal lesson starting at 100. 挨拶の基本 enters 強気 at no cost, which
+doubles scores and costs (9 and 4 become 18 and 8, 2 and 3 become 4 and 6).
+Costs are paid with stamina alone or split with genki, and genki is gained
+after the cost is paid. Only base 強気 is captured, not 強気2. The first play
+clears at the cap of 125, so its final score isn't checked.
+
+## 【基礎9】温存
+
+A vocal lesson starting at 100. イメージの基本 enters 温存, which cuts scores
+(9, 2 and 15 become 5, 1 and 8) and costs (4 and 3 become 2), rounding as the
+game does. Two plays then switch from 温存 to 強気 with 挨拶の基本, which grants
+5 熱意 and an extra card use in the same turn; the third stays in 温存. 熱意
+resets at the end of a turn, so the last card of each play leaves it out. Only
+base 温存 is captured, not 温存2. The first play clears at the cap of 130, so
+its final score isn't checked.
+
+## 【試験研修5】全力
+
+Two plays reach 10 full power charge and get an extra card use in the last
+turn; the third reaches 7 and doesn't. Before that, 潜在能力 holds one of the
+other two cards in hand: 一歩 in one play, 表現の基本 in the other. The held
+card comes back to hand when full power starts, and that same copy is played
+next, though the last hand of the second play has two 表現の基本. This uses
+base 王者の御出まし (448), where 【基礎7】全力 used 王者の御出まし+ (449).
+Its hands are checked against the captured draw sequence. The expression
+play uses the returned held copy while the other copy remains in hand.
+
+## 【試験研修6】強気
+
+スターライト enters 強気 before scoring, while paying its cost in the
+previous stance. From 強気, せーのっ！ enters 強気2; the extra stamina drain
+starts with the next card. The plays cover costs paid with stamina and genki,
+and a cost reduction of 1 applied after the stance multiplier.
+
+The first play switches from 強気 through 温存 and back, gaining 5 熱意
+and an extra use. The third reaches 温存2 first; leaving it grants 5 genki,
+8 熱意 and an extra use. Its last two scores each rise by 184 at 400%.
+Terminal 熱意 is omitted because the screenshot precedes its end-turn reset.
+
+## 【応用5】プラン：アノマリー
+
+A visual lesson starting at 100, with a target gain of 280. Covers both tiers
+of preservation and strength, enthusiasm on multiple score actions, and
+holding a card through full-power entry. Leaving preservation when full power
+starts gives three card uses in the last turn. The first play stays below
+the lesson cap through all three actions.
+
+The second play reaches only 7 charge and keeps its card held. It also checks
+the strength 2 stamina drain with half costs and a reduction of 1. The third
+holds and plays アピールの基本+ instead of 一歩. Its last score reaches the
+lesson cap, so only its resources are compared after the last card.
+Hands are checked against the captured draw sequence, including the extra
+uses after leaving preservation and the held card returned after the last
+three cards are drawn.
+Terminal full-power stance, enthusiasm and half-cost durations are omitted
+because the screenshots precede their end-turn changes.
+
+## 【基礎1】好調
+
+A dance lesson starting at 100. Covers gaining and extending good condition,
+its countdown on later turns, and scores with and without its 50% bonus.
+ファンサ rises from 10 to 15, アドリブ from 5 to 8, and ポーズの基本
+from 2 to 3. One play pays costs with genki before stamina. The first play
+clears at the cap of 140, so its last score is omitted. The other plays
+finish below the cap, with terminal good-condition durations omitted. A fourth
+play lets condition expire before its final アピールの基本 and ends at
+attribute 118. Its hands and those of 【応用2】プラン：ロジック are checked
+against the captured draw sequences.
+
+## 【基礎2】集中
+
+A vocal lesson starting at 100. Covers scores at concentration 0, 3 and 5,
+gaining concentration after scoring, and costs paid with genki. The first
+play reaches the cap of 140. The other plays capture both hits at
+concentration 2, adding 20 and finishing at attributes 122 and 132.
+
+## 【基礎3】好印象
+
+A visual lesson starting at 100. Covers good impression gained early or late,
+its countdown, end-turn scoring, and scores based on its current value.
+One play pays リスタート's full cost with genki and ends below the cap at
+attribute 123. The first play reaches the cap of 140, so its final score is
+omitted. The late-impression play finishes at attribute 124 after the last
+card and the end-turn effect each add 2. Terminal good-impression durations
+are omitted because the screenshots precede the next countdown.
+
+## 【基礎4】やる気
+
+A vocal lesson starting at 100. Covers genki gains with motivation at 0, 3,
+4 and 8, costs paid with genki or stamina, and genki-based scores rounded up.
+ありがとうの言葉+ adds genki before scoring; 気分転換+ spends stamina
+while retaining genki. The first play reaches the cap of 140, so its final
+score is omitted. The other plays end at attributes 116 and 132.
+
+## 【試験研修1】好調
+
+Covers scores at 200%, 250% and 400%, with and without good condition,
+gaining and extending its duration, and costs paid with stamina, genki or
+both. At 250%, アピールの基本 scores 23 without good condition and 35
+with it; 愛嬌 scores 50 with good condition. The plays finish at scores
+230, 97 and 160. Terminal good-condition durations are omitted because
+the screenshots precede their end-turn countdown.
+
+## 【試験研修2】集中
+
+Covers concentration gained through 表情の基本, 眼力, バランス感覚,
+情熱ターン and 準備運動, with costs paid from genki, stamina or both.
+情熱ターン scores before gaining concentration. At 250%, its score is
+28, 35 or 43 at concentration 0, 3 or 6. The final 試行錯誤 scores twice
+at 400%, adding 136, 120 or 112 at concentration 9, 7 or 6. Both hits
+are captured, with final scores 233, 162 and 189. Hands are checked against
+the captured draw sequence.
+
+## 【応用1】プラン：センス
+
+A visual lesson starting at 100, with a target gain of 120. Its P-item,
+内なる光の耳飾り, grants 2 concentration and 1 genki at the start of a
+turn with good condition, up to twice. One play triggers both uses early;
+another delays condition until turn 4; the third stays without condition
+and retains both uses.
+
+楽観的 grants its concentration bonus when condition was already present
+before use. 盛装の華形 scores twice with condition and once without it.
+The plays also cover half costs and a cost reduction of 1. The first reaches
+the cap of 220, so its last score is omitted; the others finish at attributes
+136 and 150. Terminal condition and half-cost durations are omitted because
+the screenshots precede their end-turn countdowns. Hands are checked against
+the captured draw sequence, including the P-item triggers at turn start.
+
+## 【応用2】プラン：ロジック
+
+A dance lesson starting at 100, with a target gain of 120. Its P-item,
+ピッグドリーム貯金箱, grants 3 good impression and an extra card use
+when a card finishes with at least 6 good impression, once per lesson.
+Two plays trigger it early or late; the other keeps good impression at zero.
+The extra use delays the end-turn score and countdown until the next card.
+
+ラブリーウインク scores before the P-item grants more good impression.
+思い出し笑い checks its motivation condition before use. The plays also
+cover motivation-based genki gains, fixed stamina costs and ハートの合図+'s
+genki-based score and halving. The first reaches the cap of 220 before the
+halving is visible, so its last score and genki are omitted. The second
+finishes at attribute 183. The late-threshold play finishes at attribute 155
+after the last card and the end-turn effect each add 10. Terminal
+good-impression durations are omitted because the screenshots precede their
+countdowns.

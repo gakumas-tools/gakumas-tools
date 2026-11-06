@@ -1,0 +1,368 @@
+{
+  "date": "2026-11-06",
+  "gameVersion": "3.5.3",
+  "screen": "アイドル → メモリー → 詳細を見る → ステージ",
+  "sourceDirectory": "screenshots/sources/ingame/",
+  "memories": [
+    {
+      "name": "一匹狼 月村手毬",
+      "params": [
+        778,
+        420,
+        268,
+        30
+      ],
+      "pItemIds": [
+        27
+      ],
+      "skillCardIds": [
+        203,
+        36,
+        52,
+        78,
+        102
+      ],
+      "power": 5613,
+      "capture": "campaign-s55-memory-01-stage.png"
+    },
+    {
+      "name": "Tame-Lie-One-Step 紫雲清夏",
+      "params": [
+        278,
+        850,
+        298,
+        30
+      ],
+      "pItemIds": [
+        55
+      ],
+      "skillCardIds": [
+        230,
+        34,
+        54,
+        76,
+        104
+      ],
+      "power": 5541,
+      "capture": "campaign-s55-memory-02-stage.png"
+    },
+    {
+      "name": "Tame-Lie-One-Step 紫雲清夏",
+      "params": [
+        225,
+        834,
+        300,
+        30
+      ],
+      "pItemIds": [
+        55,
+        79
+      ],
+      "skillCardIds": [
+        230,
+        24,
+        31,
+        54,
+        72
+      ],
+      "power": 5469,
+      "capture": "campaign-s55-memory-03-stage.png"
+    },
+    {
+      "name": "Tame-Lie-One-Step 紫雲清夏",
+      "params": [
+        281,
+        780,
+        338,
+        30
+      ],
+      "pItemIds": [
+        55
+      ],
+      "skillCardIds": [
+        230,
+        24,
+        34,
+        54,
+        104
+      ],
+      "power": 5415,
+      "capture": "campaign-s55-memory-04-stage.png"
+    },
+    {
+      "name": "カワイイ♡はじめました 藤田ことね",
+      "params": [
+        269,
+        627,
+        444,
+        36
+      ],
+      "pItemIds": [
+        29
+      ],
+      "skillCardIds": [
+        205,
+        38,
+        46,
+        62,
+        124
+      ],
+      "power": 5334,
+      "capture": "campaign-s55-memory-06-stage.png"
+    },
+    {
+      "name": "一匹狼 月村手毬",
+      "params": [
+        739,
+        279,
+        352,
+        30
+      ],
+      "pItemIds": [
+        27
+      ],
+      "skillCardIds": [
+        202,
+        475,
+        28,
+        30,
+        102
+      ],
+      "power": 5319,
+      "capture": "campaign-s55-memory-07-stage.png"
+    },
+    {
+      "name": "Fighting My Way 花海咲季",
+      "params": [
+        343,
+        434,
+        499,
+        32
+      ],
+      "pItemIds": [
+        43,
+        72
+      ],
+      "skillCardIds": [
+        218,
+        30,
+        52,
+        76,
+        102
+      ],
+      "power": 5289,
+      "capture": "campaign-s55-memory-08-stage.png"
+    },
+    {
+      "name": "一匹狼 月村手毬",
+      "params": [
+        644,
+        318,
+        287,
+        30
+      ],
+      "pItemIds": [
+        27
+      ],
+      "skillCardIds": [
+        202,
+        30,
+        52,
+        72,
+        104
+      ],
+      "power": 4905,
+      "capture": "campaign-s55-memory-09-stage.png"
+    },
+    {
+      "name": "カワイイ♡はじめました 藤田ことね",
+      "params": [
+        204,
+        483,
+        518,
+        27
+      ],
+      "pItemIds": [
+        29,
+        358
+      ],
+      "skillCardIds": [
+        204,
+        44,
+        46,
+        58,
+        88
+      ],
+      "power": 4866,
+      "capture": "campaign-s55-memory-10-stage.png"
+    },
+    {
+      "name": "カワイイ♡はじめました 藤田ことね",
+      "params": [
+        242,
+        519,
+        385,
+        27
+      ],
+      "pItemIds": [
+        29
+      ],
+      "skillCardIds": [
+        205,
+        44,
+        58,
+        65,
+        120
+      ],
+      "power": 4536,
+      "capture": "campaign-s55-memory-11-stage.png"
+    },
+    {
+      "name": "アイドル、はじめっ！ 花海佑芽",
+      "params": [
+        266,
+        311,
+        249,
+        30
+      ],
+      "pItemIds": [
+        85,
+        82
+      ],
+      "skillCardIds": [
+        270,
+        38,
+        62,
+        88
+      ],
+      "power": 3741,
+      "capture": "campaign-s55-memory-12-stage.png"
+    },
+    {
+      "name": "学園生活 花海佑芽",
+      "params": [
+        300,
+        400,
+        200,
+        25
+      ],
+      "pItemIds": [
+        83
+      ],
+      "skillCardIds": [
+        268,
+        42,
+        60,
+        90,
+        120
+      ],
+      "power": 3663,
+      "capture": "campaign-s55-memory-13-stage.png"
+    },
+    {
+      "name": "学園生活 秦谷美鈴",
+      "params": [
+        400,
+        200,
+        300,
+        25
+      ],
+      "pItemIds": [
+        261
+      ],
+      "skillCardIds": [
+        540,
+        380,
+        392,
+        402,
+        418
+      ],
+      "power": 3663,
+      "capture": "campaign-s55-memory-14-stage.png"
+    },
+    {
+      "name": "学園生活 十王星南",
+      "params": [
+        300,
+        200,
+        400,
+        25
+      ],
+      "pItemIds": [
+        168
+      ],
+      "skillCardIds": [
+        446,
+        382,
+        392,
+        400,
+        418
+      ],
+      "power": 3663,
+      "capture": "campaign-s55-memory-15-stage.png"
+    },
+    {
+      "name": "学園生活 藤田ことね",
+      "params": [
+        200,
+        400,
+        300,
+        25
+      ],
+      "pItemIds": [
+        11
+      ],
+      "skillCardIds": [
+        186,
+        38,
+        58,
+        88,
+        122
+      ],
+      "power": 3663,
+      "capture": "campaign-s55-memory-16-stage.png"
+    },
+    {
+      "name": "学園生活 月村手毬",
+      "params": [
+        400,
+        300,
+        200,
+        25
+      ],
+      "pItemIds": [
+        9
+      ],
+      "skillCardIds": [
+        184,
+        24,
+        52,
+        74,
+        104
+      ],
+      "power": 3663,
+      "capture": "campaign-s55-memory-17-stage.png"
+    },
+    {
+      "name": "学園生活 花海咲季",
+      "params": [
+        200,
+        300,
+        400,
+        25
+      ],
+      "pItemIds": [
+        7
+      ],
+      "skillCardIds": [
+        182,
+        28,
+        52,
+        76,
+        102
+      ],
+      "power": 3663,
+      "capture": "campaign-s55-memory-18-stage.png"
+    }
+  ]
+}
