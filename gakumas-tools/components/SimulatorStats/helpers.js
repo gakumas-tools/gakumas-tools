@@ -13,7 +13,12 @@ import { addScoreByType } from "@/utils/simulator";
 // log doesn't carry c), so a skill card's total score is split across its
 // c-variants proportionally to their use counts. Same for scoreByType.
 // P-items carry their own `uses` straight from the engine attribution.
-export function combineTurn(usageTurn, scoreTurn) {
+//
+// A card can score in a turn it wasn't used (a delayed effect firing).
+// That score is split by the variants' use counts over the whole run,
+// `runUses` from runVariantUses, so it lands on the variant that scheduled
+// it rather than on a separate uncustomized row.
+export function combineTurn(usageTurn, scoreTurn, runUses = {}) {
   const byCard = {};
 
   const ensure = (type, id, c) => {
@@ -63,12 +68,25 @@ export function combineTurn(usageTurn, scoreTurn) {
     if (e.type !== "skillCard") continue;
     const totalUse = skillCardUseById[e.id] || 0;
     if (totalUse === 0) {
-      // Card produced score but was never hand-used (e.g. the score came
-      // from its passive/delayed effect firing). Attribute to a single
-      // (id, null) row so the score still surfaces.
-      const row = ensure("skillCard", e.id, null);
-      row.score += e.score;
-      addScoreByType(row.scoreByType, e.scoreByType);
+      // Card produced score but wasn't hand-used this turn (e.g. the score
+      // came from its passive/delayed effect firing). Split it by the
+      // variants' uses over the run; a card never used at all gets a
+      // single (id, null) row so the score still surfaces.
+      const variants = runUses[e.id] || [];
+      const runTotal = variants.reduce((acc, v) => acc + v.use, 0);
+      if (!runTotal) {
+        const row = ensure("skillCard", e.id, null);
+        row.score += e.score;
+        addScoreByType(row.scoreByType, e.scoreByType);
+        continue;
+      }
+      for (const { c, use } of variants) {
+        if (!use) continue;
+        const row = ensure("skillCard", e.id, c);
+        const share = use / runTotal;
+        row.score += e.score * share;
+        addScoreByType(row.scoreByType, e.scoreByType, share);
+      }
       continue;
     }
     for (const k in byCard) {
@@ -80,6 +98,26 @@ export function combineTurn(usageTurn, scoreTurn) {
     }
   }
   return byCard;
+}
+
+// Each skill card's variants (by c) with their use counts over all turns:
+// { [id]: [{ c, use }] }.
+export function runVariantUses(usageTurns) {
+  const byKey = {};
+  for (const usageTurn of usageTurns) {
+    for (const key in usageTurn) {
+      const e = usageTurn[key];
+      if (e.id === 0) continue; // synthetic SKIP row
+      const k = `${e.id}|${JSON.stringify(e.c || null)}`;
+      byKey[k] ??= { id: e.id, c: e.c || null, use: 0 };
+      byKey[k].use += e.use;
+    }
+  }
+  const byId = {};
+  for (const { id, c, use } of Object.values(byKey)) {
+    (byId[id] ??= []).push({ c, use });
+  }
+  return byId;
 }
 
 // Sum per-turn rows into a single totals row. Keys come from combineTurn

@@ -1,0 +1,255 @@
+{
+  "stage": "【試験研修4】やる気",
+  "initial": {
+    "score": 0,
+    "stamina": 30,
+    "genki": 0,
+    "motivation": 0
+  },
+  "turnTypes": [
+    "visual",
+    "vocal",
+    "dance",
+    "visual",
+    "dance",
+    "vocal"
+  ],
+  "displayedPercents": {
+    "visual": 200,
+    "vocal": 400,
+    "dance": 250
+  },
+  "plays": [
+    {
+      "id": "first",
+      "actions": [
+        {
+          "cardId": 13,
+          "name": "表現の基本",
+          "expected": {
+            "score": 0,
+            "stamina": 30,
+            "genki": 4,
+            "motivation": 0
+          },
+          "capture": "campaign-20261102-motivation-trial-turn2.png"
+        },
+        {
+          "cardId": 62,
+          "name": "リズミカル",
+          "expected": {
+            "score": 0,
+            "stamina": 30,
+            "genki": 10,
+            "motivation": 0
+          },
+          "capture": "campaign-20261102-motivation-trial-turn3.png"
+        },
+        {
+          "cardId": 121,
+          "name": "あふれる思い出+",
+          "expected": {
+            "score": 0,
+            "stamina": 30,
+            "genki": 11,
+            "motivation": 5
+          },
+          "capture": "campaign-20261102-motivation-trial-turn4-help.png"
+        },
+        {
+          "cardId": 121,
+          "name": "あふれる思い出+",
+          "expected": {
+            "score": 0,
+            "stamina": 30,
+            "genki": 17,
+            "motivation": 10
+          },
+          "capture": "campaign-20261102-motivation-trial-turn5.png"
+        },
+        {
+          "cardId": 91,
+          "name": "ありがとうの言葉+",
+          "expected": {
+            "score": 68,
+            "stamina": 27,
+            "genki": 38,
+            "motivation": 10
+          },
+          "capture": "campaign-20261102-motivation-trial-turn6.png"
+        },
+        {
+          "cardId": 12,
+          "name": "気分転換+",
+          "expected": {
+            "score": 236,
+            "stamina": 24,
+            "genki": 38,
+            "motivation": 10
+          },
+          "capture": "campaign-20261102-motivation-trial-final-b.png"
+        }
+      ],
+      "result": "clear (2nd)",
+      "resultCapture": "campaign-20261102-motivation-trial-clear.png",
+      "limits": [
+        "Action/displayed-percent fidelity only; no raw-parameter/deck/NPC model."
+      ]
+    },
+    {
+      "id": "score-first",
+      "actions": [
+        {
+          "cardId": 1,
+          "name": "アピールの基本",
+          "expected": {
+            "score": 18,
+            "stamina": 26,
+            "genki": 0,
+            "motivation": 0
+          },
+          "capture": "campaign-motivation-r2-turn2-settled.png"
+        },
+        {
+          "cardId": 1,
+          "name": "アピールの基本",
+          "expected": {
+            "score": 54,
+            "stamina": 22,
+            "genki": 0,
+            "motivation": 0
+          },
+          "capture": "campaign-motivation-r2-turn3-settled.png"
+        },
+        {
+          "cardId": 121,
+          "name": "あふれる思い出+",
+          "expected": {
+            "score": 54,
+            "stamina": 19,
+            "genki": 4,
+            "motivation": 5
+          },
+          "capture": "campaign-motivation-r2-turn4.png"
+        },
+        {
+          "cardId": 13,
+          "name": "表現の基本",
+          "expected": {
+            "score": 54,
+            "stamina": 19,
+            "genki": 13,
+            "motivation": 5
+          },
+          "capture": "campaign-motivation-r2-turn5.png"
+        },
+        {
+          "cardId": 91,
+          "name": "ありがとうの言葉+",
+          "expected": {
+            "score": 107,
+            "stamina": 16,
+            "genki": 29,
+            "motivation": 5
+          },
+          "capture": "campaign-motivation-r2-turn6.png"
+        },
+        {
+          "cardId": 12,
+          "name": "気分転換+",
+          "expected": {
+            "score": 235,
+            "stamina": 13,
+            "genki": 29,
+            "motivation": 5
+          },
+          "capture": "campaign-motivation-r2-final-b.png"
+        }
+      ],
+      "result": "clear (2nd)",
+      "resultCapture": "campaign-motivation-r2-clear.png"
+    },
+    {
+      "id": "mixed-motivation",
+      "actions": [
+        {
+          "cardId": 3,
+          "name": "ポーズの基本",
+          "expected": {
+            "score": 4,
+            "stamina": 27,
+            "genki": 2,
+            "motivation": 0
+          },
+          "capture": "campaign-motivation-r3-turn2.png"
+        },
+        {
+          "cardId": 62,
+          "name": "リズミカル",
+          "expected": {
+            "score": 4,
+            "stamina": 27,
+            "genki": 8,
+            "motivation": 0
+          },
+          "capture": "campaign-motivation-r3-turn3.png"
+        },
+        {
+          "cardId": 61,
+          "name": "えいえいおー+",
+          "expected": {
+            "score": 4,
+            "stamina": 27,
+            "genki": 8,
+            "motivation": 4
+          },
+          "capture": "campaign-motivation-r3-turn4.png"
+        },
+        {
+          "cardId": 121,
+          "name": "あふれる思い出+",
+          "expected": {
+            "score": 4,
+            "stamina": 27,
+            "genki": 13,
+            "motivation": 9
+          },
+          "capture": "campaign-motivation-r3-turn5.png"
+        },
+        {
+          "cardId": 91,
+          "name": "ありがとうの言葉+",
+          "expected": {
+            "score": 64,
+            "stamina": 24,
+            "genki": 33,
+            "motivation": 9
+          },
+          "capture": "campaign-motivation-r3-turn6.png"
+        },
+        {
+          "cardId": 12,
+          "name": "気分転換+",
+          "expected": {
+            "score": 212,
+            "stamina": 21,
+            "genki": 33,
+            "motivation": 9
+          },
+          "capture": "campaign-motivation-r3-final-b.png"
+        }
+      ],
+      "result": "clear (2nd)",
+      "resultCapture": "campaign-motivation-r3-clear.png"
+    }
+  ],
+  "date": "2026-11-02",
+  "gameVersion": "3.5.0",
+  "scope": "Conditional selected-action replay; excludes full deck, draws, raw-parameter conversion and NPC rankings.",
+  "sourceDirectory": "screenshots/sources/ingame/",
+  "initialCaptures": [
+    "campaign-20261102-motivation-trial-turn1.png",
+    "campaign-motivation-r2-turn1-ready.png",
+    "campaign-motivation-r3-turn1.png"
+  ]
+}

@@ -12,7 +12,7 @@ const parsed = lazyParse(CUSTOMIZATIONS, (customization) => {
 const CUSTOMIZATIONS_BY_ID = CUSTOMIZATIONS.reduce((acc, cur) => {
   acc[cur.id] = cur;
   return acc;
-}, {});
+}, Object.create(null));
 
 class Customizations {
   static getAll() {

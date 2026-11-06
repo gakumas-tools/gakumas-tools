@@ -59,6 +59,7 @@ export function loadoutFromQuery(queryString) {
 
   return {
     stageId: parseInt(searchParams.get("stage"), 10),
+    enterPercents: searchParams.get("enter_percents") == "1",
     supportBonus: parseFloat(searchParams.get("support_bonus")) || null,
     params: deserializeIds(searchParams.get("params") || ""),
     pItemIds: deserializeIds(searchParams.get("items") || ""),

@@ -280,6 +280,17 @@
     "clear": "Clear",
     "confirm": "Are you sure you want to clear these skill cards?"
   },
+  "MemoryAttemptPlanner": {
+    "title": "Plan repeated attempts",
+    "show": "Show",
+    "hide": "Hide",
+    "assumption": "Estimate for independent attempts with the same acquired cards and rank. Uses the estimated success probability above; actual odds may differ.",
+    "attempts": "Number of attempts",
+    "atLeastOne": "Chance of at least one success:",
+    "targetChance": "Target chance",
+    "attemptsNeeded": "{count, plural, one {# attempt needed} other {# attempts needed}}",
+    "beyondLimit": "Target chance is not reached within {limit, number} attempts."
+  },
   "TargetSkillCards": {
     "acquired": "Acquired"
   },
@@ -439,7 +450,12 @@
     "criteria": "Criteria",
     "effects": "Effects",
     "effectFormat": "Effect format",
-    "apply": "Apply"
+    "apply": "Apply",
+    "linkTurnCounts": "Turns per link phase",
+    "linkPhase": "Phase {phase}",
+    "invalidTurnCounts": "Add at least 1 turn",
+    "invalidFirstTurns": "Set a first turn rate only for types with turns",
+    "invalidLinkTurnCounts": "Link phases must add up to the turn count"
   },
   "LoadoutSkillCardGroup": {
     "cost": "Cost",
@@ -505,6 +521,8 @@
     "optimizeGain": "Avg +{gain}",
     "optimizeAlready": "Already optimal",
     "optimizeFailed": "Can't optimize",
+    "optimizeNeedsSimulation": "Simulate the current loadout first",
+    "staleResults": "These results are from an earlier loadout",
     "rehearsal": "Rehearsal"
   },
   "CompareTab": {
@@ -758,6 +776,33 @@
           "a": "S4+ requires 30,000. S4 requires 26,000, SSS+ 23,000, and S5 35,000. Use the calculator to see the round 2 score you need."
         }
       ]
+    },
+    "memoryCalculator": {
+      "h1": "Gakumas Memory Skill Card Probability Calculator",
+      "intro": "Estimate the chance of getting a desired skill card combination in a memory. Compare target cards, acceptable alternatives, excluded cards, acquired cards, and produce rank before planning your next attempt.",
+      "howToBody": "Choose the cards you want under Target skill cards. Add acceptable alternatives with OR, or use NOT to exclude cards. Enter acquired cards, including their pre- and post-upgrade versions, then select the produce rank. Review the success and failure combinations. Draft pick lets you compare candidate cards before adding one to the acquired list.",
+      "formulaTitle": "What the estimate means",
+      "formulaBody": "The calculator enumerates combinations allowed by its memory cost model for the selected rank and sums the probabilities of outcomes matching your targets. Its uniform-distribution model is an estimate: the real skill card selection algorithm is unknown, so the displayed probability is not a verified in-game rate or a guarantee.",
+      "faq": [
+        {
+          "q": "How do OR and NOT change a target?",
+          "a": "OR accepts any one card in that target slot. Separate positive slots must all be satisfied by different cards. NOT excludes memories containing any card in the negated slot, including its alternatives."
+        },
+        {
+          "q": "Why can success show 100%?",
+          "a": "Every outcome in the current model matches the selected targets. With no target or exclusion selected, every modeled outcome counts as success. Check that you entered the intended targets, acquired cards, and rank; 100% here does not prove the game's actual lottery odds."
+        },
+        {
+          "q": "Are these the game's official probabilities?",
+          "a": "No. These are estimates that assume every memory is equally likely, as the note at the top of the calculator says, so actual outcomes may differ."
+        }
+      ]
     }
+  },
+  "EntityPage": {
+    "metaDescription": "{name} in the {category} reference",
+    "back": "All {category}",
+    "open": "Open page",
+    "customizations": "Customizations"
   }
 }

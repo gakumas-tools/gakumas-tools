@@ -19,6 +19,7 @@ import {
   newRunId,
   normalizeSavedRun,
   saveHistoryToStorage,
+  sameRunInputs,
   summarizeScores,
 } from "@/utils/simulationRun";
 
@@ -128,7 +129,7 @@ export function SimulationRunsContextProvider({ children }) {
     };
     setHistory((cur) => {
       const prev = cur[0];
-      if (prev && JSON.stringify(prev.loadout) === JSON.stringify(base)) {
+      if (prev && sameRunInputs(prev, run)) {
         return [run, ...cur.slice(1)];
       }
       return [run, ...cur].slice(0, MAX_HISTORY);

@@ -45,10 +45,15 @@ export default class IdolStageConfig {
       if (stageConfig.season >= 4) {
         return [];
       }
-      return EVENT_DEFAULT_CARD_IDS_BY_RECOMMENDED_EFFECT[
-        idolConfig.recommendedEffect
-      ];
-    } else if (idolConfig.plan) {
+      // Recommended effects without an event deck here (preservation) use
+      // their plan's contest deck below.
+      const eventCardIds =
+        EVENT_DEFAULT_CARD_IDS_BY_RECOMMENDED_EFFECT[
+          idolConfig.recommendedEffect
+        ];
+      if (eventCardIds) return eventCardIds;
+    }
+    if (idolConfig.plan) {
       return CONTEST_DEFAULT_CARD_IDS_BY_PLAN[idolConfig.plan];
     } else if (stageConfig.plan != "free") {
       return CONTEST_DEFAULT_CARD_IDS_BY_PLAN[stageConfig.plan];

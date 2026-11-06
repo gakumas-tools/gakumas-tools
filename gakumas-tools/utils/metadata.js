@@ -1,4 +1,5 @@
 import { getMessages, getTranslations } from "next-intl/server";
+import { Descriptions } from "gakumas-data";
 import { SITE_URL, alternateLanguages, localePath } from "@/utils/localeUrls";
 
 const SITE_NAME = "Gakumas Tools";
@@ -28,6 +29,24 @@ export async function generateMetadataForTool(tool, locale, path) {
       metaDescription ??
       `${t_tools(`${tool}.description`)} - ${t_meta("description")}`,
     ogDescription: metaDescription ?? t_tools(`${tool}.description`),
+    twitterCard: "summary_large_image",
+  });
+}
+
+export async function generateMetadataForReference(entity, slug, locale) {
+  const t_meta = await getTranslations({ locale, namespace: "metadata" });
+  const t_dex = await getTranslations({ locale, namespace: "Dex" });
+  const t_page = await getTranslations({ locale, namespace: "EntityPage" });
+  const category = t_dex(`tabs.${slug}`);
+  const description =
+    Descriptions.get(entity)?.replaceAll("\n", " ") ||
+    t_page("metaDescription", { name: entity.name, category });
+  return buildMetadata({
+    locale,
+    path: `/dex/reference/${slug}/${entity.id}`,
+    title: `${entity.name} | ${category} - ${t_meta("title")}`,
+    description,
+    ogDescription: description,
     twitterCard: "summary_large_image",
   });
 }

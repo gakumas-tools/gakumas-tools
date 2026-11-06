@@ -15,6 +15,7 @@ const BUFFS_MAP = {
   [S.goodConditionTurnsAdditionBuffs]: "goodConditionTurnsAdditionBuff",
   [S.concentrationBuffs]: "concentrationBuff",
   [S.concentrationAdditionBuffs]: "concentrationAdditionBuff",
+  [S.concentrationEffectBuffs]: "concentrationEffectBuff",
   [S.enthusiasmBuffs]: "enthusiasmBuff",
   [S.enthusiasmBonusBuffs]: "enthusiasmBonus",
   [S.fullPowerChargeBuffs]: "fullPowerChargeBuff",
@@ -22,9 +23,13 @@ const BUFFS_MAP = {
   [S.strengthEffectBuffs]: "strengthEffectBuff",
 };
 
+// Same as FLAT_BUFF_LOG_TYPES in Logs.js.
 const FLAT_BUFFS = {
   [S.enthusiasmBonusBuffs]: true,
+  [S.goodImpressionTurnsTimesBuffs]: true,
   [S.goodConditionTurnsAdditionBuffs]: true,
+  [S.concentrationAdditionBuffs]: true,
+  [S.motivationAdditionBuffs]: true,
 };
 
 function HandStateLine({ k, state }) {

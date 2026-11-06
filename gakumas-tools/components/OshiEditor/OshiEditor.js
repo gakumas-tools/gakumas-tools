@@ -79,9 +79,12 @@ export default function OshiEditor({ initialSettings, initialNow }) {
   const { error, index: errorIndex } = validateOshiSettings(payload);
   const dirty = JSON.stringify(banners) != JSON.stringify(savedBanners);
   const selected = banners.find(({ id }) => id == selectedId);
+  // An edit made while a save was in flight leaves the editor dirty after
+  // the save reports success, so "Saved" only shows while nothing is dirty.
+  const shownNotice = notice?.tone == "success" && dirty ? null : notice;
   const message = error
     ? { text: error, tone: "error" }
-    : (notice ?? (dirty ? { text: "Unsaved changes" } : null));
+    : (shownNotice ?? (dirty ? { text: "Unsaved changes" } : null));
 
   function change(nextBanners) {
     setBanners(nextBanners);

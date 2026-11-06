@@ -11,7 +11,7 @@ import styles from "./ManualPlay.module.scss";
 
 export default function HoldModal({ decision, onDecision, idolId }) {
   const t = useTranslations("stage");
-  const { state, cards, num } = decision;
+  const { state, cards, num, optional } = decision;
   const [selectedIndices, setSelectedIndices] = useState([]);
   const promptKey =
     {
@@ -63,7 +63,11 @@ export default function HoldModal({ decision, onDecision, idolId }) {
         style="blue"
         fill
         onClick={() => onDecision(selectedIndices)}
-        disabled={selectedIndices.length !== num}
+        disabled={
+          optional
+            ? selectedIndices.length > num
+            : selectedIndices.length !== num
+        }
       >
         {t("confirm")} ({selectedIndices.length}/{num})
       </Button>
