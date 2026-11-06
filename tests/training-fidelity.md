@@ -177,20 +177,18 @@ against the captured draw sequences.
 
 A vocal lesson starting at 100. Covers scores at concentration 0, 3 and 5,
 gaining concentration after scoring, and costs paid with genki. The first
-play reaches the cap of 140; the second final score is obscured during its
-two-hit animation, so both final scores are omitted. The third play captures
-both hits at concentration 2, with a total gain of 20 and a final attribute
-of 132.
+play reaches the cap of 140. The other plays capture both hits at
+concentration 2, adding 20 and finishing at attributes 122 and 132.
 
 ## 【基礎3】好印象
 
 A visual lesson starting at 100. Covers good impression gained early or late,
 its countdown, end-turn scoring, and scores based on its current value.
 One play pays リスタート's full cost with genki and ends below the cap at
-attribute 123. The first play reaches the cap of 140; the third final capture
-precedes the last end-turn score, so both final scores are omitted. Terminal
-good-impression durations are omitted because the screenshots precede the
-next countdown.
+attribute 123. The first play reaches the cap of 140, so its final score is
+omitted. The late-impression play finishes at attribute 124 after the last
+card and the end-turn effect each add 2. Terminal good-impression durations
+are omitted because the screenshots precede the next countdown.
 
 ## 【基礎4】やる気
 
@@ -248,6 +246,7 @@ The extra use delays the end-turn score and countdown until the next card.
 cover motivation-based genki gains, fixed stamina costs and ハートの合図+'s
 genki-based score and halving. The first reaches the cap of 220 before the
 halving is visible, so its last score and genki are omitted. The second
-finishes at attribute 183. The third final capture precedes the end-turn
-score, so its last score is omitted. Terminal good-impression durations are
-omitted because the screenshots precede their countdowns.
+finishes at attribute 183. The late-threshold play finishes at attribute 155
+after the last card and the end-turn effect each add 10. Terminal
+good-impression durations are omitted because the screenshots precede their
+countdowns.

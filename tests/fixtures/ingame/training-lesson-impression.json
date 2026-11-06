@@ -23,7 +23,7 @@
   "initialCaptures": [
     "campaign-impression-20261103-r1-ready.png",
     "campaign-impression-20261103-r2-initial.png",
-    "campaign-impression-20261103-r3-initial.png"
+    "campaign-impression-20261104-r4-initial.png"
   ],
   "plays": [
     {
@@ -171,6 +171,7 @@
     },
     {
       "id": "late-impression",
+      "date": "2026-11-04",
       "actions": [
         {
           "cardId": 1,
@@ -181,13 +182,13 @@
             "genki": 0,
             "goodImpressionTurns": 0
           },
-          "capture": "campaign-impression-20261103-r3-turn2.png",
+          "capture": "campaign-impression-20261104-r4-turn2.png",
           "handCardIds": [
             13,
             58,
             1
           ],
-          "handCapture": "campaign-impression-20261103-r3-initial.png"
+          "handCapture": "campaign-impression-20261104-r4-initial.png"
         },
         {
           "cardId": 1,
@@ -198,13 +199,13 @@
             "genki": 0,
             "goodImpressionTurns": 0
           },
-          "capture": "campaign-impression-20261103-r3-turn3.png",
+          "capture": "campaign-impression-20261104-r4-turn3-ready.png",
           "handCardIds": [
             58,
             122,
             1
           ],
-          "handCapture": "campaign-impression-20261103-r3-turn2.png"
+          "handCapture": "campaign-impression-20261104-r4-turn2.png"
         },
         {
           "cardId": 3,
@@ -215,30 +216,32 @@
             "genki": 2,
             "goodImpressionTurns": 0
           },
-          "capture": "campaign-impression-20261103-r3-turn4.png",
+          "capture": "campaign-impression-20261104-r4-turn4.png",
           "handCardIds": [
             3,
             38,
             88
           ],
-          "handCapture": "campaign-impression-20261103-r3-turn3.png"
+          "handCapture": "campaign-impression-20261104-r4-turn3-ready.png"
         },
         {
           "cardId": 9,
           "name": "可愛い仕草",
           "expected": {
+            "score": 24,
             "stamina": 16,
             "genki": 0
           },
-          "capture": "campaign-impression-20261103-r3-final-a.png",
+          "capture": "campaign-impression-20261104-r4-final-b.png",
           "handCardIds": [
             13,
             9,
             3
           ],
-          "handCapture": "campaign-impression-20261103-r3-turn4.png"
+          "handCapture": "campaign-impression-20261104-r4-turn4.png"
         }
-      ]
+      ],
+      "terminalAttribute": 124
     }
   ],
   "drawCardIds": [
