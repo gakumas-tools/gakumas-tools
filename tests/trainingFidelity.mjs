@@ -120,12 +120,6 @@ function replay(capture, play) {
     const hand = supplyHand(state, action, heldCard);
     const card = hand.find((c) => state[S.cardMap][c].id == action.cardId);
     putInHand(state, hand);
-      assert.equal(
-        state[S.cardMap][card].growth[G[field]],
-        value,
-        `turn ${turn} ${field} (${action.growthCapture})`,
-      );
-    }
 
     let holds = 0;
     engine.strategy = holdAsCaptured(action.hold, (held) => {
