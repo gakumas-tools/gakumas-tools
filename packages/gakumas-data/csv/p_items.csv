@@ -504,7 +504,8 @@ id,name,rarity,upgraded,plan,mode,sourceType,pIdolId,welfare,effects
 503,ねぎらいコーヒー,SR,FALSE,sense,produce,support,,FALSE,
 504,ヒーローの輝き,SSR,FALSE,anomaly,stage,pIdol,161,FALSE,at:afterStartOfTurn { if:cumulativeFullPowerCharge>=10 { genki+=4; setScoreBuff(0.25); moveRandomToHand[baseId(911) & (deck | discarded)] }; limit:1 }
 505,ヒーローの輝き+,SSR,TRUE,anomaly,stage,pIdol,161,FALSE,at:afterStartOfTurn { if:cumulativeFullPowerCharge>=10 { genki+=11; setScoreBuff(0.25); moveRandomToHand[baseId(911) & (deck | discarded)] }; limit:1 }
-506,夢見る輝き,SSR,FALSE,anomaly,stage,pIdol,162,FALSE,at:afterCardUsed { if:usedCardBaseId==917 { moveRandomToTopOfDeck[removed & baseId(917)]; genki+=2 }; limit:3 }
+506,夢見る輝き,SSR,FALSE,anomaly,stage,pIdol,162,FALSE,at:afterCardUsed { if:usedCardBaseId==917 { moveRandomToTopOfDeck[removed & baseId(917)]; fixedStamina-=1 }; limit:3 }
 507,夢見る輝き+,SSR,TRUE,anomaly,stage,pIdol,162,FALSE,at:afterCardUsed { if:usedCardBaseId==917 { moveRandomToTopOfDeck[removed & baseId(917)]; genki+=2 }; limit:3 }
-508,星々を統べる輝き,SSR,FALSE,logic,stage,pIdol,163,FALSE,"at:goodImpressionTurnsIncreased { if:isDirectEffect { effectCounter+=1; if:effectCounter%4==3 { setGoodImpressionTurnsTimesBuff(1,2); setGoodImpressionTurnsEffectBuff(0.1,2) } } }"
+508,星々を統べる輝き,SSR,FALSE,logic,stage,pIdol,163,FALSE,"at:goodImpressionTurnsIncreased { if:isDirectEffect { effectCounter+=1; if:effectCounter%4==3 { setGoodImpressionTurnsTimesBuff(1,2); setGoodImpressionTurnsEffectBuff(0.1,2); fixedStamina-=1 } } }"
 509,星々を統べる輝き+,SSR,TRUE,logic,stage,pIdol,163,FALSE,"at:goodImpressionTurnsIncreased { if:isDirectEffect { effectCounter+=1; if:effectCounter%4==3 { setGoodImpressionTurnsTimesBuff(1,2); setGoodImpressionTurnsEffectBuff(0.1,2) } } }"
+510,過激め？チョイス,SSR,FALSE,logic,produce,support,,FALSE,
