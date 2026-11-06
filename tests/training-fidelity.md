@@ -27,8 +27,6 @@ NPC scores or rank thresholds. Comparing whole stages and loadouts is `pnpm fide
   the state read from the screenshot after it; and `capture`, that
   screenshot's name. A card that gives an extra use leaves the turn open, so
   the next action records `turnsElapsed` where it isn't one turn per card.
-- `growthBefore`: growth read from the card detail before playing it, with
-  `growthCapture` naming that screenshot.
 - For a card that holds another from the hand, the action records the whole
   hand (`handCardIds`), the candidates and the pick (`hold`), and the held
   pile after it (`heldCardIds`). The action where the held card comes back to
@@ -140,19 +138,6 @@ holds and plays アピールの基本+ instead of 一歩. Its last score reaches
 lesson cap, so only its resources are compared after the last card.
 Terminal full-power stance, enthusiasm and half-cost durations are omitted
 because the screenshots precede their end-turn changes.
-
-## 【応用6】成長効果
-
-A vocal lesson starting at 100. 総合芸術 grows when a card changes the
-stance, including when 総合芸術 is outside the hand. Its detail panel shows
-45 added score after three stance changes. The first play clears at the
-lesson cap, so its last action checks resources and the captured growth.
-
-The other plays use one stance change before playing 総合芸術. One enters
-強気2 from 強気, and the other leaves 温存 for 強気, gaining enthusiasm
-and an extra card use. Their scores remain below the cap. The last play pays
-part of 総合芸術's cost with stamina. Growth gained by its own stance change applies after the
-current action sequence, so that use adds 54 before the follow-up card.
 
 ## 【基礎1】好調
 
