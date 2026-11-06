@@ -33,7 +33,9 @@ function FileDropzone({
         e.preventDefault();
         setOver(false);
         if (!disabled && e.dataTransfer.files.length) {
-          onFiles(Array.from(e.dataTransfer.files));
+          // The file picker enforces `multiple`; a drop doesn't.
+          const files = Array.from(e.dataTransfer.files);
+          onFiles(multiple ? files : files.slice(0, 1));
         }
       }}
     >

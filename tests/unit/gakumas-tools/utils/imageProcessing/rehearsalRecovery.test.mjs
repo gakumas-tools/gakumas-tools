@@ -191,6 +191,29 @@ test("M5: duplicated leading digit, 21-digit stream (iter71)", () => {
   );
 });
 
+// iter71's scores with a third score over 1,000,000: the duplicated "1" makes
+// a 22-digit stream (7 + 8 + 7), past three plain 7-digit scores.
+test("M5: duplicated leading digit, 22-digit stream", () => {
+  assert.deepEqual(
+    reconstructFromDigits("1184997110232541044786", 3490036, 236999),
+    [[1184997, 1023254, 1044786], "repaired"],
+  );
+});
+
+test("recoverStage: a 22-digit row with a duplicated leading digit is repaired, not flagged", () => {
+  const r = recoverStage(
+    "1,184,99711,023,2541,044,786",
+    [1184997, 11023, 254],
+    false,
+    { text: "3,490,036", confidence: 90 },
+    80,
+  );
+  assert.deepEqual(r, {
+    scores: [1184997, 1023254, 1044786],
+    recovery: "repaired",
+  });
+});
+
 test("M5: single-char split with spurious leading digit (iter400)", () => {
   assert.deepEqual(reconstructFromDigits("41110707", 1332848, 222141), [
     [1110707, 0, 0],
