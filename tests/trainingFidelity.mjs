@@ -11,6 +11,7 @@ const FIXTURES = [
   "training-lesson-flat-cost-reduction",
   "training-lesson-full-power",
   "training-lesson-strength",
+  "training-lesson-preservation",
 ];
 
 function loadCapture(name) {

@@ -86,3 +86,13 @@ doubles scores and costs (9 and 4 become 18 and 8, 2 and 3 become 4 and 6).
 Costs are paid with stamina alone or split with genki, and genki is gained
 after the cost is paid. Only base 強気 is captured, not 強気2. The first play
 clears at the cap of 125, so its final score isn't checked.
+
+## 【基礎9】温存
+
+A vocal lesson starting at 100. イメージの基本 enters 温存, which cuts scores
+(9, 2 and 15 become 5, 1 and 8) and costs (4 and 3 become 2), rounding as the
+game does. Two plays then switch from 温存 to 強気 with 挨拶の基本, which grants
+5 熱意 and an extra card use in the same turn; the third stays in 温存. 熱意
+resets at the end of a turn, so the last card of each play leaves it out. Only
+base 温存 is captured, not 温存2. The first play clears at the cap of 130, so
+its final score isn't checked.
