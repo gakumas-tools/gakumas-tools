@@ -1,0 +1,88 @@
+{
+  "date": "2026-11-06",
+  "gameVersion": "3.5.3",
+  "screen": "メモリー詳細 → ステージ",
+  "capture": "campaign-s55-memory-19-stage.png",
+  "note": "Resized to 540 px wide and cropped to rows 576-635; line from Tesseract on the resized screenshot, shifted into the crop",
+  "width": 540,
+  "params": [
+    65,
+    86,
+    140,
+    32
+  ],
+  "line": {
+    "text": "I 85 1 86 |Z 140 32\n",
+    "bbox": {
+      "x0": 55,
+      "y0": 15,
+      "x1": 475,
+      "y1": 44
+    },
+    "words": [
+      {
+        "text": "I",
+        "bbox": {
+          "x0": 55,
+          "y0": 15,
+          "x1": 79,
+          "y1": 42
+        }
+      },
+      {
+        "text": "85",
+        "bbox": {
+          "x0": 111,
+          "y0": 27,
+          "x1": 138,
+          "y1": 44
+        }
+      },
+      {
+        "text": "1",
+        "bbox": {
+          "x0": 182,
+          "y0": 24,
+          "x1": 201,
+          "y1": 41
+        }
+      },
+      {
+        "text": "86",
+        "bbox": {
+          "x0": 236,
+          "y0": 27,
+          "x1": 262,
+          "y1": 44
+        }
+      },
+      {
+        "text": "|Z",
+        "bbox": {
+          "x0": 302,
+          "y0": 22,
+          "x1": 322,
+          "y1": 44
+        }
+      },
+      {
+        "text": "140",
+        "bbox": {
+          "x0": 352,
+          "y0": 27,
+          "x1": 393,
+          "y1": 44
+        }
+      },
+      {
+        "text": "32",
+        "bbox": {
+          "x0": 449,
+          "y0": 27,
+          "x1": 475,
+          "y1": 44
+        }
+      }
+    ]
+  }
+}

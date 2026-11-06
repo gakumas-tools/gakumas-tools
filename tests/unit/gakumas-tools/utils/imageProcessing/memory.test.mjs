@@ -1,7 +1,11 @@
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { extractParams } from "../../../../../gakumas-tools/utils/imageProcessing/memory.js";
+import sharp from "sharp";
+import {
+  extractParams,
+  readParams,
+} from "../../../../../gakumas-tools/utils/imageProcessing/memory.js";
 
 const fixture = JSON.parse(
   readFileSync(
@@ -53,4 +57,23 @@ test("a rank digit does not fill a missing dance parameter", () => {
     words: fixture.line.words.filter((word) => word.text !== "86"),
   };
   assert.deepEqual(extractParams(line, fixture.width), []);
+});
+
+test("small numerals that OCR misreads are reread from their glyphs", async () => {
+  const small = JSON.parse(
+    readFileSync(
+      new URL("../../../../fixtures/ingame/memory-params-540.json", import.meta.url),
+      "utf8",
+    ),
+  );
+  const { data, info } = await sharp(
+    new URL("../../../../fixtures/ingame/memory-params-540.png", import.meta.url)
+      .pathname,
+  )
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  const imageData = { data, width: info.width, height: info.height };
+  assert.notDeepEqual(extractParams(small.line, small.width), small.params);
+  assert.deepEqual(readParams(imageData, small.line, small.width), small.params);
 });
