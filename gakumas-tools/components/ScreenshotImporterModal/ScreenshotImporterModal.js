@@ -13,6 +13,9 @@ function ScreenshotImporterModal({ translationNamespace, importFn, onSuccess }) 
   const handleFile = useCallback(
     async (e) => {
       const file = e.target.files[0];
+      // Clear the input so choosing the same file again (to retry) fires
+      // another change.
+      e.target.value = "";
       if (!file) return;
       setLoading(true);
       setError(null);
@@ -30,7 +33,8 @@ function ScreenshotImporterModal({ translationNamespace, importFn, onSuccess }) 
   );
 
   return (
-    <Modal>
+    // Closing mid-import would let the result land on whatever is open next.
+    <Modal dismissable={!loading}>
       <h3>{t("title")}</h3>
       <p className={styles.instructions}>{t("instructions")}</p>
 

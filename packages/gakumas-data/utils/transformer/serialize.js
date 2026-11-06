@@ -96,7 +96,9 @@ function getModifierLines(effect, indent) {
   return lines;
 }
 
-function renderLeafEffect(effect, indent) {
+// Statements are separated by `;` as well as newlines so the output still
+// parses after whitespace is stripped (the stage customizer does this).
+function renderLeafEffect(effect, indent, wrapped = false) {
   const pad = "  ".repeat(indent);
   const bodyPad = "  ".repeat(indent + 1);
   const actionLines = (effect.actions || []).map(
@@ -112,8 +114,22 @@ function renderLeafEffect(effect, indent) {
     return "";
   }
 
+  // `do { }` blocks only hold actions and modifiers. Inside a wrapper, a
+  // plain body of actions, nested effects and modifiers transforms back to
+  // this same single effect.
+  if (wrapped && nestedLines.length > 0) {
+    const bodyLines = [
+      ...(effect.actions || []).map((action) => `${pad}${serializeExpr(action)}`),
+      ...effect.effects
+        .map((nested) => serializeEffect(nested, indent).trimEnd())
+        .filter(Boolean),
+      ...getModifierLines(effect, indent),
+    ];
+    return `${bodyLines.join(";\n")}\n`;
+  }
+
   if ((effect.actions || []).length === 0 && nestedLines.length === 0) {
-    return `${modifierLines.map((line) => line.slice(2)).join("\n")}\n`;
+    return `${modifierLines.map((line) => line.slice(2)).join(";\n")}\n`;
   }
 
   if (
@@ -124,8 +140,7 @@ function renderLeafEffect(effect, indent) {
     return `${actionLines[0].slice(2)}\n`;
   }
 
-  const inner = [...actionLines, ...nestedLines, ...modifierLines].join("\n");
-  return `${pad}do {\n${inner}\n${pad}}\n`;
+  return `${pad}do {\n${lines.join(";\n")}\n${pad}}\n`;
 }
 
 /**
@@ -138,10 +153,12 @@ export function serializeEffect(effect, indent = 0) {
   const anchorPrefix = effect.anchor ? `@${effect.anchor} ` : "";
 
   if (effect.phase) {
-    wrappers.push(`at:${effect.phase}`);
+    const filter = effect.filter ? `[${serializeExpr(effect.filter)}]` : "";
+    wrappers.push(`at:${effect.phase}${filter}`);
   }
-  if (effect.conditions && effect.conditions.length > 0) {
-    wrappers.push(`if:${effect.conditions.map(serializeExpr).join(" & ")}`);
+  // One `if:` per condition, so the conditions list parses back unchanged.
+  for (const condition of effect.conditions || []) {
+    wrappers.push(`if:${serializeExpr(condition)}`);
   }
   if (effect.targets && effect.targets.length > 0) {
     for (const target of effect.targets) {
@@ -170,11 +187,12 @@ export function serializeEffect(effect, indent = 0) {
   const leafEffect = {
     ...effect,
     phase: null,
+    filter: null,
     conditions: null,
     targets: null,
     anchor: null,
   };
-  const body = renderLeafEffect(leafEffect, bodyIndent);
+  const body = renderLeafEffect(leafEffect, bodyIndent, true);
   if (body) {
     result += body;
   }

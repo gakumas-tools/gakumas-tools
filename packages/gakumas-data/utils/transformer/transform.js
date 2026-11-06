@@ -365,22 +365,28 @@ export function transformPatches(ast) {
     throw new Error("Expected patchSequence at top level");
   }
 
-  return ast.patches.map((patch) => {
+  return ast.patches.flatMap((patch) => {
     if (patch.op === "append") {
-      const [effect] = transformEffects({
+      // An appended block can expand to several effects (e.g. two `if:`
+      // branches); append each one.
+      const effects = transformEffects({
         type: "sequence",
         effects: [patch.effect],
       });
-      const record = { op: "append", effect };
-      hoistPatchMeta(record, effect);
-      applyPatchLevelFields(record, patch);
-      return record;
+      return effects.map((effect) => {
+        const record = { op: "append", effect };
+        hoistPatchMeta(record, effect);
+        applyPatchModifiers(effect, patch);
+        applyPatchLevelFields(record, patch);
+        return record;
+      });
     }
 
     if (patch.op === "patch") {
       const delta = buildDelta(patch.effect);
       const record = { op: "patch", anchor: patch.anchor, delta };
       hoistPatchMeta(record, delta);
+      applyPatchModifiers(delta, patch);
       applyPatchLevelFields(record, patch);
       return record;
     }
@@ -390,6 +396,18 @@ export function transformPatches(ast) {
 }
 
 const PATCH_LEVEL_FIELDS = ["level"];
+
+// Modifiers written after a patch (`+ score+=1; limit:1`) are attached to
+// the patch by the parser; they belong to the effect it appends or patches.
+const PATCH_MODIFIER_FIELDS = MODIFIER_TYPES.filter(
+  (type) => !PATCH_LEVEL_FIELDS.includes(type),
+);
+
+function applyPatchModifiers(target, patch) {
+  for (const key of PATCH_MODIFIER_FIELDS) {
+    if (patch[key] != null) target[key] = patch[key];
+  }
+}
 
 function applyPatchLevelFields(record, patch) {
   for (const key of PATCH_LEVEL_FIELDS) {
@@ -438,14 +456,15 @@ function applyToDelta(delta, node) {
       for (const child of node.body) applyToDelta(delta, child);
       break;
     }
+    // Nested blocks add to the outer conditions/targets, as in effects.
     case "condition":
-      delta.conditions = [node.expr];
+      delta.conditions = [...(delta.conditions || []), node.expr];
       for (const child of node.body) applyToDelta(delta, child);
       break;
     case "target": {
       const targetName =
         node.target.type === "identifier" ? node.target.name : node.target;
-      delta.targets = [targetName];
+      delta.targets = [...(delta.targets || []), targetName];
       for (const child of node.body) applyToDelta(delta, child);
       break;
     }

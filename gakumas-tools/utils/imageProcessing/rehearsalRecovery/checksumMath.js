@@ -65,13 +65,22 @@ export function pickBest(solutions, bonusOk, rawScores) {
   return [chosen, recovery];
 }
 
+// A raw slot's plausible magnitude. An impossible value (>= MAX_SCORE — a leading
+// glyph misread like 4,177,174) is treated as its 1,XXX,XXX repair so it does not
+// over-bound the total used to validate it; everything else is itself.
+export function plausibleFloor(value) {
+  return value < MAX_SCORE ? value : 1_000_000 + (value % 1_000_000);
+}
+
 // Is `total` a usable stage total for these raw scores? The bounds every solver
-// trusts before folding a total into the checksum search.
+// trusts before folding a total into the checksum search. Compares against the
+// slots' plausible magnitudes, as the candidate solver does, so a misread
+// leading glyph the solver can repair doesn't disqualify the total.
 export function totalUsable(total, raw) {
   return (
     total != null &&
     total > 0 &&
     total <= MAX_TOTAL &&
-    total >= Math.max(raw[0], raw[1], raw[2])
+    total >= Math.max(...raw.map(plausibleFloor))
   );
 }
