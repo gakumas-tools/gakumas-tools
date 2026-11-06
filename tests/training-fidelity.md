@@ -123,6 +123,8 @@ other two cards in hand: 一歩 in one play, 表現の基本 in the other. The h
 card comes back to hand when full power starts, and that same copy is played
 next, though the last hand of the second play has two 表現の基本. This uses
 base 王者の御出まし (448), where 【基礎7】全力 used 王者の御出まし+ (449).
+Its hands are checked against the captured draw sequence. The expression
+play uses the returned held copy while the other copy remains in hand.
 
 ## 【試験研修6】強気
 
@@ -148,6 +150,9 @@ The second play reaches only 7 charge and keeps its card held. It also checks
 the strength 2 stamina drain with half costs and a reduction of 1. The third
 holds and plays アピールの基本+ instead of 一歩. Its last score reaches the
 lesson cap, so only its resources are compared after the last card.
+Hands are checked against the captured draw sequence, including the extra
+uses after leaving preservation and the held card returned after the last
+three cards are drawn.
 Terminal full-power stance, enthusiasm and half-cost durations are omitted
 because the screenshots precede their end-turn changes.
 

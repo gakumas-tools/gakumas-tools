@@ -145,7 +145,9 @@ function replay(capture, play) {
       hand = supplyHand(state, action, heldCard);
       putInHand(state, hand);
     }
-    const card = hand.find((c) => state[S.cardMap][c].id == action.cardId);
+    const card = action.useReturnedHeldCard
+      ? heldCard
+      : hand.find((c) => state[S.cardMap][c].id == action.cardId);
 
     let holds = 0;
     engine.strategy = holdAsCaptured(action.hold, (held) => {
