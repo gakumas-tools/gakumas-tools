@@ -2,6 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   getFilledSkillCardSlots,
+  getMemorySlotCustomizations,
   setMemorySlot,
 } from "../../../../gakumas-tools/utils/memorySlots.js";
 
@@ -39,4 +40,36 @@ test("Filled skill card slots keep their slot index for customizations", () => {
       [117, 3],
     ],
   );
+});
+
+test("A memory without customizations still fills all six card slots", () => {
+  assert.deepEqual(getMemorySlotCustomizations({ skillCardIds: [1, 2] }), [
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+  ]);
+});
+
+test("A memory's customizations keep their card slots", () => {
+  const customizations = [{ 1: 1 }, null, { 2: 2 }];
+  assert.deepEqual(getMemorySlotCustomizations({ customizations }), [
+    { 1: 1 },
+    {},
+    { 2: 2 },
+    {},
+    {},
+    {},
+  ]);
+});
+
+test("Flat card indexes still reach the second memory after an empty first", () => {
+  const groups = [
+    getMemorySlotCustomizations({}),
+    getMemorySlotCustomizations({ customizations: [{ 3: 1 }] }),
+  ];
+  // LoadoutContext addresses card slot groupIndex * 6 + index.
+  assert.deepEqual([].concat(...groups)[6], { 3: 1 });
 });

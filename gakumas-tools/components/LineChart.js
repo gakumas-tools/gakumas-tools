@@ -65,9 +65,11 @@ function LineChart({
       datasets: paramOrder
         .map((order, i) => {
           const regimes = paramRegimes[order];
-          const data = regimes.map(({ threshold, constant }) => ({
+          // Each regime's line starts at its threshold; plot the value it
+          // gives there, not its intercept.
+          const data = regimes.map(({ threshold, multiplier, constant }) => ({
             x: threshold,
-            y: constant,
+            y: threshold * multiplier + constant,
           }));
           return {
             label: PARAMETER_NAMES[i],
