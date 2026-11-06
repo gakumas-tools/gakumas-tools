@@ -259,8 +259,8 @@ id,name,rarity,upgraded,plan,mode,sourceType,pIdolId,welfare,effects
 258,雨上がりの虹+,SSR,TRUE,anomaly,stage,pIdol,90,FALSE,at:afterCardUsed[mental] { if:stance==preservation2 { setEnthusiasmBonus(4) }; limit:4 }
 259,パワーをくれるモノ,SSR,FALSE,free,produce,support,,FALSE,
 260,お残しにんじん,SR,FALSE,free,produce,support,,FALSE,
-261,休憩中のおやつ,R,FALSE,anomaly,stage,pIdol,91,FALSE,at:afterCardUsed { if:cardHasEffect(preservation) & isFullPower { score+=cumulativeFullPowerCharge*0.6 }; limit:3 }
-262,休憩中のおやつ+,R,TRUE,anomaly,stage,pIdol,91,FALSE,at:afterCardUsed { if:cardHasEffect(preservation) & isFullPower { score+=cumulativeFullPowerCharge*0.6 } }
+261,休憩中のおやつ,R,FALSE,anomaly,stage,pIdol,91,FALSE,at:afterCardUsed { if:cardHasEffect(preservation) & isFullPower { score+=floor(cumulativeFullPowerCharge*0.6) }; limit:3 }
+262,休憩中のおやつ+,R,TRUE,anomaly,stage,pIdol,91,FALSE,at:afterCardUsed { if:cardHasEffect(preservation) & isFullPower { score+=floor(cumulativeFullPowerCharge*0.6) } }
 263,そよ風に揺れる髪飾り,SR,FALSE,anomaly,stage,pIdol,92,FALSE,at:afterCardUsed[active] { setStance(preservation); fixedStamina-=2; target:effect(strength) { g.score+=3 } limit:2 }
 264,そよ風に揺れる髪飾り+,SR,TRUE,anomaly,stage,pIdol,92,FALSE,at:afterCardUsed[active] { setStance(preservation); fixedStamina-=2; target:effect(strength) { g.score+=3 } limit:3 }
 265,いつもの持ち物,SSR,FALSE,anomaly,stage,pIdol,93,FALSE,at:afterCardUsed { if:cardHasEffect(preservation) & isFullPower { score+=cumulativeFullPowerCharge*1.4; fixedStamina-=1 } }

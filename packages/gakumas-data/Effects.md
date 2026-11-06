@@ -141,6 +141,9 @@ drawCard(2)
 
 Assignment operators: `=`, `+=`, `-=`, `*=`, `/=`, `%=`.
 
+`floor(expression)` rounds a value down before score modifiers are applied,
+for example `score+=floor(cumulativeFullPowerCharge*0.6)`.
+
 ### Special actions (non-assignment)
 
 | Action                                    | DSL                                                                      |
@@ -224,7 +227,6 @@ if:countCards[hand | held] >= 3 { drawCard }
 | Function       | Meaning                                              |
 | -------------- | ---------------------------------------------------- |
 | `effect(name)` | カードが特定の効果（例: `score`, `strength`）を持つ  |
-| `baseId(n)`    | ベース ID が `n` のカード                            |
 | `id(n)`        | ID が `n` のカード（強化前／後を区別）               |
 
 Example — move cards with ID 383 currently in deck or discards to hand:
