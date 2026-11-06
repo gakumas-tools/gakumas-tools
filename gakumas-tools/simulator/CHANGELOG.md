@@ -15,6 +15,7 @@ All notable changes to the contest simulator will be documented in this file.
 ## 2026-11-06
 
 - Update garakutaroad china and misuzu
+- Add garakutaroad support item
 
 ## 2026-11-02
 
