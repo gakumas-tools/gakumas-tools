@@ -5,7 +5,7 @@ import { readLoadoutCards } from "./cardBadges";
 import { DEBUG, getImageData, loadImageFromFile } from "./common";
 import { detectLoadoutBoxes } from "./contestLoadoutGeometry";
 import { readStats } from "./contestLoadoutStats";
-import { fixedPItemFilter } from "./entityClassifier";
+import { firstPItemFilter } from "./entityClassifier";
 import { extractEntities } from "./memory";
 import { loadPItemModel, loadSkillCardModel } from "./models";
 
@@ -43,7 +43,7 @@ export async function getSimulatorLoadoutFromFile(file, currentStageId) {
     pItemBoxes,
     pItemSession,
     pItemClasses,
-    fixedPItemFilter(skillCardIds.slice(0, mainBoxes.length)),
+    firstPItemFilter(skillCardIds.slice(0, mainBoxes.length)),
   );
   const { skillCardIdGroups, customizationGroups } = readLoadoutCards(
     imageData,

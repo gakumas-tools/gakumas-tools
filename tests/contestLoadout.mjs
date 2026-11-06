@@ -28,7 +28,7 @@ import {
 } from "../gakumas-tools/utils/imageProcessing/contestLoadoutStats.js";
 import {
   classifyCrops,
-  fixedPItemFilter,
+  firstPItemFilter,
   ICON_SIZE,
 } from "../gakumas-tools/utils/imageProcessing/entityClassifier.js";
 import {
@@ -234,7 +234,7 @@ async function main() {
       image,
       boxes.pItemBoxes,
       pItemModel,
-      fixedPItemFilter(classified.slice(0, boxes.mainBoxes.length)),
+      firstPItemFilter(classified.slice(0, boxes.mainBoxes.length)),
     );
     const { skillCardIdGroups: skillCards } = readLoadoutCards(
       image,

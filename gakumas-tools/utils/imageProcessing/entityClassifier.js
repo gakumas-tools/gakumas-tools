@@ -34,10 +34,11 @@ export function decodeEntityIds(logits, classes, allowed = () => true) {
   return ids;
 }
 
-// A contest loadout's first P-item slot is fixed to the main memory's P-idol's
-// own item, so it's read among the items of the P-idols whose unique cards the
-// main deck shows (a deck can hold another P-idol's unique card).
-export function fixedPItemFilter(mainCardIds) {
+// A memory's first P-item is always its P-idol's own item, so a contest
+// loadout's first P-item slot is read among the items of the P-idols whose
+// unique cards the main deck shows (a deck can hold another P-idol's unique
+// card).
+export function firstPItemFilter(mainCardIds) {
   const pIdolIds = new Set(
     mainCardIds
       .map((id) => SkillCards.getById(id))
