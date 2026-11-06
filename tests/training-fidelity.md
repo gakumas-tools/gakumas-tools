@@ -27,8 +27,6 @@ NPC scores or rank thresholds. Comparing whole stages and loadouts is `pnpm fide
   the state read from the screenshot after it; and `capture`, that
   screenshot's name. A card that gives an extra use leaves the turn open, so
   the next action records `turnsElapsed` where it isn't one turn per card.
-- `growthBefore`: growth read from the card detail before playing it, with
-  `growthCapture` naming that screenshot.
 - For a card that holds another from the hand, the action records the whole
   hand (`handCardIds`), the candidates and the pick (`hold`), and the held
   pile after it (`heldCardIds`). The action where the held card comes back to
@@ -140,7 +138,13 @@ holds and plays アピールの基本+ instead of 一歩. Its last score reaches
 lesson cap, so only its resources are compared after the last card.
 Terminal full-power stance, enthusiasm and half-cost durations are omitted
 because the screenshots precede their end-turn changes.
-
+## 【基礎1】好調
+A dance lesson starting at 100. Covers gaining and extending good condition,
+its countdown on later turns, and scores with and without its 50% bonus.
+ファンサ rises from 10 to 15, アドリブ from 5 to 8, and ポーズの基本
+from 2 to 3. One play pays costs with genki before stamina. The first play
+clears at the cap of 140, so its last score is omitted. The other plays
+finish below the cap, with terminal good-condition durations omitted.
 ## 【応用6】成長効果
 
 A vocal lesson starting at 100. 総合芸術 grows when a card changes the
