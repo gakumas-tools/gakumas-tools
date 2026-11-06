@@ -73,13 +73,25 @@ function Memories() {
     [memories, pItemIds, skillCardIds, hasSearchQuery]
   );
 
+  // Only memories still in the list can be deleted: a search can hide
+  // memories that were checked earlier.
+  const shownSelectedMemories = useMemo(
+    () =>
+      Object.fromEntries(
+        filteredMemories
+          .filter((memory) => selectedMemories[memory._id])
+          .map((memory) => [memory._id, true])
+      ),
+    [filteredMemories, selectedMemories]
+  );
+
   return (
     <div className={styles.memories}>
       <MemoriesHeader
         numMemories={filteredMemories.length}
         action={action}
         setAction={setAction}
-        selectedMemories={selectedMemories}
+        selectedMemories={shownSelectedMemories}
         setSelectedMemories={setSelectedMemories}
       />
       {memoriesError && (

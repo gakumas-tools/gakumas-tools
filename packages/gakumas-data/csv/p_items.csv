@@ -172,7 +172,7 @@ id,name,rarity,upgraded,plan,mode,sourceType,pIdolId,welfare,effects
 171,みんなの憧れ+,SR,TRUE,anomaly,stage,pIdol,60,FALSE,at:cardUsed { if:isFullPower { score+=18; genki+=9 }; limit:1 }
 172,新しい、私,SSR,FALSE,anomaly,stage,pIdol,61,FALSE,at:afterCardUsed[active] { if:isStrength { score+=8; fixedStamina+=4 }; limit:1 }
 173,新しい、私+,SSR,TRUE,anomaly,stage,pIdol,61,FALSE,at:afterCardUsed[active] { if:isStrength { score+=12; fixedStamina+=6 }; limit:1 }
-174,アイドルパワー測定器,SSR,FALSE,anomaly,stage,support,,TRUE,at:startOfTurn { if:isDanceTurn & isPreservation { fixedStamina+=5 }; limit:1 }
+174,アイドルパワー測定機,SSR,FALSE,anomaly,stage,support,,TRUE,at:startOfTurn { if:isDanceTurn & isPreservation { fixedStamina+=5 }; limit:1 }
 175,費用0円愛情MAX,SSR,FALSE,logic,stage,pIdol,62,FALSE,at:startOfTurn { if:motivation>=5 { genki+=4 }; limit:2 }
 176,費用0円愛情MAX+,SSR,TRUE,logic,stage,pIdol,62,FALSE,at:startOfTurn { if:motivation>=5 { genki+=6 }; limit:2 }
 177,めりくりライオン,SSR,FALSE,sense,stage,pIdol,63,FALSE,at:startOfTurn { if:turnsRemaining<=2 { score+=goodConditionTurns*0.7; fixedStamina-=1 }; limit:2 }
@@ -191,7 +191,7 @@ id,name,rarity,upgraded,plan,mode,sourceType,pIdolId,welfare,effects
 190,太陽まで届ける歌声,SSR,FALSE,sense,stage,pIdol,67,FALSE,at:afterCardUsed { if:usedCardBaseId==32 { concentration+=1; cardUsesRemaining+=1; fixedStamina-=1 }; limit:3 }
 191,太陽まで届ける歌声+,SSR,TRUE,sense,stage,pIdol,67,FALSE,at:afterCardUsed { if:usedCardBaseId==32 { concentration+=2; cardUsesRemaining+=1; fixedStamina-=1 }; limit:3 }
 192,あたしだけの一番星,SSR,FALSE,logic,stage,pIdol,68,FALSE,at:afterCardUsed { if:usedCardBaseId==64 { goodImpressionTurns+=2; cardUsesRemaining+=1; fixedStamina-=2 }; limit:3 }
-193,あたしだけの一番星,SSR,TRUE,logic,stage,pIdol,68,FALSE,at:afterCardUsed { if:usedCardBaseId==64 { goodImpressionTurns+=3; cardUsesRemaining+=1; fixedStamina-=1 }; limit:3 }
+193,あたしだけの一番星+,SSR,TRUE,logic,stage,pIdol,68,FALSE,at:afterCardUsed { if:usedCardBaseId==64 { goodImpressionTurns+=3; cardUsesRemaining+=1; fixedStamina-=1 }; limit:3 }
 194,N.I.Aワッペン,SSR,FALSE,free,produce,produce,,FALSE,
 195,N.I.Aバンド（紫）,SSR,FALSE,sense,produce,produce,,FALSE,
 196,N.I.Aライト（紫）,SSR,FALSE,sense,produce,produce,,FALSE,
@@ -240,8 +240,8 @@ id,name,rarity,upgraded,plan,mode,sourceType,pIdolId,welfare,effects
 239,ひとりだちシューズ,SSR,FALSE,free,stage,support,,FALSE,at:startOfTurn { if:isDanceTurn & stamina<=maxStamina*0.5 { fixedStamina+=maxStamina*0.15 }; limit:2 }
 240,積み重ねた努力,SSR,FALSE,anomaly,stage,pIdol,84,FALSE,at:startOfTurn { if:cumulativeFullPowerCharge>=5 { genki+=6 }; limit:2 }
 241,積み重ねた努力+,SSR,TRUE,anomaly,stage,pIdol,84,FALSE,at:startOfTurn { if:cumulativeFullPowerCharge>=5 { genki+=8 }; limit:2 }
-242,Pっち,SSR,FALSE,sense,stage,pIdol,85,FALSE,at:cardUsed { if:concentration>=8 { effectCounter+=1; if:effectCounter%2==1 { goodConditionTurns+=3; concentration-=1 } } }
-243,Pっち+,SSR,TRUE,sense,stage,pIdol,85,FALSE,at:cardUsed { if:concentration>=3 { effectCounter+=1; if:effectCounter%2==1 { goodConditionTurns+=3; concentration-=1 } } }
+242,「Pっち」,SSR,FALSE,sense,stage,pIdol,85,FALSE,at:cardUsed { if:concentration>=8 { effectCounter+=1; if:effectCounter%2==1 { goodConditionTurns+=3; concentration-=1 } } }
+243,「Pっち」+,SSR,TRUE,sense,stage,pIdol,85,FALSE,at:cardUsed { if:concentration>=3 { effectCounter+=1; if:effectCounter%2==1 { goodConditionTurns+=3; concentration-=1 } } }
 244,夢へのスタートライン,SSR,FALSE,sense,stage,support,,FALSE,at:startOfTurn { if:isDanceTurn & goodConditionTurns>=3 { goodConditionTurns+=3; fixedStamina-=1 }; limit:2 }
 245,ギャルめいきんぐ！,SR,FALSE,sense,produce,support,,FALSE,
 246,運命の出逢い,SSR,FALSE,anomaly,stage,pIdol,86,FALSE,at:afterStartOfTurn { if:isFullPower { genki+=10; fullPowerCharge+=3; fixedStamina-=3; target:hand { g.score+=10 }; at:turn { setStance(preservation); limit:1 } } limit:1 }
@@ -308,7 +308,7 @@ id,name,rarity,upgraded,plan,mode,sourceType,pIdolId,welfare,effects
 307,原点へのチケット,SSR,FALSE,anomaly,stage,pIdol,102,FALSE,at:staminaDecreased { if:parentPhase==processCost { setEnthusiasmBuff(0.4) }; limit:3 }
 308,原点へのチケット+,SSR,TRUE,anomaly,stage,pIdol,102,FALSE,at:staminaDecreased { if:parentPhase==processCost { setEnthusiasmBuff(0.6) }; limit:3 }
 309,面白くて心配な子,SSR,FALSE,anomaly,produce,support,,FALSE,
-310,ビシッビシッ竹刀,SR,FALSE,anomaly,produce,support,,FALSE,
+310,ビシッバシッ竹刀,SR,FALSE,anomaly,produce,support,,FALSE,
 311,咲き誇る星,SSR,FALSE,logic,stage,pIdol,103,FALSE,at:afterCardUsed[mental] { if:genki>=30 { goodImpressionTurns+=genki*0.5; goodImpressionTurns+=2 }; limit:1 }
 312,咲き誇る星+,SSR,TRUE,logic,stage,pIdol,103,FALSE,at:afterCardUsed[mental] { if:genki>=30 { goodImpressionTurns+=genki*0.5; goodImpressionTurns+=5 }; limit:1 }
 313,夜闇の星,SSR,FALSE,sense,stage,pIdol,104,FALSE,"at:startOfTurn { if:turnsElapsed==3 { setGoodConditionTurnsBuff(0.5,4) }; limit:1 }"
@@ -378,10 +378,10 @@ id,name,rarity,upgraded,plan,mode,sourceType,pIdolId,welfare,effects
 377,ガラスはつみ (黒),SSR,FALSE,anomaly,stage,produce,,FALSE,at:startOfStage { if:countCards[!(N | T)]>=21 { target:effect(fullPowerCharge) { g.score+=10 }; removeRandom[basic & (deck | discarded | hand)] } }
 378,だから、おいで,SSR,FALSE,logic,stage,pIdol,122,FALSE,"at:startOfTurn { if:goodImpressionTurns>=6 { goodImpressionTurns+=10; setScoreDebuff(0.6, 2); at:cardUsed[mental] { motivation+=1; limit:5 } } limit:1 }"
 379,だから、おいで+,SSR,TRUE,logic,stage,pIdol,122,FALSE,"at:startOfTurn { if:goodImpressionTurns>=6 { goodImpressionTurns+=13; setScoreDebuff(0.6, 2); at:cardUsed[mental] { motivation+=1; limit:5 } } limit:1 }"
-380,ぴったりコレクション,SSR,FALSE,sense,stage,support,,TRUE,at:cardUsed[active] { if:isVisualTurn & goodConditionTurns>=3 { concentration+=2; score+=4 }; limit:1 }
+380,ぴったしコレクション,SSR,FALSE,sense,stage,support,,TRUE,at:cardUsed[active] { if:isVisualTurn & goodConditionTurns>=3 { concentration+=2; score+=4 }; limit:1 }
 381,憧れのはじまり,SSR,FALSE,anomaly,stage,pIdol,123,FALSE,at:stanceChanged { if:isFullPower { nullifyCostActiveCards+=1; target:mental { g.genki+=4 } } limit:2 }
 382,憧れのはじまり+,SSR,TRUE,anomaly,stage,pIdol,123,FALSE,at:stanceChanged { if:isFullPower { nullifyCostActiveCards+=1; target:mental { g.genki+=5 } } limit:3 }
-383,そっくりワンマン,SR,FALSE,anomaly,produce,support,,FALSE,
+383,そっくりワンワン,SR,FALSE,anomaly,produce,support,,FALSE,
 384,ひろがる未来へ,SSR,FALSE,sense,stage,pIdol,124,FALSE,at:buffCostConsumed { if:goodConditionTurns>=3 { concentration+=2; goodConditionTurns-=1; at:turn { drawCard; limit:1 } } }
 385,ひろがる未来へ+,SSR,TRUE,sense,stage,pIdol,124,FALSE,at:buffCostConsumed { if:goodConditionTurns>=3 { concentration+=2; goodConditionTurns-=1; at:turn { drawCard(2); limit:1 } } }
 386,みちなるシグナル,SSR,FALSE,logic,stage,pIdol,125,FALSE,at:startOfStage { genki+=7; motivation+=4; fixedStamina-=maxStamina*0.8; limit:1 }; at:buffCostConsumed { fixedStamina+=maxStamina*0.2; setGoodImpressionTurnsEffectBuff(0.1) }
@@ -417,8 +417,8 @@ id,name,rarity,upgraded,plan,mode,sourceType,pIdolId,welfare,effects
 416,夢を創るステッキ,SSR,FALSE,logic,stage,pIdol,136,FALSE,at:endOfTurn { if:turnsElapsed%3==2 { score+=genki*1.1; genki=0; at:turn { drawCard; limit:1 } }; limit:3 }
 417,夢を創るステッキ+,SSR,TRUE,logic,stage,pIdol,136,FALSE,at:endOfTurn { if:turnsElapsed%3==2 { score+=genki*1.3; genki=0; at:turn { drawCard(2); limit:1 } }; limit:3 }
 418,もぐもぐ定食,SR,FALSE,logic,produce,support,,FALSE,
-419,夜空に従える花,SSR,FALSE,anomaly,stage,pIdol,137,FALSE,"at:afterCardUsed { if:prevStance!=none & cardHasEffect(strength) { effectCounter+=1; if:effectCounter%3==2 { setStance(leisure); setEnthusiasmBuff(0.4,1); genki+=3; limit:5 } } }"
-420,夜空に従える花+,SSR,TRUE,anomaly,stage,pIdol,137,FALSE,"at:afterCardUsed { if:prevStance!=none & cardHasEffect(strength) { effectCounter+=1; if:effectCounter%3==2 { setStance(leisure); setEnthusiasmBuff(0.4,1); genki+=3 } } }"
+419,夜空を従える花,SSR,FALSE,anomaly,stage,pIdol,137,FALSE,"at:afterCardUsed { if:prevStance!=none & cardHasEffect(strength) { effectCounter+=1; if:effectCounter%3==2 { setStance(leisure); setEnthusiasmBuff(0.4,1); genki+=3; limit:5 } } }"
+420,夜空を従える花+,SSR,TRUE,anomaly,stage,pIdol,137,FALSE,"at:afterCardUsed { if:prevStance!=none & cardHasEffect(strength) { effectCounter+=1; if:effectCounter%3==2 { setStance(leisure); setEnthusiasmBuff(0.4,1); genki+=3 } } }"
 421,のんびりアフタヌーン,SR,FALSE,anomaly,stage,support,,FALSE,at:fullPowerChargeIncreased { if:isVisualTurn & isDirectEffect & isFullPower { fullPowerCharge+=6 }; limit:1 }
 422,太陽を超える輝き,SSR,FALSE,logic,stage,pIdol,138,FALSE,at:startOfTurn { if:turnsRemaining==1 { genki+=consumedGenki*0.75; drawCard(2); fixedStamina-=3 }; limit:1 }
 423,太陽を超える輝き+,SSR,TRUE,logic,stage,pIdol,138,FALSE,at:startOfTurn { if:turnsRemaining==1 { genki+=consumedGenki*0.75; drawCard(2); fixedStamina-=1 }; limit:1 }
@@ -504,7 +504,8 @@ id,name,rarity,upgraded,plan,mode,sourceType,pIdolId,welfare,effects
 503,ねぎらいコーヒー,SR,FALSE,sense,produce,support,,FALSE,
 504,ヒーローの輝き,SSR,FALSE,anomaly,stage,pIdol,161,FALSE,at:afterStartOfTurn { if:cumulativeFullPowerCharge>=10 { genki+=4; setScoreBuff(0.25); moveRandomToHand[baseId(911) & (deck | discarded)] }; limit:1 }
 505,ヒーローの輝き+,SSR,TRUE,anomaly,stage,pIdol,161,FALSE,at:afterStartOfTurn { if:cumulativeFullPowerCharge>=10 { genki+=11; setScoreBuff(0.25); moveRandomToHand[baseId(911) & (deck | discarded)] }; limit:1 }
-506,夢見る輝き,SSR,FALSE,anomaly,stage,pIdol,162,FALSE,at:afterCardUsed { if:usedCardBaseId==917 { moveRandomToTopOfDeck[removed & baseId(917)]; genki+=2 }; limit:3 }
+506,夢見る輝き,SSR,FALSE,anomaly,stage,pIdol,162,FALSE,at:afterCardUsed { if:usedCardBaseId==917 { moveRandomToTopOfDeck[removed & baseId(917)]; fixedStamina-=1 }; limit:3 }
 507,夢見る輝き+,SSR,TRUE,anomaly,stage,pIdol,162,FALSE,at:afterCardUsed { if:usedCardBaseId==917 { moveRandomToTopOfDeck[removed & baseId(917)]; genki+=2 }; limit:3 }
-508,星々を統べる輝き,SSR,FALSE,logic,stage,pIdol,163,FALSE,"at:goodImpressionTurnsIncreased { if:isDirectEffect { effectCounter+=1; if:effectCounter%4==3 { setGoodImpressionTurnsTimesBuff(1,2); setGoodImpressionTurnsEffectBuff(0.1,2) } } }"
+508,星々を統べる輝き,SSR,FALSE,logic,stage,pIdol,163,FALSE,"at:goodImpressionTurnsIncreased { if:isDirectEffect { effectCounter+=1; if:effectCounter%4==3 { setGoodImpressionTurnsTimesBuff(1,2); setGoodImpressionTurnsEffectBuff(0.1,2); fixedStamina-=1 } } }"
 509,星々を統べる輝き+,SSR,TRUE,logic,stage,pIdol,163,FALSE,"at:goodImpressionTurnsIncreased { if:isDirectEffect { effectCounter+=1; if:effectCounter%4==3 { setGoodImpressionTurnsTimesBuff(1,2); setGoodImpressionTurnsEffectBuff(0.1,2) } } }"
+510,過激め？チョイス,SSR,FALSE,logic,produce,support,,FALSE,

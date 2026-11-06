@@ -916,6 +916,9 @@ export default class CardManager extends EngineComponent {
         type: "skillCard",
         id: state[S.cardMap][card].id,
       });
+
+      state[S.movedCard] = card;
+      this.engine.effectManager.triggerEffectsForPhase(state, "cardMovedToHeld");
     }
   }
 
@@ -984,7 +987,7 @@ export default class CardManager extends EngineComponent {
     const indicesToMove = this.engine.strategy.pickCardsToMoveToHand(
       state,
       cards,
-      num,
+      Math.min(num, cards.length),
     );
     if (indicesToMove.length === 0) return;
 
@@ -1021,7 +1024,7 @@ export default class CardManager extends EngineComponent {
     const indicesToHold = this.engine.strategy.pickCardsToHold(
       state,
       cards,
-      num,
+      Math.min(num, cards.length),
       optional,
     );
 
@@ -1081,7 +1084,7 @@ export default class CardManager extends EngineComponent {
     const indicesToUse = this.engine.strategy.pickCardsToUseFree(
       state,
       cards,
-      num,
+      Math.min(num, cards.length),
     );
     if (!indicesToUse || indicesToUse.length === 0) return;
 
@@ -1112,7 +1115,7 @@ export default class CardManager extends EngineComponent {
     const indicesToUse = this.engine.strategy.pickCardsToUseFree(
       state,
       cards,
-      num,
+      Math.min(num, cards.length),
     );
     if (!indicesToUse || indicesToUse.length === 0) return;
 

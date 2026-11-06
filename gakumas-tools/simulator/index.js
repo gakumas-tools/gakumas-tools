@@ -2,8 +2,8 @@ import { StageEngine, StagePlayer, STRATEGIES } from "gakumas-engine";
 import {
   accumulateCardUsage,
   accumulateScoreStats,
+  createGraphAverage,
   formatRun,
-  mergeGraphDatas,
 } from "@/utils/simulator";
 
 export function createSimulation(idolStageConfig, linkConfigs, strategyName) {
@@ -15,7 +15,7 @@ export function createSimulation(idolStageConfig, linkConfigs, strategyName) {
   let averageScore = 0;
   let minRun, averageRun, maxRun;
   let scores = [];
-  let graphDatas = [];
+  const graph = createGraphAverage();
   const cardUsage = { numRuns: 0, turns: [] };
   const scoreStats = { numRuns: 0, turns: [] };
 
@@ -43,7 +43,7 @@ export function createSimulation(idolStageConfig, linkConfigs, strategyName) {
       }
 
       scores.push(result.score);
-      graphDatas.push(result.graphData);
+      graph.add(result.graphData);
 
       // Accumulate per-turn stats from this run's log stream. Logs for
       // non-representative runs are dropped after this line, so we must
@@ -59,7 +59,7 @@ export function createSimulation(idolStageConfig, linkConfigs, strategyName) {
 
   function result() {
     return {
-      ...mergeGraphDatas(graphDatas),
+      ...graph.result(),
       minRun: formatRun(minRun),
       averageRun: formatRun(averageRun),
       maxRun: formatRun(maxRun),

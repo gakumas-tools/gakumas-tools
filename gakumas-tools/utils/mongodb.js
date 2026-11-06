@@ -14,6 +14,11 @@ if (!MONGODB_DB) {
   );
 }
 
+const INDEXES = {
+  memories: { userId: 1 },
+  loadouts: { userId: 1, createdAt: -1 },
+};
+
 /**
  * Global is used here to maintain a cached connection across hot reloads
  * in development. This prevents connections growing exponentially
@@ -25,16 +30,37 @@ if (!cached) {
   cached = global.mongo = { conn: null, promise: null };
 }
 
+async function ensureIndexes(db) {
+  try {
+    await Promise.all(
+      Object.entries(INDEXES).map(([name, keys]) =>
+        db.collection(name).createIndex(keys),
+      ),
+    );
+  } catch (error) {
+    console.warn("mongodb: could not ensure indexes:", error.message);
+  }
+}
+
+async function createConnection() {
+  const client = await MongoClient.connect(MONGODB_URI, {
+    serverSelectionTimeoutMS: 5000,
+  });
+  const db = client.db(MONGODB_DB);
+  await ensureIndexes(db);
+  return { client, db };
+}
+
 export async function connect() {
   if (cached.conn) {
     return cached.conn;
   }
 
   if (!cached.promise) {
-    cached.promise = MongoClient.connect(MONGODB_URI).then((client) => ({
-      client,
-      db: client.db(MONGODB_DB),
-    }));
+    cached.promise = createConnection().catch((error) => {
+      cached.promise = null;
+      throw error;
+    });
   }
 
   cached.conn = await cached.promise;

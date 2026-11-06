@@ -52,6 +52,8 @@ export default class BaseStrategy {
    * Handles exceptions that occur while executing a decision.
    * Returns the next state.
    * Can be async for strategies that need to await user input.
+   * Rethrowing the exception ends the stage with it; throwing another one
+   * hands that one back to this handler.
    */
   handleException(exception) {
     throw exception;

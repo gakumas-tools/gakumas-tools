@@ -4,6 +4,7 @@ export const MAX_HISTORY = 20;
 
 const LOADOUT_FIELDS = [
   "stageId",
+  "enterPercents",
   "customStage",
   "supportBonus",
   "params",
@@ -16,6 +17,13 @@ export function extractLoadoutFields(loadout) {
   const out = {};
   for (const f of LOADOUT_FIELDS) out[f] = loadout?.[f];
   return out;
+}
+
+export function sameRunInputs(a, b) {
+  return (
+    JSON.stringify([a.loadout, a.linkLoadouts]) ===
+    JSON.stringify([b.loadout, b.linkLoadouts])
+  );
 }
 
 const NUM_BUCKETS = 40;

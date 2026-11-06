@@ -17,15 +17,16 @@ export default class StagePlayer {
         state = this.engine.executeDecision(state, decision);
       } catch (e) {
         let exception = e;
-        while (exception) {
+        while (true) {
           try {
             state = await this.strategy.handleException(
               exception,
               state,
               decision,
             );
-            exception = null;
+            break;
           } catch (newException) {
+            if (newException === exception) throw exception;
             exception = newException;
           }
         }
