@@ -40,7 +40,13 @@
             "genki": 0,
             "goodConditionTurns": 0
           },
-          "capture": "campaign-trial-condition-20261103-r1-turn2-ready.png"
+          "capture": "campaign-trial-condition-20261103-r1-turn2-ready.png",
+          "handCardIds": [
+            13,
+            3,
+            1
+          ],
+          "handCapture": "campaign-trial-condition-20261103-r1-ready.png"
         },
         {
           "cardId": 1,
@@ -51,7 +57,13 @@
             "genki": 0,
             "goodConditionTurns": 0
           },
-          "capture": "campaign-trial-condition-20261103-r1-turn3-ready.png"
+          "capture": "campaign-trial-condition-20261103-r1-turn3-ready.png",
+          "handCardIds": [
+            15,
+            1,
+            13
+          ],
+          "handCapture": "campaign-trial-condition-20261103-r1-turn2-ready.png"
         },
         {
           "cardId": 104,
@@ -62,7 +74,13 @@
             "genki": 6,
             "goodConditionTurns": 3
           },
-          "capture": "campaign-trial-condition-20261103-r1-turn4-ready.png"
+          "capture": "campaign-trial-condition-20261103-r1-turn4-ready.png",
+          "handCardIds": [
+            74,
+            104,
+            3
+          ],
+          "handCapture": "campaign-trial-condition-20261103-r1-turn3-ready.png"
         },
         {
           "cardId": 24,
@@ -73,7 +91,13 @@
             "genki": 2,
             "goodConditionTurns": 4
           },
-          "capture": "campaign-trial-condition-20261103-r1-turn5.png"
+          "capture": "campaign-trial-condition-20261103-r1-turn5.png",
+          "handCardIds": [
+            24,
+            30,
+            15
+          ],
+          "handCapture": "campaign-trial-condition-20261103-r1-turn4-ready.png"
         },
         {
           "cardId": 26,
@@ -84,7 +108,13 @@
             "genki": 0,
             "goodConditionTurns": 3
           },
-          "capture": "campaign-trial-condition-20261103-r1-turn6.png"
+          "capture": "campaign-trial-condition-20261103-r1-turn6.png",
+          "handCardIds": [
+            13,
+            1,
+            26
+          ],
+          "handCapture": "campaign-trial-condition-20261103-r1-turn5.png"
         },
         {
           "cardId": 72,
@@ -94,7 +124,13 @@
             "stamina": 14,
             "genki": 0
           },
-          "capture": "campaign-trial-condition-20261103-r1-final-b.png"
+          "capture": "campaign-trial-condition-20261103-r1-final-b.png",
+          "handCardIds": [
+            72,
+            13,
+            3
+          ],
+          "handCapture": "campaign-trial-condition-20261103-r1-turn6.png"
         }
       ]
     },
@@ -110,7 +146,13 @@
             "genki": 4,
             "goodConditionTurns": 0
           },
-          "capture": "campaign-trial-condition-20261103-r2-turn2.png"
+          "capture": "campaign-trial-condition-20261103-r2-turn2.png",
+          "handCardIds": [
+            13,
+            3,
+            1
+          ],
+          "handCapture": "campaign-trial-condition-20261103-r2-ready.png"
         },
         {
           "cardId": 15,
@@ -121,7 +163,13 @@
             "genki": 4,
             "goodConditionTurns": 2
           },
-          "capture": "campaign-trial-condition-20261103-r2-turn3.png"
+          "capture": "campaign-trial-condition-20261103-r2-turn3.png",
+          "handCardIds": [
+            15,
+            1,
+            13
+          ],
+          "handCapture": "campaign-trial-condition-20261103-r2-turn2.png"
         },
         {
           "cardId": 74,
@@ -132,7 +180,13 @@
             "genki": 0,
             "goodConditionTurns": 4
           },
-          "capture": "campaign-trial-condition-20261103-r2-turn4-ready.png"
+          "capture": "campaign-trial-condition-20261103-r2-turn4-ready.png",
+          "handCardIds": [
+            74,
+            104,
+            3
+          ],
+          "handCapture": "campaign-trial-condition-20261103-r2-turn3.png"
         },
         {
           "cardId": 30,
@@ -143,7 +197,13 @@
             "genki": 0,
             "goodConditionTurns": 3
           },
-          "capture": "campaign-trial-condition-20261103-r2-turn5.png"
+          "capture": "campaign-trial-condition-20261103-r2-turn5.png",
+          "handCardIds": [
+            24,
+            30,
+            15
+          ],
+          "handCapture": "campaign-trial-condition-20261103-r2-turn4-ready.png"
         },
         {
           "cardId": 1,
@@ -154,7 +214,13 @@
             "genki": 0,
             "goodConditionTurns": 2
           },
-          "capture": "campaign-trial-condition-20261103-r2-turn6.png"
+          "capture": "campaign-trial-condition-20261103-r2-turn6.png",
+          "handCardIds": [
+            13,
+            1,
+            26
+          ],
+          "handCapture": "campaign-trial-condition-20261103-r2-turn5.png"
         },
         {
           "cardId": 3,
@@ -164,7 +230,13 @@
             "stamina": 21,
             "genki": 2
           },
-          "capture": "campaign-trial-condition-20261103-r2-final-b.png"
+          "capture": "campaign-trial-condition-20261103-r2-final-b.png",
+          "handCardIds": [
+            72,
+            13,
+            3
+          ],
+          "handCapture": "campaign-trial-condition-20261103-r2-turn6.png"
         }
       ]
     },
@@ -180,7 +252,13 @@
             "genki": 2,
             "goodConditionTurns": 0
           },
-          "capture": "campaign-trial-condition-20261103-r3-turn2.png"
+          "capture": "campaign-trial-condition-20261103-r3-turn2.png",
+          "handCardIds": [
+            13,
+            3,
+            1
+          ],
+          "handCapture": "campaign-trial-condition-20261103-r3-ready.png"
         },
         {
           "cardId": 1,
@@ -191,7 +269,13 @@
             "genki": 0,
             "goodConditionTurns": 0
           },
-          "capture": "campaign-trial-condition-20261103-r3-turn3-ready.png"
+          "capture": "campaign-trial-condition-20261103-r3-turn3-ready.png",
+          "handCardIds": [
+            15,
+            1,
+            13
+          ],
+          "handCapture": "campaign-trial-condition-20261103-r3-turn2.png"
         },
         {
           "cardId": 3,
@@ -202,7 +286,13 @@
             "genki": 2,
             "goodConditionTurns": 0
           },
-          "capture": "campaign-trial-condition-20261103-r3-turn4.png"
+          "capture": "campaign-trial-condition-20261103-r3-turn4.png",
+          "handCardIds": [
+            74,
+            104,
+            3
+          ],
+          "handCapture": "campaign-trial-condition-20261103-r3-turn3-ready.png"
         },
         {
           "cardId": 30,
@@ -213,7 +303,13 @@
             "genki": 0,
             "goodConditionTurns": 0
           },
-          "capture": "campaign-trial-condition-20261103-r3-turn5.png"
+          "capture": "campaign-trial-condition-20261103-r3-turn5.png",
+          "handCardIds": [
+            24,
+            30,
+            15
+          ],
+          "handCapture": "campaign-trial-condition-20261103-r3-turn4.png"
         },
         {
           "cardId": 1,
@@ -224,7 +320,13 @@
             "genki": 0,
             "goodConditionTurns": 0
           },
-          "capture": "campaign-trial-condition-20261103-r3-turn6.png"
+          "capture": "campaign-trial-condition-20261103-r3-turn6.png",
+          "handCardIds": [
+            13,
+            1,
+            26
+          ],
+          "handCapture": "campaign-trial-condition-20261103-r3-turn5.png"
         },
         {
           "cardId": 72,
@@ -234,9 +336,35 @@
             "stamina": 15,
             "genki": 0
           },
-          "capture": "campaign-trial-condition-20261103-r3-final-b.png"
+          "capture": "campaign-trial-condition-20261103-r3-final-b.png",
+          "handCardIds": [
+            72,
+            13,
+            3
+          ],
+          "handCapture": "campaign-trial-condition-20261103-r3-turn6.png"
         }
       ]
     }
+  ],
+  "drawCardIds": [
+    13,
+    3,
+    1,
+    15,
+    1,
+    13,
+    74,
+    104,
+    3,
+    24,
+    30,
+    15,
+    13,
+    1,
+    26,
+    72,
+    13,
+    3
   ]
 }

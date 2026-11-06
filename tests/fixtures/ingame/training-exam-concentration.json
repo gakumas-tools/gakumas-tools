@@ -40,7 +40,13 @@
             "genki": 0,
             "concentration": 0
           },
-          "capture": "campaign-trial-concentration-20261103-r1-turn2-ready.png"
+          "capture": "campaign-trial-concentration-20261103-r1-turn2-ready.png",
+          "handCardIds": [
+            13,
+            3,
+            1
+          ],
+          "handCapture": "campaign-trial-concentration-20261103-r1-ready.png"
         },
         {
           "cardId": 1,
@@ -51,7 +57,13 @@
             "genki": 0,
             "concentration": 0
           },
-          "capture": "campaign-trial-concentration-20261103-r1-turn3-ready.png"
+          "capture": "campaign-trial-concentration-20261103-r1-turn3-ready.png",
+          "handCardIds": [
+            17,
+            1,
+            13
+          ],
+          "handCapture": "campaign-trial-concentration-20261103-r1-turn2-ready.png"
         },
         {
           "cardId": 102,
@@ -62,7 +74,13 @@
             "genki": 6,
             "concentration": 3
           },
-          "capture": "campaign-trial-concentration-20261103-r1-turn4-ready.png"
+          "capture": "campaign-trial-concentration-20261103-r1-turn4-ready.png",
+          "handCardIds": [
+            76,
+            102,
+            3
+          ],
+          "handCapture": "campaign-trial-concentration-20261103-r1-turn3-ready.png"
         },
         {
           "cardId": 52,
@@ -73,7 +91,13 @@
             "genki": 4,
             "concentration": 6
           },
-          "capture": "campaign-trial-concentration-20261103-r1-turn5.png"
+          "capture": "campaign-trial-concentration-20261103-r1-turn5.png",
+          "handCardIds": [
+            52,
+            3,
+            17
+          ],
+          "handCapture": "campaign-trial-concentration-20261103-r1-turn4-ready.png"
         },
         {
           "cardId": 76,
@@ -84,7 +108,13 @@
             "genki": 0,
             "concentration": 9
           },
-          "capture": "campaign-trial-concentration-20261103-r1-turn6.png"
+          "capture": "campaign-trial-concentration-20261103-r1-turn6.png",
+          "handCardIds": [
+            13,
+            28,
+            76
+          ],
+          "handCapture": "campaign-trial-concentration-20261103-r1-turn5.png"
         },
         {
           "cardId": 7,
@@ -95,7 +125,13 @@
             "genki": 0,
             "concentration": 9
           },
-          "capture": "campaign-trial-concentration-20261103-r1-final-c.png"
+          "capture": "campaign-trial-concentration-20261103-r1-final-c.png",
+          "handCardIds": [
+            52,
+            1,
+            7
+          ],
+          "handCapture": "campaign-trial-concentration-20261103-r1-turn6.png"
         }
       ]
     },
@@ -111,7 +147,13 @@
             "genki": 4,
             "concentration": 0
           },
-          "capture": "campaign-trial-concentration-20261103-r2-turn2.png"
+          "capture": "campaign-trial-concentration-20261103-r2-turn2.png",
+          "handCardIds": [
+            13,
+            3,
+            1
+          ],
+          "handCapture": "campaign-trial-concentration-20261103-r2-ready.png"
         },
         {
           "cardId": 17,
@@ -122,7 +164,13 @@
             "genki": 4,
             "concentration": 2
           },
-          "capture": "campaign-trial-concentration-20261103-r2-turn3.png"
+          "capture": "campaign-trial-concentration-20261103-r2-turn3.png",
+          "handCardIds": [
+            17,
+            1,
+            13
+          ],
+          "handCapture": "campaign-trial-concentration-20261103-r2-turn2.png"
         },
         {
           "cardId": 102,
@@ -133,7 +181,13 @@
             "genki": 7,
             "concentration": 5
           },
-          "capture": "campaign-trial-concentration-20261103-r2-turn4-ready.png"
+          "capture": "campaign-trial-concentration-20261103-r2-turn4-ready.png",
+          "handCardIds": [
+            76,
+            102,
+            3
+          ],
+          "handCapture": "campaign-trial-concentration-20261103-r2-turn3.png"
         },
         {
           "cardId": 3,
@@ -144,7 +198,13 @@
             "genki": 6,
             "concentration": 5
           },
-          "capture": "campaign-trial-concentration-20261103-r2-turn5.png"
+          "capture": "campaign-trial-concentration-20261103-r2-turn5.png",
+          "handCardIds": [
+            52,
+            3,
+            17
+          ],
+          "handCapture": "campaign-trial-concentration-20261103-r2-turn4-ready.png"
         },
         {
           "cardId": 28,
@@ -155,7 +215,13 @@
             "genki": 2,
             "concentration": 7
           },
-          "capture": "campaign-trial-concentration-20261103-r2-turn6.png"
+          "capture": "campaign-trial-concentration-20261103-r2-turn6.png",
+          "handCardIds": [
+            13,
+            28,
+            76
+          ],
+          "handCapture": "campaign-trial-concentration-20261103-r2-turn5.png"
         },
         {
           "cardId": 7,
@@ -166,7 +232,13 @@
             "genki": 0,
             "concentration": 7
           },
-          "capture": "campaign-trial-concentration-20261103-r2-final-c.png"
+          "capture": "campaign-trial-concentration-20261103-r2-final-c.png",
+          "handCardIds": [
+            52,
+            1,
+            7
+          ],
+          "handCapture": "campaign-trial-concentration-20261103-r2-turn6.png"
         }
       ]
     },
@@ -182,7 +254,13 @@
             "genki": 2,
             "concentration": 0
           },
-          "capture": "campaign-trial-concentration-20261103-r3-turn2.png"
+          "capture": "campaign-trial-concentration-20261103-r3-turn2.png",
+          "handCardIds": [
+            13,
+            3,
+            1
+          ],
+          "handCapture": "campaign-trial-concentration-20261103-r3-ready.png"
         },
         {
           "cardId": 13,
@@ -193,7 +271,13 @@
             "genki": 6,
             "concentration": 0
           },
-          "capture": "campaign-trial-concentration-20261103-r3-turn3.png"
+          "capture": "campaign-trial-concentration-20261103-r3-turn3.png",
+          "handCardIds": [
+            17,
+            1,
+            13
+          ],
+          "handCapture": "campaign-trial-concentration-20261103-r3-turn2.png"
         },
         {
           "cardId": 76,
@@ -204,7 +288,13 @@
             "genki": 0,
             "concentration": 3
           },
-          "capture": "campaign-trial-concentration-20261103-r3-turn4-ready.png"
+          "capture": "campaign-trial-concentration-20261103-r3-turn4-ready.png",
+          "handCardIds": [
+            76,
+            102,
+            3
+          ],
+          "handCapture": "campaign-trial-concentration-20261103-r3-turn3.png"
         },
         {
           "cardId": 3,
@@ -215,7 +305,13 @@
             "genki": 2,
             "concentration": 3
           },
-          "capture": "campaign-trial-concentration-20261103-r3-turn5.png"
+          "capture": "campaign-trial-concentration-20261103-r3-turn5.png",
+          "handCardIds": [
+            52,
+            3,
+            17
+          ],
+          "handCapture": "campaign-trial-concentration-20261103-r3-turn4-ready.png"
         },
         {
           "cardId": 76,
@@ -226,7 +322,13 @@
             "genki": 0,
             "concentration": 6
           },
-          "capture": "campaign-trial-concentration-20261103-r3-turn6.png"
+          "capture": "campaign-trial-concentration-20261103-r3-turn6.png",
+          "handCardIds": [
+            13,
+            28,
+            76
+          ],
+          "handCapture": "campaign-trial-concentration-20261103-r3-turn5.png"
         },
         {
           "cardId": 7,
@@ -237,9 +339,35 @@
             "genki": 0,
             "concentration": 6
           },
-          "capture": "campaign-trial-concentration-20261103-r3-final-c.png"
+          "capture": "campaign-trial-concentration-20261103-r3-final-c.png",
+          "handCardIds": [
+            52,
+            1,
+            7
+          ],
+          "handCapture": "campaign-trial-concentration-20261103-r3-turn6.png"
         }
       ]
     }
+  ],
+  "drawCardIds": [
+    13,
+    3,
+    1,
+    17,
+    1,
+    13,
+    76,
+    102,
+    3,
+    52,
+    3,
+    17,
+    13,
+    28,
+    76,
+    52,
+    1,
+    7
   ]
 }
