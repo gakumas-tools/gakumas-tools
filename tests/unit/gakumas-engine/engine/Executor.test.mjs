@@ -3,6 +3,37 @@ import assert from "node:assert/strict";
 import { CARD_PILES, S } from "gakumas-engine";
 import { createEngine, parseActions } from "../helpers.mjs";
 
+test("floor rounds the base score before the full power multiplier", () => {
+  const engine = createEngine();
+  const state = engine.getInitialState(true);
+  state[S.cumulativeFullPowerCharge] = 13;
+  state[S.stance] = "fullPower";
+  engine.turnManager.getTurnMultiplier = () => 2.96;
+
+  engine.executor.executeActions(
+    state,
+    parseActions("score+=floor(cumulativeFullPowerCharge*0.6)"),
+    null,
+  );
+
+  assert.equal(state[S.score], 63);
+});
+
+test("floor reads a state field passed as its argument", () => {
+  const engine = createEngine();
+  const state = engine.getInitialState(true);
+  state[S.cumulativeFullPowerCharge] = 13;
+  engine.turnManager.getTurnMultiplier = () => 1;
+
+  engine.executor.executeActions(
+    state,
+    parseActions("score+=floor(cumulativeFullPowerCharge)"),
+    null,
+  );
+
+  assert.equal(state[S.score], 13);
+});
+
 test("Good Impression card costs accumulate across a lesson", () => {
   const engine = createEngine();
   const state = engine.getInitialState(true);

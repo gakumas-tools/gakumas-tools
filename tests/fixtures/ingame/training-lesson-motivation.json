@@ -1,0 +1,263 @@
+{
+  "date": "2026-11-03",
+  "gameVersion": "3.5.0",
+  "stage": "【基礎4】やる気",
+  "sourceDirectory": "screenshots/sources/ingame/",
+  "initialAttribute": 100,
+  "targetGain": 40,
+  "initial": {
+    "score": 0,
+    "stamina": 30,
+    "genki": 0,
+    "motivation": 0
+  },
+  "turnTypes": [
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal"
+  ],
+  "replayMultipliers": {
+    "vocal": 1
+  },
+  "initialCaptures": [
+    "campaign-motivation-basic-20261103-r1-initial.png",
+    "campaign-motivation-basic-20261103-r2-initial.png",
+    "campaign-motivation-basic-20261103-r3-initial.png"
+  ],
+  "plays": [
+    {
+      "id": "early-motivation",
+      "actions": [
+        {
+          "cardId": 42,
+          "name": "もう少しだけ",
+          "expected": {
+            "score": 10,
+            "stamina": 25,
+            "genki": 0,
+            "motivation": 3
+          },
+          "capture": "campaign-motivation-basic-20261103-r1-turn2.png",
+          "handCardIds": [
+            3,
+            13,
+            42
+          ],
+          "handCapture": "campaign-motivation-basic-20261103-r1-initial.png"
+        },
+        {
+          "cardId": 121,
+          "name": "あふれる思い出+",
+          "expected": {
+            "score": 10,
+            "stamina": 22,
+            "genki": 7,
+            "motivation": 8
+          },
+          "capture": "campaign-motivation-basic-20261103-r1-turn3.png",
+          "handCardIds": [
+            121,
+            61,
+            1
+          ],
+          "handCapture": "campaign-motivation-basic-20261103-r1-turn2.png"
+        },
+        {
+          "cardId": 91,
+          "name": "ありがとうの言葉+",
+          "expected": {
+            "score": 29,
+            "stamina": 19,
+            "genki": 26,
+            "motivation": 8
+          },
+          "capture": "campaign-motivation-basic-20261103-r1-turn4.png",
+          "handCardIds": [
+            91,
+            1,
+            4
+          ],
+          "handCapture": "campaign-motivation-basic-20261103-r1-turn3.png"
+        },
+        {
+          "cardId": 12,
+          "name": "気分転換+",
+          "expected": {
+            "stamina": 16,
+            "genki": 26,
+            "motivation": 8
+          },
+          "capture": "campaign-motivation-basic-20261103-r1-final-b.png",
+          "handCardIds": [
+            3,
+            12,
+            13
+          ],
+          "handCapture": "campaign-motivation-basic-20261103-r1-turn4.png"
+        }
+      ],
+      "terminalAttribute": 140
+    },
+    {
+      "id": "genki-first",
+      "actions": [
+        {
+          "cardId": 13,
+          "name": "表現の基本",
+          "expected": {
+            "score": 0,
+            "stamina": 30,
+            "genki": 4,
+            "motivation": 0
+          },
+          "capture": "campaign-motivation-basic-20261103-r2-turn2.png",
+          "handCardIds": [
+            3,
+            13,
+            42
+          ],
+          "handCapture": "campaign-motivation-basic-20261103-r2-initial.png"
+        },
+        {
+          "cardId": 61,
+          "name": "えいえいおー+",
+          "expected": {
+            "score": 0,
+            "stamina": 30,
+            "genki": 4,
+            "motivation": 4
+          },
+          "capture": "campaign-motivation-basic-20261103-r2-turn3.png",
+          "handCardIds": [
+            121,
+            61,
+            1
+          ],
+          "handCapture": "campaign-motivation-basic-20261103-r2-turn2.png"
+        },
+        {
+          "cardId": 4,
+          "name": "ポーズの基本+",
+          "expected": {
+            "score": 6,
+            "stamina": 30,
+            "genki": 9,
+            "motivation": 4
+          },
+          "capture": "campaign-motivation-basic-20261103-r2-turn4.png",
+          "handCardIds": [
+            91,
+            1,
+            4
+          ],
+          "handCapture": "campaign-motivation-basic-20261103-r2-turn3.png"
+        },
+        {
+          "cardId": 12,
+          "name": "気分転換+",
+          "expected": {
+            "score": 16,
+            "stamina": 27,
+            "genki": 9,
+            "motivation": 4
+          },
+          "capture": "campaign-motivation-basic-20261103-r2-final-b.png",
+          "handCardIds": [
+            3,
+            12,
+            13
+          ],
+          "handCapture": "campaign-motivation-basic-20261103-r2-turn4.png"
+        }
+      ]
+    },
+    {
+      "id": "without-motivation",
+      "actions": [
+        {
+          "cardId": 3,
+          "name": "ポーズの基本",
+          "expected": {
+            "score": 2,
+            "stamina": 27,
+            "genki": 2,
+            "motivation": 0
+          },
+          "capture": "campaign-motivation-basic-20261103-r3-turn2.png",
+          "handCardIds": [
+            3,
+            13,
+            42
+          ],
+          "handCapture": "campaign-motivation-basic-20261103-r3-initial.png"
+        },
+        {
+          "cardId": 1,
+          "name": "アピールの基本",
+          "expected": {
+            "score": 11,
+            "stamina": 25,
+            "genki": 0,
+            "motivation": 0
+          },
+          "capture": "campaign-motivation-basic-20261103-r3-turn3.png",
+          "handCardIds": [
+            121,
+            61,
+            1
+          ],
+          "handCapture": "campaign-motivation-basic-20261103-r3-turn2.png"
+        },
+        {
+          "cardId": 91,
+          "name": "ありがとうの言葉+",
+          "expected": {
+            "score": 19,
+            "stamina": 22,
+            "genki": 11,
+            "motivation": 0
+          },
+          "capture": "campaign-motivation-basic-20261103-r3-turn4.png",
+          "handCardIds": [
+            91,
+            1,
+            4
+          ],
+          "handCapture": "campaign-motivation-basic-20261103-r3-turn3.png"
+        },
+        {
+          "cardId": 12,
+          "name": "気分転換+",
+          "expected": {
+            "score": 32,
+            "stamina": 19,
+            "genki": 11,
+            "motivation": 0
+          },
+          "capture": "campaign-motivation-basic-20261103-r3-final-b.png",
+          "handCardIds": [
+            3,
+            12,
+            13
+          ],
+          "handCapture": "campaign-motivation-basic-20261103-r3-turn4.png"
+        }
+      ]
+    }
+  ],
+  "drawCardIds": [
+    3,
+    13,
+    42,
+    121,
+    61,
+    1,
+    91,
+    1,
+    4,
+    3,
+    12,
+    13
+  ]
+}

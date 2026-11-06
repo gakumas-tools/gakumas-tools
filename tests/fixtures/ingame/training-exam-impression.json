@@ -21,7 +21,6 @@
     "dance": 200,
     "visual": 400
   },
-  "scope": "Conditional action replay; excludes deck draws, raw-parameter conversion, NPC rankings and uncaptured terminal score.",
   "sourceDirectory": "screenshots/sources/ingame/",
   "plays": [
     {
@@ -36,7 +35,13 @@
             "genki": 0,
             "goodImpressionTurns": 0
           },
-          "capture": "campaign-20261102-exam-impression-turn2-help-ready.png"
+          "capture": "campaign-20261102-exam-impression-turn2-help-ready.png",
+          "handCardIds": [
+            13,
+            3,
+            1
+          ],
+          "handCapture": "campaign-20261102-exam-impression-turn1.png"
         },
         {
           "cardId": 1,
@@ -47,7 +52,13 @@
             "genki": 0,
             "goodImpressionTurns": 0
           },
-          "capture": "campaign-20261102-exam-impression-turn3-help.png"
+          "capture": "campaign-20261102-exam-impression-turn3-help.png",
+          "handCardIds": [
+            62,
+            1,
+            13
+          ],
+          "handCapture": "campaign-20261102-exam-impression-turn2-help-ready.png"
         },
         {
           "cardId": 122,
@@ -58,7 +69,13 @@
             "genki": 3,
             "goodImpressionTurns": 4
           },
-          "capture": "campaign-20261102-exam-impression-turn4.png"
+          "capture": "campaign-20261102-exam-impression-turn4.png",
+          "handCardIds": [
+            19,
+            58,
+            122
+          ],
+          "handCapture": "campaign-20261102-exam-impression-turn3-help.png"
         },
         {
           "cardId": 122,
@@ -69,7 +86,13 @@
             "genki": 3,
             "goodImpressionTurns": 7
           },
-          "capture": "campaign-20261102-exam-impression-turn5.png"
+          "capture": "campaign-20261102-exam-impression-turn5.png",
+          "handCardIds": [
+            122,
+            58,
+            3
+          ],
+          "handCapture": "campaign-20261102-exam-impression-turn4.png"
         },
         {
           "cardId": 38,
@@ -80,7 +103,13 @@
             "genki": 0,
             "goodImpressionTurns": 9
           },
-          "capture": "campaign-20261102-exam-impression-turn6.png"
+          "capture": "campaign-20261102-exam-impression-turn6.png",
+          "handCardIds": [
+            38,
+            1,
+            19
+          ],
+          "handCapture": "campaign-20261102-exam-impression-turn5.png"
         }
       ]
     },
@@ -97,7 +126,13 @@
             "genki": 4,
             "goodImpressionTurns": 0
           },
-          "capture": "campaign-20261102-exam-impression-replay-turn2-help.png"
+          "capture": "campaign-20261102-exam-impression-replay-turn2-help.png",
+          "handCardIds": [
+            13,
+            3,
+            1
+          ],
+          "handCapture": "campaign-20261102-exam-impression-replay-turn1.png"
         },
         {
           "cardId": 62,
@@ -108,7 +143,13 @@
             "genki": 10,
             "goodImpressionTurns": 0
           },
-          "capture": "campaign-20261102-exam-impression-replay-turn3.png"
+          "capture": "campaign-20261102-exam-impression-replay-turn3.png",
+          "handCardIds": [
+            62,
+            1,
+            13
+          ],
+          "handCapture": "campaign-20261102-exam-impression-replay-turn2-help.png"
         },
         {
           "cardId": 58,
@@ -119,7 +160,13 @@
             "genki": 8,
             "goodImpressionTurns": 3
           },
-          "capture": "campaign-20261102-exam-impression-replay-turn4-help.png"
+          "capture": "campaign-20261102-exam-impression-replay-turn4-help.png",
+          "handCardIds": [
+            19,
+            58,
+            122
+          ],
+          "handCapture": "campaign-20261102-exam-impression-replay-turn3.png"
         },
         {
           "cardId": 122,
@@ -130,7 +177,13 @@
             "genki": 6,
             "goodImpressionTurns": 6
           },
-          "capture": "campaign-20261102-exam-impression-replay-turn5.png"
+          "capture": "campaign-20261102-exam-impression-replay-turn5.png",
+          "handCardIds": [
+            122,
+            58,
+            3
+          ],
+          "handCapture": "campaign-20261102-exam-impression-replay-turn4-help.png"
         },
         {
           "cardId": 38,
@@ -141,7 +194,13 @@
             "genki": 2,
             "goodImpressionTurns": 8
           },
-          "capture": "campaign-20261102-exam-impression-replay-turn6.png"
+          "capture": "campaign-20261102-exam-impression-replay-turn6.png",
+          "handCardIds": [
+            38,
+            1,
+            19
+          ],
+          "handCapture": "campaign-20261102-exam-impression-replay-turn5.png"
         },
         {
           "cardId": 9,
@@ -152,7 +211,13 @@
             "genki": 0
           },
           "capture": "campaign-20261102-exam-impression-replay-final-b.png",
-          "terminalGoodImpressionDisplayed": 10
+          "terminalGoodImpressionDisplayed": 10,
+          "handCardIds": [
+            13,
+            1,
+            9
+          ],
+          "handCapture": "campaign-20261102-exam-impression-replay-turn6.png"
         }
       ],
       "result": "retry offered (4th)",
@@ -174,7 +239,13 @@
             "genki": 2,
             "goodImpressionTurns": 0
           },
-          "capture": "campaign-20261102-exam-impression-validation-turn2.png"
+          "capture": "campaign-20261102-exam-impression-validation-turn2.png",
+          "handCardIds": [
+            13,
+            3,
+            1
+          ],
+          "handCapture": "campaign-20261102-exam-impression-validation-turn1.png"
         },
         {
           "cardId": 1,
@@ -185,7 +256,13 @@
             "genki": 0,
             "goodImpressionTurns": 0
           },
-          "capture": "campaign-20261102-exam-impression-validation-turn3.png"
+          "capture": "campaign-20261102-exam-impression-validation-turn3.png",
+          "handCardIds": [
+            62,
+            1,
+            13
+          ],
+          "handCapture": "campaign-20261102-exam-impression-validation-turn2.png"
         },
         {
           "cardId": 19,
@@ -196,7 +273,13 @@
             "genki": 1,
             "goodImpressionTurns": 2
           },
-          "capture": "campaign-20261102-exam-impression-validation-turn4-help.png"
+          "capture": "campaign-20261102-exam-impression-validation-turn4-help.png",
+          "handCardIds": [
+            19,
+            58,
+            122
+          ],
+          "handCapture": "campaign-20261102-exam-impression-validation-turn3.png"
         },
         {
           "cardId": 58,
@@ -207,7 +290,13 @@
             "genki": 2,
             "goodImpressionTurns": 4
           },
-          "capture": "campaign-20261102-exam-impression-validation-turn5.png"
+          "capture": "campaign-20261102-exam-impression-validation-turn5.png",
+          "handCardIds": [
+            122,
+            58,
+            3
+          ],
+          "handCapture": "campaign-20261102-exam-impression-validation-turn4-help.png"
         },
         {
           "cardId": 38,
@@ -218,7 +307,13 @@
             "genki": 0,
             "goodImpressionTurns": 6
           },
-          "capture": "campaign-20261102-exam-impression-validation-turn6.png"
+          "capture": "campaign-20261102-exam-impression-validation-turn6.png",
+          "handCardIds": [
+            38,
+            1,
+            19
+          ],
+          "handCapture": "campaign-20261102-exam-impression-validation-turn5.png"
         },
         {
           "cardId": 9,
@@ -229,7 +324,13 @@
             "genki": 0
           },
           "capture": "campaign-20261102-exam-impression-validation-final-b.png",
-          "terminalGoodImpressionDisplayed": 8
+          "terminalGoodImpressionDisplayed": 8,
+          "handCardIds": [
+            13,
+            1,
+            9
+          ],
+          "handCapture": "campaign-20261102-exam-impression-validation-turn6.png"
         }
       ],
       "result": "clear (3rd)",
@@ -243,5 +344,25 @@
     "campaign-20261102-exam-impression-turn1.png",
     "campaign-20261102-exam-impression-replay-turn1.png",
     "campaign-20261102-exam-impression-validation-turn1.png"
+  ],
+  "drawCardIds": [
+    13,
+    3,
+    1,
+    62,
+    1,
+    13,
+    19,
+    58,
+    122,
+    122,
+    58,
+    3,
+    38,
+    1,
+    19,
+    13,
+    1,
+    9
   ]
 }

@@ -182,6 +182,10 @@ function validateExpr(expr, errors) {
       }
       return;
     case "call":
+      if (expr.name === "floor") {
+        for (const arg of expr.args || []) validateExpr(arg, errors);
+        return;
+      }
       if (!CALLABLE_RESOLVERS.has(expr.name)) {
         errors.push(`Unknown function call: ${expr.name}`);
       }

@@ -1,0 +1,281 @@
+{
+  "date": "2026-11-02",
+  "gameVersion": "3.5.0",
+  "stage": "【基礎6】消費体力削減",
+  "sourceDirectory": "screenshots/sources/ingame/",
+  "initial": {
+    "score": 0,
+    "stamina": 7,
+    "genki": 20,
+    "costReduction": 0,
+    "motivation": 0
+  },
+  "turnTypes": [
+    "visual",
+    "visual",
+    "visual",
+    "visual"
+  ],
+  "initialAttribute": 100,
+  "targetGain": 40,
+  "replayMultipliers": {
+    "visual": 1
+  },
+  "initialCaptures": [
+    "campaign-increase-r1-turn1.png",
+    "campaign-increase-r2-turn1.png",
+    "campaign-increase-r3-turn1.png"
+  ],
+  "plays": [
+    {
+      "id": "direct-cost-first",
+      "actions": [
+        {
+          "cardId": 90,
+          "name": "ありがとうの言葉",
+          "expected": {
+            "score": 12,
+            "stamina": 4,
+            "genki": 29,
+            "costReduction": 0,
+            "motivation": 0
+          },
+          "capture": "campaign-increase-r1-turn2.png",
+          "handCardIds": [
+            90,
+            1,
+            62
+          ],
+          "handCapture": "campaign-increase-r1-turn1.png"
+        },
+        {
+          "cardId": 157,
+          "name": "叶えたい夢+",
+          "expected": {
+            "score": 12,
+            "stamina": 3,
+            "genki": 38,
+            "costReduction": 2,
+            "motivation": 0
+          },
+          "capture": "campaign-increase-r1-turn3.png",
+          "handCardIds": [
+            1,
+            157,
+            13
+          ],
+          "handCapture": "campaign-increase-r1-turn2.png"
+        },
+        {
+          "cardId": 90,
+          "name": "ありがとうの言葉",
+          "expected": {
+            "score": 31,
+            "stamina": 2,
+            "genki": 47,
+            "costReduction": 2,
+            "motivation": 0
+          },
+          "capture": "campaign-increase-r1-turn4.png",
+          "handCardIds": [
+            3,
+            1,
+            90
+          ],
+          "handCapture": "campaign-increase-r1-turn3.png"
+        },
+        {
+          "cardId": 40,
+          "name": "ゆるふわおしゃべり",
+          "expected": {
+            "stamina": 0,
+            "genki": 47,
+            "costReduction": 2,
+            "motivation": 3
+          },
+          "capture": "campaign-increase-r1-final-b.png",
+          "handCardIds": [
+            13,
+            40,
+            21
+          ],
+          "handCapture": "campaign-increase-r1-turn4.png"
+        }
+      ],
+      "terminalAttribute": 140,
+      "terminalScoreCompared": false
+    },
+    {
+      "id": "genki-first",
+      "actions": [
+        {
+          "cardId": 62,
+          "name": "リズミカル",
+          "expected": {
+            "score": 0,
+            "stamina": 7,
+            "genki": 26,
+            "costReduction": 0,
+            "motivation": 0
+          },
+          "capture": "campaign-increase-r2-turn2-guide1.png",
+          "handCardIds": [
+            90,
+            1,
+            62
+          ],
+          "handCapture": "campaign-increase-r2-turn1.png"
+        },
+        {
+          "cardId": 157,
+          "name": "叶えたい夢+",
+          "expected": {
+            "score": 0,
+            "stamina": 6,
+            "genki": 35,
+            "costReduction": 2,
+            "motivation": 0
+          },
+          "capture": "campaign-increase-r2-turn3.png",
+          "handCardIds": [
+            1,
+            157,
+            13
+          ],
+          "handCapture": "campaign-increase-r2-turn2-guide1.png"
+        },
+        {
+          "cardId": 1,
+          "name": "アピールの基本",
+          "expected": {
+            "score": 9,
+            "stamina": 6,
+            "genki": 33,
+            "costReduction": 2,
+            "motivation": 0
+          },
+          "capture": "campaign-increase-r2-turn4.png",
+          "handCardIds": [
+            3,
+            1,
+            90
+          ],
+          "handCapture": "campaign-increase-r2-turn3.png"
+        },
+        {
+          "cardId": 40,
+          "name": "ゆるふわおしゃべり",
+          "expected": {
+            "score": 29,
+            "stamina": 4,
+            "genki": 33,
+            "costReduction": 2,
+            "motivation": 3
+          },
+          "capture": "campaign-increase-r2-final-b.png",
+          "handCardIds": [
+            13,
+            40,
+            21
+          ],
+          "handCapture": "campaign-increase-r2-turn4.png"
+        }
+      ],
+      "terminalScoreCompared": true,
+      "result": "Retry offered; below target"
+    },
+    {
+      "id": "zero-cost-validation",
+      "actions": [
+        {
+          "cardId": 1,
+          "name": "アピールの基本",
+          "expected": {
+            "score": 9,
+            "stamina": 7,
+            "genki": 16,
+            "costReduction": 0,
+            "motivation": 0
+          },
+          "capture": "campaign-increase-r3-turn2.png",
+          "handCardIds": [
+            90,
+            1,
+            62
+          ],
+          "handCapture": "campaign-increase-r3-turn1.png"
+        },
+        {
+          "cardId": 157,
+          "name": "叶えたい夢+",
+          "expected": {
+            "score": 9,
+            "stamina": 6,
+            "genki": 25,
+            "costReduction": 2,
+            "motivation": 0
+          },
+          "capture": "campaign-increase-r3-turn3.png",
+          "handCardIds": [
+            1,
+            157,
+            13
+          ],
+          "handCapture": "campaign-increase-r3-turn2.png"
+        },
+        {
+          "cardId": 3,
+          "name": "ポーズの基本",
+          "expected": {
+            "score": 11,
+            "stamina": 6,
+            "genki": 26,
+            "costReduction": 2,
+            "motivation": 0
+          },
+          "capture": "campaign-increase-r3-turn4.png",
+          "handCardIds": [
+            3,
+            1,
+            90
+          ],
+          "handCapture": "campaign-increase-r3-turn3.png"
+        },
+        {
+          "cardId": 21,
+          "name": "意識の基本",
+          "expected": {
+            "score": 11,
+            "stamina": 6,
+            "genki": 27,
+            "costReduction": 2,
+            "motivation": 2
+          },
+          "capture": "campaign-increase-r3-final-a.png",
+          "handCardIds": [
+            13,
+            40,
+            21
+          ],
+          "handCapture": "campaign-increase-r3-turn4.png"
+        }
+      ],
+      "terminalScoreCompared": true,
+      "result": "Retry offered; below target"
+    }
+  ],
+  "drawCardIds": [
+    90,
+    1,
+    62,
+    1,
+    157,
+    13,
+    3,
+    1,
+    90,
+    13,
+    40,
+    21
+  ]
+}

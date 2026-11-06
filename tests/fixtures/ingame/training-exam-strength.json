@@ -1,0 +1,421 @@
+{
+  "date": "2026-11-03",
+  "gameVersion": "3.5.0",
+  "stage": "【試験研修6】強気",
+  "initial": {
+    "score": 0,
+    "stamina": 30,
+    "genki": 0,
+    "fullPowerCharge": 0,
+    "stance": "none"
+  },
+  "turnTypes": [
+    "dance",
+    "visual",
+    "vocal",
+    "dance",
+    "vocal",
+    "visual"
+  ],
+  "displayedPercents": {
+    "dance": 200,
+    "visual": 400,
+    "vocal": 250
+  },
+  "sourceDirectory": "screenshots/sources/ingame/",
+  "initialCaptures": [
+    "campaign-exam-strength-r1-initial.png",
+    "campaign-exam-strength-r2-initial.png",
+    "campaign-exam-strength-r3-initial.png"
+  ],
+  "plays": [
+    {
+      "id": "guided-appeal",
+      "actions": [
+        {
+          "cardId": 1,
+          "name": "アピールの基本",
+          "expected": {
+            "score": 18,
+            "stamina": 26,
+            "genki": 0
+          },
+          "capture": "campaign-exam-strength-r1-turn2-ready.png",
+          "handCardIds": [
+            1,
+            3,
+            13
+          ],
+          "handCapture": "campaign-exam-strength-r1-initial.png"
+        },
+        {
+          "cardId": 1,
+          "name": "アピールの基本",
+          "expected": {
+            "score": 54,
+            "stamina": 22,
+            "genki": 0,
+            "stance": "none"
+          },
+          "capture": "campaign-exam-strength-r1-turn3-ready.png",
+          "handCardIds": [
+            50,
+            1,
+            3
+          ],
+          "handCapture": "campaign-exam-strength-r1-turn2-ready.png"
+        },
+        {
+          "cardId": 382,
+          "name": "スターライト",
+          "expected": {
+            "score": 99,
+            "stamina": 16,
+            "genki": 0,
+            "stance": "strength"
+          },
+          "capture": "campaign-exam-strength-r1-turn4-ready.png",
+          "handCardIds": [
+            13,
+            382,
+            3
+          ],
+          "handCapture": "campaign-exam-strength-r1-turn3-ready.png"
+        },
+        {
+          "cardId": 418,
+          "name": "カウントダウン",
+          "expected": {
+            "score": 99,
+            "stamina": 12,
+            "genki": 8,
+            "stance": "preservation"
+          },
+          "capture": "campaign-exam-strength-r1-turn5-ready.png",
+          "handCardIds": [
+            376,
+            418,
+            3
+          ],
+          "handCapture": "campaign-exam-strength-r1-turn4-ready.png"
+        },
+        {
+          "cardId": 400,
+          "name": "せーのっ！",
+          "turnsElapsed": 4,
+          "expected": {
+            "score": 184,
+            "stamina": 12,
+            "genki": 5,
+            "stance": "strength",
+            "enthusiasm": 5,
+            "cardUsesRemaining": 1
+          },
+          "capture": "campaign-exam-strength-r1-extra-ready.png",
+          "handCardIds": [
+            400,
+            392,
+            13
+          ],
+          "handCapture": "campaign-exam-strength-r1-turn5-ready.png"
+        },
+        {
+          "cardId": 13,
+          "name": "表現の基本",
+          "turnsElapsed": 5,
+          "expected": {
+            "score": 184,
+            "stamina": 12,
+            "genki": 9,
+            "stance": "strength",
+            "enthusiasm": 0
+          },
+          "capture": "campaign-exam-strength-r1-turn6-ready.png",
+          "handCardIds": [
+            392,
+            13
+          ],
+          "handCapture": "campaign-exam-strength-r1-extra-ready.png"
+        },
+        {
+          "cardId": 370,
+          "name": "はげしく",
+          "turnsElapsed": 6,
+          "expected": {
+            "score": 336,
+            "genki": 0,
+            "stance": "strength2",
+            "stamina": 7
+          },
+          "capture": "campaign-exam-strength-r1-final-a.png",
+          "handCardIds": [
+            384,
+            370,
+            13
+          ],
+          "handCapture": "campaign-exam-strength-r1-turn6-ready.png"
+        }
+      ]
+    },
+    {
+      "id": "genki-cost-reduction-strength2",
+      "actions": [
+        {
+          "cardId": 13,
+          "name": "表現の基本",
+          "expected": {
+            "score": 0,
+            "stamina": 30,
+            "genki": 4,
+            "stance": "none",
+            "costReduction": 0
+          },
+          "capture": "campaign-exam-strength-r2-turn2.png",
+          "handCardIds": [
+            1,
+            3,
+            13
+          ],
+          "handCapture": "campaign-exam-strength-r2-initial.png"
+        },
+        {
+          "cardId": 50,
+          "name": "ファーストステップ",
+          "expected": {
+            "score": 0,
+            "stamina": 30,
+            "genki": 7,
+            "stance": "none",
+            "costReduction": 1
+          },
+          "capture": "campaign-exam-strength-r2-turn3.png",
+          "handCardIds": [
+            50,
+            1,
+            3
+          ],
+          "handCapture": "campaign-exam-strength-r2-turn2.png"
+        },
+        {
+          "cardId": 382,
+          "name": "スターライト",
+          "expected": {
+            "score": 45,
+            "stamina": 30,
+            "genki": 2,
+            "stance": "strength",
+            "costReduction": 1
+          },
+          "capture": "campaign-exam-strength-r2-turn4.png",
+          "handCardIds": [
+            13,
+            382,
+            3
+          ],
+          "handCapture": "campaign-exam-strength-r2-turn3.png"
+        },
+        {
+          "cardId": 3,
+          "name": "ポーズの基本",
+          "expected": {
+            "score": 53,
+            "stamina": 27,
+            "genki": 2,
+            "stance": "strength",
+            "costReduction": 1
+          },
+          "capture": "campaign-exam-strength-r2-turn5.png",
+          "handCardIds": [
+            376,
+            418,
+            3
+          ],
+          "handCapture": "campaign-exam-strength-r2-turn4.png"
+        },
+        {
+          "cardId": 400,
+          "name": "せーのっ！",
+          "expected": {
+            "score": 128,
+            "stamina": 20,
+            "genki": 0,
+            "stance": "strength2",
+            "costReduction": 1
+          },
+          "capture": "campaign-exam-strength-r2-turn6.png",
+          "handCardIds": [
+            400,
+            392,
+            13
+          ],
+          "handCapture": "campaign-exam-strength-r2-turn5.png"
+        },
+        {
+          "cardId": 384,
+          "name": "一歩",
+          "expected": {
+            "score": 280,
+            "stamina": 12,
+            "genki": 0,
+            "stance": "strength2",
+            "costReduction": 1
+          },
+          "capture": "campaign-exam-strength-r2-final-b.png",
+          "handCardIds": [
+            384,
+            370,
+            13
+          ],
+          "handCapture": "campaign-exam-strength-r2-turn6.png"
+        }
+      ]
+    },
+    {
+      "id": "preservation2-late-strength",
+      "actions": [
+        {
+          "cardId": 3,
+          "name": "ポーズの基本",
+          "expected": {
+            "score": 4,
+            "stamina": 27,
+            "genki": 2,
+            "stance": "none"
+          },
+          "capture": "campaign-exam-strength-r3-turn2.png",
+          "handCardIds": [
+            1,
+            3,
+            13
+          ],
+          "handCapture": "campaign-exam-strength-r3-initial.png"
+        },
+        {
+          "cardId": 3,
+          "name": "ポーズの基本",
+          "expected": {
+            "score": 12,
+            "stamina": 26,
+            "genki": 2,
+            "stance": "none"
+          },
+          "capture": "campaign-exam-strength-r3-turn3.png",
+          "handCardIds": [
+            50,
+            1,
+            3
+          ],
+          "handCapture": "campaign-exam-strength-r3-turn2-hand.png"
+        },
+        {
+          "cardId": 13,
+          "name": "表現の基本",
+          "expected": {
+            "score": 12,
+            "stamina": 26,
+            "genki": 6,
+            "stance": "none"
+          },
+          "capture": "campaign-exam-strength-r3-turn4.png",
+          "handCardIds": [
+            13,
+            382,
+            3
+          ],
+          "handCapture": "campaign-exam-strength-r3-turn3.png"
+        },
+        {
+          "cardId": 376,
+          "name": "イメージの基本",
+          "expected": {
+            "score": 12,
+            "stamina": 26,
+            "genki": 6,
+            "stance": "preservation"
+          },
+          "capture": "campaign-exam-strength-r3-turn5.png",
+          "handCardIds": [
+            376,
+            418,
+            3
+          ],
+          "handCapture": "campaign-exam-strength-r3-turn4.png"
+        },
+        {
+          "cardId": 392,
+          "name": "ハッピー♪",
+          "expected": {
+            "score": 12,
+            "stamina": 26,
+            "genki": 11,
+            "stance": "preservation2"
+          },
+          "capture": "campaign-exam-strength-r3-turn6.png",
+          "handCardIds": [
+            400,
+            392,
+            13
+          ],
+          "handCapture": "campaign-exam-strength-r3-turn5.png"
+        },
+        {
+          "cardId": 370,
+          "name": "はげしく",
+          "turnsElapsed": 5,
+          "expected": {
+            "score": 196,
+            "stamina": 26,
+            "genki": 14,
+            "stance": "strength",
+            "enthusiasm": 8,
+            "cardUsesRemaining": 1
+          },
+          "capture": "campaign-exam-strength-r3-extra.png",
+          "handCardIds": [
+            384,
+            370,
+            13
+          ],
+          "handCapture": "campaign-exam-strength-r3-turn6.png"
+        },
+        {
+          "cardId": 384,
+          "name": "一歩",
+          "turnsElapsed": 6,
+          "expected": {
+            "score": 380,
+            "stamina": 26,
+            "genki": 6,
+            "stance": "strength"
+          },
+          "capture": "campaign-exam-strength-r3-final-b.png",
+          "handCardIds": [
+            384,
+            13
+          ],
+          "handCapture": "campaign-exam-strength-r3-extra.png"
+        }
+      ]
+    }
+  ],
+  "drawCardIds": [
+    1,
+    3,
+    13,
+    50,
+    1,
+    3,
+    13,
+    382,
+    3,
+    376,
+    418,
+    3,
+    400,
+    392,
+    13,
+    384,
+    370,
+    13
+  ]
+}

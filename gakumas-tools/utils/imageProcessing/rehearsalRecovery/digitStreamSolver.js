@@ -10,10 +10,11 @@ import {
   pickBest,
 } from "./checksumMath.js";
 
-// A per-character score is at most 7 digits (one below MAX_SCORE), so a stage
-// row's digit stream holds at most three such scores' worth of digits.
+// A per-character score is at most 7 digits (one below MAX_SCORE), and each of
+// the two non-first scores may carry a duplicated leading "1" (8 digits, see
+// partOptions), so a stage row's digit stream holds at most 7 + 8 + 8 digits.
 const MAX_SCORE_DIGITS = 7;
-const MAX_STREAM_DIGITS = 3 * MAX_SCORE_DIGITS;
+const MAX_STREAM_DIGITS = 3 * MAX_SCORE_DIGITS + 2;
 
 const DIGITS_0_9 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 

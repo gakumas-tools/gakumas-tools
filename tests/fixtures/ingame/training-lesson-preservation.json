@@ -1,0 +1,279 @@
+{
+  "date": "2026-11-02",
+  "gameVersion": "3.5.0",
+  "stage": "【基礎9】温存",
+  "sourceDirectory": "screenshots/sources/ingame/",
+  "initialAttribute": 100,
+  "targetGain": 30,
+  "initial": {
+    "score": 0,
+    "stamina": 15,
+    "genki": 0,
+    "fullPowerCharge": 0,
+    "stance": "none",
+    "enthusiasm": 0
+  },
+  "turnTypes": [
+    "vocal",
+    "vocal",
+    "vocal"
+  ],
+  "replayMultipliers": {
+    "vocal": 1
+  },
+  "initialCaptures": [
+    "campaign-preservation-r1-turn1.png",
+    "campaign-preservation-r2-turn1.png",
+    "campaign-preservation-r3-turn1.png"
+  ],
+  "plays": [
+    {
+      "id": "guided-appeal",
+      "actions": [
+        {
+          "cardId": 376,
+          "name": "イメージの基本",
+          "turnsElapsed": 1,
+          "expected": {
+            "stamina": 13,
+            "genki": 2,
+            "stance": "preservation",
+            "fullPowerCharge": 0,
+            "score": 0,
+            "enthusiasm": 0
+          },
+          "capture": "campaign-preservation-r1-turn2.png",
+          "handCardIds": [
+            13,
+            376,
+            3
+          ],
+          "handCapture": "campaign-preservation-r1-turn1.png"
+        },
+        {
+          "cardId": 1,
+          "name": "アピールの基本",
+          "turnsElapsed": 2,
+          "expected": {
+            "stamina": 13,
+            "genki": 0,
+            "stance": "preservation",
+            "fullPowerCharge": 0,
+            "score": 5,
+            "enthusiasm": 0
+          },
+          "capture": "campaign-preservation-r1-turn3-play.png",
+          "handCardIds": [
+            1,
+            3,
+            384
+          ],
+          "handCapture": "campaign-preservation-r1-turn2.png"
+        },
+        {
+          "cardId": 368,
+          "name": "挨拶の基本",
+          "turnsElapsed": 2,
+          "expected": {
+            "stamina": 13,
+            "genki": 0,
+            "stance": "strength",
+            "fullPowerCharge": 0,
+            "score": 5,
+            "enthusiasm": 5,
+            "cardUsesRemaining": 1
+          },
+          "capture": "campaign-preservation-r1-extra.png",
+          "handCardIds": [
+            368,
+            1,
+            13
+          ],
+          "handCapture": "campaign-preservation-r1-turn3-play.png"
+        },
+        {
+          "cardId": 1,
+          "name": "アピールの基本",
+          "turnsElapsed": 3,
+          "expected": {
+            "stamina": 5,
+            "genki": 0,
+            "stance": "strength",
+            "fullPowerCharge": 0
+          },
+          "capture": "campaign-preservation-r1-final-b.png",
+          "handCardIds": [
+            1,
+            13
+          ],
+          "handCapture": "campaign-preservation-r1-extra.png"
+        }
+      ],
+      "terminalAttribute": 130,
+      "terminalScoreCompared": false
+    },
+    {
+      "id": "pose-then-appeal",
+      "actions": [
+        {
+          "cardId": 376,
+          "name": "イメージの基本",
+          "turnsElapsed": 1,
+          "expected": {
+            "stamina": 13,
+            "genki": 2,
+            "stance": "preservation",
+            "fullPowerCharge": 0,
+            "score": 0,
+            "enthusiasm": 0
+          },
+          "capture": "campaign-preservation-r2-turn2.png",
+          "handCardIds": [
+            13,
+            376,
+            3
+          ],
+          "handCapture": "campaign-preservation-r2-turn1.png"
+        },
+        {
+          "cardId": 3,
+          "name": "ポーズの基本",
+          "turnsElapsed": 2,
+          "expected": {
+            "stamina": 13,
+            "genki": 2,
+            "stance": "preservation",
+            "fullPowerCharge": 0,
+            "score": 1,
+            "enthusiasm": 0
+          },
+          "capture": "campaign-preservation-r2-turn3.png",
+          "handCardIds": [
+            1,
+            3,
+            384
+          ],
+          "handCapture": "campaign-preservation-r2-turn2.png"
+        },
+        {
+          "cardId": 368,
+          "name": "挨拶の基本",
+          "turnsElapsed": 2,
+          "expected": {
+            "stamina": 13,
+            "genki": 2,
+            "stance": "strength",
+            "fullPowerCharge": 0,
+            "score": 1,
+            "enthusiasm": 5,
+            "cardUsesRemaining": 1
+          },
+          "capture": "campaign-preservation-r2-extra.png",
+          "handCardIds": [
+            368,
+            1,
+            13
+          ],
+          "handCapture": "campaign-preservation-r2-turn3.png"
+        },
+        {
+          "cardId": 1,
+          "name": "アピールの基本",
+          "turnsElapsed": 3,
+          "expected": {
+            "stamina": 7,
+            "genki": 0,
+            "stance": "strength",
+            "fullPowerCharge": 0,
+            "score": 29
+          },
+          "capture": "campaign-preservation-r2-final-b.png",
+          "handCardIds": [
+            1,
+            13
+          ],
+          "handCapture": "campaign-preservation-r2-extra.png"
+        }
+      ],
+      "terminalAttribute": 129,
+      "terminalScoreCompared": true
+    },
+    {
+      "id": "remain-in-preservation",
+      "actions": [
+        {
+          "cardId": 376,
+          "name": "イメージの基本",
+          "turnsElapsed": 1,
+          "expected": {
+            "score": 0,
+            "stamina": 13,
+            "genki": 2,
+            "fullPowerCharge": 0,
+            "stance": "preservation",
+            "enthusiasm": 0
+          },
+          "capture": "campaign-preservation-r3-turn2.png",
+          "handCardIds": [
+            13,
+            376,
+            3
+          ],
+          "handCapture": "campaign-preservation-r3-turn1.png"
+        },
+        {
+          "cardId": 384,
+          "name": "一歩",
+          "turnsElapsed": 2,
+          "expected": {
+            "score": 8,
+            "stamina": 13,
+            "genki": 0,
+            "fullPowerCharge": 0,
+            "stance": "preservation",
+            "enthusiasm": 0
+          },
+          "capture": "campaign-preservation-r3-turn3.png",
+          "handCardIds": [
+            1,
+            3,
+            384
+          ],
+          "handCapture": "campaign-preservation-r3-turn2.png"
+        },
+        {
+          "cardId": 1,
+          "name": "アピールの基本",
+          "turnsElapsed": 3,
+          "expected": {
+            "score": 13,
+            "stamina": 11,
+            "genki": 0,
+            "fullPowerCharge": 0,
+            "stance": "preservation"
+          },
+          "capture": "campaign-preservation-r3-final-b.png",
+          "handCardIds": [
+            368,
+            1,
+            13
+          ],
+          "handCapture": "campaign-preservation-r3-turn3.png"
+        }
+      ],
+      "terminalAttribute": 113,
+      "terminalScoreCompared": true
+    }
+  ],
+  "drawCardIds": [
+    13,
+    376,
+    3,
+    1,
+    3,
+    384,
+    368,
+    1,
+    13
+  ]
+}

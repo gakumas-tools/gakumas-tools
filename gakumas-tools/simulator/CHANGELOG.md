@@ -11,6 +11,13 @@ All notable changes to the contest simulator will be documented in this file.
 
 
 
+
+## 2026-11-06
+
+- Update garakutaroad china and misuzu
+- Add garakutaroad support item
+- Fix break-time snack score rounding
+
 ## 2026-11-02
 
 - Confirm contest season 55 stages

@@ -1,0 +1,190 @@
+{
+  "date": "2026-11-05",
+  "gameVersion": "3.5.0",
+  "stage": "Contest S55 stage 3 (アノマリー) rehearsal 42: owned memory 学園生活 秦谷美鈴 3663 (400/200/300, St 25)",
+  "stageId": 192,
+  "startingStamina": 25,
+  "initial": {
+    "score": 0,
+    "stamina": 25
+  },
+  "pItemIds": [
+    261
+  ],
+  "turnTypes": [
+    "dance",
+    "visual",
+    "visual",
+    "vocal",
+    "dance",
+    "dance",
+    "visual",
+    "dance",
+    "dance",
+    "vocal",
+    "visual",
+    "dance"
+  ],
+  "displayedPercents": {
+    "vocal": 274,
+    "dance": 296,
+    "visual": 328
+  },
+  "sourceDirectory": "screenshots/sources/ingame/",
+  "plays": [
+    {
+      "id": "rehearsal-20261105-misuzu-42",
+      "actions": [
+        {
+          "turn": 1,
+          "cardId": 418,
+          "name": "カウントダウン",
+          "expected": {
+            "score": 0,
+            "genki": 8
+          },
+          "capture": "campaign-s28-mis1-log-8.png"
+        },
+        {
+          "turn": 2,
+          "cardId": 392,
+          "name": "ハッピー♪",
+          "expected": {
+            "score": 0,
+            "genki": 13
+          },
+          "capture": "campaign-s28-mis1-log-7.png"
+        },
+        {
+          "turn": 3,
+          "cardId": 540,
+          "name": "のんびり屋さん",
+          "expected": {
+            "score": 0,
+            "fullPowerCharge": 1
+          },
+          "capture": "campaign-s28-mis1-log-7.png"
+        },
+        {
+          "turn": 4,
+          "cardId": 370,
+          "name": "はげしく",
+          "expected": {
+            "score": 137,
+            "enthusiasm": 10
+          },
+          "capture": "campaign-s28-mis1-log-6.png"
+        },
+        {
+          "turn": 4,
+          "cardId": 376,
+          "name": "イメージの基本",
+          "expected": {
+            "score": 137,
+            "genki": 14
+          },
+          "capture": "campaign-s28-mis1-log-6.png"
+        },
+        {
+          "turn": 5,
+          "cardId": 374,
+          "name": "メントレの基本",
+          "expected": {
+            "score": 137,
+            "genki": 16,
+            "fullPowerCharge": 3
+          },
+          "capture": "campaign-s28-mis1-log-6.png"
+        },
+        {
+          "turn": 6,
+          "cardId": 376,
+          "name": "イメージの基本",
+          "expected": {
+            "score": 137,
+            "genki": 18
+          },
+          "capture": "campaign-s28-mis1-log-5.png"
+        },
+        {
+          "turn": 7,
+          "cardId": 372,
+          "name": "スパート",
+          "expected": {
+            "score": 137,
+            "fullPowerCharge": 4
+          },
+          "capture": "campaign-s28-mis1-log-5.png"
+        },
+        {
+          "turn": 8,
+          "cardId": 380,
+          "name": "ジャストアピール",
+          "expected": {
+            "score": 137,
+            "fullPowerCharge": 6
+          },
+          "capture": "campaign-s28-mis1-log-10.png"
+        },
+        {
+          "turn": 9,
+          "cardId": 374,
+          "name": "メントレの基本",
+          "expected": {
+            "score": 137,
+            "fullPowerCharge": 8
+          },
+          "capture": "campaign-s28-mis1-log-4.png"
+        },
+        {
+          "turn": 10,
+          "cardId": 402,
+          "name": "アッチェレランド",
+          "expected": {
+            "score": 137,
+            "fullPowerCharge": 1,
+            "genki": 25
+          },
+          "capture": "campaign-s28-mis1-log-3.png"
+        },
+        {
+          "turn": 11,
+          "cardId": 1,
+          "name": "アピールの基本",
+          "expected": {
+            "score": 324
+          },
+          "capture": "campaign-s28-mis1-log-2.png"
+        },
+        {
+          "turn": 11,
+          "cardId": 372,
+          "name": "スパート",
+          "expected": {
+            "score": 669,
+            "fullPowerCharge": 2
+          },
+          "capture": "campaign-s28-mis1-log-1.png"
+        },
+        {
+          "turn": 11,
+          "cardId": 376,
+          "name": "イメージの基本",
+          "expected": {
+            "score": 738
+          },
+          "capture": "campaign-s28-mis1-log-1.png"
+        },
+        {
+          "turn": 12,
+          "cardId": 1,
+          "name": "アピールの基本",
+          "expected": {
+            "score": 795
+          },
+          "capture": "campaign-s28-mis1-log-1.png"
+        }
+      ]
+    }
+  ]
+}
