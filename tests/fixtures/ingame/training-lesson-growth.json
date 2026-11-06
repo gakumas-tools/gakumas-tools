@@ -1,0 +1,309 @@
+{
+  "date": "2026-11-03",
+  "gameVersion": "3.5.0",
+  "stage": "【応用6】成長効果",
+  "sourceDirectory": "screenshots/sources/ingame/",
+  "initialAttribute": 100,
+  "targetGain": 100,
+  "initial": {
+    "score": 0,
+    "stamina": 30,
+    "genki": 0,
+    "stance": "none",
+    "enthusiasm": 0
+  },
+  "turnTypes": [
+    "vocal",
+    "vocal",
+    "vocal"
+  ],
+  "replayMultipliers": {
+    "vocal": 1
+  },
+  "initialCaptures": [
+    "campaign-growth-20261103-r1-initial.png",
+    "campaign-growth-20261103-r2-ready.png",
+    "campaign-growth-20261103-r3-initial.png",
+    "campaign-growth-20261103-r4-initial.png",
+    "campaign-growth-20261104-r5-initial.png"
+  ],
+  "plays": [
+    {
+      "id": "guided-stance-changes",
+      "actions": [
+        {
+          "cardId": 418,
+          "name": "カウントダウン",
+          "expected": {
+            "stamina": 28,
+            "genki": 8,
+            "stance": "preservation",
+            "score": 0,
+            "enthusiasm": 0
+          },
+          "capture": "campaign-growth-20261103-r1-turn2-ready.png"
+        },
+        {
+          "cardId": 382,
+          "name": "スターライト",
+          "expected": {
+            "stamina": 28,
+            "genki": 5,
+            "stance": "strength",
+            "enthusiasm": 5,
+            "score": 28,
+            "cardUsesRemaining": 1
+          },
+          "capture": "campaign-growth-20261103-r1-extra1.png",
+          "turnsElapsed": 1
+        },
+        {
+          "cardId": 376,
+          "name": "イメージの基本",
+          "expected": {
+            "stamina": 28,
+            "genki": 3,
+            "stance": "preservation",
+            "score": 28,
+            "enthusiasm": 0
+          },
+          "capture": "campaign-growth-20261103-r1-turn3-ready.png",
+          "turnsElapsed": 2
+        },
+        {
+          "cardId": 430,
+          "name": "総合芸術",
+          "expected": {
+            "stamina": 27,
+            "genki": 0
+          },
+          "capture": "campaign-growth-20261103-r1-final-b.png",
+          "turnsElapsed": 2,
+          "growthBefore": {
+            "g.score": 45
+          },
+          "growthCapture": "campaign-growth-20261103-r1-growth-detail.png"
+        }
+      ],
+      "terminalAttribute": 200
+    },
+    {
+      "id": "strength-without-preservation",
+      "actions": [
+        {
+          "cardId": 3,
+          "name": "ポーズの基本",
+          "expected": {
+            "stamina": 27,
+            "genki": 2,
+            "stance": "none",
+            "score": 2
+          },
+          "capture": "campaign-growth-20261103-r2-turn2.png"
+        },
+        {
+          "cardId": 382,
+          "name": "スターライト",
+          "expected": {
+            "stamina": 23,
+            "genki": 0,
+            "stance": "strength",
+            "score": 20
+          },
+          "capture": "campaign-growth-20261103-r2-turn3.png"
+        },
+        {
+          "cardId": 430,
+          "name": "総合芸術",
+          "expected": {
+            "stamina": 9,
+            "genki": 0,
+            "stance": "strength2",
+            "score": 75
+          },
+          "capture": "campaign-growth-20261103-r2-final-a.png",
+          "growthBefore": {
+            "g.score": 15
+          },
+          "growthCapture": "campaign-growth-20261103-r2-growth-detail.png"
+        }
+      ]
+    },
+    {
+      "id": "late-preservation-exit",
+      "actions": [
+        {
+          "cardId": 418,
+          "name": "カウントダウン",
+          "expected": {
+            "score": 0,
+            "stamina": 28,
+            "genki": 8,
+            "stance": "preservation",
+            "enthusiasm": 0
+          },
+          "capture": "campaign-growth-20261103-r3-turn2.png"
+        },
+        {
+          "cardId": 13,
+          "name": "表現の基本",
+          "expected": {
+            "score": 0,
+            "stamina": 28,
+            "genki": 12,
+            "stance": "preservation",
+            "enthusiasm": 0
+          },
+          "capture": "campaign-growth-20261103-r3-turn3.png"
+        },
+        {
+          "cardId": 430,
+          "name": "総合芸術",
+          "turnsElapsed": 2,
+          "growthBefore": {
+            "g.score": 15
+          },
+          "growthCapture": "campaign-growth-20261103-r3-growth-detail.png",
+          "expected": {
+            "score": 54,
+            "stamina": 28,
+            "genki": 8,
+            "stance": "strength",
+            "enthusiasm": 5,
+            "cardUsesRemaining": 1
+          },
+          "capture": "campaign-growth-20261103-r3-extra1.png"
+        },
+        {
+          "cardId": 1,
+          "name": "アピールの基本",
+          "turnsElapsed": 3,
+          "expected": {
+            "score": 82,
+            "stamina": 28,
+            "genki": 0,
+            "stance": "strength"
+          },
+          "capture": "campaign-growth-20261103-r3-final-a.png"
+        }
+      ]
+    },
+    {
+      "id": "stamina-paid-preservation-exit",
+      "actions": [
+        {
+          "cardId": 3,
+          "name": "ポーズの基本",
+          "expected": {
+            "score": 2,
+            "stamina": 27,
+            "genki": 2,
+            "stance": "none"
+          },
+          "capture": "campaign-growth-20261103-r4-turn2.png"
+        },
+        {
+          "cardId": 376,
+          "name": "イメージの基本",
+          "expected": {
+            "score": 2,
+            "stamina": 27,
+            "genki": 2,
+            "stance": "preservation"
+          },
+          "capture": "campaign-growth-20261103-r4-turn3.png"
+        },
+        {
+          "cardId": 430,
+          "name": "総合芸術",
+          "turnsElapsed": 2,
+          "growthBefore": {
+            "g.score": 15
+          },
+          "growthCapture": "campaign-growth-20261103-r4-growth-detail.png",
+          "expected": {
+            "score": 56,
+            "stamina": 25,
+            "genki": 0,
+            "stance": "strength",
+            "enthusiasm": 5,
+            "cardUsesRemaining": 1
+          },
+          "capture": "campaign-growth-20261103-r4-extra1.png"
+        },
+        {
+          "cardId": 1,
+          "name": "アピールの基本",
+          "turnsElapsed": 3,
+          "expected": {
+            "score": 84,
+            "stamina": 17,
+            "genki": 0,
+            "stance": "strength"
+          },
+          "capture": "campaign-growth-20261103-r4-final-a.png"
+        }
+      ]
+    },
+    {
+      "id": "retained-strength-cap",
+      "date": "2026-11-04",
+      "actions": [
+        {
+          "cardId": 418,
+          "name": "カウントダウン",
+          "expected": {
+            "score": 0,
+            "stamina": 28,
+            "genki": 8,
+            "stance": "preservation",
+            "enthusiasm": 0
+          },
+          "capture": "campaign-growth-20261104-r5-turn2.png"
+        },
+        {
+          "cardId": 382,
+          "name": "スターライト",
+          "expected": {
+            "score": 28,
+            "stamina": 28,
+            "genki": 5,
+            "stance": "strength",
+            "enthusiasm": 5,
+            "cardUsesRemaining": 1
+          },
+          "capture": "campaign-growth-20261104-r5-extra1.png",
+          "turnsElapsed": 1
+        },
+        {
+          "cardId": 13,
+          "name": "表現の基本",
+          "expected": {
+            "score": 28,
+            "stamina": 28,
+            "genki": 9,
+            "stance": "strength",
+            "enthusiasm": 0
+          },
+          "capture": "campaign-growth-20261104-r5-turn3.png",
+          "turnsElapsed": 2
+        },
+        {
+          "cardId": 430,
+          "name": "総合芸術",
+          "expected": {
+            "stamina": 23,
+            "genki": 0
+          },
+          "capture": "campaign-growth-20261104-r5-final-b.png",
+          "growthBefore": {
+            "g.score": 30
+          },
+          "growthCapture": "campaign-growth-20261104-r5-growth-detail.png",
+          "turnsElapsed": 3
+        }
+      ],
+      "terminalAttribute": 200
+    }
+  ]
+}
