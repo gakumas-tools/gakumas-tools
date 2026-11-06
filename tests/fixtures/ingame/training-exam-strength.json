@@ -40,7 +40,13 @@
             "stamina": 26,
             "genki": 0
           },
-          "capture": "campaign-exam-strength-r1-turn2-ready.png"
+          "capture": "campaign-exam-strength-r1-turn2-ready.png",
+          "handCardIds": [
+            1,
+            3,
+            13
+          ],
+          "handCapture": "campaign-exam-strength-r1-initial.png"
         },
         {
           "cardId": 1,
@@ -51,7 +57,13 @@
             "genki": 0,
             "stance": "none"
           },
-          "capture": "campaign-exam-strength-r1-turn3-ready.png"
+          "capture": "campaign-exam-strength-r1-turn3-ready.png",
+          "handCardIds": [
+            50,
+            1,
+            3
+          ],
+          "handCapture": "campaign-exam-strength-r1-turn2-ready.png"
         },
         {
           "cardId": 382,
@@ -62,7 +74,13 @@
             "genki": 0,
             "stance": "strength"
           },
-          "capture": "campaign-exam-strength-r1-turn4-ready.png"
+          "capture": "campaign-exam-strength-r1-turn4-ready.png",
+          "handCardIds": [
+            13,
+            382,
+            3
+          ],
+          "handCapture": "campaign-exam-strength-r1-turn3-ready.png"
         },
         {
           "cardId": 418,
@@ -73,7 +91,13 @@
             "genki": 8,
             "stance": "preservation"
           },
-          "capture": "campaign-exam-strength-r1-turn5-ready.png"
+          "capture": "campaign-exam-strength-r1-turn5-ready.png",
+          "handCardIds": [
+            376,
+            418,
+            3
+          ],
+          "handCapture": "campaign-exam-strength-r1-turn4-ready.png"
         },
         {
           "cardId": 400,
@@ -87,7 +111,13 @@
             "enthusiasm": 5,
             "cardUsesRemaining": 1
           },
-          "capture": "campaign-exam-strength-r1-extra-ready.png"
+          "capture": "campaign-exam-strength-r1-extra-ready.png",
+          "handCardIds": [
+            400,
+            392,
+            13
+          ],
+          "handCapture": "campaign-exam-strength-r1-turn5-ready.png"
         },
         {
           "cardId": 13,
@@ -100,7 +130,12 @@
             "stance": "strength",
             "enthusiasm": 0
           },
-          "capture": "campaign-exam-strength-r1-turn6-ready.png"
+          "capture": "campaign-exam-strength-r1-turn6-ready.png",
+          "handCardIds": [
+            392,
+            13
+          ],
+          "handCapture": "campaign-exam-strength-r1-extra-ready.png"
         },
         {
           "cardId": 370,
@@ -112,7 +147,13 @@
             "stance": "strength2",
             "stamina": 7
           },
-          "capture": "campaign-exam-strength-r1-final-a.png"
+          "capture": "campaign-exam-strength-r1-final-a.png",
+          "handCardIds": [
+            384,
+            370,
+            13
+          ],
+          "handCapture": "campaign-exam-strength-r1-turn6-ready.png"
         }
       ]
     },
@@ -129,7 +170,13 @@
             "stance": "none",
             "costReduction": 0
           },
-          "capture": "campaign-exam-strength-r2-turn2.png"
+          "capture": "campaign-exam-strength-r2-turn2.png",
+          "handCardIds": [
+            1,
+            3,
+            13
+          ],
+          "handCapture": "campaign-exam-strength-r2-initial.png"
         },
         {
           "cardId": 50,
@@ -141,7 +188,13 @@
             "stance": "none",
             "costReduction": 1
           },
-          "capture": "campaign-exam-strength-r2-turn3.png"
+          "capture": "campaign-exam-strength-r2-turn3.png",
+          "handCardIds": [
+            50,
+            1,
+            3
+          ],
+          "handCapture": "campaign-exam-strength-r2-turn2.png"
         },
         {
           "cardId": 382,
@@ -153,7 +206,13 @@
             "stance": "strength",
             "costReduction": 1
           },
-          "capture": "campaign-exam-strength-r2-turn4.png"
+          "capture": "campaign-exam-strength-r2-turn4.png",
+          "handCardIds": [
+            13,
+            382,
+            3
+          ],
+          "handCapture": "campaign-exam-strength-r2-turn3.png"
         },
         {
           "cardId": 3,
@@ -165,7 +224,13 @@
             "stance": "strength",
             "costReduction": 1
           },
-          "capture": "campaign-exam-strength-r2-turn5.png"
+          "capture": "campaign-exam-strength-r2-turn5.png",
+          "handCardIds": [
+            376,
+            418,
+            3
+          ],
+          "handCapture": "campaign-exam-strength-r2-turn4.png"
         },
         {
           "cardId": 400,
@@ -177,7 +242,13 @@
             "stance": "strength2",
             "costReduction": 1
           },
-          "capture": "campaign-exam-strength-r2-turn6.png"
+          "capture": "campaign-exam-strength-r2-turn6.png",
+          "handCardIds": [
+            400,
+            392,
+            13
+          ],
+          "handCapture": "campaign-exam-strength-r2-turn5.png"
         },
         {
           "cardId": 384,
@@ -189,7 +260,13 @@
             "stance": "strength2",
             "costReduction": 1
           },
-          "capture": "campaign-exam-strength-r2-final-b.png"
+          "capture": "campaign-exam-strength-r2-final-b.png",
+          "handCardIds": [
+            384,
+            370,
+            13
+          ],
+          "handCapture": "campaign-exam-strength-r2-turn6.png"
         }
       ]
     },
@@ -205,7 +282,13 @@
             "genki": 2,
             "stance": "none"
           },
-          "capture": "campaign-exam-strength-r3-turn2.png"
+          "capture": "campaign-exam-strength-r3-turn2.png",
+          "handCardIds": [
+            1,
+            3,
+            13
+          ],
+          "handCapture": "campaign-exam-strength-r3-initial.png"
         },
         {
           "cardId": 3,
@@ -216,7 +299,13 @@
             "genki": 2,
             "stance": "none"
           },
-          "capture": "campaign-exam-strength-r3-turn3.png"
+          "capture": "campaign-exam-strength-r3-turn3.png",
+          "handCardIds": [
+            50,
+            1,
+            3
+          ],
+          "handCapture": "campaign-exam-strength-r3-turn2-hand.png"
         },
         {
           "cardId": 13,
@@ -227,7 +316,13 @@
             "genki": 6,
             "stance": "none"
           },
-          "capture": "campaign-exam-strength-r3-turn4.png"
+          "capture": "campaign-exam-strength-r3-turn4.png",
+          "handCardIds": [
+            13,
+            382,
+            3
+          ],
+          "handCapture": "campaign-exam-strength-r3-turn3.png"
         },
         {
           "cardId": 376,
@@ -238,7 +333,13 @@
             "genki": 6,
             "stance": "preservation"
           },
-          "capture": "campaign-exam-strength-r3-turn5.png"
+          "capture": "campaign-exam-strength-r3-turn5.png",
+          "handCardIds": [
+            376,
+            418,
+            3
+          ],
+          "handCapture": "campaign-exam-strength-r3-turn4.png"
         },
         {
           "cardId": 392,
@@ -249,7 +350,13 @@
             "genki": 11,
             "stance": "preservation2"
           },
-          "capture": "campaign-exam-strength-r3-turn6.png"
+          "capture": "campaign-exam-strength-r3-turn6.png",
+          "handCardIds": [
+            400,
+            392,
+            13
+          ],
+          "handCapture": "campaign-exam-strength-r3-turn5.png"
         },
         {
           "cardId": 370,
@@ -263,7 +370,13 @@
             "enthusiasm": 8,
             "cardUsesRemaining": 1
           },
-          "capture": "campaign-exam-strength-r3-extra.png"
+          "capture": "campaign-exam-strength-r3-extra.png",
+          "handCardIds": [
+            384,
+            370,
+            13
+          ],
+          "handCapture": "campaign-exam-strength-r3-turn6.png"
         },
         {
           "cardId": 384,
@@ -275,9 +388,34 @@
             "genki": 6,
             "stance": "strength"
           },
-          "capture": "campaign-exam-strength-r3-final-b.png"
+          "capture": "campaign-exam-strength-r3-final-b.png",
+          "handCardIds": [
+            384,
+            13
+          ],
+          "handCapture": "campaign-exam-strength-r3-extra.png"
         }
       ]
     }
+  ],
+  "drawCardIds": [
+    1,
+    3,
+    13,
+    50,
+    1,
+    3,
+    13,
+    382,
+    3,
+    376,
+    418,
+    3,
+    400,
+    392,
+    13,
+    384,
+    370,
+    13
   ]
 }
