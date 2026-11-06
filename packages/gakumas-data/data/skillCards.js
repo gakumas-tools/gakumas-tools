@@ -5,7 +5,10 @@ import { lazyParse } from "../utils/lazyParse";
 
 SKILL_CARDS.forEach((skillCard) => {
   skillCard._type = "skillCard";
-  skillCard.availableCustomizations = skillCard.availableCustomizations
+  // A single id is parsed as a number, so split its string form.
+  skillCard.availableCustomizations = String(
+    skillCard.availableCustomizations ?? "",
+  )
     .split(",")
     .filter((c) => c);
   skillCard.limit = skillCard.limit || null;
@@ -23,7 +26,7 @@ const parsed = lazyParse(SKILL_CARDS, (skillCard) => {
 const SKILL_CARDS_BY_ID = SKILL_CARDS.reduce((acc, cur) => {
   acc[cur.id] = cur;
   return acc;
-}, {});
+}, Object.create(null));
 
 class SkillCards {
   static getAll() {

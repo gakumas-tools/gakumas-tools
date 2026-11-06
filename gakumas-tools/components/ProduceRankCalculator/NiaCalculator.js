@@ -17,6 +17,7 @@ import Table from "@/components/Table";
 import { usePopOnChange } from "@/utils/usePop";
 import WorkspaceContext from "@/contexts/WorkspaceContext";
 import c from "@/utils/classNames";
+import { exactFloor } from "@/utils/exactFloor";
 import { getRank, TARGET_RATING_BY_RANK } from "@/utils/produceRank";
 import {
   BALANCE_BY_IDOL,
@@ -74,7 +75,11 @@ export default function NiaCalculator() {
   const DIFFICULTIES = ["pro", "master"];
   const TABLE_HEADERS = [t("produceRank"), "Vo", "Da", "Vi"];
 
-  const { idolId, setIdolId } = useContext(WorkspaceContext);
+  const { idolId: workspaceIdolId, setIdolId } = useContext(WorkspaceContext);
+  // The workspace idol may be one N.I.A doesn't offer (e.g. 亜紗里).
+  const idolId = IDOL_OPTIONS.some((o) => o.id == workspaceIdolId)
+    ? workspaceIdolId
+    : IDOL_OPTIONS[0].id;
 
   const [difficulty, setDifficulty] = useState("master");
   const [stage, setStage] = useState("finale");
@@ -154,7 +159,7 @@ export default function NiaCalculator() {
   const totalVotes = votes + gainedVotes;
   const voteRank = getVoteRank(totalVotes);
 
-  const paramRating = Math.floor(
+  const paramRating = exactFloor(
     postAuditionParams.reduce((acc, cur) => acc + cur, 0) * 2.3,
   );
 
@@ -185,6 +190,7 @@ export default function NiaCalculator() {
             if (diff === "master") {
               setStage("finale");
               setAffection(20);
+              setChallengeParamBonus(55);
             } else {
               setChallengeParamBonus(null);
             }
