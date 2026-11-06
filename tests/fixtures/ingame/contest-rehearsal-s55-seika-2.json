@@ -1,0 +1,136 @@
+{
+  "date": "2026-11-05",
+  "gameVersion": "3.5.0",
+  "stage": "Contest S55 stage 1 (センス) rehearsal (second play): Tame-Lie-One-Step 紫雲清夏 5541",
+  "startingStamina": 30,
+  "initial": {
+    "score": 0,
+    "stamina": 30,
+    "concentration": 3
+  },
+  "pItemIds": [
+    55
+  ],
+  "skillCardIds": [
+    76,
+    17,
+    104,
+    54,
+    7,
+    1,
+    230,
+    5
+  ],
+  "turnTypes": [
+    "visual",
+    "vocal",
+    "visual",
+    "visual",
+    "vocal",
+    "visual",
+    "dance",
+    "dance",
+    "vocal",
+    "visual"
+  ],
+  "displayedPercents": {
+    "vocal": 319,
+    "dance": 482,
+    "visual": 402
+  },
+  "scope": "Contest rehearsal replay with the panel's type %; excludes deck draws, the % calculation from parameters (#373) and the stage's ranking bonus.",
+  "sourceDirectory": "screenshots/sources/ingame/",
+  "plays": [
+    {
+      "id": "rehearsal-20261105-2",
+      "actions": [
+        {
+          "cardId": 76,
+          "name": "情熱ターン",
+          "expected": {
+            "score": 57,
+            "concentration": 6
+          },
+          "capture": "campaign-s20-reh-s1log-seika-4.png"
+        },
+        {
+          "cardId": 17,
+          "name": "表情の基本",
+          "expected": {
+            "score": 57,
+            "genki": 1,
+            "concentration": 8
+          },
+          "capture": "campaign-s20-reh-s1log-seika-4.png"
+        },
+        {
+          "cardId": 104,
+          "name": "大声援",
+          "expected": {
+            "score": 57,
+            "genki": 6
+          },
+          "capture": "campaign-s20-reh-s1log-seika-3.png"
+        },
+        {
+          "cardId": 54,
+          "name": "楽観的",
+          "expected": {
+            "score": 57,
+            "concentration": 9
+          },
+          "capture": "campaign-s20-reh-s1log-seika-3.png"
+        },
+        {
+          "cardId": 7,
+          "name": "試行錯誤",
+          "expected": {
+            "score": 223
+          },
+          "capture": "campaign-s20-reh-s1log-seika-3.png"
+        },
+        {
+          "cardId": 54,
+          "name": "楽観的",
+          "expected": {
+            "score": 223
+          },
+          "capture": "campaign-s20-reh-s1log-seika-3.png"
+        },
+        {
+          "cardId": 1,
+          "name": "アピールの基本",
+          "expected": {
+            "score": 363
+          },
+          "capture": "campaign-s20-reh-s1log-seika-2.png"
+        },
+        {
+          "cardId": 230,
+          "name": "ワンモアステップ",
+          "expected": {
+            "score": 741
+          },
+          "capture": "campaign-s20-reh-s1log-seika-2.png"
+        },
+        {
+          "cardId": 17,
+          "name": "表情の基本",
+          "expected": {
+            "score": 741,
+            "concentration": 12
+          },
+          "capture": "campaign-s20-reh-s1log-seika-1.png"
+        },
+        {
+          "cardId": 5,
+          "name": "挑戦",
+          "expected": {
+            "score": 967
+          },
+          "capture": "campaign-s20-reh-s1log-seika-1.png"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,158 @@
+{
+  "date": "2026-11-05",
+  "gameVersion": "3.5.0",
+  "stageId": 190,
+  "startingStamina": 35,
+  "initial": {
+    "score": 0,
+    "concentration": 3
+  },
+  "pItemIds": [
+    27
+  ],
+  "stage": "Contest S55 stage 1 (センス) sixth rehearsal: owned memory 一匹狼 月村手毬 5319 + sub 学園生活 月村手毬",
+  "skillCardIds": [
+    184,
+    24,
+    475,
+    17,
+    74,
+    7,
+    52,
+    5,
+    17,
+    15
+  ],
+  "turnTypes": [
+    "visual",
+    "visual",
+    "visual",
+    "vocal",
+    "visual",
+    "dance",
+    "vocal",
+    "dance",
+    "vocal",
+    "visual"
+  ],
+  "displayedPercents": {
+    "vocal": 873,
+    "dance": 284,
+    "visual": 576
+  },
+  "scope": "Contest rehearsal replay with the panel's type %; excludes deck draws, the % calculation from parameters (#373) and the stage's ranking bonus.",
+  "note": "Expected values are after the action's turn ends. 練習再開！+ comes on turn 3 and its extra use plays 表情の基本 with 8 turns left, so the stage's effect stays off. 私の「初」の楽譜 fires at the start of turns 1 and 2 only (its limit is 2), so turn 1's values include turn 2's start. Turn 8 is skipped.",
+  "sourceDirectory": "screenshots/sources/ingame/",
+  "plays": [
+    {
+      "id": "rehearsal-20261105-temari-5319-6",
+      "actions": [
+        {
+          "turn": 1,
+          "cardId": 184,
+          "name": "意地っ張り",
+          "expected": {
+            "score": 58,
+            "stamina": 27,
+            "concentration": 9
+          },
+          "capture": "campaign-s25-tem6-log-6.png"
+        },
+        {
+          "turn": 2,
+          "cardId": 24,
+          "name": "軽い足取り",
+          "expected": {
+            "score": 145,
+            "concentration": 9
+          },
+          "capture": "campaign-s25-tem6-log-6.png"
+        },
+        {
+          "turn": 3,
+          "cardId": 475,
+          "name": "練習再開！+",
+          "expected": {
+            "score": 145
+          },
+          "capture": "campaign-s25-tem6-log-5.png"
+        },
+        {
+          "turn": 3,
+          "cardId": 17,
+          "name": "表情の基本",
+          "expected": {
+            "score": 145,
+            "concentration": 11
+          },
+          "capture": "campaign-s25-tem6-log-4.png"
+        },
+        {
+          "turn": 4,
+          "cardId": 74,
+          "name": "アドリブ",
+          "expected": {
+            "score": 355
+          },
+          "capture": "campaign-s25-tem6-log-4.png"
+        },
+        {
+          "turn": 5,
+          "cardId": 7,
+          "name": "試行錯誤",
+          "expected": {
+            "score": 691
+          },
+          "capture": "campaign-s25-tem6-log-3.png"
+        },
+        {
+          "turn": 6,
+          "cardId": 52,
+          "name": "バランス感覚",
+          "expected": {
+            "score": 691,
+            "concentration": 14
+          },
+          "capture": "campaign-s25-tem6-log-3.png"
+        },
+        {
+          "turn": 7,
+          "cardId": 5,
+          "name": "挑戦",
+          "expected": {
+            "score": 1207
+          },
+          "capture": "campaign-s25-tem6-log-2.png"
+        },
+        {
+          "turn": 8,
+          "cardId": null,
+          "expected": {
+            "score": 1207,
+            "stamina": 2
+          },
+          "capture": "campaign-s25-tem6-log-2.png"
+        },
+        {
+          "turn": 9,
+          "cardId": 17,
+          "name": "表情の基本",
+          "expected": {
+            "score": 1207,
+            "concentration": 16
+          },
+          "capture": "campaign-s25-tem6-log-1.png"
+        },
+        {
+          "turn": 10,
+          "cardId": 15,
+          "name": "振る舞いの基本",
+          "expected": {
+            "score": 1207
+          },
+          "capture": "campaign-s25-tem6-log-1.png"
+        }
+      ]
+    }
+  ]
+}

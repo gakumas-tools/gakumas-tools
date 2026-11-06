@@ -1,0 +1,157 @@
+{
+  "date": "2026-11-05",
+  "gameVersion": "3.5.0",
+  "stage": "Contest S55 stage 1 (センス) rehearsal: owned memory Tame-Lie-One-Step 紫雲清夏 5469",
+  "stageId": 190,
+  "startingStamina": 30,
+  "initial": {
+    "score": 0,
+    "stamina": 30,
+    "concentration": 3
+  },
+  "pItemIds": [
+    55,
+    79
+  ],
+  "skillCardIds": [
+    17,
+    15,
+    7,
+    24,
+    5,
+    54,
+    230,
+    24,
+    31
+  ],
+  "turnTypes": [
+    "visual",
+    "visual",
+    "visual",
+    "dance",
+    "vocal",
+    "visual",
+    "vocal",
+    "dance",
+    "vocal",
+    "visual"
+  ],
+  "displayedPercents": {
+    "vocal": 272,
+    "dance": 463,
+    "visual": 394
+  },
+  "scope": "Contest rehearsal replay with the panel's type %; excludes deck draws, the % calculation from parameters (#373) and the stage's ranking bonus.",
+  "note": "Expected values are after the action's turn ends. 夢にあふれた大荷物 gives an extra card use on turn 4 (the first dance turn), so 軽い足取り and 挑戦 are both played there, with 7 turns left (the stage's effect stays off). Turns 9 and 10 are skipped.",
+  "sourceDirectory": "screenshots/sources/ingame/",
+  "plays": [
+    {
+      "id": "rehearsal-20261105-seika-5469",
+      "actions": [
+        {
+          "turn": 1,
+          "cardId": 17,
+          "name": "表情の基本",
+          "expected": {
+            "score": 0,
+            "genki": 1,
+            "concentration": 5
+          },
+          "capture": "campaign-s24-sei-log-4.png"
+        },
+        {
+          "turn": 2,
+          "cardId": 15,
+          "name": "振る舞いの基本",
+          "expected": {
+            "score": 0,
+            "goodConditionTurns": 2
+          },
+          "capture": "campaign-s24-sei-log-4.png"
+        },
+        {
+          "turn": 3,
+          "cardId": 7,
+          "name": "試行錯誤",
+          "expected": {
+            "score": 158
+          },
+          "capture": "campaign-s24-sei-log-5.png"
+        },
+        {
+          "turn": 4,
+          "cardId": 24,
+          "name": "軽い足取り",
+          "expected": {
+            "score": 237
+          },
+          "capture": "campaign-s24-sei-log-5.png"
+        },
+        {
+          "turn": 4,
+          "cardId": 5,
+          "name": "挑戦",
+          "expected": {
+            "score": 446
+          },
+          "capture": "campaign-s24-sei-log-5.png"
+        },
+        {
+          "turn": 5,
+          "cardId": 54,
+          "name": "楽観的",
+          "expected": {
+            "score": 446,
+            "concentration": 6
+          },
+          "capture": "campaign-s24-sei-log-3.png"
+        },
+        {
+          "turn": 6,
+          "cardId": 230,
+          "name": "ワンモアステップ",
+          "expected": {
+            "score": 683
+          },
+          "capture": "campaign-s24-sei-log-6.png"
+        },
+        {
+          "turn": 7,
+          "cardId": 24,
+          "name": "軽い足取り",
+          "expected": {
+            "score": 732
+          },
+          "capture": "campaign-s24-sei-log-6.png"
+        },
+        {
+          "turn": 8,
+          "cardId": 31,
+          "name": "ファンサ+",
+          "expected": {
+            "score": 885
+          },
+          "capture": "campaign-s24-sei-log-6.png"
+        },
+        {
+          "turn": 9,
+          "cardId": null,
+          "expected": {
+            "score": 885,
+            "stamina": 2
+          },
+          "capture": "campaign-s24-sei-log-1.png"
+        },
+        {
+          "turn": 10,
+          "cardId": null,
+          "expected": {
+            "score": 885,
+            "stamina": 4
+          },
+          "capture": "campaign-s24-sei-log-1.png"
+        }
+      ]
+    }
+  ]
+}

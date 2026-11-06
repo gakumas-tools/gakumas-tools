@@ -1,0 +1,168 @@
+{
+  "date": "2026-11-05",
+  "gameVersion": "3.5.0",
+  "stage": "Contest S55 stage 2 (ロジック) rehearsal: owned memory カワイイ♡はじめました 藤田ことね 4866",
+  "stageId": 191,
+  "startingStamina": 27,
+  "initial": {
+    "score": 0,
+    "stamina": 27
+  },
+  "pItemIds": [
+    29,
+    358
+  ],
+  "skillCardIds": [
+    13,
+    13,
+    204,
+    88,
+    88,
+    21,
+    9,
+    58,
+    88,
+    44,
+    58,
+    88
+  ],
+  "turnTypes": [
+    "vocal",
+    "dance",
+    "vocal",
+    "visual",
+    "vocal",
+    "visual",
+    "visual",
+    "vocal",
+    "vocal",
+    "dance",
+    "visual",
+    "vocal"
+  ],
+  "displayedPercents": {
+    "vocal": 329,
+    "dance": 341,
+    "visual": 551
+  },
+  "scope": "Contest rehearsal replay with the panel's type %; excludes deck draws, the % calculation from parameters (#373) and the stage's ranking bonus.",
+  "note": "Expected values are after the action's turn ends, so they include the end-of-turn 好印象 score. The stage's effect (初星ライト) fires on turns 7 and 12, doubling those turns' 好印象 ticks. 寝心地は良好 never appears in the log.",
+  "sourceDirectory": "screenshots/sources/ingame/",
+  "plays": [
+    {
+      "id": "rehearsal-20261105-kotone-4866",
+      "actions": [
+        {
+          "turn": 1,
+          "cardId": 13,
+          "name": "表現の基本",
+          "expected": {
+            "score": 0,
+            "genki": 4
+          },
+          "capture": "campaign-s24-kot-log-8.png"
+        },
+        {
+          "turn": 2,
+          "cardId": 13,
+          "name": "表現の基本",
+          "expected": {
+            "score": 14
+          },
+          "capture": "campaign-s24-kot-log-8.png"
+        },
+        {
+          "turn": 3,
+          "cardId": 204,
+          "name": "Colorful Cute!",
+          "expected": {
+            "score": 47
+          },
+          "capture": "campaign-s24-kot-log-6.png"
+        },
+        {
+          "turn": 4,
+          "cardId": 88,
+          "name": "ラブリーウインク",
+          "expected": {
+            "score": 164
+          },
+          "capture": "campaign-s24-kot-log-6.png"
+        },
+        {
+          "turn": 5,
+          "cardId": 88,
+          "name": "ラブリーウインク",
+          "expected": {
+            "score": 250
+          },
+          "capture": "campaign-s24-kot-log-5.png"
+        },
+        {
+          "turn": 6,
+          "cardId": 21,
+          "name": "意識の基本",
+          "expected": {
+            "score": 333,
+            "motivation": 2
+          },
+          "capture": "campaign-s24-kot-log-5.png"
+        },
+        {
+          "turn": 7,
+          "cardId": 9,
+          "name": "可愛い仕草",
+          "expected": {
+            "score": 714
+          },
+          "capture": "campaign-s24-kot-log-4.png"
+        },
+        {
+          "turn": 8,
+          "cardId": 58,
+          "name": "リスタート",
+          "expected": {
+            "score": 880
+          },
+          "capture": "campaign-s24-kot-log-3.png"
+        },
+        {
+          "turn": 9,
+          "cardId": 88,
+          "name": "ラブリーウインク",
+          "expected": {
+            "score": 1029
+          },
+          "capture": "campaign-s24-kot-log-3.png"
+        },
+        {
+          "turn": 10,
+          "cardId": 44,
+          "name": "手拍子",
+          "expected": {
+            "score": 1262
+          },
+          "capture": "campaign-s24-kot-log-2.png"
+        },
+        {
+          "turn": 11,
+          "cardId": 58,
+          "name": "リスタート",
+          "expected": {
+            "score": 1422
+          },
+          "capture": "campaign-s24-kot-log-2.png"
+        },
+        {
+          "turn": 12,
+          "cardId": 88,
+          "name": "ラブリーウインク",
+          "expected": {
+            "score": 1759
+          },
+          "capture": "campaign-s24-kot-log-1.png"
+        }
+      ]
+    }
+  ]
+}

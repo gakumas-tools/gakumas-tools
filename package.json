@@ -22,6 +22,7 @@
     "regression:coverage": "node --loader ./scripts/extensionless-loader.mjs ./tests/coverage.mjs",
     "fidelity": "node --no-warnings --loader ./scripts/extensionless-loader.mjs ./tests/fidelity.mjs",
     "fidelity:training": "node --no-warnings --loader ./scripts/extensionless-loader.mjs --test ./tests/trainingFidelity.mjs",
+    "fidelity:contest": "node --no-warnings --loader ./scripts/extensionless-loader.mjs --test ./tests/contestFidelity.mjs",
     "bench": "node --loader ./scripts/extensionless-loader.mjs ./tests/bench.mjs",
     "bench:choices": "node --no-warnings --loader ./scripts/extensionless-loader.mjs ./tests/choiceWeightStudy.mjs",
     "validate:data": "node --loader ./scripts/extensionless-loader.mjs ./scripts/validate-data.mjs",

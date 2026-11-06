@@ -1,0 +1,153 @@
+{
+  "date": "2026-11-05",
+  "gameVersion": "3.5.0",
+  "stage": "Contest S55 stage 1 (センス) second rehearsal: owned memory 学園生活 花海咲季 3663",
+  "stageId": 190,
+  "startingStamina": 25,
+  "initial": {
+    "score": 0,
+    "stamina": 25
+  },
+  "pItemIds": [
+    7
+  ],
+  "skillCardIds": [
+    76,
+    102,
+    17,
+    17,
+    15,
+    15,
+    28,
+    7,
+    1,
+    5
+  ],
+  "turnTypes": [
+    "visual",
+    "visual",
+    "visual",
+    "visual",
+    "vocal",
+    "vocal",
+    "dance",
+    "dance",
+    "vocal",
+    "visual"
+  ],
+  "displayedPercents": {
+    "vocal": 258,
+    "dance": 236,
+    "visual": 505
+  },
+  "scope": "Contest rehearsal replay with the panel's type %; excludes deck draws, the % calculation from parameters (#373) and the stage's ranking bonus.",
+  "note": "Expected values are after the action's turn ends, including the next turn's start: ばくおんライオン's score at the start of turn 5 (56 → 111) is checked after turn 4.",
+  "sourceDirectory": "screenshots/sources/ingame/",
+  "plays": [
+    {
+      "id": "rehearsal-20261105-saki-3663-2",
+      "actions": [
+        {
+          "turn": 1,
+          "cardId": 76,
+          "name": "情熱ターン",
+          "expected": {
+            "score": 56,
+            "concentration": 3
+          },
+          "capture": "campaign-s23-saki4-log-2.png"
+        },
+        {
+          "turn": 2,
+          "cardId": 102,
+          "name": "眼力",
+          "expected": {
+            "score": 56,
+            "genki": 6,
+            "concentration": 6
+          },
+          "capture": "campaign-s23-saki4-log-2.png"
+        },
+        {
+          "turn": 3,
+          "cardId": 17,
+          "name": "表情の基本",
+          "expected": {
+            "score": 56,
+            "genki": 6,
+            "concentration": 8
+          },
+          "capture": "campaign-s23-saki4-log-2.png"
+        },
+        {
+          "turn": 4,
+          "cardId": 15,
+          "name": "振る舞いの基本",
+          "expected": {
+            "score": 111,
+            "genki": 6
+          },
+          "capture": "campaign-s23-saki4-log-3.png"
+        },
+        {
+          "turn": 5,
+          "cardId": 17,
+          "name": "表情の基本",
+          "expected": {
+            "score": 111,
+            "genki": 6,
+            "concentration": 10
+          },
+          "capture": "campaign-s23-saki4-log-3.png"
+        },
+        {
+          "turn": 6,
+          "cardId": 28,
+          "name": "準備運動",
+          "expected": {
+            "score": 173,
+            "concentration": 12
+          },
+          "capture": "campaign-s23-saki4-log-3.png"
+        },
+        {
+          "turn": 7,
+          "cardId": 7,
+          "name": "試行錯誤",
+          "expected": {
+            "score": 269
+          },
+          "capture": "campaign-s23-saki4-log-4.png"
+        },
+        {
+          "turn": 8,
+          "cardId": 15,
+          "name": "振る舞いの基本",
+          "expected": {
+            "score": 269,
+            "genki": 1
+          },
+          "capture": "campaign-s23-saki4-log-4.png"
+        },
+        {
+          "turn": 9,
+          "cardId": 1,
+          "name": "アピールの基本",
+          "expected": {
+            "score": 352
+          },
+          "capture": "campaign-s23-saki4-log-4.png"
+        },
+        {
+          "turn": 10,
+          "cardId": 5,
+          "name": "挑戦",
+          "expected": {
+            "score": 635
+          },
+          "capture": "campaign-s23-saki4-log-1.png"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,152 @@
+{
+  "date": "2026-11-05",
+  "gameVersion": "3.5.0",
+  "stage": "Contest S55 stage 2 (ロジック) rehearsal: カワイイ♡はじめました 藤田ことね 5334 + sub 学園生活 藤田ことね",
+  "startingStamina": 41,
+  "initial": {
+    "score": 0,
+    "stamina": 41
+  },
+  "pItemIds": [
+    29
+  ],
+  "skillCardIds": [
+    38,
+    186,
+    21,
+    205,
+    124,
+    251,
+    9,
+    64,
+    13,
+    19
+  ],
+  "turnTypes": [
+    "vocal",
+    "vocal",
+    "vocal",
+    "vocal",
+    "dance",
+    "vocal",
+    "visual",
+    "visual",
+    "visual",
+    "dance",
+    "visual",
+    "vocal"
+  ],
+  "displayedPercents": {
+    "vocal": 472,
+    "dance": 489,
+    "visual": 609
+  },
+  "scope": "Contest rehearsal replay with the panel's type %; excludes deck draws, the % calculation from parameters (#373) and the stage's ranking bonus.",
+  "sourceDirectory": "screenshots/sources/ingame/",
+  "plays": [
+    {
+      "id": "rehearsal-20261105",
+      "actions": [
+        {
+          "cardId": 38,
+          "name": "今日もおはよう",
+          "expected": {
+            "score": 49
+          },
+          "capture": "campaign-s19-reh-s2log-7.png"
+        },
+        {
+          "cardId": 186,
+          "name": "アルバイター",
+          "expected": {
+            "score": 97
+          },
+          "capture": "campaign-s19-reh-s2log-7.png"
+        },
+        {
+          "cardId": 21,
+          "name": "意識の基本",
+          "expected": {
+            "score": 131,
+            "motivation": 2
+          },
+          "capture": "campaign-s19-reh-s2log-6.png"
+        },
+        {
+          "cardId": 205,
+          "name": "Colorful Cute!+",
+          "expected": {
+            "score": 198
+          },
+          "capture": "campaign-s19-reh-s2log-6.png"
+        },
+        {
+          "cardId": 124,
+          "name": "幸せな時間",
+          "expected": {
+            "score": 454
+          },
+          "capture": "campaign-s19-reh-s2log-8.png"
+        },
+        {
+          "cardId": 251,
+          "name": "心のアルバム+",
+          "expected": {
+            "score": 757
+          },
+          "capture": "campaign-s19-reh-s2log-5.png"
+        },
+        {
+          "cardId": 38,
+          "name": "今日もおはよう",
+          "expected": {
+            "score": 989
+          },
+          "capture": "campaign-s19-reh-s2log-4.png"
+        },
+        {
+          "cardId": 9,
+          "name": "可愛い仕草",
+          "expected": {
+            "score": 1379
+          },
+          "capture": "campaign-s19-reh-s2log-3.png"
+        },
+        {
+          "cardId": 64,
+          "name": "思い出し笑い",
+          "expected": {
+            "score": 1587,
+            "motivation": 4
+          },
+          "capture": "campaign-s19-reh-s2log-3.png"
+        },
+        {
+          "cardId": 124,
+          "name": "幸せな時間",
+          "expected": {
+            "score": 2037
+          },
+          "capture": "campaign-s19-reh-s2log-2.png"
+        },
+        {
+          "cardId": 13,
+          "name": "表現の基本",
+          "expected": {
+            "score": 2587
+          },
+          "capture": "campaign-s19-reh-s2log-1.png"
+        },
+        {
+          "cardId": 19,
+          "name": "目線の基本",
+          "expected": {
+            "score": 2805
+          },
+          "capture": "campaign-s19-reh-s2log-1.png"
+        }
+      ]
+    }
+  ],
+  "stageId": 191
+}

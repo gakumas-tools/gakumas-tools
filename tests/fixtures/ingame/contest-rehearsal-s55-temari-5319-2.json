@@ -1,0 +1,162 @@
+{
+  "date": "2026-11-05",
+  "gameVersion": "3.5.0",
+  "stage": "Contest S55 stage 1 (センス) second rehearsal: owned memory 一匹狼 月村手毬 5319 + sub 学園生活 月村手毬",
+  "stageId": 190,
+  "startingStamina": 35,
+  "initial": {
+    "score": 0,
+    "concentration": 3
+  },
+  "pItemIds": [
+    27
+  ],
+  "skillCardIds": [
+    52,
+    15,
+    104,
+    184,
+    475,
+    74,
+    28,
+    7,
+    5,
+    102,
+    202
+  ],
+  "turnTypes": [
+    "visual",
+    "visual",
+    "vocal",
+    "vocal",
+    "visual",
+    "visual",
+    "dance",
+    "dance",
+    "vocal",
+    "visual"
+  ],
+  "displayedPercents": {
+    "vocal": 873,
+    "dance": 284,
+    "visual": 576
+  },
+  "scope": "Contest rehearsal replay with the panel's type %; excludes deck draws, the % calculation from parameters (#373) and the stage's ranking bonus.",
+  "note": "Expected values are after the action's turn ends, including the next turn's start (私の「初」の楽譜's 集中 +3 when 元気 is 0). Turn 5's アドリブ is the turn's second card with 6 turns left, so the stage's effect doesn't fire.",
+  "sourceDirectory": "screenshots/sources/ingame/",
+  "plays": [
+    {
+      "id": "rehearsal-20261105-temari-5319-2",
+      "actions": [
+        {
+          "turn": 1,
+          "cardId": 52,
+          "name": "バランス感覚",
+          "expected": {
+            "score": 0,
+            "concentration": 9
+          },
+          "capture": "campaign-s23-tem2-log-2.png"
+        },
+        {
+          "turn": 2,
+          "cardId": 15,
+          "name": "振る舞いの基本",
+          "expected": {
+            "score": 0,
+            "genki": 1
+          },
+          "capture": "campaign-s23-tem2-log-4.png"
+        },
+        {
+          "turn": 3,
+          "cardId": 104,
+          "name": "大声援",
+          "expected": {
+            "score": 0,
+            "genki": 6
+          },
+          "capture": "campaign-s23-tem2-log-4.png"
+        },
+        {
+          "turn": 4,
+          "cardId": 184,
+          "name": "意地っ張り",
+          "expected": {
+            "score": 210,
+            "concentration": 12
+          },
+          "capture": "campaign-s23-tem2-log-4.png"
+        },
+        {
+          "turn": 5,
+          "cardId": 475,
+          "name": "練習再開！+",
+          "expected": {
+            "score": 210,
+            "goodConditionTurns": 6
+          },
+          "capture": "campaign-s23-tem2-log-3.png"
+        },
+        {
+          "turn": 5,
+          "cardId": 74,
+          "name": "アドリブ",
+          "expected": {
+            "score": 360,
+            "concentration": 12
+          },
+          "capture": "campaign-s23-tem2-log-5.png"
+        },
+        {
+          "turn": 6,
+          "cardId": 28,
+          "name": "準備運動",
+          "expected": {
+            "score": 516,
+            "concentration": 14
+          },
+          "capture": "campaign-s23-tem2-log-5.png"
+        },
+        {
+          "turn": 7,
+          "cardId": 7,
+          "name": "試行錯誤",
+          "expected": {
+            "score": 704
+          },
+          "capture": "campaign-s23-tem2-log-5.png"
+        },
+        {
+          "turn": 8,
+          "cardId": 5,
+          "name": "挑戦",
+          "expected": {
+            "score": 872
+          },
+          "capture": "campaign-s23-tem2-log-1.png"
+        },
+        {
+          "turn": 9,
+          "cardId": 102,
+          "name": "眼力",
+          "expected": {
+            "score": 872,
+            "genki": 6,
+            "concentration": 17
+          },
+          "capture": "campaign-s23-tem2-log-1.png"
+        },
+        {
+          "turn": 10,
+          "cardId": 202,
+          "name": "ローン・ウルフ",
+          "expected": {
+            "score": 1380
+          },
+          "capture": "campaign-s23-tem2-log-1.png"
+        }
+      ]
+    }
+  ]
+}
