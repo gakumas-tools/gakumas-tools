@@ -41,9 +41,9 @@ function getTypeMultipliers(capture) {
 }
 
 function createEngine(capture, play) {
-  const cardIds = play.actions.flatMap(
-    (action) => action.handCardIds ?? [action.cardId],
-  );
+  const cardIds =
+    capture.drawCardIds ??
+    play.actions.flatMap((action) => action.handCardIds ?? [action.cardId]);
   const idol = new IdolConfig({
     params: [0, 0, 0, capture.initial.stamina],
     pItemIds: capture.pItemIds ?? [],
@@ -111,6 +111,15 @@ function replay(capture, play) {
   const engine = createEngine(capture, play);
   const initialState = engine.getInitialState();
   initialState[S.genki] = capture.initial.genki;
+  if (capture.drawCardIds) {
+    const deck = [];
+    for (const cardId of capture.drawCardIds) {
+      const card = findCopy(initialState, cardId, deck);
+      assert.ok(card >= 0, `no copy of card ${cardId} left`);
+      deck.push(card);
+    }
+    initialState[S.deckCards] = deck.reverse();
+  }
   let state = engine.startStage(initialState);
   engine.logger.disable();
 
@@ -123,9 +132,20 @@ function replay(capture, play) {
     const turn = i + 1;
     assert.equal(SkillCards.getById(action.cardId).name, action.name);
 
-    const hand = supplyHand(state, action, heldCard);
+    let hand;
+    if (capture.drawCardIds) {
+      hand = state[S.handCards];
+      const cardIds = hand.map((c) => state[S.cardMap][c].id);
+      assert.deepEqual(
+        cardIds,
+        action.handCardIds,
+        `turn ${turn} hand (${action.handCapture})`,
+      );
+    } else {
+      hand = supplyHand(state, action, heldCard);
+      putInHand(state, hand);
+    }
     const card = hand.find((c) => state[S.cardMap][c].id == action.cardId);
-    putInHand(state, hand);
 
     let holds = 0;
     engine.strategy = holdAsCaptured(action.hold, (held) => {
