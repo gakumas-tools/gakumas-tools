@@ -7,7 +7,11 @@ import {
   usePopOnChange,
 } from "@/utils/usePop";
 import c from "@/utils/classNames";
-import { COMPARE_FN_BY_TYPE, ENTITY_DATA_BY_TYPE } from "@/utils/entities";
+import {
+  COMPARE_FN_BY_TYPE,
+  ENTITY_DATA_BY_TYPE,
+  isEntityHidden,
+} from "@/utils/entities";
 import styles from "./TierListPickerModal.module.scss";
 
 const PickerEntity = memo(function PickerEntity({
@@ -57,7 +61,9 @@ function TierListPickerModal({
   onClose,
 }) {
   const entities = useMemo(() => {
-    const all = ENTITY_DATA_BY_TYPE[type].getAll();
+    const all = ENTITY_DATA_BY_TYPE[type]
+      .getAll()
+      .filter((e) => !isEntityHidden(type, e.id));
     const compareFn = (a, b) => COMPARE_FN_BY_TYPE[type](b, a);
     return all.slice().sort(compareFn);
   }, [type]);

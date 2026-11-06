@@ -69,14 +69,13 @@ export default function useRehearsalParser() {
   }, []);
 
   const processVideo = useCallback(
-    async (videoFile) => {
+    async (videoFile, frameUnits) => {
       setProcessingStatus(t("analyzingVideo"));
       // Frames are OCR'd while scanning continues. Capping the frames in
       // flight keeps peak memory flat however long the video is.
       const pool = getOcrPool();
       const scan = new AbortController();
       let found = 0;
-      let scanStarted = false;
       let lastStatusAt = 0;
       const { streamCandidateFrames, getScoresFromImage } =
         await loadOcrModules();
@@ -85,12 +84,13 @@ export default function useRehearsalParser() {
         intervalMs: FRAME_INTERVAL_MS,
         brightnessThreshold: BRIGHTNESS_THRESHOLD,
         onProgress: (analyzed, frameTotal) => {
-          if (!scanStarted) {
-            scanStarted = true;
+          if (!frameUnits.ticked) {
             // The video was initially allocated 1 unit in the total; expand
             // that to `frameTotal` so the progress bar tracks per-frame.
+            frameUnits.allocated = frameTotal;
             setTotal((cur) => cur + frameTotal - 1);
           }
+          frameUnits.ticked++;
           setProgress((p) => p + 1);
           // Throttle status updates to ~4/sec — seeking can fire every
           // ~50ms on desktop.
@@ -132,7 +132,7 @@ export default function useRehearsalParser() {
       );
       const results = scored.filter(Boolean);
       setProcessingStatus(t("videoComplete", { count: results.length }));
-      return { results, scanStarted };
+      return results;
     },
     [getOcrPool, t],
   );
@@ -198,19 +198,17 @@ export default function useRehearsalParser() {
       // Videos and images share the OCR worker pool, so they run sequentially.
       const ocrPromise = (async () => {
         for (const videoFile of videos) {
-          let scanStarted = false;
+          const frameUnits = { allocated: 1, ticked: 0 };
           try {
-            const res = await processVideo(videoFile);
-            results.push(...res.results);
-            scanStarted = res.scanStarted;
+            results.push(...(await processVideo(videoFile, frameUnits)));
           } catch (err) {
             console.error(`Error processing ${videoFile.name}:`, err);
             setProcessingStatus(t("videoError", { message: err.message }));
           }
-          // If the scan never started (loadVideo error), close out the
-          // video's 1-unit allocation here. Otherwise per-frame ticking
-          // already covered it.
-          if (!scanStarted) setProgress((p) => p + 1);
+          // Close out the units the scan never ticked: all of them when the
+          // video failed to load, the rest of the frames when OCR aborted it.
+          const unticked = frameUnits.allocated - frameUnits.ticked;
+          if (unticked > 0) setProgress((p) => p + unticked);
         }
         if (images.length) {
           const { results: imgResults, failures } = await processImages(images);
