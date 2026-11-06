@@ -261,6 +261,9 @@ function TierList({ type }) {
   // containers and blow React's update budget.
   const recentlyMovedRef = useRef(false);
   const lastOverIdRef = useRef(null);
+  // Hover-moves write into the list mid-drag; a cancelled drag (Esc, resize,
+  // touchcancel) restores the list from before it started.
+  const dragStartListRef = useRef(null);
   const markMoved = () => {
     recentlyMovedRef.current = true;
     requestAnimationFrame(() => {
@@ -313,6 +316,7 @@ function TierList({ type }) {
 
   const handleDragStart = useCallback((event) => {
     setActiveId(event.active.id);
+    dragStartListRef.current = listRef.current;
     lastOverIdRef.current = null;
     recentlyMovedRef.current = false;
     navigator.vibrate?.(8);
@@ -385,6 +389,7 @@ function TierList({ type }) {
     (event) => {
       const { active, over } = event;
       setActiveId(null);
+      dragStartListRef.current = null;
       lastOverIdRef.current = null;
       recentlyMovedRef.current = false;
       if (!over) return;
@@ -417,6 +422,8 @@ function TierList({ type }) {
   );
 
   const handleDragCancel = useCallback(() => {
+    if (dragStartListRef.current) setList(dragStartListRef.current);
+    dragStartListRef.current = null;
     setActiveId(null);
     lastOverIdRef.current = null;
     recentlyMovedRef.current = false;

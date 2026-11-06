@@ -26,6 +26,7 @@ import sharp from "sharp";
 import * as ort from "onnxruntime-node";
 import { createWorker } from "tesseract.js";
 import { PItems, SkillCards } from "gakumas-data";
+import { extractParams } from "../gakumas-tools/utils/imageProcessing/memory.js";
 import {
   getPItemBoundingBoxes,
   getSkillCardBoundingBoxes,
@@ -174,7 +175,10 @@ async function detectMemory(image, ocrWorker) {
   const ocrInput = await binarizeForOcr(image);
   const result = await ocrWorker.recognize(ocrInput, {}, { blocks: true });
   const lines = extractLines(result);
-  const idx = lines.findIndex((l) => PARAMS_REGEXP.test(l.text));
+  let idx = lines.findIndex((l) => PARAMS_REGEXP.test(l.text));
+  if (idx < 0) {
+    idx = lines.findIndex((line) => extractParams(line, image.width).length === 4);
+  }
   if (idx < 0 || !lines[idx + 1]) {
     throw new Error(
       "Could not locate the Vo/Da/Vi/stamina parameter line. Is this a memory screenshot?",
@@ -185,7 +189,7 @@ async function detectMemory(image, ocrWorker) {
   const contentWidth = paramsLine.bbox.x1 - pItemsLabelLine.bbox.x0;
   const anchor = { x: pItemsLabelLine.bbox.x0, y: pItemsLabelLine.bbox.y1 };
   return {
-    params: (paramsLine.text.match(/\d+/g) || []).map((n) => parseInt(n, 10)),
+    params: extractParams(paramsLine, image.width),
     pItemBoxes: getPItemBoundingBoxes(anchor, contentWidth),
     skillCardBoxes: getSkillCardBoundingBoxes(anchor, contentWidth),
     paramsBbox: paramsLine.bbox,
