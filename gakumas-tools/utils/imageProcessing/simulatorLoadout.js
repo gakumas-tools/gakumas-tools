@@ -5,6 +5,7 @@ import { readLoadoutCards } from "./cardBadges";
 import { DEBUG, getImageData, loadImageFromFile } from "./common";
 import { detectLoadoutBoxes } from "./contestLoadoutGeometry";
 import { readStats } from "./contestLoadoutStats";
+import { fixedPItemFilter } from "./entityClassifier";
 import { extractEntities } from "./memory";
 import { loadPItemModel, loadSkillCardModel } from "./models";
 
@@ -42,6 +43,7 @@ export async function getSimulatorLoadoutFromFile(file, currentStageId) {
     pItemBoxes,
     pItemSession,
     pItemClasses,
+    fixedPItemFilter(skillCardIds.slice(0, mainBoxes.length)),
   );
   const { skillCardIdGroups, customizationGroups } = readLoadoutCards(
     imageData,
@@ -90,12 +92,14 @@ export async function getSimulatorLoadoutFromFile(file, currentStageId) {
 }
 
 // Slots cut off by the screenshot's edge come back null and stay empty.
-async function classifySlots(img, boxes, session, classes) {
+async function classifySlots(img, boxes, session, classes, allowed) {
+  const slots = boxes.flatMap((box, i) => (box ? [i] : []));
   const ids = await extractEntities(
     img,
-    boxes.filter(Boolean),
+    slots.map((i) => boxes[i]),
     session,
     classes,
+    allowed && ((id, i) => allowed(id, slots[i])),
   );
   return boxes.map((box) => (box ? ids.shift() : 0));
 }
