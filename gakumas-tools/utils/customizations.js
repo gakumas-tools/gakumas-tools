@@ -58,6 +58,20 @@ export function fixCardCustomizations(cardId, customizations) {
   return fixed;
 }
 
+// Customizations belong to the card they were made on, so a slot that is
+// given a different card starts with none.
+export function customizationsAfterPick(
+  customizations,
+  index,
+  previousId,
+  cardId
+) {
+  if (previousId == cardId) return customizations;
+  const next = [...customizations];
+  next[index] = {};
+  return next;
+}
+
 export function fixCustomizationGroups(skillCardIdGroups, customizationGroups) {
   return skillCardIdGroups.map((ids, i) =>
     ids.map((id, j) =>

@@ -1,7 +1,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { Customizations, SkillCards } from "gakumas-data";
+import { calculateContestPower } from "../../../../gakumas-tools/utils/contestPower.js";
 import {
+  customizationsAfterPick,
   deserializeCustomizations,
   fixCardCustomizations,
   fixCustomizationGroups,
@@ -47,6 +49,30 @@ test("serializing keeps empty slots in their place", () => {
     serializeCustomizations([null, { 65: 1 }, undefined]),
   );
   assert.deepEqual(restored, [{}, { 65: 1 }, {}]);
+});
+
+test("a slot given a different card drops the old card's customizations", () => {
+  const other = SkillCards.getAll().find(
+    (card) => card.id != CARD && !card.availableCustomizations.includes(65),
+  ).id;
+  const before = [{}, { 65: MAX }, {}];
+  const after = customizationsAfterPick(before, 1, CARD, other);
+  assert.deepEqual(after, [{}, {}, {}]);
+  assert.deepEqual(before, [{}, { 65: MAX }, {}]);
+  assert.deepEqual(customizationsAfterPick(before, 1, CARD, 0), [{}, {}, {}]);
+
+  // The memory's contest power no longer counts them.
+  const params = [0, 0, 0, 0];
+  const cards = [0, other, 0];
+  assert.equal(
+    calculateContestPower(params, [], cards, after),
+    calculateContestPower(params, [], cards, [{}, {}, {}]),
+  );
+});
+
+test("picking the same card again keeps its customizations", () => {
+  const before = [{}, { 65: MAX }, {}];
+  assert.equal(customizationsAfterPick(before, 1, CARD, CARD), before);
 });
 
 test("missing or partial groups become one map per card", () => {

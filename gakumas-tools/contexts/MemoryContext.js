@@ -9,7 +9,10 @@ import {
   useState,
 } from "react";
 import DataContext from "@/contexts/DataContext";
-import { fixCustomizations } from "@/utils/customizations";
+import {
+  customizationsAfterPick,
+  fixCustomizations,
+} from "@/utils/customizations";
 import { stashMemoryDraft, takeMemoryDraft } from "@/utils/memoryDraft";
 import { getSaveOutcome } from "@/utils/memorySave";
 
@@ -173,13 +176,20 @@ export function MemoryContextProvider({ children }) {
     });
   }, []);
 
+  const skillCardIdsRef = useRef(skillCardIds);
+  skillCardIdsRef.current = skillCardIds;
+
   const replaceSkillCardId = useCallback((index, cardId) => {
     markDirty();
+    const previousId = skillCardIdsRef.current[index];
     setSkillCardIds((cur) => {
       const next = [...cur];
       next[index] = cardId;
       return next;
     });
+    setCustomizations((cur) =>
+      customizationsAfterPick(cur, index, previousId, cardId)
+    );
   }, []);
 
   const replaceCustomizations = useCallback((index, c11n) => {
