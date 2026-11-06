@@ -40,10 +40,9 @@ Add a loadout to the suite whenever a user reports a bug: it becomes a pinned te
 ### Contest power
 
 `pnpm test` checks memory contest power against captured Stage panels in
-[`fixtures/ingame/contest-power.json`](fixtures/ingame/contest-power.json).
+`fixtures/ingame/contest-power.json`, in a folder outside git; they skip when it isn't there.
 Each case records the displayed total, parameters, P-items and skill cards.
 The fixture names its source screenshots, game version and capture date.
-Screenshots stay under `screenshots/sources/ingame/`, outside git.
 The customized-memory case uses the labeled badges and displayed total in
 the existing memory screenshot fixtures.
 

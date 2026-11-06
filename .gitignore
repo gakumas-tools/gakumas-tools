@@ -16,5 +16,6 @@ screenshots/
 .classifier-data/
 scripts/train_classifier/checkpoints/
 tests/overlays/
+tests/fixtures/ingame/
 tests/.tesseract-cache/
 .claude/

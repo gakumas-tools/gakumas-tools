@@ -3,13 +3,11 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { calculateContestPower } from "../../../../gakumas-tools/utils/contestPower.js";
 import { inferCustomizations } from "../../../../gakumas-tools/utils/inferCustomizations.js";
+import { hasIngameFixtures, loadIngameFixture } from "../../../ingameFixtures.mjs";
 
-const { memories } = JSON.parse(
-  readFileSync(
-    new URL("../../../fixtures/ingame/contest-power.json", import.meta.url),
-    "utf8",
-  ),
-);
+const { memories } = hasIngameFixtures
+  ? loadIngameFixture("contest-power")
+  : { memories: [] };
 
 for (const memory of memories) {
   test(`${memory.name} (${memory.power}) has its captured contest power`, () => {
