@@ -142,7 +142,10 @@ export default function RehearsalTable({
                     type="button"
                     className={styles.remove}
                     onClick={() => {
-                      // Indices shift on delete; drop any cell/preview state.
+                      // The open input never blurs (see onMouseDown above),
+                      // so save its value before the delete. Indices shift on
+                      // delete; drop any cell/preview state.
+                      commitEdit();
                       cancelEditing();
                       onRowDelete(i);
                     }}

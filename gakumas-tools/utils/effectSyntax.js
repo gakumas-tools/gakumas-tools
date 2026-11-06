@@ -48,9 +48,21 @@ const LEXEMES = {
   [TokenType.NOT]: ["!", "operator"],
 };
 
-function classify(token) {
+// The digits as written, as the tokenizer's readNumber reads them: a number's
+// value doesn't keep "0.50", "05" or "1." spelled the way they were typed.
+const NUMBER_PATTERN = /-?\d+(?:\.\d*)?/g;
+
+function numberText(input, cursor) {
+  NUMBER_PATTERN.lastIndex = cursor;
+  return NUMBER_PATTERN.exec(input)?.[0] ?? null;
+}
+
+function classify(token, input, cursor) {
   if (KEYWORD_TYPES.has(token.type)) return [String(token.value), "keyword"];
-  if (token.type === TokenType.NUMBER) return [String(token.value), "number"];
+  if (token.type === TokenType.NUMBER) {
+    const text = numberText(input, cursor);
+    return text == null ? null : [text, "number"];
+  }
   if (token.type === TokenType.IDENTIFIER) return [token.value, "identifier"];
   return LEXEMES[token.type] || null;
 }
@@ -71,7 +83,7 @@ export function highlightEffects(input) {
   let cursor = 0;
 
   for (const token of tokens) {
-    const hit = classify(token);
+    const hit = classify(token, input, cursor);
     if (!hit) continue;
     const [text, className] = hit;
 

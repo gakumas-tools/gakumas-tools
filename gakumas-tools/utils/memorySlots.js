@@ -1,4 +1,13 @@
+import { SkillCards } from "gakumas-data";
 import { getMemoryParamContribution } from "@/utils/stamina";
+
+// A memory's skill cards without its empty slots. Customizations are stored
+// by slot, so each card keeps the slot it came from.
+export function getFilledSkillCardSlots(skillCardIds) {
+  return skillCardIds
+    .map((id, slot) => ({ skillCard: SkillCards.getById(id), slot }))
+    .filter(({ skillCard }) => skillCard);
+}
 
 export function setMemorySlot(
   { params, slots },
@@ -18,4 +27,11 @@ export function setMemorySlot(
     params: base.map((p, i) => p + contribution[i]),
     slots: nextSlots,
   };
+}
+
+// One entry per card slot: LoadoutContext indexes customizations as one flat
+// list cut into groups of 6. Memories saved before customizations existed have
+// none, and a short group would shift every later group's customizations.
+export function getMemorySlotCustomizations(memory) {
+  return Array.from({ length: 6 }, (_, i) => memory.customizations?.[i] || {});
 }

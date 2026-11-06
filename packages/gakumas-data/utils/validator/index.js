@@ -28,23 +28,30 @@ import {
 
 // Names legal as "readable" identifiers in a condition or RHS expression.
 // Union of anything the Evaluator can resolve. Phases are included because
-// `parentPhase == processCost` style comparisons reference phase names;
-// intermediate fields are included because `cardHasEffect(fixedStamina)`
-// passes them as identifier args.
+// `parentPhase == processCost` style comparisons reference phase names.
 const READABLE_IDENTIFIERS = new Set([
   ...STATE_FIELDS,
-  ...INTERMEDIATE_FIELDS,
   ...VARIABLE_RESOLVERS,
   ...STANCES,
   ...SOURCE_TYPES,
   ...RARITIES,
   ...SKILL_CARD_TYPES,
-  ...TURN_TYPES,
   ...PHASES,
 ]);
 
-// Names legal as a function call in condition/RHS position.
-const CALLABLE_RESOLVERS = new Set([...VARIABLE_RESOLVERS, ...SPECIAL_ACTIONS]);
+// Names legal as a bare identifier argument, which functions read as a
+// name rather than a value: `cardHasEffect(fixedStamina)` passes an
+// intermediate field, and turn types can be passed the same way. The
+// Evaluator can't read these as values.
+const ARG_IDENTIFIERS = new Set([
+  ...READABLE_IDENTIFIERS,
+  ...INTERMEDIATE_FIELDS,
+  ...TURN_TYPES,
+]);
+
+// Names legal as a function call in condition/RHS position. Special actions
+// only run as statements; the Evaluator can't call them in an expression.
+const CALLABLE_RESOLVERS = new Set(VARIABLE_RESOLVERS);
 
 // Names legal as assignment LHS.
 const ASSIGNABLE_FIELDS = new Set([
@@ -241,6 +248,11 @@ function validateArg(arg, errors) {
   if (!arg) return;
   // Function args accept identifiers (like `pIdol` stance name,
   // rarity, buff-count names) as well as numbers and nested expressions.
-  // Validate as a general expression — matches what Evaluator does.
+  if (arg.type === "identifier") {
+    if (!ARG_IDENTIFIERS.has(arg.name)) {
+      errors.push(`Unknown identifier: ${arg.name}`);
+    }
+    return;
+  }
   validateExpr(arg, errors);
 }

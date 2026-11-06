@@ -54,10 +54,8 @@ function CompareTab({ currentRun, onAfterLoad }) {
     "gakumas-tools.compare.stageFilter",
     "all",
   );
-  const [stageFilterTouched, setStageFilterTouched] = usePersistedState(
-    "gakumas-tools.compare.stageFilterTouched",
-    false,
-  );
+  const [stageFilterTouched, setStageFilterTouched, stageFilterTouchedLoaded] =
+    usePersistedState("gakumas-tools.compare.stageFilterTouched", false);
   const [seasonFilter, setSeasonFilter] = usePersistedState(
     "gakumas-tools.compare.seasonFilter",
     "all",
@@ -68,11 +66,13 @@ function CompareTab({ currentRun, onAfterLoad }) {
   );
 
   // Default stage filter to current run's stage, until user changes it.
+  // Wait for the stored flag: before it loads, this would overwrite the
+  // user's stored filter.
   useEffect(() => {
-    if (stageFilterTouched) return;
+    if (!stageFilterTouchedLoaded || stageFilterTouched) return;
     const key = stageKeyOf(currentRun);
     if (key) setStageFilter(key);
-  }, [currentRun, stageFilterTouched]);
+  }, [currentRun, stageFilterTouched, stageFilterTouchedLoaded]);
 
   const historyRuns = useMemo(() => {
     if (!currentRun) return history;
