@@ -2,6 +2,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   Customizations,
+  Idols,
+  PIdols,
   PDrinks,
   PItems,
   SkillCards,
@@ -48,4 +50,30 @@ test("Stages.findLast parses the stage it finds", () => {
 test("getAll parses every record", () => {
   assert.ok(Stages.getAll().every((s) => isParsed(s, ["effects"])));
   assert.ok(SkillCards.getAll().every((c) => isParsed(c, ["effects"])));
+});
+
+const DATASETS = [
+  Customizations,
+  Idols,
+  PIdols,
+  PDrinks,
+  PItems,
+  SkillCards,
+  Stages,
+];
+
+test("getById finds nothing for Object's own property names", () => {
+  for (const data of DATASETS) {
+    for (const id of ["constructor", "__proto__", "toString"]) {
+      assert.equal(data.getById(id), undefined, `${data.name}.getById(${id})`);
+    }
+  }
+});
+
+test("getById finds a record by its id as a number or a string", () => {
+  for (const data of DATASETS) {
+    const record = data.getAll()[0];
+    assert.equal(data.getById(record.id), record);
+    assert.equal(data.getById(String(record.id)), record);
+  }
 });

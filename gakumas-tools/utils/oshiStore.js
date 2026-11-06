@@ -6,7 +6,13 @@ const CACHE_TTL_MS = 60 * 1000;
 const FIRST_LOAD_TIMEOUT_MS = 2000;
 
 // Shared through global so the API route's writes reach the layout's reads.
-const cache = (global.oshiSettings ??= { entry: null, refreshing: null });
+// `saves` counts saves, so a refresh whose read started before a save
+// doesn't put the old settings back.
+const cache = (global.oshiSettings ??= {
+  entry: null,
+  refreshing: null,
+  saves: 0,
+});
 
 async function settingsCollection() {
   const { db } = await connect();
@@ -33,16 +39,20 @@ export async function saveOshiSettings(settings) {
     { ...settings, updatedAt: new Date() },
     { upsert: true }
   );
+  cache.saves = (cache.saves ?? 0) + 1;
   setCached(settings);
 }
 
 function refresh() {
+  const saves = cache.saves;
   cache.refreshing ??= readOshiSettings()
     .catch((error) => {
       console.error("Failed to load oshi settings", error);
       return cache.entry?.settings ?? DEFAULT_OSHI_SETTINGS;
     })
-    .then(setCached)
+    .then((settings) => {
+      if (cache.saves === saves) setCached(settings);
+    })
     .finally(() => (cache.refreshing = null));
   return cache.refreshing;
 }

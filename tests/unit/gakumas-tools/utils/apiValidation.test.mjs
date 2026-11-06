@@ -71,6 +71,54 @@ test("readJsonBody rejects invalid JSON and non-object bodies with 400", async (
   }
 });
 
+const streamed = (stream) =>
+  new Request("http://x/", { method: "POST", body: stream, duplex: "half" });
+
+test("readJsonBody stops reading an oversized stream at the limit", async () => {
+  let reads = 0;
+  let cancelled = false;
+  const stream = new ReadableStream(
+    {
+      pull(controller) {
+        reads++;
+        controller.enqueue(new TextEncoder().encode("x".repeat(20)));
+      },
+      cancel() {
+        cancelled = true;
+        return new Promise(() => {});
+      },
+    },
+    { highWaterMark: 0 },
+  );
+  assert.equal((await readJsonBody(streamed(stream), 10)).status, 413);
+  assert.equal(reads, 1);
+  assert.equal(cancelled, true);
+});
+
+test("readJsonBody decodes a character split across chunks", async () => {
+  const bytes = new TextEncoder().encode(JSON.stringify({ text: "あいう" }));
+  const stream = new ReadableStream({
+    start(controller) {
+      for (const byte of bytes) controller.enqueue(Uint8Array.of(byte));
+      controller.close();
+    },
+  });
+  assert.deepEqual(await readJsonBody(streamed(stream), bytes.length), {
+    body: { text: "あいう" },
+  });
+});
+
+test("readJsonBody rejects an empty or broken body with 400", async () => {
+  const empty = new Request("http://x/", { method: "POST" });
+  assert.equal((await readJsonBody(empty, 100)).status, 400);
+  const broken = new ReadableStream({
+    start(controller) {
+      controller.error(new Error("disconnected"));
+    },
+  });
+  assert.equal((await readJsonBody(streamed(broken), 100)).status, 400);
+});
+
 test("isObjectId accepts 24-hex strings only", () => {
   assert.equal(isObjectId(ID), true);
   for (const bad of ["abc", "zz2f1c2b9d3e4a0012345678", 123, null, {}, ["x"]]) {
@@ -131,6 +179,7 @@ test("cleanMemories rejects non-arrays, empty arrays and oversized batches", () 
 test("validateLoadout accepts a saved run and rejects wrong field types", () => {
   assert.equal(validateLoadout(savedRun), null);
   assert.equal(validateLoadout({ ...savedRun, linkLoadouts: [savedRun] }), null);
+  assert.equal(validateLoadout({ ...savedRun, enterPercents: true }), null);
   for (const patch of [
     { name: 5 },
     { name: { $gt: "" } },
@@ -140,6 +189,7 @@ test("validateLoadout accepts a saved run and rejects wrong field types", () => 
     { stats: [1] },
     { derived: "x" },
     { customStage: 3 },
+    { enterPercents: "true" },
   ]) {
     assert.notEqual(validateLoadout({ ...savedRun, ...patch }), null, JSON.stringify(patch));
   }

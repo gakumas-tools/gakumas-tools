@@ -102,7 +102,7 @@ function RehearsalComparison({
                     <th scope="row">{tRehearsal("stage", { n: stage + 1 })}</th>
                     {SLOTS.map((slot) => {
                       const scores = grid[slot].data[stage];
-                      const icon = scores.length && icons?.[stage]?.[slot];
+                      const icon = scores.length ? icons?.[stage]?.[slot] : null;
                       const selected =
                         cell?.[0] === stage && cell?.[1] === slot;
                       return (

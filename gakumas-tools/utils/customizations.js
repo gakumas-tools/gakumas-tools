@@ -1,4 +1,4 @@
-import { Customizations } from "gakumas-data";
+import { Customizations, SkillCards } from "gakumas-data";
 
 export function deserializeCustomizations(str) {
   try {
@@ -21,9 +21,8 @@ export function deserializeCustomizations(str) {
 export function serializeCustomizations(customizations) {
   if (!customizations) return "";
   return customizations
-    .filter((c) => c)
     .map((c) =>
-      Object.keys(c)
+      Object.keys(c || {})
         .filter((k) => c[k])
         .map((k) => `${k}x${c[k]}`)
         .join("e")
@@ -43,4 +42,26 @@ export function fixCustomizations(customizations) {
       acc[cur] = customizations[cur];
       return acc;
     }, {});
+}
+
+export function fixCardCustomizations(cardId, customizations) {
+  const card = SkillCards.getById(cardId);
+  const fixed = {};
+  if (!card || !customizations) return fixed;
+  for (const id of card.availableCustomizations) {
+    const level = customizations[id];
+    const max = Customizations.getById(id).max;
+    if (Number.isInteger(level) && level > 0 && level <= max) {
+      fixed[id] = level;
+    }
+  }
+  return fixed;
+}
+
+export function fixCustomizationGroups(skillCardIdGroups, customizationGroups) {
+  return skillCardIdGroups.map((ids, i) =>
+    ids.map((id, j) =>
+      fixCardCustomizations(id, customizationGroups?.[i]?.[j])
+    )
+  );
 }
