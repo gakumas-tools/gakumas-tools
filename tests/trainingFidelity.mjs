@@ -175,6 +175,12 @@ function replay(capture, play) {
       );
     }
   }
+
+  if (play.terminalAttribute !== undefined) {
+    const attribute =
+      capture.initialAttribute + Math.min(state[S.score], capture.targetGain);
+    assert.equal(attribute, play.terminalAttribute, "terminal attribute");
+  }
 }
 
 for (const capture of FIXTURES.map(loadCapture)) {

@@ -48,6 +48,11 @@ or rank thresholds. Comparing whole stages and loadouts is
 
 Screenshots stay out of git, under `screenshots/sources/ingame/`.
 
+`terminalAttribute` checks a lesson's final displayed attribute. It is the
+initial attribute plus the engine's score, capped at the lesson's target
+gain. Capped attributes check that the replay reaches the target; the exact
+score above the target isn't visible in the game.
+
 ## Capturing
 
 Record only settled values, never a score still counting up or a preview.
