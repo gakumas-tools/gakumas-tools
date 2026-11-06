@@ -28,3 +28,10 @@ export function setMemorySlot(
     slots: nextSlots,
   };
 }
+
+// One entry per card slot: LoadoutContext indexes customizations as one flat
+// list cut into groups of 6. Memories saved before customizations existed have
+// none, and a short group would shift every later group's customizations.
+export function getMemorySlotCustomizations(memory) {
+  return Array.from({ length: 6 }, (_, i) => memory.customizations?.[i] || {});
+}
