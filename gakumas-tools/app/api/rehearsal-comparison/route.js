@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { getServerSession } from "next-auth/next";
+import { readJsonBody } from "@/utils/apiValidation";
 import { authOptions } from "@/utils/auth";
 import { clientIp } from "@/utils/clientIp";
 import { connect } from "@/utils/mongodb";
@@ -32,23 +33,15 @@ function rateLimited(key) {
   return limited;
 }
 
-async function readBody(request) {
-  const text = await request.text();
-  if (text.length > MAX_BODY_BYTES) return null;
-  try {
-    return JSON.parse(text);
-  } catch {
-    return null;
-  }
-}
-
 export async function PUT(request) {
   const ipHash = pseudonym(`ip:${clientIp(request.headers)}`);
   if (rateLimited(`put:${ipHash}`)) {
     return new Response("Too many comparisons", { status: 429 });
   }
 
-  const { comparison, error } = validateComparison(await readBody(request));
+  const read = await readJsonBody(request, MAX_BODY_BYTES);
+  if (read.error) return new Response(read.error, { status: read.status });
+  const { comparison, error } = validateComparison(read.body);
   if (error) return new Response(error, { status: 400 });
 
   const session = await getServerSession(authOptions);
@@ -78,7 +71,9 @@ export async function DELETE(request) {
     return new Response("Too many deletions", { status: 429 });
   }
 
-  const { id } = (await readBody(request)) || {};
+  const { body, error, status } = await readJsonBody(request, MAX_BODY_BYTES);
+  if (error) return new Response(error, { status });
+  const { id } = body;
   if (typeof id != "string") return new Response("Missing id", { status: 400 });
 
   const { db } = await connect();

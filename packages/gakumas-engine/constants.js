@@ -308,6 +308,7 @@ export const CARD_PILES = [
 export const COST_FIELDS = [
   S.stamina,
   S.goodConditionTurns,
+  S.perfectConditionTurns,
   S.concentration,
   S.goodImpressionTurns,
   S.motivation,

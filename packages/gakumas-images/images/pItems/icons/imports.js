@@ -503,6 +503,10 @@ import image_502 from "./502.png";
 import image_503 from "./503.png";
 import image_504 from "./504.png";
 import image_505 from "./505.png";
+import image_506 from "./506.png";
+import image_507 from "./507.png";
+import image_508 from "./508.png";
+import image_509 from "./509.png";
 
 const IMAGES = {
   '1': image_1,
@@ -1010,6 +1014,10 @@ const IMAGES = {
   '503': image_503,
   '504': image_504,
   '505': image_505,
+  '506': image_506,
+  '507': image_507,
+  '508': image_508,
+  '509': image_509,
 };
 
 export default IMAGES;

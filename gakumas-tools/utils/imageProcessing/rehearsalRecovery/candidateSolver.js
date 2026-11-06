@@ -20,6 +20,7 @@ import {
   checksumOk,
   comboCompare,
   pickBest,
+  plausibleFloor,
 } from "./checksumMath.js";
 
 // A candidate value for one slot, tagged with its provenance (`kind`) and whether
@@ -138,13 +139,6 @@ function structuralOnly(ocrScores, totalProvided, bonusOk) {
   const recovery =
     totalProvided || bonusDisagrees || collisionProne ? "flagged" : "ok";
   return [ocrScores.slice(), recovery];
-}
-
-// A raw slot's plausible magnitude. An impossible value (>= MAX_SCORE — a leading
-// glyph misread like 4,177,174) is treated as its 1,XXX,XXX repair so it does not
-// over-bound the total used to validate it; everything else is itself.
-function plausibleFloor(value) {
-  return value < MAX_SCORE ? value : 1_000_000 + (value % 1_000_000);
 }
 
 // Plausible totals to test against the checksum: the literal total (penalty 0)

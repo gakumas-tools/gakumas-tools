@@ -10,6 +10,17 @@ All notable changes to the contest simulator will be documented in this file.
 
 
 
+
+
+## 2026-11-06
+
+- Update garakutaroad china and misuzu
+- Add garakutaroad support item
+
+## 2026-11-02
+
+- Confirm contest season 55 stages
+
 ## 2026-10-31
 
 - Fix 翼 sometimes not returning また、飛べる from removed cards

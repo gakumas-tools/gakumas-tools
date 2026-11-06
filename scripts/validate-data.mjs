@@ -133,6 +133,24 @@ for (const drink of P_DRINKS) {
   validateEffectField("pDrink", drink.id, "actions", drink.actions);
 }
 
+// --- Upgraded rows: the base row is id-1, and the game names the upgrade
+// after it with a trailing "+" ---
+function validateUpgradedNames(entity, records) {
+  const byId = new Map(records.map((r) => [String(r.id), r]));
+  for (const record of records) {
+    if (String(record.upgraded).toUpperCase() !== "TRUE") continue;
+    const base = byId.get(String(Number(record.id) - 1));
+    if (base && record.name === `${base.name}+`) continue;
+    report(entity, record.id, "name", record.name, [
+      base
+        ? `Upgraded name should be ${JSON.stringify(`${base.name}+`)} (base is #${base.id}).`
+        : `Upgraded row has no base row #${Number(record.id) - 1}.`,
+    ]);
+  }
+}
+validateUpgradedNames("skillCard", SKILL_CARDS);
+validateUpgradedNames("pItem", P_ITEMS);
+
 if (totalErrors > 0) {
   console.error(`\nFound ${totalErrors} validation error(s).`);
   process.exit(1);

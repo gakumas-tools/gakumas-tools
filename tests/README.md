@@ -53,7 +53,18 @@ Users can share simulator-vs-rehearsal comparisons from the simulator's Rehearsa
 ```sh
 (cd gakumas-tools && pnpm comparisons export --since 2026-10-01) > comparisons.jsonl
 pnpm fidelity comparisons.jsonl --runs 500   # re-simulate on the current engine, rank gaps by z-score
+pnpm fidelity comparisons.jsonl --runs 500 --max-gap-pct 5 --min-rehearsals 3
 ```
+
+With `--max-gap-pct`, fidelity exits nonzero if any comparison's mean score is off by more than that percentage, likely mis-picks included, or has fewer than `--min-rehearsals` rehearsal scores (3 by default).
+
+### Fidelity against in-game trainings
+
+```sh
+pnpm fidelity:training  # replay captured training plays card by card
+```
+
+See [training-fidelity.md](training-fidelity.md) for what it checks and how its fixtures are captured.
 
 ## Bootstrap (one-shot)
 
