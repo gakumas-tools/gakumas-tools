@@ -1,4 +1,5 @@
 import { SkillCards } from "gakumas-data";
+import { fixCardCustomizations } from "@/utils/customizations";
 import { getMemoryParamContribution } from "@/utils/stamina";
 
 // A memory's skill cards without its empty slots. Customizations are stored
@@ -32,6 +33,11 @@ export function setMemorySlot(
 // One entry per card slot: LoadoutContext indexes customizations as one flat
 // list cut into groups of 6. Memories saved before customizations existed have
 // none, and a short group would shift every later group's customizations.
+// Each slot keeps only what its card can have: the memory editor used to keep
+// a slot's customizations when its card changed, and the engine applies
+// whatever it is given.
 export function getMemorySlotCustomizations(memory) {
-  return Array.from({ length: 6 }, (_, i) => memory.customizations?.[i] || {});
+  return Array.from({ length: 6 }, (_, i) =>
+    fixCardCustomizations(memory.skillCardIds?.[i], memory.customizations?.[i]),
+  );
 }

@@ -53,23 +53,36 @@ test("A memory without customizations still fills all six card slots", () => {
   ]);
 });
 
+// 軽い足取り+ can have パラメータ+ (65); アピールの基本 (1) has no customizations.
+const CARD = 25;
+const PLAIN_CARD = 1;
+
 test("A memory's customizations keep their card slots", () => {
-  const customizations = [{ 1: 1 }, null, { 2: 2 }];
-  assert.deepEqual(getMemorySlotCustomizations({ customizations }), [
-    { 1: 1 },
-    {},
-    { 2: 2 },
-    {},
-    {},
-    {},
-  ]);
+  const skillCardIds = [CARD, PLAIN_CARD, CARD, 0, 0, 0];
+  const customizations = [{ 65: 1 }, null, { 65: 2 }];
+  assert.deepEqual(
+    getMemorySlotCustomizations({ skillCardIds, customizations }),
+    [{ 65: 1 }, {}, { 65: 2 }, {}, {}, {}],
+  );
+});
+
+test("A memory's slot drops customizations its card can't have", () => {
+  const skillCardIds = [PLAIN_CARD, CARD, 0, 0, 0, 0];
+  const customizations = [{ 65: 3 }, { 65: 1 }, { 65: 1 }];
+  assert.deepEqual(
+    getMemorySlotCustomizations({ skillCardIds, customizations }),
+    [{}, { 65: 1 }, {}, {}, {}, {}],
+  );
 });
 
 test("Flat card indexes still reach the second memory after an empty first", () => {
   const groups = [
     getMemorySlotCustomizations({}),
-    getMemorySlotCustomizations({ customizations: [{ 3: 1 }] }),
+    getMemorySlotCustomizations({
+      skillCardIds: [CARD, 0, 0, 0, 0, 0],
+      customizations: [{ 65: 1 }],
+    }),
   ];
   // LoadoutContext addresses card slot groupIndex * 6 + index.
-  assert.deepEqual([].concat(...groups)[6], { 3: 1 });
+  assert.deepEqual([].concat(...groups)[6], { 65: 1 });
 });
