@@ -9,6 +9,7 @@ const FIXTURES = [
   "training-exam-motivation",
   "training-lesson-cost-reduction",
   "training-lesson-flat-cost-reduction",
+  "training-lesson-full-power",
 ];
 
 function loadCapture(name) {
@@ -80,7 +81,7 @@ function replay(capture, play) {
     assert.ok(engine.isCardUsable(state, card), `turn ${turn}: usable`);
     state = engine.useCard(state, card);
 
-    assert.equal(state[S.turnsElapsed], turn);
+    assert.equal(state[S.turnsElapsed], action.turnsElapsed ?? turn);
     for (const [field, value] of Object.entries(action.expected)) {
       assert.equal(
         state[S[field]],

@@ -1,0 +1,255 @@
+{
+  "date": "2026-11-02",
+  "gameVersion": "3.5.0",
+  "stage": "【基礎7】全力",
+  "sourceDirectory": "screenshots/sources/ingame/",
+  "scope": "Conditional action replay; synthetic unit multiplier, gain above dance100. No raw-parameter, deck/draw or lesson cap claim.",
+  "initialAttribute": 100,
+  "targetGain": 60,
+  "initial": {
+    "score": 0,
+    "stamina": 30,
+    "genki": 0,
+    "fullPowerCharge": 0,
+    "halfCostTurns": 0,
+    "stance": "none",
+    "costReduction": 0
+  },
+  "turnTypes": [
+    "dance",
+    "dance",
+    "dance",
+    "dance"
+  ],
+  "replayMultipliers": {
+    "dance": 1
+  },
+  "initialCaptures": [
+    "campaign-fullpower-r1-turn1.png",
+    "campaign-fullpower-r2-turn1.png",
+    "campaign-fullpower-r3-turn1.png"
+  ],
+  "plays": [
+    {
+      "id": "charge-threshold",
+      "actions": [
+        {
+          "cardId": 402,
+          "name": "アッチェレランド",
+          "expected": {
+            "score": 10,
+            "stamina": 25,
+            "genki": 0,
+            "fullPowerCharge": 3,
+            "halfCostTurns": 0,
+            "stance": "none"
+          },
+          "capture": "campaign-fullpower-r1-turn2-guide.png"
+        },
+        {
+          "cardId": 374,
+          "name": "メントレの基本",
+          "expected": {
+            "score": 10,
+            "stamina": 22,
+            "genki": 2,
+            "fullPowerCharge": 5,
+            "halfCostTurns": 0,
+            "stance": "none"
+          },
+          "capture": "campaign-fullpower-r1-turn3.png"
+        },
+        {
+          "cardId": 449,
+          "name": "王者の御出まし+",
+          "expected": {
+            "score": 10,
+            "stamina": 21,
+            "genki": 0,
+            "fullPowerCharge": 0,
+            "halfCostTurns": 3,
+            "stance": "fullPower",
+            "cardUsesRemaining": 2
+          },
+          "capture": "campaign-fullpower-r1-turn4-guide.png"
+        },
+        {
+          "cardId": 384,
+          "name": "一歩",
+          "turnsElapsed": 3,
+          "expected": {
+            "score": 55,
+            "stamina": 19,
+            "genki": 0,
+            "fullPowerCharge": 0,
+            "halfCostTurns": 3,
+            "stance": "fullPower",
+            "cardUsesRemaining": 1
+          },
+          "capture": "campaign-fullpower-r1-turn4b.png"
+        },
+        {
+          "cardId": 1,
+          "name": "アピールの基本",
+          "turnsElapsed": 4,
+          "expected": {
+            "stamina": 17,
+            "genki": 0,
+            "fullPowerCharge": 0
+          },
+          "capture": "campaign-fullpower-r1-final-b.png"
+        }
+      ],
+      "terminalAttribute": 160,
+      "terminalScoreCompared": false
+    },
+    {
+      "id": "reversed-full-power-actions",
+      "actions": [
+        {
+          "cardId": 402,
+          "name": "アッチェレランド",
+          "expected": {
+            "score": 10,
+            "stamina": 25,
+            "genki": 0,
+            "fullPowerCharge": 3,
+            "halfCostTurns": 0,
+            "stance": "none"
+          },
+          "capture": "campaign-fullpower-r2-turn2.png"
+        },
+        {
+          "cardId": 374,
+          "name": "メントレの基本",
+          "expected": {
+            "score": 10,
+            "stamina": 22,
+            "genki": 2,
+            "fullPowerCharge": 5,
+            "halfCostTurns": 0,
+            "stance": "none"
+          },
+          "capture": "campaign-fullpower-r2-turn3.png"
+        },
+        {
+          "cardId": 449,
+          "name": "王者の御出まし+",
+          "expected": {
+            "score": 10,
+            "stamina": 21,
+            "genki": 0,
+            "fullPowerCharge": 0,
+            "halfCostTurns": 3,
+            "stance": "fullPower",
+            "cardUsesRemaining": 2
+          },
+          "capture": "campaign-fullpower-r2-turn4-guide1.png"
+        },
+        {
+          "cardId": 1,
+          "name": "アピールの基本",
+          "turnsElapsed": 3,
+          "expected": {
+            "score": 37,
+            "stamina": 19,
+            "genki": 0,
+            "fullPowerCharge": 0,
+            "halfCostTurns": 3,
+            "stance": "fullPower",
+            "cardUsesRemaining": 1
+          },
+          "capture": "campaign-fullpower-r2-turn4b.png"
+        },
+        {
+          "cardId": 384,
+          "name": "一歩",
+          "turnsElapsed": 4,
+          "expected": {
+            "stamina": 17,
+            "genki": 0,
+            "fullPowerCharge": 0
+          },
+          "capture": "campaign-fullpower-r2-final-b.png"
+        }
+      ],
+      "terminalAttribute": 160,
+      "terminalScoreCompared": false
+    },
+    {
+      "id": "below-threshold",
+      "actions": [
+        {
+          "cardId": 50,
+          "name": "ファーストステップ",
+          "expected": {
+            "score": 0,
+            "stamina": 30,
+            "genki": 3,
+            "fullPowerCharge": 0,
+            "costReduction": 1,
+            "halfCostTurns": 0,
+            "stance": "none"
+          },
+          "capture": "campaign-fullpower-r3-turn2.png"
+        },
+        {
+          "cardId": 374,
+          "name": "メントレの基本",
+          "expected": {
+            "score": 0,
+            "stamina": 30,
+            "genki": 3,
+            "fullPowerCharge": 2,
+            "costReduction": 1,
+            "halfCostTurns": 0,
+            "stance": "none"
+          },
+          "capture": "campaign-fullpower-r3-turn3.png"
+        },
+        {
+          "cardId": 449,
+          "name": "王者の御出まし+",
+          "expected": {
+            "score": 0,
+            "stamina": 30,
+            "genki": 1,
+            "fullPowerCharge": 7,
+            "costReduction": 1,
+            "halfCostTurns": 3,
+            "stance": "none",
+            "cardUsesRemaining": 1
+          },
+          "capture": "campaign-fullpower-r3-turn4.png"
+        },
+        {
+          "cardId": 384,
+          "name": "一歩",
+          "expected": {
+            "score": 15,
+            "stamina": 30,
+            "genki": 0,
+            "fullPowerCharge": 7,
+            "costReduction": 1,
+            "stance": "none"
+          },
+          "capture": "campaign-fullpower-r3-final-b.png"
+        }
+      ],
+      "terminalAttribute": 115,
+      "terminalScoreCompared": true
+    }
+  ],
+  "verification": {
+    "plays": 3,
+    "checkpoints": 14,
+    "outcomeFields": 86,
+    "maxAbsoluteNumericError": 0,
+    "categoricalMatches": "all recorded stances"
+  },
+  "limits": [
+    "First two terminal scores hit cap160 and are excluded. Only terminal resources and charge are checked.",
+    "Third terminal attribute115 is uncapped and settled. Terminal halfCost duration is pre-transition and excluded.",
+    "The replay supplies selected-card availability, with no full-deck/draw/hold or raw-parameter formula claim."
+  ]
+}

@@ -25,7 +25,8 @@ thresholds. Comparing whole stages and loadouts is `pnpm fidelity`'s job.
   and record score as the gain over the lesson's starting attribute.
 - `plays[].actions[]`: each card played, by `cardId` and `name`; `expected`,
   the state read from the screenshot after it; and `capture`, that
-  screenshot's name.
+  screenshot's name. A card that gives an extra use leaves the turn open, so
+  the next action records `turnsElapsed` where it isn't one turn per card.
 
 Screenshots stay out of git, under `screenshots/sources/ingame/`.
 
@@ -68,3 +69,12 @@ A visual lesson starting at 100, with 7 stamina and 20 genki. Covers
 costs, which bypass genki. One play uses two copies of ありがとうの言葉, which
 can be used once each. The first play clears at the cap of 140, so its final
 score isn't checked.
+
+## 【基礎7】全力
+
+A dance lesson starting at 100. Two plays reach 10 full power charge, which
+enters full power at the start of the next turn with one extra card use, and
+play their last two cards in either order; in full power, scores of 15 and 9
+become 45 and 27. The third play reaches only 7, stays out of full power and
+gets one card in the last turn. Both full power plays clear at the cap of
+160, so their final scores aren't checked.
