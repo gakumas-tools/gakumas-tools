@@ -204,6 +204,9 @@ export default class HeuristicStrategy extends BaseStrategy {
   }
 
   getStateScore(state) {
+    // After the last turn, resources and card plays are worth nothing.
+    if (state[S.turnsRemaining] == 0) return state[S.score];
+
     const sc = this._getScoringConfig(state);
     // Mirror multipliers on `this` so call-sites that read them (including
     // `getFuture`'s scoring adjustments) keep working unchanged.
@@ -460,7 +463,27 @@ export default class HeuristicStrategy extends BaseStrategy {
     return this.pickCardsToHold(state, cards, num);
   }
 
+  // evaluateForHold scores a card in a fresh full-power state, but the
+  // selected use plays it in the real one, where a card whose conditions
+  // fail does nothing (and a paid use discards it). Pick among the cards
+  // whose conditions pass, if any do.
   pickCardsToUseFree(state, cards, num = 1) {
-    return this.pickCardsToHold(state, cards, num);
+    const playable = [];
+    for (let i = 0; i < cards.length; i++) {
+      const conditions = this.engine.cardManager.getConditions(state, cards[i]);
+      if (
+        conditions.every((condition) =>
+          this.engine.evaluator.evaluateCondition(state, condition),
+        )
+      ) {
+        playable.push(i);
+      }
+    }
+    if (!playable.length) return this.pickCardsToHold(state, cards, num);
+    return this.pickCardsToHold(
+      state,
+      playable.map((i) => cards[i]),
+      num,
+    ).map((j) => playable[j]);
   }
 }

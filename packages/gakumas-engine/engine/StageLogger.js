@@ -5,12 +5,14 @@ const LOGGED_BUFFS_FIELDS = [
   S.scoreDebuffs,
   S.goodImpressionTurnsBuffs,
   S.goodImpressionTurnsEffectBuffs,
+  S.goodImpressionTurnsTimesBuffs,
   S.motivationBuffs,
   S.motivationAdditionBuffs,
   S.goodConditionTurnsBuffs,
   S.goodConditionTurnsAdditionBuffs,
   S.concentrationBuffs,
   S.concentrationAdditionBuffs,
+  S.concentrationEffectBuffs,
   S.enthusiasmBuffs,
   S.enthusiasmBonusBuffs,
   S.fullPowerChargeBuffs,
@@ -110,6 +112,7 @@ export default class StageLogger {
 
     res.turn = {
       types: state[S.turnTypes],
+      elapsed: state[S.turnsElapsed],
       remaining: state[S.turnsRemaining],
       multiplier: this.engine.turnManager.getTurnMultiplier(state),
     };
