@@ -11,21 +11,11 @@ export function formatStageName(stage, t) {
   let stageName = "";
   if (stage.id == "custom") {
     stageName = t("custom");
-  } else if (stage.type == "contest") {
+  } else if (stage.type == "contest" || stage.type == "linkContest") {
     stageName = t("contestStageName", {
       season: stage.season,
       stage: stage.stage,
     });
-  } else if (stage.type == "linkContest") {
-    stageName = (
-      <span>
-        <FaLink />
-        {t("contestStageName", {
-          season: stage.season,
-          stage: stage.stage,
-        })}
-      </span>
-    );
   } else if (stage.type == "event") {
     stageName = t("eventStageName", {
       name: stage.name,
@@ -35,6 +25,15 @@ export function formatStageName(stage, t) {
   }
   if (stage.preview) {
     stageName += "*";
+  }
+  // Mark after the "*" so a link contest preview doesn't stringify the span
+  if (stage.id != "custom" && stage.type == "linkContest") {
+    return (
+      <span>
+        <FaLink />
+        {stageName}
+      </span>
+    );
   }
   return stageName;
 }

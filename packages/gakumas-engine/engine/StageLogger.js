@@ -112,6 +112,7 @@ export default class StageLogger {
 
     res.turn = {
       types: state[S.turnTypes],
+      elapsed: state[S.turnsElapsed],
       remaining: state[S.turnsRemaining],
       multiplier: this.engine.turnManager.getTurnMultiplier(state),
     };
