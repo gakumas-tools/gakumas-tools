@@ -11,7 +11,7 @@ import {
 import DataContext from "@/contexts/DataContext";
 import {
   customizationsAfterPick,
-  fixCustomizations,
+  fixCustomizationGroups,
 } from "@/utils/customizations";
 import { stashMemoryDraft, takeMemoryDraft } from "@/utils/memoryDraft";
 import { getSaveOutcome } from "@/utils/memorySave";
@@ -112,12 +112,13 @@ export function MemoryContextProvider({ children }) {
     setPIdolId(memory.pIdolId || null);
     setParams(memory.params || [null, null, null, null]);
     setPItemIds(memory.pItemIds || [0, 0, 0, 0]);
-    setSkillCardIds(memory.skillCardIds || [0, 0, 0, 0, 0, 0]);
-    if (memory.customizations) {
-      setCustomizations(memory.customizations.map(fixCustomizations));
-    } else {
-      setCustomizations([{}, {}, {}, {}, {}, {}]);
-    }
+    const skillCardIds = memory.skillCardIds || [0, 0, 0, 0, 0, 0];
+    setSkillCardIds(skillCardIds);
+    // A saved memory can hold customizations its cards can't have: the
+    // editor used to keep them when a slot's card changed.
+    setCustomizations(
+      fixCustomizationGroups([skillCardIds], [memory.customizations])[0]
+    );
     revisionRef.current++;
     documentRef.current++;
     setDirty(false);

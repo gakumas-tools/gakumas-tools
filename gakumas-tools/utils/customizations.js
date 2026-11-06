@@ -35,15 +35,6 @@ export function countCustomizations(customizations) {
   return Object.values(customizations).reduce((acc, cur) => acc + cur, 0);
 }
 
-export function fixCustomizations(customizations) {
-  return Object.keys(customizations || {})
-    .filter(Customizations.getById)
-    .reduce((acc, cur) => {
-      acc[cur] = customizations[cur];
-      return acc;
-    }, {});
-}
-
 export function fixCardCustomizations(cardId, customizations) {
   const card = SkillCards.getById(cardId);
   const fixed = {};

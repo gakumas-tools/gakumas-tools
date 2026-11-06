@@ -75,6 +75,26 @@ test("picking the same card again keeps its customizations", () => {
   assert.equal(customizationsAfterPick(before, 1, CARD, CARD), before);
 });
 
+test("a saved memory loads with only its cards' own customizations", () => {
+  const other = SkillCards.getAll().find(
+    (card) => card.id != CARD && !card.availableCustomizations.includes(65),
+  ).id;
+  const memory = {
+    skillCardIds: [CARD, other, 0, 0, 0, 0],
+    customizations: [{ 65: 1 }, { 65: MAX }],
+  };
+  const loaded = fixCustomizationGroups(
+    [memory.skillCardIds],
+    [memory.customizations],
+  )[0];
+  assert.deepEqual(loaded, [{ 65: 1 }, {}, {}, {}, {}, {}]);
+  assert.equal(
+    calculateContestPower([0, 0, 0, 0], [], memory.skillCardIds, loaded) -
+      calculateContestPower([0, 0, 0, 0], [], memory.skillCardIds, []),
+    36,
+  );
+});
+
 test("missing or partial groups become one map per card", () => {
   const cards = [[CARD, 0, 1], [CARD]];
   assert.deepEqual(fixCustomizationGroups(cards, undefined), [
