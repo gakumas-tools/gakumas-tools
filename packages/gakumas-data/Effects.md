@@ -163,7 +163,7 @@ Assignment operators: `=`, `+=`, `-=`, `*=`, `/=`, `%=`.
 | 特定カードを保留 (全部)                   | `holdAll[...]`                                                           |
 | このカードを保留                          | `holdThis`                                                               |
 | 特定カードを無料で使用 (ランダム/全/選択) | `useRandomFree[...]` / `useAllFree[...]` / `useSelectedFree[...](, num)` |
-| 特定カードを除外                          | `removeAll[...]`                                                         |
+| 特定カードを除外 (ランダム)               | `removeRandom[...]`                                                      |
 | 保留カードを手札に移動                    | `moveHeldCardsToHand`                                                    |
 | 低下状態を解除                            | `removeDebuffs(n)`                                                       |
 | 指針を変更                                | `setStance(stance)`                                                      |
@@ -223,7 +223,7 @@ if:countCards[hand | held] >= 3 { drawCard }
 
 | Function       | Meaning                                              |
 | -------------- | ---------------------------------------------------- |
-| `effect(name)` | カードが特定の効果（例: `score`, `setStance`）を持つ |
+| `effect(name)` | カードが特定の効果（例: `score`, `strength`）を持つ  |
 | `baseId(n)`    | ベース ID が `n` のカード                            |
 | `id(n)`        | ID が `n` のカード（強化前／後を区別）               |
 

@@ -42,11 +42,21 @@ function HifCalculator() {
   const round1Score = useMemo(() => {
     const left = leftScore || 0;
     const r2 = round2Score || 0;
-    if (scoreMode === "total") return left - r2;
+    if (scoreMode === "total") return Math.max(0, left - r2);
     return left;
   }, [scoreMode, leftScore, round2Score]);
 
   const totalScore = round1Score + (round2Score || 0);
+
+  // The left field holds the total in one mode and round 1 in the other, so
+  // convert it on a switch to keep the scores the user entered.
+  const changeScoreMode = (mode) => {
+    if (mode === scoreMode) return;
+    if (leftScore != null) {
+      setLeftScore(mode === "total" ? totalScore : round1Score);
+    }
+    setScoreMode(mode);
+  };
 
   const boostedStarGain = getBoostedRound2StarGain(round2Score || 0);
 
@@ -118,7 +128,7 @@ function HifCalculator() {
           <ButtonGroup
             options={SCORE_MODE_OPTIONS}
             selected={scoreMode}
-            onChange={setScoreMode}
+            onChange={changeScoreMode}
           />
         </div>
 
