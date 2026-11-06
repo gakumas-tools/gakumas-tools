@@ -1,6 +1,11 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { PIdols, SkillCards } from "gakumas-data";
+import {
+  HIDDEN_CARD_IDS,
+  HIDDEN_ITEM_IDS,
+  PIdols,
+  SkillCards,
+} from "gakumas-data";
 import {
   getEntity,
   searchEntities,
@@ -36,7 +41,16 @@ test("a card's summary lists its customizations", () => {
   );
 });
 
-test("hidden cards and items can't be found or read", () => {
+test("hidden cards and items can't be found or read", (t) => {
+  // Hide a released card and item for this test, whatever previews are hidden.
+  for (const [ids, id] of [
+    [HIDDEN_CARD_IDS, 915],
+    [HIDDEN_ITEM_IDS, 506],
+  ]) {
+    if (ids.has(id)) continue;
+    ids.add(id);
+    t.after(() => ids.delete(id));
+  }
   assert.ok(!foundIds("skillCard", "915").includes(915));
   assert.ok(!foundIds("pItem", "506").includes(506));
   assert.throws(() => getEntity("skillCard", 915));
