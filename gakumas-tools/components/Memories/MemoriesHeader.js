@@ -125,7 +125,10 @@ function MemoriesHeader({
           <Layer shown={action == "delete"}>
             <IconButton
               icon={FaCircleXmark}
-              onClick={() => setAction(null)}
+              onClick={() => {
+                setAction(null);
+                setSelectedMemories({});
+              }}
               ariaLabel={t("cancel")}
             />
             <span className={styles.modeLabel} aria-live="polite">

@@ -15,15 +15,23 @@ import {
 import { silenceConsole } from "./lib.mjs";
 
 const args = process.argv.slice(2);
-const runsIndex = args.indexOf("--runs");
-const RUNS = runsIndex >= 0 ? parseInt(args[runsIndex + 1], 10) : 200;
+const VALUE_OPTIONS = ["--runs", "--max-gap-pct", "--min-rehearsals"];
+const option = (name) => {
+  const i = args.indexOf(name);
+  return i >= 0 ? args[i + 1] : undefined;
+};
+const RUNS = parseInt(option("--runs") ?? 200, 10);
+const MAX_GAP_PCT = option("--max-gap-pct");
+const MIN_REHEARSALS = parseInt(option("--min-rehearsals") ?? 3, 10);
 const asJson = args.includes("--json");
 const file = args.find(
-  (a, i) => !a.startsWith("--") && !(runsIndex >= 0 && i == runsIndex + 1),
+  (a, i) => !a.startsWith("--") && !VALUE_OPTIONS.includes(args[i - 1]),
 );
 
 if (!file) {
-  console.error("Usage: pnpm fidelity <comparisons.jsonl> [--runs N] [--json]");
+  console.error(
+    "Usage: pnpm fidelity <comparisons.jsonl> [--runs N] [--json] [--max-gap-pct N [--min-rehearsals N]]",
+  );
   process.exit(1);
 }
 
@@ -60,9 +68,16 @@ function describe(loadout) {
 const unique = new Map();
 for (const line of readFileSync(file, "utf8").split("\n").filter(Boolean)) {
   const c = JSON.parse(line);
-  unique.set(JSON.stringify([c.loadout, c.rehearsal.scores]), c);
+  unique.set(
+    JSON.stringify([c.loadout, !!c.enterPercents, c.rehearsal.scores]),
+    c,
+  );
 }
 const comparisons = [...unique.values()];
+if (!comparisons.length) {
+  console.error(`No comparisons in ${file}`);
+  process.exit(1);
+}
 const sources = new Set(comparisons.map((c) => c.userHash || c.ipHash));
 
 const restore = silenceConsole();
@@ -81,7 +96,7 @@ try {
       id: c._id,
       ...describe(c.loadout),
       n: gap.n,
-      submittedDiffPct: c.simStats.mean / gap.rehearsalMean - 1,
+      submittedDiffPct: c.simStats && c.simStats.mean / gap.rehearsalMean - 1,
       diffPct: gap.diffPct,
       marginPct: gap.marginPct,
       z: gap.marginPct ? (gap.diffPct / gap.marginPct) * 1.96 : 0,
@@ -94,10 +109,10 @@ try {
 
 results.sort((a, b) => Math.abs(b.z) - Math.abs(a.z));
 
+const pct = (v) => (v == null ? "    -" : `${(v * 100).toFixed(1)}%`);
 if (asJson) {
   for (const r of results) console.log(JSON.stringify(r));
 } else {
-  const pct = (v) => (v == null ? "    -" : `${(v * 100).toFixed(1)}%`);
   console.log(
     `${comparisons.length} unique comparisons from ${sources.size} sources\n`,
   );
@@ -126,4 +141,19 @@ if (asJson) {
     const mean = rows.reduce((a, r) => a + r.diffPct, 0) / rows.length;
     console.log(`  ${plan}: ${pct(mean)} over ${rows.length}`);
   }
+}
+
+if (MAX_GAP_PCT != null) {
+  const maxGap = parseFloat(MAX_GAP_PCT) / 100;
+  const failures = results.filter(
+    (r) => r.n < MIN_REHEARSALS || Math.abs(r.diffPct) > maxGap,
+  );
+  for (const r of failures) {
+    console.error(`${r.id ?? r.stage}: ${r.n} rehearsals, ${pct(r.diffPct)} gap`);
+  }
+  console.error(
+    `Fidelity gate: ${failures.length ? "FAIL" : "PASS"} ` +
+      `(gap within ±${MAX_GAP_PCT}%, at least ${MIN_REHEARSALS} rehearsals each)`,
+  );
+  if (failures.length) process.exitCode = 1;
 }

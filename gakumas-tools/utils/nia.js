@@ -1,4 +1,5 @@
 import { TARGET_RATING_BY_RANK } from "@/utils/produceRank";
+import { exactFloor } from "@/utils/exactFloor";
 
 export const MAX_PARAMS_BY_DIFFICULTY = {
   pro: 2000,
@@ -206,29 +207,33 @@ export function calculateGainedParams(paramRegimesByOrder, paramOrder, scores) {
   });
 }
 
+// The score at which each param reaches maxParams after the audition's
+// bonus and challenge params, or where its gains stop if it never does.
 export function calculateMaxScores(
   paramRegimesByOrder,
   maxParams,
   paramOrder,
   params,
   paramBonuses,
+  challengeParamBonus = 0,
 ) {
   return paramOrder.map((order, i) => {
     const regimes = paramRegimesByOrder[order];
-    const maxGain = Math.ceil(
-      (maxParams - params[i]) / (1 + paramBonuses[i] / 100),
-    );
-    let regime = regimes[0];
-    for (let j = 1; j < regimes.length; j++) {
-      const { constant, multiplier } = regimes[j];
-      if ((maxGain - constant) / multiplier > regimes[j - 1].threshold) {
-        break;
-      }
-      regime = regimes[j];
-    }
-    const { threshold, constant, multiplier } = regime;
-    if (multiplier == 0) return threshold;
-    return Math.floor((maxGain - constant) / multiplier);
+    if (params[i] >= maxParams) return 0;
+    const postAuditionParam = (score) => {
+      const [gained] = calculateGainedParams(paramRegimesByOrder, [order], [
+        score,
+      ]);
+      const [bonus] = calculateBonusParams([gained], [paramBonuses[i]]);
+      const [challenge] = calculateChallengeParams(
+        [gained],
+        [bonus],
+        challengeParamBonus,
+      );
+      return params[i] + gained + bonus + challenge;
+    };
+    const score = lowestScoreReaching(regimes, postAuditionParam, maxParams);
+    return score == Infinity ? regimes[0].threshold : score;
   });
 }
 
@@ -308,7 +313,7 @@ export function calculateGainedVotes(voteRegimes, affection, score) {
   for (let j = 0; j < voteRegimes.length; j++) {
     const { threshold, multiplier, constant } = voteRegimes[j];
     if (score > threshold) {
-      return Math.floor(
+      return exactFloor(
         Math.ceil(score * multiplier + constant) *
           (1 + 0.05 * (affection - 10)),
       );
@@ -317,17 +322,38 @@ export function calculateGainedVotes(voteRegimes, affection, score) {
   return 0;
 }
 
-function calculateScoreForVotes(voteRegimes, affection, votes) {
-  for (let j = 0; j < voteRegimes.length; j++) {
-    const { threshold, multiplier, constant } = voteRegimes[j];
-    if (votes > constant) {
-      return Math.floor(
-        (Math.ceil(votes / (1 + 0.05 * (affection - 10))) - constant) /
-          multiplier,
-      );
+const MAX_SEARCH_SCORE = 1e9;
+
+// The lowest score at which value(score) reaches target, or Infinity if none
+// does. Values rise with score within each regime but can drop at a
+// regime's threshold, so search each regime's score range on its own.
+function lowestScoreReaching(regimes, value, target) {
+  let lowest = Infinity;
+  let upper = MAX_SEARCH_SCORE;
+  for (const { threshold } of regimes) {
+    let lo = Math.floor(threshold) + 1;
+    let hi = upper;
+    if (lo <= hi && value(hi) >= target) {
+      while (lo < hi) {
+        const mid = Math.floor((lo + hi) / 2);
+        if (value(mid) >= target) hi = mid;
+        else lo = mid + 1;
+      }
+      lowest = Math.min(lowest, lo);
     }
+    upper = Math.floor(threshold);
   }
-  return 0;
+  return lowest;
+}
+
+// The lowest score whose gained votes reach `votes`, or Infinity if none does.
+export function calculateScoreForVotes(voteRegimes, affection, votes) {
+  if (votes <= 0) return 0;
+  return lowestScoreReaching(
+    voteRegimes,
+    (score) => calculateGainedVotes(voteRegimes, affection, score),
+    votes,
+  );
 }
 
 const VOTE_RANKS = [
@@ -382,6 +408,7 @@ export function calculateRecommendedScores(
     paramOrder,
     params,
     paramBonuses,
+    challengeParamBonus,
   );
   let recommendedScores = {};
   let currentScores = [0, 0, 0];
@@ -422,7 +449,7 @@ export function calculateRecommendedScores(
     );
     const postAuditionVotes = votes + gainedVotes;
 
-    const currentParamRating = Math.floor(
+    const currentParamRating = exactFloor(
       postAuditionParams.reduce((acc, cur) => acc + cur, 0) * 2.3,
     );
 

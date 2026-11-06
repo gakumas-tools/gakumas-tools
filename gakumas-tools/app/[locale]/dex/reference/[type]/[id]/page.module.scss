@@ -1,0 +1,153 @@
+@use "../../../../../../styles/colors";
+@use "../../../../../../styles/mixins";
+@use "../../../../../../styles/tokens";
+
+.page {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$space-4;
+  padding: tokens.$space-4;
+  @include mixins.card;
+}
+
+.back {
+  align-self: flex-start;
+  font-size: tokens.$text-sm;
+  @include mixins.link-pill;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.icon {
+  position: relative;
+  flex-shrink: 0;
+  width: 80px;
+  aspect-ratio: 1;
+  border-radius: tokens.$radius-icon;
+  box-shadow: tokens.$shadow-icon;
+  overflow: hidden;
+
+  img {
+    object-fit: cover;
+  }
+}
+
+.heading {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$space-2;
+
+  h1 {
+    font-size: tokens.$text-xl;
+    font-weight: tokens.$weight-heavy;
+    line-height: 1.3;
+  }
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  @include mixins.tag(tokens.$fill-muted, tokens.$surface-ink-muted);
+  padding: 1px 7px 1px 5px;
+  gap: 3px;
+}
+
+// The game's description, a line per effect. Without one, the in-game details screen cropped to its text.
+.description {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$space-1;
+  padding: tokens.$space-3 tokens.$space-4;
+  border-radius: tokens.$radius-lg;
+  background-color: tokens.$surface-alt;
+  color: tokens.$surface-ink;
+  font-size: tokens.$text-md;
+  line-height: 1.6;
+}
+
+.crop {
+  position: relative;
+  width: min(100%, 400px);
+  aspect-ratio: 362 / 168;
+  overflow: hidden;
+
+  img {
+    position: absolute;
+    top: calc(-100% * 43 / 168);
+    left: calc(-100% * 124 / 362);
+    width: calc(100% * 500 / 362);
+    max-width: none;
+    height: auto;
+    mix-blend-mode: multiply;
+    filter: brightness(1.05);
+
+    @include mixins.dark {
+      mix-blend-mode: screen;
+      filter: invert(1) hue-rotate(180deg) brightness(1.1);
+    }
+  }
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$space-2;
+
+  h2 {
+    @include mixins.heading;
+  }
+}
+
+.c11ns {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: tokens.$space-2;
+  list-style: none;
+}
+
+.c11n {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: tokens.$space-2;
+  padding: 6px 6px 6px 10px;
+  border-radius: tokens.$radius-md;
+  box-shadow: tokens.$shadow-icon;
+
+  @include mixins.c11n-gradients using ($c11n-gradient) {
+    background: $c11n-gradient;
+  }
+}
+
+.name {
+  min-width: 0;
+  color: colors.$white;
+  font-size: tokens.$text-sm;
+  font-weight: tokens.$weight-heavy;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.max {
+  flex-shrink: 0;
+  padding: 0 6px;
+  border-radius: tokens.$radius-sm;
+  background-color: tokens.$surface-panel;
+  color: tokens.$surface-ink;
+  font-size: tokens.$text-2xs;
+  font-weight: tokens.$weight-bold;
+  line-height: 16px;
+}

@@ -7,7 +7,7 @@ P_IDOLS.forEach((pIdol) => {
 const P_IDOLS_BY_ID = P_IDOLS.reduce((acc, cur) => {
   acc[cur.id] = cur;
   return acc;
-}, {});
+}, Object.create(null));
 
 class PIdols {
   static getAll() {

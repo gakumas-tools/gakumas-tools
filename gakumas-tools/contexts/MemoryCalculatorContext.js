@@ -11,6 +11,7 @@ import {
   loadMemoryCalculatorState,
   saveMemoryCalculatorState,
 } from "@/utils/memoryCalculatorStorage";
+import { getOtherVersionId } from "@/utils/upgrades";
 
 const MemoryCalculatorContext = createContext();
 
@@ -110,13 +111,11 @@ export function MemoryCalculatorContextProvider({ children }) {
       } else {
         // Add the opposite upgraded version of the card by default
         let targetSkillCard = SkillCards.getById(targetSkillCardIds[index]);
-        if (!targetSkillCard || targetSkillCard.rarity == "T") {
-          updatedAlternateSkillCardIds[index] = [0];
-        } else if (targetSkillCard.upgraded) {
-          updatedAlternateSkillCardIds[index] = [targetSkillCard.id - 1];
-        } else {
-          updatedAlternateSkillCardIds[index] = [targetSkillCard.id + 1];
-        }
+        const otherId =
+          targetSkillCard?.rarity == "T"
+            ? null
+            : getOtherVersionId(SkillCards, targetSkillCard);
+        updatedAlternateSkillCardIds[index] = [otherId ?? 0];
       }
       _setAlternateSkillCardIds(updatedAlternateSkillCardIds);
     },
