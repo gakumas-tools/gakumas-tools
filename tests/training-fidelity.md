@@ -174,3 +174,12 @@ A vocal lesson starting at 100. Covers genki gains with motivation at 0, 3,
 ありがとうの言葉+ adds genki before scoring; 気分転換+ spends stamina
 while retaining genki. The first play reaches the cap of 140, so its final
 score is omitted. The other plays end at attributes 116 and 132.
+
+## 【試験研修1】好調
+
+Covers scores at 200%, 250% and 400%, with and without good condition,
+gaining and extending its duration, and costs paid with stamina, genki or
+both. At 250%, アピールの基本 scores 23 without good condition and 35
+with it; 愛嬌 scores 50 with good condition. The plays finish at scores
+230, 97 and 160. Terminal good-condition durations are omitted because
+the screenshots precede their end-turn countdown.
