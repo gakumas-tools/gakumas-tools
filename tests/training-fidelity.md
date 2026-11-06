@@ -138,25 +138,6 @@ holds and plays アピールの基本+ instead of 一歩. Its last score reaches
 lesson cap, so only its resources are compared after the last card.
 Terminal full-power stance, enthusiasm and half-cost durations are omitted
 because the screenshots precede their end-turn changes.
-## 【基礎1】好調
-A dance lesson starting at 100. Covers gaining and extending good condition,
-its countdown on later turns, and scores with and without its 50% bonus.
-ファンサ rises from 10 to 15, アドリブ from 5 to 8, and ポーズの基本
-from 2 to 3. One play pays costs with genki before stamina. The first play
-clears at the cap of 140, so its last score is omitted. The other plays
-finish below the cap, with terminal good-condition durations omitted.
-## 【応用6】成長効果
-
-A vocal lesson starting at 100. 総合芸術 grows when a card changes the
-stance, including when 総合芸術 is outside the hand. Its detail panel shows
-45 added score after three stance changes. The first play clears at the
-lesson cap, so its last action checks resources and the captured growth.
-
-The other plays use one stance change before playing 総合芸術. One enters
-強気2 from 強気, and the other leaves 温存 for 強気, gaining enthusiasm
-and an extra card use. Their scores remain below the cap. The last play pays
-part of 総合芸術's cost with stamina. Growth gained by its own stance change applies after the
-current action sequence, so that use adds 54 before the follow-up card.
 
 ## 【基礎1】好調
 
