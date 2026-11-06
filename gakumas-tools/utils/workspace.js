@@ -36,7 +36,7 @@ export function parseWorkspace(value) {
   }
   if (!data || typeof data != "object") return workspace;
 
-  if (data.filter) workspace.filter = data.filter;
+  if (typeof data.filter == "boolean") workspace.filter = data.filter;
   if (data.plan) workspace.plan = data.plan;
   if (data.idolId) workspace.idolId = data.idolId;
   if (Array.isArray(data.pinnedTools)) workspace.pinnedTools = data.pinnedTools;

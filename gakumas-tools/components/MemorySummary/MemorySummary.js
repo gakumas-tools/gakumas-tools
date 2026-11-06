@@ -1,5 +1,5 @@
 import { memo, useMemo, useState } from "react";
-import { PIdols, PItems, SkillCards } from "gakumas-data";
+import { PIdols, PItems } from "gakumas-data";
 import gkImg from "gakumas-images";
 import EntityIcon from "@/components/EntityIcon";
 import Image from "@/components/Image";
@@ -7,6 +7,7 @@ import PIdol from "@/components/PIdol";
 import c from "@/utils/classNames";
 import { calculateContestPower } from "@/utils/contestPower";
 import { EntityTypes } from "@/utils/entities";
+import { getFilledSkillCardSlots } from "@/utils/memorySlots";
 import MemorySummaryActionButtons from "./MemorySummaryActionButtons";
 import styles from "./MemorySummary.module.scss";
 
@@ -29,7 +30,7 @@ function MemorySummary({ memory, picking, onClick }) {
     [pItemIds]
   );
   const skillCards = useMemo(
-    () => skillCardIds.filter((s) => s).map(SkillCards.getById),
+    () => getFilledSkillCardSlots(skillCardIds),
     [skillCardIds]
   );
 
@@ -72,12 +73,12 @@ function MemorySummary({ memory, picking, onClick }) {
         </div>
 
         <div className={styles.row}>
-          {skillCards.map((skillCard, i) => (
-            <div key={i} className={styles.imgWrapper}>
+          {skillCards.map(({ skillCard, slot }) => (
+            <div key={slot} className={styles.imgWrapper}>
               <EntityIcon
                 type={EntityTypes.SKILL_CARD}
                 id={skillCard.id}
-                customizations={customizations?.[i]}
+                customizations={customizations?.[slot]}
                 idolId={idolId}
                 size="fill"
               />

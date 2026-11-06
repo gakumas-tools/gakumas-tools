@@ -58,8 +58,10 @@ export function DataContextProvider({ children }) {
         return await postJson(url, body);
       } catch (error) {
         console.error(error);
-        setMemoriesError(action);
-        fetchMemories();
+        // Refetching clears the error first, so report the failure after
+        // it unless the refetch failed too.
+        await fetchMemories();
+        setMemoriesError((current) => current ?? action);
         return null;
       }
     },

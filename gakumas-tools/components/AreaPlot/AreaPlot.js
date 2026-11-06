@@ -114,7 +114,7 @@ function AreaPlot({ data, plan }) {
           }
         : {}),
     }),
-    [t]
+    [t, plan]
   );
 
   const [activeFields, setActiveFields] = useState({

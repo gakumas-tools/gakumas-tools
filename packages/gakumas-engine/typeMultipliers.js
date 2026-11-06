@@ -6,6 +6,21 @@ export function getParamCap(season) {
   return 3360;
 }
 
+// From season 55 the whole bonus shrinks for each param below 900 × its
+// criterion, by a fixed step plus the shortfall's share. Fitted from 37 contest
+// formation panel readings (ver 3.5.0, 2026-11-04); seasons before 55 unchecked.
+function getShortfallRate(params, criteria, season) {
+  if (season < 55) return 1;
+  let rate = 1;
+  for (const key of Object.keys(criteria)) {
+    const threshold = 900 * criteria[key];
+    if (params[key] < threshold) {
+      rate -= 0.0979 + 0.1512 * (1 - params[key] / threshold);
+    }
+  }
+  return rate;
+}
+
 export function calculateTypeMultipliers(
   params,
   stage,
@@ -26,6 +41,7 @@ export function calculateTypeMultipliers(
   const hasFlatterBonus = season == 23;
 
   const multipliers = {};
+  const shortfallRate = getShortfallRate(params, criteria, season);
 
   for (const key of Object.keys(criteria)) {
     const param = Math.min(params[key], getParamCap(season));
@@ -87,7 +103,7 @@ export function calculateTypeMultipliers(
 
     if (hasFlatterBonus) multiplier += param;
 
-    multiplier = multiplier * criterion + 100;
+    multiplier = multiplier * criterion * shortfallRate + 100;
     multiplier =
       Math.ceil(multiplier) *
       (1 + supportBonus + (hasFlatterBonus ? 0.01 : 0));

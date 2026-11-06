@@ -323,9 +323,9 @@ id,name,availableCustomizations,rarity,type,plan,unlockPlv,upgraded,unique,sourc
 322,初めての未来,,R,active,logic,1,FALSE,TRUE,pIdol,41,FALSE,,stamina-=5,score+=goodImpressionTurns*1.9,1,
 323,初めての未来+,,R,active,logic,1,TRUE,TRUE,pIdol,41,FALSE,,stamina-=3,score+=goodImpressionTurns*2,1,
 324,初めての場所,,R,mental,logic,1,FALSE,TRUE,pIdol,42,FALSE,,cost-=6,goodImpressionTurns+=6,1,
-325,初めての場所,,R,mental,logic,1,TRUE,TRUE,pIdol,42,FALSE,,cost-=6,goodImpressionTurns+=8,1,
+325,初めての場所+,,R,mental,logic,1,TRUE,TRUE,pIdol,42,FALSE,,cost-=6,goodImpressionTurns+=8,1,
 326,初めてのご褒美,,R,mental,sense,1,FALSE,TRUE,pIdol,43,FALSE,,cost-=4,goodConditionTurns+=3; perfectConditionTurns+=2,1,
-327,初めてのご褒美,,R,mental,sense,1,TRUE,TRUE,pIdol,43,FALSE,,cost-=4,goodConditionTurns+=4; perfectConditionTurns+=3,1,
+327,初めてのご褒美+,,R,mental,sense,1,TRUE,TRUE,pIdol,43,FALSE,,cost-=4,goodConditionTurns+=4; perfectConditionTurns+=3,1,
 328,お茶会へようこそ♪,,SSR,mental,sense,1,FALSE,TRUE,pIdol,44,FALSE,,cost-=4,genki+=3; perfectConditionTurns+=2; cardUsesRemaining+=1; drawCard,1,
 329,お茶会へようこそ♪+,,SSR,mental,sense,1,TRUE,TRUE,pIdol,44,FALSE,,cost-=3,genki+=5; perfectConditionTurns+=3; cardUsesRemaining+=1; drawCard,1,
 330,初めての地平,,R,active,sense,1,FALSE,TRUE,pIdol,45,FALSE,,cost-=2,score+=goodConditionTurns*2,1,
@@ -462,8 +462,8 @@ id,name,availableCustomizations,rarity,type,plan,unlockPlv,upgraded,unique,sourc
 461,おすそわけですっ！+,,SSR,mental,sense,1,TRUE,TRUE,pIdol,63,FALSE,,cost-=6,concentration+=3; at:startOfTurn { goodConditionTurns+=2 },1,
 462,光の夜,,SSR,mental,sense,1,FALSE,TRUE,support,,FALSE,,cost-=0,perfectConditionTurns+=2; fixedStamina+=2,1,
 463,光の夜+,"15,14",SSR,mental,sense,1,TRUE,TRUE,support,,FALSE,,cost-=0,perfectConditionTurns+=3; fixedStamina+=4,1,
-464,愛をこめて,,SSR,active,logic,1,FALSE,TRUE,pIdol,64,FALSE,,cost-=6,motivationMultiplier=1.8; genki+=4; score+=motivation*3,1,
-465,愛をこめて+,,SSR,active,logic,1,TRUE,TRUE,pIdol,64,FALSE,,cost-=6,motivationMultiplier=2; genki+=6; score+=motivation*4,1,
+464,愛を込めて,,SSR,active,logic,1,FALSE,TRUE,pIdol,64,FALSE,,cost-=6,motivationMultiplier=1.8; genki+=4; score+=motivation*3,1,
+465,愛を込めて+,,SSR,active,logic,1,TRUE,TRUE,pIdol,64,FALSE,,cost-=6,motivationMultiplier=2; genki+=6; score+=motivation*4,1,
 466,踏切の先に,,SSR,active,anomaly,1,FALSE,TRUE,pIdol,65,FALSE,if:isFullPower,cost-=3,score+=10; score+=10; score+=10; at:turn { setStance(preservation2); limit:1 },1,
 467,踏切の先に+,,SSR,active,anomaly,1,TRUE,TRUE,pIdol,65,FALSE,if:isFullPower,cost-=3,score+=16; score+=16; score+=16; at:turn { setStance(preservation2); limit:1 },1,
 468,これまでもこれからも,,SSR,active,sense,1,FALSE,TRUE,pIdol,66,FALSE,if:goodConditionTurns>=4,cost-=6,goodConditionTurnsMultiplier=2.5; score+=40,1,
@@ -584,8 +584,8 @@ id,name,availableCustomizations,rarity,type,plan,unlockPlv,upgraded,unique,sourc
 583,待ち望んだ瞬間+,,SSR,mental,anomaly,1,TRUE,TRUE,pIdol,105,FALSE,,cost-=1,setStance(preservation2); at:fullPowerChargeIncreased { if:isDirectEffect & isPreservation { fullPowerCharge+=1 } },1,
 584,夏夜に咲く思い出,,SSR,active,free,1,FALSE,TRUE,support,,FALSE,,cost-=7,removeRandom[trouble & (deck | discarded)]; cardUsesRemaining+=1; at:cardUsed { effectCounter+=1; if:effectCounter%5==4 { score+=4 } },1,
 585,夏夜に咲く思い出+,"29,83",SSR,active,free,1,TRUE,TRUE,support,,FALSE,,cost-=4,removeRandom[trouble & (deck | discarded)]; cardUsesRemaining+=1; at:cardUsed { effectCounter+=1; if:effectCounter%5==4 { score+=4 } },1,
-586,月明りに包まれて,,SSR,mental,free,1,FALSE,TRUE,support,,TRUE,,cost-=5,costReduction+=1; cardUsesRemaining+=1,1,
-587,月明りに包まれて+,"29,27",SSR,mental,free,1,TRUE,TRUE,support,,TRUE,,cost-=2,costReduction+=1; cardUsesRemaining+=1,1,
+586,月明かりに包まれて,,SSR,mental,free,1,FALSE,TRUE,support,,TRUE,,cost-=5,costReduction+=1; cardUsesRemaining+=1,1,
+587,月明かりに包まれて+,"29,27",SSR,mental,free,1,TRUE,TRUE,support,,TRUE,,cost-=2,costReduction+=1; cardUsesRemaining+=1,1,
 588,自己肯定感爆上げ↑↑,,SSR,mental,sense,1,FALSE,TRUE,pIdol,106,FALSE,,stamina-=3,at:cardUsed[mental] { concentration+=2 },1,
 589,自己肯定感爆上げ↑↑+,,SSR,mental,sense,1,TRUE,TRUE,pIdol,106,FALSE,,stamina-=2,concentration+=1; at:cardUsed[mental] { concentration+=2 },1,
 590,巻き返し,,R,mental,anomaly,66,FALSE,FALSE,produce,,FALSE,,fullPowerCharge-=1,setStance(preservation); setEnthusiasmBonus(3); target:all { g.cost+=1 },1,
@@ -727,8 +727,8 @@ id,name,availableCustomizations,rarity,type,plan,unlockPlv,upgraded,unique,sourc
 726,最強パフォーマー,,L,mental,logic,1,FALSE,TRUE,produce,,FALSE,if:motivation>=9,cost-=8,cardUsesRemaining+=1; motivation+=5; at:staminaDecreased { if:parentPhase==processCost { motivationMultiplier=2.5; genki+=4 } },1,
 727,エキスパート,,L,mental,anomaly,1,FALSE,TRUE,produce,,FALSE,if:stanceChangedTimes>=4,cost-=3,target:held { g.score+=5 }; useAllFree[held]; cardUsesRemaining+=1; at:turn { setStance(preservation); limit:1 },,at:cardMovedToHand { if:movedCardId==727 { holdSelected[deck | discarded] } }
 728,レジェンドスター,,L,mental,anomaly,1,FALSE,TRUE,produce,,FALSE,,cost-=6,"cardUsesRemaining+=1; drawCard(2); if:preservationTimes>=2 { turnsRemaining+=1 }; if:strengthTimes>=2 { turnsRemaining+=1 }; if:fullPowerTimes>=2 { turnsRemaining+=1 }; at:stanceChanged { if:isFullPower & turnsRemaining<=3 { setScoreBuff(1.5,1) }; limit:3 }",1,
-729,夢と現境界線,,SSR,active,logic,1,FALSE,TRUE,pIdol,122,FALSE,,cost-=4,cardUsesRemaining+=1; if:motivation<=8 { goodImpressionTurns*=1.1 }; if:motivation>=9 { score+=goodImpressionTurns*1.4 },,
-730,夢と現境界線+,,SSR,active,logic,1,TRUE,TRUE,pIdol,122,FALSE,,cost-=4,cardUsesRemaining+=1; if:motivation<=8 { goodImpressionTurns*=1.1 }; if:motivation>=9 { score+=goodImpressionTurns*2.5 },,
+729,夢と現の境界線,,SSR,active,logic,1,FALSE,TRUE,pIdol,122,FALSE,,cost-=4,cardUsesRemaining+=1; if:motivation<=8 { goodImpressionTurns*=1.1 }; if:motivation>=9 { score+=goodImpressionTurns*1.4 },,
+730,夢と現の境界線+,,SSR,active,logic,1,TRUE,TRUE,pIdol,122,FALSE,,cost-=4,cardUsesRemaining+=1; if:motivation<=8 { goodImpressionTurns*=1.1 }; if:motivation>=9 { score+=goodImpressionTurns*2.5 },,
 731,あこがれ不良ムーブ,,SSR,mental,logic,1,FALSE,TRUE,support,,FALSE,,motivation-=3,goodImpressionTurns+=3; cardUsesRemaining+=1; at:turn { drawCard; limit:1 }; if:motivation>=6 { drawCard(2) },1,
 732,あこがれ不良ムーブ+,"19,34",SSR,mental,logic,1,TRUE,TRUE,support,,FALSE,,motivation-=2,goodImpressionTurns+=4; cardUsesRemaining+=1; at:turn { drawCard; limit:1 }; if:motivation>=6 { drawCard(2) },1,
 733,味見はいかが,,SR,mental,logic,1,FALSE,TRUE,support,,FALSE,,cost-=5,removeRandom[trouble & (deck | discarded)]; goodImpressionTurns+=4; motivation+=3,1,
@@ -913,11 +913,11 @@ id,name,availableCustomizations,rarity,type,plan,unlockPlv,upgraded,unique,sourc
 912,結果としての今+,,SSR,active,anomaly,1,TRUE,TRUE,pIdol,161,FALSE,if:cumulativeFullPowerCharge>=10,fullPowerCharge-=2,setStance(strength); fixedStamina+=7; at:endOfTurn { enthusiasmExtensionTurns+=1; limit:1 },1,at:afterStartOfTurn { if:countCards[baseId(911) & removed] > 0 { useRandomCardFree[baseId(911)]; limit:1 } }
 913,ファンが望むこと,,SSR,mental,anomaly,1,FALSE,TRUE,pIdol,161,TRUE,,stamina-=7,setStance(preservation); at:stanceChanged { if:isDirectEffect & isStrength { fullPowerCharge+=2 } },1,
 914,ファンが望むこと+,,SSR,mental,anomaly,1,TRUE,TRUE,pIdol,161,TRUE,,stamina-=4,setStance(preservation); at:stanceChanged { if:isDirectEffect & isStrength { fullPowerCharge+=2 } },1,
-915,なにかを続ける尊さ,,SSR,mental,anomaly,1,FALSE,TRUE,pIdol,162,FALSE,,cost-=5,fullPowerCharge+=2; cardUsesRemaining+=1,1,at:afterCardUsed { if:isFullPower & turnCardsUsed%2==0 & effectCounter==0 & countCards[baseId(915) & removed] > 0 { effectCounter+=1; useRandomCardFree[baseId(915)] }; limit:3 }; at:beforeStartOfTurn { effectCounter=0 }
+915,なにかを続ける尊さ,,SSR,mental,anomaly,1,FALSE,TRUE,pIdol,162,FALSE,,cost-=7,fullPowerCharge+=1; cardUsesRemaining+=1,1,at:afterCardUsed { if:isFullPower & turnCardsUsed%2==0 & effectCounter==0 & countCards[baseId(915) & removed] > 0 { effectCounter+=1; useRandomCardFree[baseId(915)] }; limit:3 }; at:beforeStartOfTurn { effectCounter=0 }
 916,なにかを続ける尊さ+,,SSR,mental,anomaly,1,TRUE,TRUE,pIdol,162,FALSE,,cost-=5,fullPowerCharge+=2; cardUsesRemaining+=1,1,at:afterCardUsed { if:isFullPower & turnCardsUsed%2==0 & effectCounter==0 & countCards[baseId(915) & removed] > 0 { effectCounter+=1; useRandomCardFree[baseId(915)] }; limit:3 }; at:beforeStartOfTurn { effectCounter=0 }
-917,わずかずつの歩み,,SSR,mental,anomaly,1,FALSE,TRUE,pIdol,162,FALSE,,stamina-=5,genki+=1; moveHeldCardsToHand; cardUsesRemaining+=3,1,
+917,わずかずつの歩み,,SSR,mental,anomaly,1,FALSE,TRUE,pIdol,162,FALSE,,stamina-=8,moveHeldCardsToHand; cardUsesRemaining+=3,1,
 918,わずかずつの歩み+,,SSR,mental,anomaly,1,TRUE,TRUE,pIdol,162,FALSE,,stamina-=5,genki+=1; moveHeldCardsToHand; cardUsesRemaining+=3,1,
-919,ありのままのわたし,,SSR,mental,logic,1,FALSE,TRUE,pIdol,163,FALSE,,cost-=5,genki+=4; setGoodImpressionTurnsEffectBuff(0.5),1,at:goodImpressionTurnsIncreased { if:isDirectEffect & countCards[baseId(919) & removed] > 0 { effectCounter+=1; if:effectCounter%3==2 & effectCounter(turn)==0 { effectCounter(turn)+=1; useRandomCardFree[baseId(919)]; limit:2 } } }; at:beforeStartOfTurn { effectCounter(turn)=0 }
+919,ありのままのわたし,,SSR,mental,logic,1,FALSE,TRUE,pIdol,163,FALSE,,cost-=7,genki+=3; setGoodImpressionTurnsEffectBuff(0.5),1,at:goodImpressionTurnsIncreased { if:isDirectEffect & countCards[baseId(919) & removed] > 0 { effectCounter+=1; if:effectCounter%3==2 & effectCounter(turn)==0 { effectCounter(turn)+=1; useRandomCardFree[baseId(919)]; limit:2 } } }; at:beforeStartOfTurn { effectCounter(turn)=0 }
 920,ありのままのわたし+,,SSR,mental,logic,1,TRUE,TRUE,pIdol,163,FALSE,,cost-=5,genki+=4; setGoodImpressionTurnsEffectBuff(0.5),1,at:goodImpressionTurnsIncreased { if:isDirectEffect & countCards[baseId(919) & removed] > 0 { effectCounter+=1; if:effectCounter%3==2 & effectCounter(turn)==0 { effectCounter(turn)+=1; useRandomCardFree[baseId(919)]; limit:2 } } }; at:beforeStartOfTurn { effectCounter(turn)=0 }
-921,認めてくれるひと,,SSR,active,logic,1,FALSE,TRUE,pIdol,163,FALSE,,cost-=6,goodImpressionTurns+=3; if:countCards[removed]>=7 { goodImpressionTurns+=5 }; if:countCards[removed]>=11 { score+=goodImpressionTurns*2.8 },,
+921,認めてくれるひと,,SSR,active,logic,1,FALSE,TRUE,pIdol,163,FALSE,,cost-=6,goodImpressionTurns+=3; if:countCards[removed]>=7 { goodImpressionTurns+=5 }; if:countCards[removed]>=11 { score+=goodImpressionTurns*1.7 },,
 922,認めてくれるひと+,,SSR,active,logic,1,TRUE,TRUE,pIdol,163,FALSE,,cost-=6,goodImpressionTurns+=3; if:countCards[removed]>=7 { goodImpressionTurns+=5 }; if:countCards[removed]>=11 { score+=goodImpressionTurns*2.8 },,

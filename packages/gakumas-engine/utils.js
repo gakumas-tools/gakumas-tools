@@ -14,10 +14,34 @@ function mulberry32(a) {
 
 let _getRand = DEBUG ? mulberry32(seed) : Math.random;
 let _getRandCount = 0;
+let _randTape = null;
+let _randTapePos = 0;
 
 export function getRand() {
   _getRandCount++;
+  if (_randTape) {
+    if (_randTapePos < _randTape.length) return _randTape[_randTapePos++];
+    const value = _getRand();
+    _randTape.push(value);
+    _randTapePos++;
+    return value;
+  }
   return _getRand();
+}
+
+// Record the draws from here on, so a card use replayed from the start rolls
+// what it rolled before.
+export function recordRand() {
+  _randTape = [];
+  _randTapePos = 0;
+}
+
+export function rewindRand() {
+  _randTapePos = 0;
+}
+
+export function stopRecordingRand() {
+  _randTape = null;
 }
 
 export function getRandCallCount() {
@@ -30,6 +54,7 @@ export function getRandCallCount() {
 export function resetRand(customSeed) {
   _getRand = mulberry32(customSeed ?? seed);
   _getRandCount = 0;
+  _randTape = null;
 }
 
 export function shuffle(arr) {
