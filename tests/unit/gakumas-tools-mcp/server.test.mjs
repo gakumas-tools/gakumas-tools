@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
-import { Stages } from "gakumas-data";
+import { HIDDEN_CARD_IDS, HIDDEN_ITEM_IDS, Stages } from "gakumas-data";
 import {
   IdolConfig,
   IdolStageConfig,
@@ -181,6 +181,15 @@ test("simulations on two servers at once keep their seeds", async (t) => {
 });
 
 test("a loadout with an unknown ID or customization is refused", async (t) => {
+  // Hide a released card and item for this test, whatever previews are hidden.
+  for (const [ids, id] of [
+    [HIDDEN_CARD_IDS, 915],
+    [HIDDEN_ITEM_IDS, 506],
+  ]) {
+    if (ids.has(id)) continue;
+    ids.add(id);
+    t.after(() => ids.delete(id));
+  }
   const client = await connect(t);
   const refused = [
     { stageId: 999999 },
