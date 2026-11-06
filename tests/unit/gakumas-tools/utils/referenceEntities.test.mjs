@@ -1,18 +1,38 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { PDrinks, PItems, SkillCards } from "gakumas-data";
+import {
+  HIDDEN_CARD_IDS,
+  HIDDEN_ITEM_IDS,
+  PDrinks,
+  PItems,
+  SkillCards,
+} from "gakumas-data";
 import {
   getReferenceEntity,
   referencePath,
   referencePaths,
 } from "../../../../gakumas-tools/utils/referenceEntities.js";
 
-test("every visible card, item and drink has one page", () => {
+// Hides a released card and item for one test, so the test doesn't depend on
+// which previews are hidden at the time.
+function hideSamples(t) {
+  for (const [ids, id] of [
+    [HIDDEN_CARD_IDS, 915],
+    [HIDDEN_ITEM_IDS, 506],
+  ]) {
+    if (ids.has(id)) continue;
+    ids.add(id);
+    t.after(() => ids.delete(id));
+  }
+}
+
+test("every visible card, item and drink has one page", (t) => {
+  hideSamples(t);
   const paths = referencePaths();
   const visible =
-    SkillCards.getAll().filter((card) => ![915, 917, 919, 921].includes(card.id))
+    SkillCards.getAll().filter((card) => !HIDDEN_CARD_IDS.has(card.id))
       .length +
-    PItems.getAll().filter((item) => ![506, 508].includes(item.id)).length +
+    PItems.getAll().filter((item) => !HIDDEN_ITEM_IDS.has(item.id)).length +
     PDrinks.getAll().length;
   assert.equal(paths.length, visible);
   assert.equal(new Set(paths).size, paths.length);
@@ -22,7 +42,8 @@ test("every visible card, item and drink has one page", () => {
   }
 });
 
-test("hidden, unknown and non-canonical ids have no page", () => {
+test("hidden, unknown and non-canonical ids have no page", (t) => {
+  hideSamples(t);
   for (const [slug, id] of [
     ["skill-cards", "915"],
     ["p-items", "506"],

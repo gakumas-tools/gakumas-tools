@@ -26,6 +26,7 @@ import {
   buildBoxPlotData,
   computeStats,
   scoresForSelected,
+  stageSampleSizes,
 } from "./rehearsalStats";
 import useRehearsalParser from "./useRehearsalParser";
 import styles from "./Rehearsal.module.scss";
@@ -64,8 +65,10 @@ function Rehearsal() {
   // on unrelated re-renders.
   const boxPlotLabels = useMemo(
     () =>
-      [0, 1, 2].map((i) => t("stage", { n: i + 1 }) + ` (n=${data.length})`),
-    [t, data.length],
+      stageSampleSizes(boxPlotData).map(
+        (n, i) => t("stage", { n: i + 1 }) + ` (n=${n})`,
+      ),
+    [t, boxPlotData],
   );
 
   const selectedData = useMemo(() => {

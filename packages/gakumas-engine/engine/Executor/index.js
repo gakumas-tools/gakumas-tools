@@ -149,7 +149,6 @@ export default class Executor extends EngineComponent {
   }
 
   executeActions(state, actions, card) {
-    const growth = state[S.cardMap][card]?.growth;
     // Pre-list values of the end-of-turn-decrement fields for the
     // fresh-buff bookkeeping at the bottom.
     const eotPrev = new Array(EOT_DECREMENT_FIELDS.length);
@@ -171,7 +170,8 @@ export default class Executor extends EngineComponent {
     // Seed scoreTimes from the card's g.scoreTimes growth so legacy
     // growth-driven repeats still fire. Actions may also write to
     // state.scoreTimes directly before the first score action.
-    state[S.scoreTimes] = growth?.[G["g.scoreTimes"]] || 0;
+    state[S.scoreTimes] =
+      state[S.cardMap][card]?.growth?.[G["g.scoreTimes"]] || 0;
 
     // Diffs are logged per action (and per scoreTimes repeat), before the
     // action's change triggers fire, so each logged delta belongs to
@@ -207,7 +207,7 @@ export default class Executor extends EngineComponent {
         const prevGenki = state[S.genki];
         const prevGoodImpressionTurns = state[S.goodImpressionTurns];
 
-        this.executeAction(state, actions[i], growth);
+        this.executeAction(state, actions[i], card);
 
         // Apply scoreTimes to the first score action we see, then consume
         // it. `state[S.scoreTimes]` is seeded from g.scoreTimes above but
@@ -228,7 +228,7 @@ export default class Executor extends EngineComponent {
         // the game's separate score popups. Repeats only touch score, so
         // clamping between them is equivalent to the single trailing clamp.
         for (let j = 0; j < repeats; j++) {
-          this.executeAction(state, actions[i], growth);
+          this.executeAction(state, actions[i], card);
           this.clampFields(state);
           if (logging) this.logDiffs(state, diffSnap);
         }
@@ -375,7 +375,12 @@ export default class Executor extends EngineComponent {
     }
   }
 
-  executeAction(state, action, growth) {
+  executeAction(state, action, card) {
+    let growth = null;
+    if (card != null) {
+      growth = state[S.cardMap][card].growth;
+    }
+
     if (action.type === "identifier") {
       this.executeSpecialAction(state, action.name, growth);
       return;
