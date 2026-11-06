@@ -3,7 +3,6 @@
   "gameVersion": "3.5.0",
   "stage": "【基礎6】消費体力削減",
   "sourceDirectory": "screenshots/sources/ingame/",
-  "scope": "Conditional selected-action replay; synthetic unit multiplier normalizes pre-cap gain above visual100. Starting genki20 is an observed input. No full-deck, draw or cap claim.",
   "initial": {
     "score": 0,
     "stamina": 7,
@@ -41,7 +40,13 @@
             "costReduction": 0,
             "motivation": 0
           },
-          "capture": "campaign-increase-r1-turn2.png"
+          "capture": "campaign-increase-r1-turn2.png",
+          "handCardIds": [
+            90,
+            1,
+            62
+          ],
+          "handCapture": "campaign-increase-r1-turn1.png"
         },
         {
           "cardId": 157,
@@ -53,7 +58,13 @@
             "costReduction": 2,
             "motivation": 0
           },
-          "capture": "campaign-increase-r1-turn3.png"
+          "capture": "campaign-increase-r1-turn3.png",
+          "handCardIds": [
+            1,
+            157,
+            13
+          ],
+          "handCapture": "campaign-increase-r1-turn2.png"
         },
         {
           "cardId": 90,
@@ -65,7 +76,13 @@
             "costReduction": 2,
             "motivation": 0
           },
-          "capture": "campaign-increase-r1-turn4.png"
+          "capture": "campaign-increase-r1-turn4.png",
+          "handCardIds": [
+            3,
+            1,
+            90
+          ],
+          "handCapture": "campaign-increase-r1-turn3.png"
         },
         {
           "cardId": 40,
@@ -76,7 +93,13 @@
             "costReduction": 2,
             "motivation": 3
           },
-          "capture": "campaign-increase-r1-final-b.png"
+          "capture": "campaign-increase-r1-final-b.png",
+          "handCardIds": [
+            13,
+            40,
+            21
+          ],
+          "handCapture": "campaign-increase-r1-turn4.png"
         }
       ],
       "terminalAttribute": 140,
@@ -95,7 +118,13 @@
             "costReduction": 0,
             "motivation": 0
           },
-          "capture": "campaign-increase-r2-turn2-guide1.png"
+          "capture": "campaign-increase-r2-turn2-guide1.png",
+          "handCardIds": [
+            90,
+            1,
+            62
+          ],
+          "handCapture": "campaign-increase-r2-turn1.png"
         },
         {
           "cardId": 157,
@@ -107,7 +136,13 @@
             "costReduction": 2,
             "motivation": 0
           },
-          "capture": "campaign-increase-r2-turn3.png"
+          "capture": "campaign-increase-r2-turn3.png",
+          "handCardIds": [
+            1,
+            157,
+            13
+          ],
+          "handCapture": "campaign-increase-r2-turn2-guide1.png"
         },
         {
           "cardId": 1,
@@ -119,7 +154,13 @@
             "costReduction": 2,
             "motivation": 0
           },
-          "capture": "campaign-increase-r2-turn4.png"
+          "capture": "campaign-increase-r2-turn4.png",
+          "handCardIds": [
+            3,
+            1,
+            90
+          ],
+          "handCapture": "campaign-increase-r2-turn3.png"
         },
         {
           "cardId": 40,
@@ -131,7 +172,13 @@
             "costReduction": 2,
             "motivation": 3
           },
-          "capture": "campaign-increase-r2-final-b.png"
+          "capture": "campaign-increase-r2-final-b.png",
+          "handCardIds": [
+            13,
+            40,
+            21
+          ],
+          "handCapture": "campaign-increase-r2-turn4.png"
         }
       ],
       "terminalScoreCompared": true,
@@ -150,7 +197,13 @@
             "costReduction": 0,
             "motivation": 0
           },
-          "capture": "campaign-increase-r3-turn2.png"
+          "capture": "campaign-increase-r3-turn2.png",
+          "handCardIds": [
+            90,
+            1,
+            62
+          ],
+          "handCapture": "campaign-increase-r3-turn1.png"
         },
         {
           "cardId": 157,
@@ -162,7 +215,13 @@
             "costReduction": 2,
             "motivation": 0
           },
-          "capture": "campaign-increase-r3-turn3.png"
+          "capture": "campaign-increase-r3-turn3.png",
+          "handCardIds": [
+            1,
+            157,
+            13
+          ],
+          "handCapture": "campaign-increase-r3-turn2.png"
         },
         {
           "cardId": 3,
@@ -174,7 +233,13 @@
             "costReduction": 2,
             "motivation": 0
           },
-          "capture": "campaign-increase-r3-turn4.png"
+          "capture": "campaign-increase-r3-turn4.png",
+          "handCardIds": [
+            3,
+            1,
+            90
+          ],
+          "handCapture": "campaign-increase-r3-turn3.png"
         },
         {
           "cardId": 21,
@@ -186,22 +251,31 @@
             "costReduction": 2,
             "motivation": 2
           },
-          "capture": "campaign-increase-r3-final-a.png"
+          "capture": "campaign-increase-r3-final-a.png",
+          "handCardIds": [
+            13,
+            40,
+            21
+          ],
+          "handCapture": "campaign-increase-r3-turn4.png"
         }
       ],
       "terminalScoreCompared": true,
       "result": "Retry offered; below target"
     }
   ],
-  "verification": {
-    "plays": 3,
-    "checkpoints": 12,
-    "outcomeFields": 59,
-    "maxAbsoluteError": 0
-  },
-  "sourceNotes": [
-    "The capture prefix increase was assigned from an earlier handoff; the captured lesson title and tutorial establish flat cost reduction, not cost increase.",
-    "Terminal score excluded only for first play, which reaches the target cap. Other two plays have readable uncapped terminal attributes129 and111.",
-    "Only persistent buffs are compared at terminal; no duration-buff phase inference."
+  "drawCardIds": [
+    90,
+    1,
+    62,
+    1,
+    157,
+    13,
+    3,
+    1,
+    90,
+    13,
+    40,
+    21
   ]
 }
