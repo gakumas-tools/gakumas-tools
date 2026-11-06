@@ -33,6 +33,7 @@ export const MEMORY_LAYOUT = {
 
 const MIN_BADGE_FILL = 0.02;
 const BADGE_PAD = 0.04;
+const COST_BADGE_PAD = 0.08;
 const MAX_DISTANCE = 20;
 
 function isDotGreen(r, g, b) {
@@ -50,10 +51,15 @@ function isHeart(r, g, b) {
   return s > 0.45 && (h < 20 || h > 330 || (h >= 45 && h <= 172));
 }
 
-function isWhite(r, g, b) {
+function isWhite(r, g, b, minLuma = 195) {
   const max = Math.max(r, g, b);
   const luma = 0.299 * r + 0.587 * g + 0.114 * b;
-  return luma >= 195 && max - Math.min(r, g, b) < 0.25 * max;
+  return luma >= minLuma && max - Math.min(r, g, b) < 0.25 * max;
+}
+
+// The cost heart's pale outline passes as white and merges with the last digit.
+function isCostWhite(r, g, b) {
+  return isWhite(r, g, b, 205);
 }
 
 function isBright(r, g, b) {
@@ -104,16 +110,17 @@ function findDot(imageData, box, { dot }) {
   );
 }
 
-function findBadge(imageData, box, region, color) {
+function findBadge(imageData, box, region, color, rightPad = BADGE_PAD) {
   const found = blobs(imageData, area(box, region, imageData), color);
   if (!found.length) return null;
   const parts = found.filter(({ n }) => n >= 0.15 * found[0].n);
   const total = parts.reduce((sum, { n }) => sum + n, 0);
   if (total < MIN_BADGE_FILL * box.width * box.height) return null;
   const pad = Math.round(BADGE_PAD * box.width);
+  const right = Math.round(rightPad * box.width);
   return {
     x0: Math.max(0, Math.min(...parts.map((p) => p.x0)) - pad),
-    x1: Math.min(imageData.width, Math.max(...parts.map((p) => p.x1)) + pad),
+    x1: Math.min(imageData.width, Math.max(...parts.map((p) => p.x1)) + right),
     y0: Math.max(0, Math.min(...parts.map((p) => p.y0)) - pad),
     y1: Math.min(imageData.height, Math.max(...parts.map((p) => p.y1)) + pad),
   };
@@ -171,7 +178,15 @@ export function badgeGlyphs(imageData, box, layout) {
     });
   const dot = findDot(imageData, box, layout);
   const shield = findBadge(imageData, box, layout.genki, isShieldBlue);
-  const heart = findBadge(imageData, box, layout.cost, isHeart);
+  // A cost's last digit can stick out past the right of its heart.
+  const heart = findBadge(imageData, box, layout.cost, isHeart, COST_BADGE_PAD);
+  const cost = (predicate) =>
+    adjacentRun(
+      heart
+        ? white(heart, true, predicate)
+        : white(area(box, layout.plainCost, imageData), false, predicate),
+      true,
+    );
   return {
     dot: dot && white(dot, true, isBright),
     score: adjacentRun(
@@ -183,21 +198,18 @@ export function badgeGlyphs(imageData, box, layout) {
       false,
     ),
     genki: shield && white(shield),
-    cost: adjacentRun(
-      heart
-        ? white(heart)
-        : white(area(box, layout.plainCost, imageData), false),
-      true,
-    ),
+    cost: cost(isCostWhite),
+    // The stricter mask can thin an antialiased digit away.
+    costFallback: cost(isWhite),
   };
 }
 
-function readBadge(glyphs, templates, fromRight = false) {
+export function readBadge(glyphs, templates, fromRight = false) {
   const ordered = fromRight ? [...glyphs].reverse() : glyphs;
   const digits = [];
   for (const glyph of ordered) {
     const { digit, distance } = classifyGlyph(glyph, templates);
-    if (distance > MAX_DISTANCE) break;
+    if (distance > MAX_DISTANCE) return undefined;
     digits.push(digit);
   }
   if (!digits.length) return undefined;
@@ -224,7 +236,9 @@ export function readBadges(imageData, box, layout) {
       ? readBadge(glyphs.score, BADGE_TEMPLATES.dark)
       : null,
     genki: glyphs.genki ? readBadge(glyphs.genki, BADGE_TEMPLATES.white) : null,
-    cost: readBadge(glyphs.cost, BADGE_TEMPLATES.white, true),
+    cost:
+      readBadge(glyphs.cost, BADGE_TEMPLATES.white, true) ??
+      readBadge(glyphs.costFallback, BADGE_TEMPLATES.white, true),
     icon: readBottomIcon(imageData, box, layout.icon),
   };
 }

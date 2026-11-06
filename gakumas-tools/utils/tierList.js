@@ -16,19 +16,28 @@ export function encodeList(list) {
     .join("_");
 }
 
+// Known ranks only, each once, and each id in one tier: the editor keys rows
+// by rank and items by id.
 export function decodeList(str) {
   if (!str) return null;
   const tiers = [];
   const items = {};
+  const seen = new Set();
   for (const seg of str.split("_")) {
     const eq = seg.indexOf("=");
     const rank = eq >= 0 ? seg.slice(0, eq) : seg;
     const idsStr = eq >= 0 ? seg.slice(eq + 1) : "";
-    if (!rank) continue;
-    tiers.push(rank);
-    items[rank] = idsStr
-      ? idsStr.split(".").map(Number).filter(Number.isFinite)
-      : [];
+    if (!AVAILABLE_RANKS.includes(rank)) continue;
+    if (!items[rank]) {
+      tiers.push(rank);
+      items[rank] = [];
+    }
+    if (!idsStr) continue;
+    for (const id of idsStr.split(".").map(Number)) {
+      if (!Number.isFinite(id) || seen.has(id)) continue;
+      seen.add(id);
+      items[rank].push(id);
+    }
   }
   if (!tiers.length) return null;
   return { tiers: sortRanks(tiers), items };
@@ -37,7 +46,9 @@ export function decodeList(str) {
 // Known ranks only, each id once, and at most `maxPerTier` ids per tier, plus
 // the count cut from each tier.
 export function clampList(list, maxPerTier) {
-  const tiers = list.tiers.filter((rank) => AVAILABLE_RANKS.includes(rank));
+  const tiers = [...new Set(list.tiers)].filter((rank) =>
+    AVAILABLE_RANKS.includes(rank),
+  );
   const items = {};
   const overflow = {};
   const seen = new Set();

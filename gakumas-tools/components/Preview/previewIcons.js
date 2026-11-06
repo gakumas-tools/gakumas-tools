@@ -4,6 +4,27 @@ export const MAX_ITEMS = 4;
 export const MAX_GROUPS = 4;
 export const MAX_CARDS_PER_GROUP = 6;
 
+const knownId = (Entities, id) => (Entities.getById(id) ? id : 0);
+
+// IdolConfig throws on an unknown id, so those become empty slots.
+export function boundPreviewLoadout(loadout) {
+  const groups = loadout.skillCardIdGroups
+    .slice(0, MAX_GROUPS)
+    .map((group) => group.slice(0, MAX_CARDS_PER_GROUP));
+  return {
+    ...loadout,
+    pItemIds: loadout.pItemIds
+      .slice(0, MAX_ITEMS)
+      .map((id) => knownId(PItems, id)),
+    skillCardIdGroups: groups.map((group) =>
+      group.map((id) => knownId(SkillCards, id)),
+    ),
+    customizationGroups: groups.map((group, i) =>
+      group.map((_, j) => loadout.customizationGroups[i][j] || {}),
+    ),
+  };
+}
+
 // gkImg().icon is either a CDN URL string (when NEXT_PUBLIC_GK_IMG_BASE_URL
 // is set) or a bundled image object { src: "/_next/static/media/..." } when
 // unset. Normalize to a lookup key + absolute fetch URL the server can hit.

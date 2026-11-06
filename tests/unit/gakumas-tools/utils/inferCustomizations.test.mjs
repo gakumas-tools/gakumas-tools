@@ -103,3 +103,16 @@ test("drops a contradicting badge before giving up", () => {
 test("returns no customizations without a dot", () => {
   assert.deepEqual(inferCustomizations(SEISHIN_TOUITSU, { dot: 0 }), {});
 });
+
+test("handles customizations that patch an existing effect", () => {
+  // 107 (成長変更) on 一番高い星+ (451) is an op:"patch" with a delta and
+  // no effect of its own.
+  const ICHIBAN_TAKAI_HOSHI = 451;
+  const badges = predictBadges(ICHIBAN_TAKAI_HOSHI, { 107: 1 });
+  assert.ok(
+    customizationCandidates(ICHIBAN_TAKAI_HOSHI, badges).some(
+      (c11n) => c11n[107] === 1,
+    ),
+  );
+  assert.doesNotThrow(() => inferCustomizations(ICHIBAN_TAKAI_HOSHI, badges));
+});
