@@ -138,3 +138,12 @@ holds and plays アピールの基本+ instead of 一歩. Its last score reaches
 lesson cap, so only its resources are compared after the last card.
 Terminal full-power stance, enthusiasm and half-cost durations are omitted
 because the screenshots precede their end-turn changes.
+
+## 【基礎1】好調
+
+A dance lesson starting at 100. Covers gaining and extending good condition,
+its countdown on later turns, and scores with and without its 50% bonus.
+ファンサ rises from 10 to 15, アドリブ from 5 to 8, and ポーズの基本
+from 2 to 3. One play pays costs with genki before stamina. The first play
+clears at the cap of 140, so its last score is omitted. The other plays
+finish below the cap, with terminal good-condition durations omitted.
