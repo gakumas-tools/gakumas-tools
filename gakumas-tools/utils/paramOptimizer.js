@@ -74,12 +74,10 @@ export function findOptimalParams({
           const candidate = { ...best };
           candidate[a] += step * dir;
           candidate[b] -= step * dir;
-          if (
-            candidate[a] < 0 ||
-            candidate[b] < 0 ||
-            candidate[a] > cap ||
-            candidate[b] > cap
-          ) {
+          // Only the raised axis is held to the cap, so points already above
+          // it, which score nothing, can still move to another type.
+          const raised = dir > 0 ? a : b;
+          if (candidate[a] < 0 || candidate[b] < 0 || candidate[raised] > cap) {
             continue;
           }
           const candidateScore = score(candidate);

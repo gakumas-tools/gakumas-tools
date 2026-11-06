@@ -14,6 +14,7 @@ import Loader from "@/components/Loader";
 import MemoryEditorModal from "@/components/MemoryEditorModal";
 import ModalLoading from "@/components/Modal/ModalLoading";
 import DataContext from "@/contexts/DataContext";
+import MemoryContext from "@/contexts/MemoryContext";
 import ModalContext from "@/contexts/ModalContext";
 import styles from "./Memories.module.scss";
 
@@ -27,6 +28,7 @@ function MemoriesNudge({ filtered }) {
 
   const { status } = useSession();
   const { uploadMemories, memoriesLoading } = useContext(DataContext);
+  const { setAll } = useContext(MemoryContext);
   const { setModal } = useContext(ModalContext);
 
   if (filtered) {
@@ -60,7 +62,12 @@ function MemoriesNudge({ filtered }) {
             <Button style="primary" onClick={() => signIn("discord")}>
               <FaDiscord /> {t("signIn")}
             </Button>
-            <Button onClick={() => setModal(<MemoryEditorModal />)}>
+            <Button
+              onClick={() => {
+                setAll({});
+                setModal(<MemoryEditorModal />);
+              }}
+            >
               <FaPen /> {t("create")}
             </Button>
           </div>

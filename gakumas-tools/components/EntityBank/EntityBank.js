@@ -43,7 +43,8 @@ function getEntities(type, { filter, plan, idolId }) {
   }
 
   const nonSignatureEntities = Entities.getFiltered({
-    rarities: ["R", "SR", "SSR", "L"],
+    // Default cards are N, and a memory's Stage deck can hold them.
+    rarities: ["N", "R", "SR", "SSR", "L"],
     plans: [plan, "free"],
     modes: ["stage"],
     sourceTypes: ["default", "produce", "support"],
