@@ -166,3 +166,11 @@ attribute 123. The first play reaches the cap of 140; the third final capture
 precedes the last end-turn score, so both final scores are omitted. Terminal
 good-impression durations are omitted because the screenshots precede the
 next countdown.
+
+## 【基礎4】やる気
+
+A vocal lesson starting at 100. Covers genki gains with motivation at 0, 3,
+4 and 8, costs paid with genki or stamina, and genki-based scores rounded up.
+ありがとうの言葉+ adds genki before scoring; 気分転換+ spends stamina
+while retaining genki. The first play reaches the cap of 140, so its final
+score is omitted. The other plays end at attributes 116 and 132.

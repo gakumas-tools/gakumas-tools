@@ -18,6 +18,7 @@ const FIXTURES = [
   "training-lesson-good-condition",
   "training-lesson-concentration",
   "training-lesson-impression",
+  "training-lesson-motivation",
 ];
 
 function loadCapture(name) {
