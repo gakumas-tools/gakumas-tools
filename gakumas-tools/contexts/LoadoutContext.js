@@ -17,7 +17,10 @@ import {
   getStage,
   knownStageId,
 } from "@/utils/simulator";
-import { setMemorySlot } from "@/utils/memorySlots";
+import {
+  getMemorySlotCustomizations,
+  setMemorySlot,
+} from "@/utils/memorySlots";
 import { synchronizeLinkLoadouts } from "@/utils/linkLoadouts";
 import { fixCustomizationGroups } from "@/utils/customizations";
 
@@ -323,7 +326,7 @@ export function LoadoutContextProvider({ children }) {
     });
     setCustomizationGroups((cur) => {
       const next = [...cur];
-      next[index] = memory.customizations || [];
+      next[index] = getMemorySlotCustomizations(memory);
       return next;
     });
   }, []);
