@@ -2,7 +2,10 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   deriveRunMeta,
+  extractLoadoutFields,
   formatRelative,
+  normalizeSavedRun,
+  sameRunInputs,
   stageLabelOf,
 } from "../../../../gakumas-tools/utils/simulationRun.js";
 
@@ -44,5 +47,38 @@ test("an unnamed custom stage stores no English name", () => {
     deriveRunMeta({ stageId: "custom", customStage: { name: "Mine" } })
       .stageName,
     "Mine",
+  );
+});
+
+test("link runs that differ only in a later phase are different runs", () => {
+  const first = {
+    loadout: { stageId: 121, params: [100, 200, 300, 50] },
+    linkLoadouts: [{ stageId: 121, params: [100, 200, 300, 40] }],
+  };
+  const second = structuredClone(first);
+  assert.equal(sameRunInputs(first, second), true);
+  second.linkLoadouts[0].params[3] = 60;
+  assert.equal(sameRunInputs(first, second), false);
+});
+
+test("history keeps percentage input and tells it apart from raw stats", () => {
+  const raw = { stageId: 1, params: [100, 200, 300, 50], enterPercents: false };
+  const percents = extractLoadoutFields({ ...raw, enterPercents: true });
+  assert.equal(percents.enterPercents, true);
+  assert.equal(
+    normalizeSavedRun({ ...percents, _id: "saved" }).loadout.enterPercents,
+    true,
+  );
+  assert.equal(sameRunInputs({ loadout: raw }, { loadout: percents }), false);
+});
+
+test("run metadata doesn't make the same inputs a different run", () => {
+  const loadout = { stageId: 1, params: [100, 200, 300, 50] };
+  assert.equal(
+    sameRunInputs(
+      { id: "one", loadout, createdAt: "yesterday" },
+      { id: "two", loadout, linkLoadouts: null, stats: { mean: 100 } },
+    ),
+    true,
   );
 });

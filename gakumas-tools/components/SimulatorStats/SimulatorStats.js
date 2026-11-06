@@ -1,7 +1,12 @@
 import { memo, useCallback, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { DEFAULT_SORT, SORTABLE_COLS } from "./constants";
-import { combineTotal, combineTurn, sumTurnMeta } from "./helpers";
+import {
+  combineTotal,
+  combineTurn,
+  runVariantUses,
+  sumTurnMeta,
+} from "./helpers";
 import Section from "./Section";
 import styles from "./SimulatorStats.module.scss";
 
@@ -31,11 +36,12 @@ function SimulatorStats({ cardUsage, scoreStats }) {
       cardUsage?.turns?.length || 0,
       scoreStats?.turns?.length || 0,
     );
+    const runUses = runVariantUses(cardUsage?.turns || []);
     const perTurn = [];
     for (let i = 0; i < numTurns; i++) {
       const scoreTurn = scoreStats?.turns?.[i];
       perTurn.push({
-        byCard: combineTurn(cardUsage?.turns?.[i] || {}, scoreTurn),
+        byCard: combineTurn(cardUsage?.turns?.[i] || {}, scoreTurn, runUses),
         turnTypeCounts: scoreTurn?.turnTypeCounts || {
           vocal: 0,
           dance: 0,

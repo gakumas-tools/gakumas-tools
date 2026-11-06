@@ -1,0 +1,247 @@
+{
+  "date": "2026-11-02",
+  "gameVersion": "3.5.0",
+  "stage": "【試験研修3】好印象",
+  "initial": {
+    "score": 0,
+    "stamina": 30,
+    "genki": 0,
+    "goodImpressionTurns": 0
+  },
+  "turnTypes": [
+    "dance",
+    "visual",
+    "vocal",
+    "dance",
+    "vocal",
+    "visual"
+  ],
+  "displayedPercents": {
+    "vocal": 250,
+    "dance": 200,
+    "visual": 400
+  },
+  "scope": "Conditional action replay; excludes deck draws, raw-parameter conversion, NPC rankings and uncaptured terminal score.",
+  "sourceDirectory": "screenshots/sources/ingame/",
+  "plays": [
+    {
+      "id": "first-clear-observed-prefix",
+      "actions": [
+        {
+          "cardId": 1,
+          "name": "アピールの基本",
+          "expected": {
+            "score": 18,
+            "stamina": 26,
+            "genki": 0,
+            "goodImpressionTurns": 0
+          },
+          "capture": "campaign-20261102-exam-impression-turn2-help-ready.png"
+        },
+        {
+          "cardId": 1,
+          "name": "アピールの基本",
+          "expected": {
+            "score": 54,
+            "stamina": 22,
+            "genki": 0,
+            "goodImpressionTurns": 0
+          },
+          "capture": "campaign-20261102-exam-impression-turn3-help.png"
+        },
+        {
+          "cardId": 122,
+          "name": "ふれあい",
+          "expected": {
+            "score": 64,
+            "stamina": 17,
+            "genki": 3,
+            "goodImpressionTurns": 4
+          },
+          "capture": "campaign-20261102-exam-impression-turn4.png"
+        },
+        {
+          "cardId": 122,
+          "name": "ふれあい",
+          "expected": {
+            "score": 80,
+            "stamina": 15,
+            "genki": 3,
+            "goodImpressionTurns": 7
+          },
+          "capture": "campaign-20261102-exam-impression-turn5.png"
+        },
+        {
+          "cardId": 38,
+          "name": "今日もおはよう",
+          "expected": {
+            "score": 123,
+            "stamina": 14,
+            "genki": 0,
+            "goodImpressionTurns": 9
+          },
+          "capture": "campaign-20261102-exam-impression-turn6.png"
+        }
+      ]
+    },
+    {
+      "id": "genki-first",
+      "capturePrefix": "campaign-20261102-exam-impression-replay-",
+      "actions": [
+        {
+          "cardId": 13,
+          "name": "表現の基本",
+          "expected": {
+            "score": 0,
+            "stamina": 30,
+            "genki": 4,
+            "goodImpressionTurns": 0
+          },
+          "capture": "campaign-20261102-exam-impression-replay-turn2-help.png"
+        },
+        {
+          "cardId": 62,
+          "name": "リズミカル",
+          "expected": {
+            "score": 0,
+            "stamina": 30,
+            "genki": 10,
+            "goodImpressionTurns": 0
+          },
+          "capture": "campaign-20261102-exam-impression-replay-turn3.png"
+        },
+        {
+          "cardId": 58,
+          "name": "リスタート",
+          "expected": {
+            "score": 8,
+            "stamina": 30,
+            "genki": 8,
+            "goodImpressionTurns": 3
+          },
+          "capture": "campaign-20261102-exam-impression-replay-turn4-help.png"
+        },
+        {
+          "cardId": 122,
+          "name": "ふれあい",
+          "expected": {
+            "score": 22,
+            "stamina": 30,
+            "genki": 6,
+            "goodImpressionTurns": 6
+          },
+          "capture": "campaign-20261102-exam-impression-replay-turn5.png"
+        },
+        {
+          "cardId": 38,
+          "name": "今日もおはよう",
+          "expected": {
+            "score": 63,
+            "stamina": 30,
+            "genki": 2,
+            "goodImpressionTurns": 8
+          },
+          "capture": "campaign-20261102-exam-impression-replay-turn6.png"
+        },
+        {
+          "cardId": 9,
+          "name": "可愛い仕草",
+          "expected": {
+            "score": 143,
+            "stamina": 27,
+            "genki": 0
+          },
+          "capture": "campaign-20261102-exam-impression-replay-final-b.png",
+          "terminalGoodImpressionDisplayed": 10
+        }
+      ],
+      "result": "retry offered (4th)",
+      "resultCapture": "campaign-20261102-exam-impression-replay-final-c.png",
+      "limits": [
+        "Terminal image still shows remaining1 and goodImpression10; engine post-end-turn state has9. Only terminal score/stamina/genki compared; buff transition phase not captured."
+      ]
+    },
+    {
+      "id": "balanced-validation",
+      "capturePrefix": "campaign-20261102-exam-impression-validation-",
+      "actions": [
+        {
+          "cardId": 3,
+          "name": "ポーズの基本",
+          "expected": {
+            "score": 4,
+            "stamina": 27,
+            "genki": 2,
+            "goodImpressionTurns": 0
+          },
+          "capture": "campaign-20261102-exam-impression-validation-turn2.png"
+        },
+        {
+          "cardId": 1,
+          "name": "アピールの基本",
+          "expected": {
+            "score": 40,
+            "stamina": 25,
+            "genki": 0,
+            "goodImpressionTurns": 0
+          },
+          "capture": "campaign-20261102-exam-impression-validation-turn3.png"
+        },
+        {
+          "cardId": 19,
+          "name": "目線の基本",
+          "expected": {
+            "score": 45,
+            "stamina": 23,
+            "genki": 1,
+            "goodImpressionTurns": 2
+          },
+          "capture": "campaign-20261102-exam-impression-validation-turn4-help.png"
+        },
+        {
+          "cardId": 58,
+          "name": "リスタート",
+          "expected": {
+            "score": 55,
+            "stamina": 20,
+            "genki": 2,
+            "goodImpressionTurns": 4
+          },
+          "capture": "campaign-20261102-exam-impression-validation-turn5.png"
+        },
+        {
+          "cardId": 38,
+          "name": "今日もおはよう",
+          "expected": {
+            "score": 91,
+            "stamina": 18,
+            "genki": 0,
+            "goodImpressionTurns": 6
+          },
+          "capture": "campaign-20261102-exam-impression-validation-turn6.png"
+        },
+        {
+          "cardId": 9,
+          "name": "可愛い仕草",
+          "expected": {
+            "score": 155,
+            "stamina": 13,
+            "genki": 0
+          },
+          "capture": "campaign-20261102-exam-impression-validation-final-b.png",
+          "terminalGoodImpressionDisplayed": 8
+        }
+      ],
+      "result": "clear (3rd)",
+      "resultCapture": "campaign-20261102-exam-impression-validation-final-c.png",
+      "limits": [
+        "Terminal image still shows remaining1 and goodImpression8; engine post-end-turn state has7. Only terminal score/stamina/genki compared; buff transition phase not captured."
+      ]
+    }
+  ],
+  "initialCaptures": [
+    "campaign-20261102-exam-impression-turn1.png",
+    "campaign-20261102-exam-impression-replay-turn1.png",
+    "campaign-20261102-exam-impression-validation-turn1.png"
+  ]
+}

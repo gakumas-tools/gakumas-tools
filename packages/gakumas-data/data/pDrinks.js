@@ -13,7 +13,7 @@ const parsed = lazyParse(P_DRINKS, (pDrink) => {
 const P_DRINKS_BY_ID = P_DRINKS.reduce((acc, cur) => {
   acc[cur.id] = cur;
   return acc;
-}, {});
+}, Object.create(null));
 
 class PDrinks {
   static getAll() {

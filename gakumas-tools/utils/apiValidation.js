@@ -9,8 +9,27 @@ const OBJECT_ID = /^[0-9a-f]{24}$/i;
 export async function readJsonBody(request, maxBytes) {
   const tooLarge = { error: "Body too large", status: 413 };
   if (Number(request.headers.get("content-length")) > maxBytes) return tooLarge;
-  const text = await request.text();
-  if (new TextEncoder().encode(text).length > maxBytes) return tooLarge;
+  if (!request.body) return { error: "Invalid JSON", status: 400 };
+  const reader = request.body.getReader();
+  const decoder = new TextDecoder();
+  let text = "";
+  let size = 0;
+  try {
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      size += value.byteLength;
+      if (size > maxBytes) {
+        // Not awaited: a stalled sender may never let the cancel finish.
+        reader.cancel().catch(() => {});
+        return tooLarge;
+      }
+      text += decoder.decode(value, { stream: true });
+    }
+  } catch {
+    return { error: "Invalid body", status: 400 };
+  }
+  text += decoder.decode();
   let body;
   try {
     body = JSON.parse(text);
@@ -72,6 +91,12 @@ export function cleanMemories(memories) {
 
 export function validateLoadout(loadout) {
   if (loadout.name != null && !isName(loadout.name)) return "Invalid name";
+  if (
+    loadout.enterPercents != null &&
+    typeof loadout.enterPercents != "boolean"
+  ) {
+    return "Invalid enterPercents";
+  }
   for (const field of [
     "params",
     "pItemIds",

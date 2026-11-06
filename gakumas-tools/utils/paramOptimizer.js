@@ -44,7 +44,9 @@ export function findOptimalParams({
   if (total <= 0) return null;
 
   const totalByType = aggregateScoreByType(scoreStats);
-  const cap = getParamCap(stage.season);
+  // The season cap applies to raw contest params, not to percentages.
+  const isRawContest = stage.type == "contest" && !enterPercents;
+  const cap = isRawContest ? getParamCap(stage.season) : total;
 
   function score(params) {
     const mult = calculateTypeMultipliers(

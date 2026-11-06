@@ -1,0 +1,42 @@
+name: preview
+
+# A Vercel preview of a PR, made when it's labeled "preview". The label comes off once the
+# preview is up, so labeling it again deploys its newest commit.
+on:
+  pull_request:
+    types: [labeled]
+
+jobs:
+  preview:
+    name: Preview
+    if: github.event.label.name == 'preview'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Deploy on Vercel
+        id: deploy
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          url=$(npx --yes vercel@64.5.0 deploy --yes --token "$VERCEL_TOKEN")
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      - name: Comment the URL
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          URL: ${{ steps.deploy.outputs.url }}
+          SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          gh pr comment "$PR" -R "$GITHUB_REPOSITORY" --body "Preview of ${SHA:0:7}: $URL"
+          gh pr edit "$PR" -R "$GITHUB_REPOSITORY" --remove-label preview
