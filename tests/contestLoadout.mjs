@@ -28,6 +28,7 @@ import {
 } from "../gakumas-tools/utils/imageProcessing/contestLoadoutStats.js";
 import {
   classifyCrops,
+  firstPItemFilter,
   ICON_SIZE,
 } from "../gakumas-tools/utils/imageProcessing/entityClassifier.js";
 import {
@@ -109,10 +110,17 @@ async function crop(image, box) {
     .toBuffer();
 }
 
-async function classify(image, boxes, { session, classes }) {
-  const present = boxes.filter(Boolean);
-  const crops = await Promise.all(present.map((box) => crop(image, box)));
-  const ids = await classifyCrops(ort, session, classes, crops, 3);
+async function classify(image, boxes, { session, classes }, allowed) {
+  const slots = boxes.flatMap((box, i) => (box ? [i] : []));
+  const crops = await Promise.all(slots.map((i) => crop(image, boxes[i])));
+  const ids = await classifyCrops(
+    ort,
+    session,
+    classes,
+    crops,
+    3,
+    allowed && ((id, i) => allowed(id, slots[i])),
+  );
   return boxes.map((box) => (box ? ids.shift() : 0));
 }
 
@@ -220,9 +228,14 @@ async function main() {
       continue;
     }
 
-    const pItems = await classify(image, boxes.pItemBoxes, pItemModel);
     const cardBoxes = [...boxes.mainBoxes, ...boxes.subBoxes];
     const classified = await classify(image, cardBoxes, skillCardModel);
+    const pItems = await classify(
+      image,
+      boxes.pItemBoxes,
+      pItemModel,
+      firstPItemFilter(classified.slice(0, boxes.mainBoxes.length)),
+    );
     const { skillCardIdGroups: skillCards } = readLoadoutCards(
       image,
       [boxes.mainBoxes, boxes.subBoxes],
