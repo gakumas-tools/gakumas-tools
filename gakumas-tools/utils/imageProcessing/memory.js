@@ -225,7 +225,7 @@ export function readParams(imageData, line, width) {
   });
 }
 
-export async function extractEntities(img, boxes, session, classes) {
+export async function extractEntities(img, boxes, session, classes, allowed) {
   const canvas = document.createElement("canvas");
   canvas.width = ICON_SIZE;
   canvas.height = ICON_SIZE;
@@ -250,7 +250,7 @@ export async function extractEntities(img, boxes, session, classes) {
     return ctx.getImageData(0, 0, ICON_SIZE, ICON_SIZE).data;
   });
 
-  return classifyCrops(ort, session, classes, crops, 4);
+  return classifyCrops(ort, session, classes, crops, 4, allowed);
 }
 
 function downloadCrop(canvas, i) {
