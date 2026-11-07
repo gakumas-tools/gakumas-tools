@@ -1,6 +1,10 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { extractParams } from "../../../../../gakumas-tools/utils/imageProcessing/memory.js";
+import sharp from "sharp";
+import {
+  extractParams,
+  readParams,
+} from "../../../../../gakumas-tools/utils/imageProcessing/memory.js";
 import { hasIngameFixtures, loadIngameFixture } from "../../../../ingameFixtures.mjs";
 
 const fixture = hasIngameFixtures && loadIngameFixture("memory-params-ocr");
@@ -49,4 +53,18 @@ test("a rank digit does not fill a missing dance parameter", needsFixture, () =>
     words: fixture.line.words.filter((word) => word.text !== "86"),
   };
   assert.deepEqual(extractParams(line, fixture.width), []);
+});
+
+test("small numerals that OCR misreads are reread from their glyphs", needsFixture, async () => {
+  const small = loadIngameFixture("memory-params-540");
+  const { data, info } = await sharp(
+    new URL("../../../../fixtures/ingame/memory-params-540.png", import.meta.url)
+      .pathname,
+  )
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  const imageData = { data, width: info.width, height: info.height };
+  assert.notDeepEqual(extractParams(small.line, small.width), small.params);
+  assert.deepEqual(readParams(imageData, small.line, small.width), small.params);
 });

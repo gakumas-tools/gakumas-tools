@@ -9,7 +9,9 @@ import {
   loadImageFromFile,
   extractLines,
 } from "./common";
+import DIGIT_TEMPLATES from "./contestLoadoutDigits.json";
 import { classifyCrops, ICON_SIZE } from "./entityClassifier";
+import { readNumber, segmentGlyphs } from "./glyphs";
 import {
   getPItemBoundingBoxes,
   getSkillCardBoundingBoxes,
@@ -85,7 +87,8 @@ export async function getMemoryFromFile(
     ]);
   }
 
-  const params = extractParams(paramsLine, img.width);
+  const imageData = getImageData(img);
+  const params = readParams(imageData, paramsLine, img.width);
   const pItems = await extractEntities(
     img,
     pItemBoxes,
@@ -99,7 +102,6 @@ export async function getMemoryFromFile(
     skillCardClasses
   );
 
-  const imageData = getImageData(img);
   const customizations = skillCards.map((id, i) =>
     readCustomizations(imageData, skillCardBoxes[i], MEMORY_LAYOUT, id)
   );
@@ -170,19 +172,57 @@ export function extractParams(line, width) {
   if (PARAMS_REGEXP.test(line.text)) {
     return line.text.match(/\d+/g).map((t) => parseInt(t, 10));
   }
-  if (!line.words || !width) return [];
+  return (paramWords(line, width) || []).map((word) => parseInt(word.text, 10));
+}
+
+// The OCR words holding Vo, Da, Vi, stamina, or null if a column is missing
+function paramWords(line, width) {
+  const numbers = (line.words || []).filter((word) =>
+    /^\d+$/.test(word.text.trim())
+  );
+  if (PARAMS_REGEXP.test(line.text) && numbers.length === 4) return numbers;
+  if (!width) return null;
 
   // Rank icons sit left of the values in the first three columns.
-  const params = Array(4).fill(null);
-  for (const word of line.words) {
-    if (!/^\d+$/.test(word.text.trim())) continue;
+  const words = Array(4).fill(null);
+  for (const word of numbers) {
     const column = Math.floor((word.bbox.x0 / width) * 4);
     if (column < 3 && word.bbox.x1 < ((column + 0.6) * width) / 4) {
       continue;
     }
-    params[column] = parseInt(word.text, 10);
+    words[column] = word;
   }
-  return params.every((value) => value !== null) ? params : [];
+  return words.every((word) => word !== null) ? words : null;
+}
+
+const isParamInk = (r, g, b) =>
+  Math.max(r, g, b) < 110 && Math.max(r, g, b) - Math.min(r, g, b) < 30;
+
+// OCR misreads small numerals (Vo 65 as 85 in a 540 px wide screenshot), so
+// each value is reread from its glyphs inside the OCR word's box. A rank
+// badge merged into the word sits left of the value, so only the rightmost
+// run of glyphs is read.
+export function readParams(imageData, line, width) {
+  const words = paramWords(line, width);
+  if (!words) return extractParams(line, width);
+  const pad = Math.ceil((line.bbox.y1 - line.bbox.y0) * 0.15);
+  return words.map((word) => {
+    const value = readNumber(
+      segmentGlyphs(
+        imageData,
+        {
+          x0: Math.max(0, word.bbox.x0 - pad),
+          x1: Math.min(imageData.width, word.bbox.x1 + pad),
+          y0: Math.max(0, line.bbox.y0 - pad),
+          y1: Math.min(imageData.height, line.bbox.y1 + pad),
+        },
+        isParamInk,
+        true
+      ),
+      DIGIT_TEMPLATES.value
+    );
+    return Number.isInteger(value) ? value : parseInt(word.text, 10);
+  });
 }
 
 export async function extractEntities(img, boxes, session, classes) {
