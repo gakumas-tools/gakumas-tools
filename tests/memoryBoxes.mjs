@@ -26,7 +26,10 @@ import sharp from "sharp";
 import * as ort from "onnxruntime-node";
 import { createWorker } from "tesseract.js";
 import { PItems, SkillCards } from "gakumas-data";
-import { extractParams } from "../gakumas-tools/utils/imageProcessing/memory.js";
+import {
+  extractParams,
+  readParams,
+} from "../gakumas-tools/utils/imageProcessing/memory.js";
 import {
   getPItemBoundingBoxes,
   getSkillCardBoundingBoxes,
@@ -189,7 +192,7 @@ async function detectMemory(image, ocrWorker) {
   const contentWidth = paramsLine.bbox.x1 - pItemsLabelLine.bbox.x0;
   const anchor = { x: pItemsLabelLine.bbox.x0, y: pItemsLabelLine.bbox.y1 };
   return {
-    params: extractParams(paramsLine, image.width),
+    params: readParams({ ...image, data: image.pixels }, paramsLine, image.width),
     pItemBoxes: getPItemBoundingBoxes(anchor, contentWidth),
     skillCardBoxes: getSkillCardBoundingBoxes(anchor, contentWidth),
     paramsBbox: paramsLine.bbox,
