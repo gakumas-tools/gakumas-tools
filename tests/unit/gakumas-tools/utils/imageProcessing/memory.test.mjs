@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import sharp from "sharp";
 import {
   extractParams,
+  findParams,
   readParams,
 } from "../../../../../gakumas-tools/utils/imageProcessing/memory.js";
 import { hasIngameFixtures, loadIngameFixture } from "../../../../ingameFixtures.mjs";
@@ -55,16 +56,45 @@ test("a rank digit does not fill a missing dance parameter", needsFixture, () =>
   assert.deepEqual(extractParams(line, fixture.width), []);
 });
 
-test("small numerals that OCR misreads are reread from their glyphs", needsFixture, async () => {
-  const small = loadIngameFixture("memory-params-540");
+async function loadCrop(name) {
+  const crop = loadIngameFixture(name);
   const { data, info } = await sharp(
-    new URL("../../../../fixtures/ingame/memory-params-540.png", import.meta.url)
-      .pathname,
+    new URL(`../../../../fixtures/ingame/${name}.png`, import.meta.url).pathname,
   )
     .ensureAlpha()
     .raw()
     .toBuffer({ resolveWithObject: true });
-  const imageData = { data, width: info.width, height: info.height };
+  return { ...crop, imageData: { data, width: info.width, height: info.height } };
+}
+
+test("small numerals that OCR misreads are reread from their glyphs", needsFixture, async () => {
+  const small = await loadCrop("memory-params-540");
   assert.notDeepEqual(extractParams(small.line, small.width), small.params);
-  assert.deepEqual(readParams(imageData, small.line, small.width), small.params);
+  assert.deepEqual(
+    readParams(small.imageData, small.line, small.width),
+    small.params,
+  );
+});
+
+for (const name of ["memory-params-480", "memory-params-900"]) {
+  test(`values OCR glued stray marks onto are found and read (${name})`, needsFixture, async () => {
+    const small = await loadCrop(name);
+    assert.deepEqual(extractParams(small.line, small.width), []);
+    assert.deepEqual(findParams([small.line], small.imageData, small.width), {
+      index: 0,
+      params: small.params,
+    });
+  });
+}
+
+test("a line missing a digit in a column is not found loosely", needsFixture, async () => {
+  const small = await loadCrop("memory-params-900");
+  const line = {
+    ...small.line,
+    words: small.line.words.filter((word) => !word.text.includes("¢")),
+  };
+  assert.deepEqual(findParams([line], small.imageData, small.width), {
+    index: -1,
+    params: [],
+  });
 });
