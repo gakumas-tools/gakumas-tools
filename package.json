@@ -26,7 +26,8 @@
     "bench": "node --loader ./scripts/extensionless-loader.mjs ./tests/bench.mjs",
     "bench:choices": "node --no-warnings --loader ./scripts/extensionless-loader.mjs ./tests/choiceWeightStudy.mjs",
     "validate:data": "node --loader ./scripts/extensionless-loader.mjs ./scripts/validate-data.mjs",
-    "changelog": "node ./scripts/changelog.js",
+    "check:images": "python3 -m scripts.missing_images --since 0",
+    "changelog":"node ./scripts/changelog.js",
     "backup-db": "pnpm --filter gakumas-tools backup-db",
     "oshi": "pnpm --filter gakumas-tools oshi"
   },
