@@ -17,6 +17,7 @@ All notable changes to the contest simulator will be documented in this file.
 ## 2026-11-09
 
 - Add me hiro and garakutaroad tsubame portraits
+- Add shoshi kantetsu tsubame portrait
 
 ## 2026-11-07
 
