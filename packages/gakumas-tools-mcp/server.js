@@ -51,14 +51,16 @@ const deck = {
 const simulateSchema = z
   .object({
     stageId: id,
+    // An array, not a tuple: tuple schemas become draft-07 array-form
+    // `items`, which some MCP clients (e.g. the Anthropic API) reject.
     params: z
-      .tuple([
-        z.number().min(0),
-        z.number().min(0),
-        z.number().min(0),
-        z.number().int().min(0),
-      ])
-      .describe("Vo, Da, Vi, stamina"),
+      .array(z.number().min(0))
+      .length(4)
+      .refine((params) => params.length !== 4 || Number.isInteger(params[3]), {
+        message: "Invalid input: expected int, received number",
+        path: [3],
+      })
+      .describe("[Vo, Da, Vi, stamina]; stamina is an integer"),
     enterPercents: z
       .boolean()
       .default(false)
@@ -81,8 +83,9 @@ const simulateLinkSchema = z
   .object({
     stageId: id,
     params: z
-      .tuple([z.number().min(0), z.number().min(0), z.number().min(0)])
-      .describe("Vo, Da, Vi as displayed percentages, shared by every phase"),
+      .array(z.number().min(0))
+      .length(3)
+      .describe("[Vo, Da, Vi] as displayed percentages, shared by every phase"),
     phases: z
       .array(
         z.object({ stamina: z.number().int().min(0), ...deck }).strict(),
