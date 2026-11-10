@@ -17,6 +17,7 @@ All notable changes to the contest simulator will be documented in this file.
 ## 2026-11-10
 
 - Add gakuen seikatsu tsubame portrait
+- Add kanae episode0 support item images
 
 ## 2026-11-09
 
