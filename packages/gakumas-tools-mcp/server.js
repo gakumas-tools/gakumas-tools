@@ -6,12 +6,10 @@ import {
   IdolConfig,
   IdolStageConfig,
   StageConfig,
-  StageEngine,
-  StagePlayer,
-  STRATEGIES,
   getDefaultParams,
   getSimulatorUrl,
-  resetRand,
+  playScores,
+  stageConfigFor,
 } from "gakumas-engine";
 import {
   ENTITY_KINDS,
@@ -75,35 +73,56 @@ const deck = {
     .describe("Customization ID to level, for each card slot"),
 };
 
+const seed = z.number().int().min(0).max(0xffffffff);
+
+const stageSetup = {
+  stageId: id,
+  params: z
+    .tuple([
+      z.number().min(0),
+      z.number().min(0),
+      z.number().min(0),
+      z.number().int().min(0),
+    ])
+    .optional()
+    .describe(
+      "Vo, Da, Vi, stamina. Contest stages default to the website's: 2700, 2000, 800 by the stage's criteria, and 50 stamina",
+    ),
+  enterPercents: z
+    .boolean()
+    .default(false)
+    .describe(
+      "Contest stages only: Vo/Da/Vi are displayed percentages, not raw parameters. Event stages always take percentages.",
+    ),
+  supportBonus: z
+    .number()
+    .min(0)
+    .max(1)
+    .default(0.1)
+    .describe("A fraction: 0.1 is 10%, the website's default"),
+};
+
 const simulateSchema = z
   .object({
-    stageId: id,
-    params: z
-      .tuple([
-        z.number().min(0),
-        z.number().min(0),
-        z.number().min(0),
-        z.number().int().min(0),
-      ])
-      .optional()
-      .describe(
-        "Vo, Da, Vi, stamina. Contest stages default to the website's: 2700, 2000, 800 by the stage's criteria, and 50 stamina",
-      ),
-    enterPercents: z
-      .boolean()
-      .default(false)
-      .describe(
-        "Contest stages only: Vo/Da/Vi are displayed percentages, not raw parameters. Event stages always take percentages.",
-      ),
-    supportBonus: z
-      .number()
-      .min(0)
-      .max(1)
-      .default(0.1)
-      .describe("A fraction: 0.1 is 10%, the website's default"),
+    ...stageSetup,
     ...deck,
-    seed: z.number().int().min(0).max(0xffffffff),
+    seed,
     runs: z.number().int().min(1).max(100).default(1),
+  })
+  .strict();
+
+const compareSchema = z
+  .object({
+    ...stageSetup,
+    loadouts: z.array(z.object(deck).strict()).min(2).max(10),
+    seed,
+    runs: z
+      .number()
+      .int()
+      .min(1)
+      .max(1000)
+      .default(100)
+      .describe("Runs per loadout, on the same seeds for each"),
   })
   .strict();
 
@@ -118,7 +137,7 @@ const simulateLinkSchema = z
         z.object({ stamina: z.number().int().min(0), ...deck }).strict(),
       )
       .min(1),
-    seed: z.number().int().min(0).max(0xffffffff),
+    seed,
     runs: z.number().int().min(1).max(100).default(1),
   })
   .strict();
@@ -224,31 +243,46 @@ function checkLoadout({ pItemIds, skillCardIdGroups, customizationGroups }) {
   }
 }
 
-async function play(config, linkConfigs, { seed, runs }, signal) {
-  const engine = new StageEngine(config, linkConfigs);
-  const strategy = new STRATEGIES.HeuristicStrategy(engine);
-  engine.strategy = strategy;
+// Lets a cancellation arrive between runs.
+const tick = () => setImmediate();
 
-  const scores = [];
-  for (let i = 0; i < runs; i++) {
-    signal.throwIfAborted();
-    resetRand((seed + i) >>> 0);
-    const { score } = await new StagePlayer(engine, strategy).play();
-    scores.push(score);
-    // Lets a cancellation arrive between runs.
-    await setImmediate();
-  }
+function summarize(scores) {
   return {
-    typeMultipliers: config.typeMultipliers,
-    scores,
     min: Math.min(...scores),
     max: Math.max(...scores),
     mean: scores.reduce((sum, score) => sum + score, 0) / scores.length,
   };
 }
 
-async function simulate(loadout, signal) {
-  const stage = getStage(loadout.stageId);
+// Differences of runs on the same seed cancel most of the luck both share.
+function pairedDifference(scores, baseline) {
+  const diffs = scores.map((score, i) => score - baseline[i]);
+  const { mean } = summarize(diffs);
+  const variance =
+    diffs.reduce((sum, diff) => sum + (diff - mean) ** 2, 0) /
+    (diffs.length - 1);
+  return {
+    mean,
+    standardError: diffs.length > 1 ? Math.sqrt(variance / diffs.length) : null,
+  };
+}
+
+async function play(config, linkConfigs, { seed, runs }, signal) {
+  const scores = await playScores(config, linkConfigs, {
+    seed,
+    runs,
+    signal,
+    tick,
+  });
+  return {
+    typeMultipliers: config.typeMultipliers,
+    scores,
+    ...summarize(scores),
+  };
+}
+
+function getSingleStage(stageId) {
+  const stage = getStage(stageId);
   if (stage.preview) {
     throw new Error(`Stage ${stage.id} is a preview and can't be simulated.`);
   }
@@ -257,18 +291,46 @@ async function simulate(loadout, signal) {
       `Stage ${stage.id} is a link contest: use gakumas_simulate_link_loadout.`,
     );
   }
+  return stage;
+}
+
+async function simulate(loadout, signal) {
+  const stage = getSingleStage(loadout.stageId);
   checkLoadout(loadout);
   loadout = { ...loadout, params: resolveParams(stage, loadout) };
 
-  const config = new IdolStageConfig(
-    new IdolConfig(loadout),
-    new StageConfig(stage),
-    loadout.enterPercents,
-  );
   return {
-    ...(await play(config, null, loadout, signal)),
+    ...(await play(stageConfigFor(stage, loadout), null, loadout, signal)),
     params: loadout.params,
     simulatorUrl: simulatorUrl(loadout),
+  };
+}
+
+async function compare({ loadouts: decks, seed, runs, ...setup }, signal) {
+  const stage = getSingleStage(setup.stageId);
+  decks.forEach(checkLoadout);
+  const params = resolveParams(stage, setup);
+
+  const plays = [];
+  for (const deck of decks) {
+    const loadout = { ...setup, ...deck, params };
+    const scores = await playScores(stageConfigFor(stage, loadout), null, {
+      seed,
+      runs,
+      signal,
+      tick,
+    });
+    plays.push({ loadout, scores });
+  }
+
+  const baseline = plays[0].scores;
+  return {
+    params,
+    loadouts: plays.map(({ loadout, scores }, i) => ({
+      ...summarize(scores),
+      ...(i > 0 && { vsFirst: pairedDifference(scores, baseline) }),
+      simulatorUrl: simulatorUrl(loadout),
+    })),
   };
 }
 
@@ -348,6 +410,19 @@ export function createMcpServer() {
     },
     async (input, { signal }) =>
       json(await queueSimulation(() => simulate(input, signal))),
+  );
+
+  server.registerTool(
+    "gakumas_compare_loadouts",
+    {
+      title: "Compare loadouts",
+      description:
+        "Play several decks on one stage with the same params and seeds, as gakumas_simulate_loadout does. Each deck after the first gives its mean difference from the first, with a standard error: shared seeds cancel most of the luck, so this tells small differences apart in far fewer runs.",
+      inputSchema: compareSchema,
+      annotations: READ_ONLY,
+    },
+    async (input, { signal }) =>
+      json(await queueSimulation(() => compare(input, signal))),
   );
 
   server.registerTool(

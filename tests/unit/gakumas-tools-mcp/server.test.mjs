@@ -174,6 +174,38 @@ test("a contest without params plays the website's defaults", async (t) => {
   assert.equal(url.searchParams.get("params"), defaults.join("-"));
 });
 
+test("compared loadouts play the same seeds and pair their differences", async (t) => {
+  const client = await connect(t);
+  const base = loadout("seed1-002", { runs: 5 });
+  const other = loadout("seed1-001");
+  const deck = ({ pItemIds, skillCardIdGroups, customizationGroups }) => ({
+    pItemIds,
+    skillCardIdGroups,
+    customizationGroups,
+  });
+  const result = await call(client, "gakumas_compare_loadouts", {
+    stageId: base.stageId,
+    params: base.params,
+    supportBonus: base.supportBonus,
+    loadouts: [deck(base), deck(other)],
+    seed: base.seed,
+    runs: base.runs,
+  });
+
+  const expected = [
+    await directScores(base),
+    await directScores({ ...base, ...deck(other) }),
+  ];
+  const means = expected.map(
+    (scores) => scores.reduce((sum, score) => sum + score, 0) / scores.length,
+  );
+  assert.deepEqual(result.loadouts.map(({ mean }) => mean), means);
+  assert.equal(result.loadouts[0].vsFirst, undefined);
+  assert.equal(result.loadouts[1].vsFirst.mean, means[1] - means[0]);
+  assert.ok(result.loadouts[1].vsFirst.standardError >= 0);
+  assert.match(result.loadouts[1].simulatorUrl, /stage=/);
+});
+
 test("an event stage without params is refused", async (t) => {
   const client = await connect(t);
   const event = Stages.getAll().find(

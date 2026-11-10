@@ -30,6 +30,7 @@ MCP messages.
 | `gakumas_list_stages`           | Searches stages by name or ID, type, plan and season     |
 | `gakumas_get_stage`             | Reads a stage's criteria, turn counts and effects        |
 | `gakumas_simulate_loadout`      | Plays a loadout on a contest or event stage, seeded      |
+| `gakumas_compare_loadouts`      | Plays several decks on the same seeds and pairs them     |
 | `gakumas_simulate_link_loadout` | Plays a deck per phase on a link contest, seeded         |
 | `gakumas_search_entities`       | Searches cards, items, idols and more by name or ID      |
 | `gakumas_get_entity`            | Reads one with its effects, and a p-idol's signatures    |
@@ -53,6 +54,13 @@ without `params` plays the website's defaults: 2700, 2000 and 800 by the
 stage's criteria, and 50 stamina. `supportBonus` is a fraction, 0.1 unless
 given, as on the website. Zero IDs are empty slots. The result has the params
 it played and a `simulatorUrl` that opens the loadout on the website.
+
+`gakumas_compare_loadouts` takes the same stage fields once and a list of
+`loadouts`, each with its own `pItemIds`, `skillCardIdGroups` and
+`customizationGroups`. Every deck plays the same seeds, so each one after the
+first reports `vsFirst`: its mean difference from the first deck and that
+difference's standard error. Shared seeds cancel most of the luck, so a
+difference several standard errors from zero is real for this simulator.
 
 A link contest takes Vo, Da and Vi once, as displayed percentages, and a deck
 and stamina for each of the stage's phases:
