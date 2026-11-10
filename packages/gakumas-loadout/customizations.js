@@ -1,7 +1,5 @@
 import { Customizations, SkillCards } from "gakumas-data";
 
-export { serializeCustomizations } from "gakumas-engine";
-
 export function deserializeCustomizations(str) {
   try {
     return str.split("-").map((c) =>
@@ -18,6 +16,18 @@ export function deserializeCustomizations(str) {
     console.error(e);
     return [];
   }
+}
+
+export function serializeCustomizations(customizations) {
+  if (!customizations) return "";
+  return customizations
+    .map((c) =>
+      Object.keys(c || {})
+        .filter((k) => c[k])
+        .map((k) => `${k}x${c[k]}`)
+        .join("e")
+    )
+    .join("-");
 }
 
 export function countCustomizations(customizations) {

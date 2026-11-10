@@ -14,7 +14,7 @@ import {
   optimizeLoadout,
   playScores,
   stageConfigFor,
-} from "gakumas-engine";
+} from "gakumas-loadout";
 
 const YELLOW_BIG_BANG_CARD = 279;
 const YELLOW_BIG_BANG_ITEM = 90;

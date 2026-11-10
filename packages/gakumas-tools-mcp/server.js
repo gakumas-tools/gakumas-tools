@@ -2,22 +2,20 @@ import { setImmediate } from "node:timers/promises";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { Customizations, PItems, SkillCards, Stages } from "gakumas-data";
+import { IdolConfig, IdolStageConfig, StageConfig } from "gakumas-engine";
 import {
-  IdolConfig,
-  IdolStageConfig,
-  StageConfig,
-  getDefaultParams,
   defaultPools,
+  getDefaultParams,
   getSimulatorUrl,
   loadoutProblems,
   optimizeLoadout,
   playScores,
   stageConfigFor,
-} from "gakumas-engine";
+  withPIdolSignatures,
+} from "gakumas-loadout";
 import {
   ENTITY_KINDS,
   getEntity,
-  getSignatureIds,
   readEntity,
   searchEntities,
 } from "./entities.js";
@@ -267,16 +265,6 @@ function resolveParams(stage, { params, enterPercents }) {
   return getDefaultParams(stage);
 }
 
-function simulatorUrl(loadout) {
-  const { skillCardIdGroups, customizationGroups = [] } = loadout;
-  return getSimulatorUrl({
-    ...loadout,
-    customizationGroups: skillCardIdGroups.map((group, i) =>
-      group.map((_, j) => customizationGroups[i]?.[j] ?? {}),
-    ),
-  });
-}
-
 function checkLoadout({ pItemIds, skillCardIdGroups, customizationGroups }) {
   for (const pItemId of pItemIds) {
     if (pItemId) getEntity("pItem", pItemId);
@@ -361,7 +349,7 @@ async function simulate(loadout, signal) {
   return {
     ...(await play(stageConfigFor(stage, loadout), null, loadout, signal)),
     params: loadout.params,
-    simulatorUrl: simulatorUrl(loadout),
+    simulatorUrl: getSimulatorUrl(loadout),
   };
 }
 
@@ -388,32 +376,9 @@ async function compare({ loadouts: decks, seed, runs, ...setup }, signal) {
     loadouts: plays.map(({ loadout, scores }, i) => ({
       ...summarize(scores),
       ...(i > 0 && { vsFirst: pairedDifference(scores, baseline) }),
-      simulatorUrl: simulatorUrl(loadout),
+      simulatorUrl: getSimulatorUrl(loadout),
     })),
   };
-}
-
-function startingLoadout({ pIdolId, pItemIds, skillCardIdGroups }) {
-  const loadout = structuredClone({ pItemIds, skillCardIdGroups });
-  if (pIdolId == null) return loadout;
-  getEntity("pIdol", pIdolId);
-
-  const upgradedSignatureId = (kind, data) => {
-    const ids = getSignatureIds(kind, pIdolId);
-    return ids.find((id) => data.getById(id).upgraded) ?? ids[0];
-  };
-  const place = (ids, id) => {
-    if (!id || ids.includes(id)) return;
-    const open = ids.indexOf(0);
-    if (open == -1) throw new Error(`No open slot for p-idol ${pIdolId}.`);
-    ids[open] = id;
-  };
-  place(
-    loadout.skillCardIdGroups[0],
-    upgradedSignatureId("skillCard", SkillCards),
-  );
-  place(loadout.pItemIds, upgradedSignatureId("pItem", PItems));
-  return loadout;
 }
 
 function checkIds(kind, ids) {
@@ -437,8 +402,14 @@ function namesOf({ skillCardIdGroups, pItemIds }) {
 async function optimize(input, { signal, notifyProgress }) {
   const stage = getSingleStage(input.stageId);
   const params = resolveParams(stage, input);
+  const { pIdolId } = input;
+  if (pIdolId != null) getEntity("pIdol", pIdolId);
+  const deck = {
+    pItemIds: input.pItemIds,
+    skillCardIdGroups: input.skillCardIdGroups,
+  };
   const start = {
-    ...startingLoadout(input),
+    ...(pIdolId == null ? deck : withPIdolSignatures(deck, pIdolId)),
     customizationGroups: input.customizationGroups ?? [],
     stageId: stage.id,
     params,
@@ -508,7 +479,7 @@ async function optimize(input, { signal, notifyProgress }) {
     converged: result.converged,
     timedOut: result.timedOut,
     poolSizes: { cards: cardPool.length, pItems: pItemPool.length },
-    simulatorUrl: simulatorUrl(result.loadout),
+    simulatorUrl: getSimulatorUrl(result.loadout),
   };
 }
 

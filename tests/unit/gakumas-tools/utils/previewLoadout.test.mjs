@@ -5,7 +5,7 @@ import {
   previewLoadoutFromSearchParams,
   searchParamsFromRecord,
 } from "../../../../gakumas-tools/utils/previewLoadout.js";
-import { loadoutsToSearchParams } from "../../../../gakumas-tools/utils/simulator.js";
+import { loadoutsToSearchParams } from "gakumas-loadout";
 
 const linkStage = Stages.getAll().find((s) => s.type == "linkContest");
 

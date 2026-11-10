@@ -16,9 +16,9 @@ import {
   StageEngine,
   StagePlayer,
   STRATEGIES,
-  getDefaultParams,
   resetRand,
 } from "gakumas-engine";
+import { getDefaultParams } from "gakumas-loadout";
 import { createMcpServer } from "../../../packages/gakumas-tools-mcp/server.js";
 import { loadSuite, loadoutFromQuery } from "../../lib.mjs";
 

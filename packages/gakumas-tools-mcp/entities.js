@@ -8,6 +8,7 @@ import {
   PItems,
   SkillCards,
 } from "gakumas-data";
+import { pIdolSignatureIds } from "gakumas-loadout";
 
 const DATA_BY_KIND = {
   skillCard: SkillCards,
@@ -61,21 +62,14 @@ export function getEntity(kind, id) {
   return entity;
 }
 
-export function getSignatureIds(kind, pIdolId) {
-  return DATA_BY_KIND[kind]
-    .getAll()
-    .filter((e) => e.sourceType == "pIdol" && e.pIdolId == pIdolId)
-    .filter((e) => !isHidden(kind, e.id))
-    .map((e) => e.id);
-}
-
 export function readEntity(kind, id) {
   const entity = getEntity(kind, id);
   if (kind != "pIdol") return { entity };
+  const { skillCardIds, pItemIds } = pIdolSignatureIds(id);
   return {
     entity,
-    signatureSkillCardIds: getSignatureIds("skillCard", id),
-    signaturePItemIds: getSignatureIds("pItem", id),
+    signatureSkillCardIds: skillCardIds,
+    signaturePItemIds: pItemIds,
   };
 }
 

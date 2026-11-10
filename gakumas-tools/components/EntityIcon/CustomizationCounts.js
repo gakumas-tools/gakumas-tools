@@ -1,6 +1,6 @@
 import { Customizations } from "gakumas-data";
+import { countCustomizations } from "gakumas-loadout";
 import c from "@/utils/classNames";
-import { countCustomizations } from "@/utils/customizations";
 import styles from "./EntityIcon.module.scss";
 
 // `size` scales the badges down for icons smaller than the default 60px.

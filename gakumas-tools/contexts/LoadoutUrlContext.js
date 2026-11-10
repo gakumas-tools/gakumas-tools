@@ -7,7 +7,7 @@ import {
   loadoutsFromSearchParams,
   loadoutsToSearchParams,
   loadoutToSearchParams,
-} from "@/utils/simulator";
+} from "gakumas-loadout";
 
 const LoadoutUrlContext = createContext();
 

@@ -4,12 +4,40 @@ import {
   PItems,
   SkillCards,
 } from "gakumas-data";
-import { IdolConfig } from "./config";
+import { IdolConfig, getBaseId, isUniqueCard } from "gakumas-engine";
 import { playScores, stageConfigFor } from "./play";
-import { getBaseId, isUniqueCard } from "./utils";
 
 function signaturePIdolId(entity) {
   return entity?.sourceType == "pIdol" ? entity.pIdolId : null;
+}
+
+export function pIdolSignatureIds(pIdolId) {
+  const isShownSignature = (hiddenIds) => (entity) =>
+    signaturePIdolId(entity) == pIdolId && !hiddenIds.has(entity.id);
+  return {
+    skillCardIds: SkillCards.getAll()
+      .filter(isShownSignature(HIDDEN_CARD_IDS))
+      .map((card) => card.id),
+    pItemIds: PItems.getAll()
+      .filter(isShownSignature(HIDDEN_ITEM_IDS))
+      .map((item) => item.id),
+  };
+}
+
+export function withPIdolSignatures(loadout, pIdolId) {
+  const next = structuredClone(loadout);
+  const { skillCardIds, pItemIds } = pIdolSignatureIds(pIdolId);
+  const upgradedId = (ids, data) =>
+    ids.find((id) => data.getById(id).upgraded) ?? ids[0];
+  const place = (slots, id) => {
+    if (!id || slots.includes(id)) return;
+    const open = slots.indexOf(0);
+    if (open == -1) throw new Error(`No open slot for p-idol ${pIdolId}.`);
+    slots[open] = id;
+  };
+  place(next.skillCardIdGroups[0], upgradedId(skillCardIds, SkillCards));
+  place(next.pItemIds, upgradedId(pItemIds, PItems));
+  return next;
 }
 
 export function loadoutProblems({ skillCardIdGroups, pItemIds }) {

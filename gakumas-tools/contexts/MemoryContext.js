@@ -8,8 +8,8 @@ import {
   useRef,
   useState,
 } from "react";
+import { fixCustomizations } from "gakumas-loadout";
 import DataContext from "@/contexts/DataContext";
-import { fixCustomizations } from "@/utils/customizations";
 import { stashMemoryDraft, takeMemoryDraft } from "@/utils/memoryDraft";
 import { getSaveOutcome } from "@/utils/memorySave";
 

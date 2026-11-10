@@ -1,7 +1,12 @@
-import { IdolConfig, IdolStageConfig, StageConfig } from "./config";
-import { StageEngine, StagePlayer } from "./engine";
-import STRATEGIES from "./strategies";
-import { resetRand } from "./utils";
+import {
+  IdolConfig,
+  IdolStageConfig,
+  StageConfig,
+  StageEngine,
+  StagePlayer,
+  STRATEGIES,
+  resetRand,
+} from "gakumas-engine";
 
 export function stageConfigFor(stage, loadout) {
   return new IdolStageConfig(
