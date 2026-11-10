@@ -11,6 +11,7 @@ import {
   StageEngine,
   StagePlayer,
   STRATEGIES,
+  getDefaultParams,
   resetRand,
 } from "gakumas-engine";
 import { createMcpServer } from "../../../packages/gakumas-tools-mcp/server.js";
@@ -133,6 +134,57 @@ test("stages page through every non-preview stage once", async (t) => {
     .map((stage) => stage.id)
     .sort((a, b) => a - b);
   assert.deepEqual(ids, expected);
+});
+
+test("stages filter by season and stage number", async (t) => {
+  const client = await connect(t);
+  const ids = async (args) =>
+    (await call(client, "gakumas_list_stages", args)).stages.map(
+      (stage) => stage.id,
+    );
+  const season = Stages.getById(190).season;
+  const expected = Stages.getAll()
+    .filter((stage) => !stage.preview && stage.season == season)
+    .map((stage) => stage.id)
+    .sort((a, b) => a - b);
+
+  assert.deepEqual(await ids({ season }), expected);
+  assert.deepEqual(
+    await ids({ season, stage: Stages.getById(190).stage }),
+    [190],
+  );
+});
+
+test("a contest without params plays the website's defaults", async (t) => {
+  const client = await connect(t);
+  const { params, ...args } = loadout(undefined, {
+    stageId: 190,
+    supportBonus: undefined,
+  });
+  const result = await call(client, "gakumas_simulate_loadout", args);
+  const defaults = getDefaultParams(Stages.getById(190));
+
+  assert.deepEqual(result.params, defaults);
+  assert.deepEqual(
+    result.scores,
+    await directScores({ ...args, params: defaults, supportBonus: 0.1 }),
+  );
+  const url = new URL(result.simulatorUrl);
+  assert.equal(url.searchParams.get("stage"), "190");
+  assert.equal(url.searchParams.get("params"), defaults.join("-"));
+});
+
+test("an event stage without params is refused", async (t) => {
+  const client = await connect(t);
+  const event = Stages.getAll().find(
+    (stage) => stage.type == "event" && !stage.preview,
+  );
+  const { params, ...args } = loadout(undefined, { stageId: event.id });
+  const result = await client.callTool({
+    name: "gakumas_simulate_loadout",
+    arguments: args,
+  });
+  assert.equal(result.isError, true);
 });
 
 test("a stage reads as its data, link turn counts only for link contests", async (t) => {

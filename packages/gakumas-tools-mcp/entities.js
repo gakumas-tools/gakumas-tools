@@ -29,6 +29,7 @@ const SUMMARY_FIELDS = [
   "rarity",
   "type",
   "sourceType",
+  "mode",
   "upgraded",
   "pIdolId",
   "idolId",
@@ -60,20 +61,57 @@ export function getEntity(kind, id) {
   return entity;
 }
 
-export function searchEntities({ kind, query, plan, offset, limit }) {
-  const needle = normalize(query.trim());
-  const entities = DATA_BY_KIND[kind]
+export function getSignatureIds(kind, pIdolId) {
+  return DATA_BY_KIND[kind]
     .getAll()
-    .filter((entity) => !isHidden(kind, entity.id))
-    .filter((entity) => !plan || entity.plan == plan)
-    .filter((entity) =>
-      normalize(`${entity.id} ${entity.name ?? entity.title}`).includes(needle),
-    )
-    .sort((a, b) => a.id - b.id);
+    .filter((e) => e.sourceType == "pIdol" && e.pIdolId == pIdolId)
+    .filter((e) => !isHidden(kind, e.id))
+    .map((e) => e.id);
+}
+
+export function readEntity(kind, id) {
+  const entity = getEntity(kind, id);
+  if (kind != "pIdol") return { entity };
+  return {
+    entity,
+    signatureSkillCardIds: getSignatureIds("skillCard", id),
+    signaturePItemIds: getSignatureIds("pItem", id),
+  };
+}
+
+export function searchEntities({
+  kind,
+  query,
+  plan,
+  upgraded,
+  sourceType,
+  mode,
+  pIdolId,
+  offset,
+  limit,
+}) {
+  const needle = normalize(query.trim());
+  const entities = (kind ? [kind] : ENTITY_KINDS).flatMap((kind) =>
+    DATA_BY_KIND[kind]
+      .getAll()
+      .filter((entity) => !isHidden(kind, entity.id))
+      .filter((entity) => !plan || entity.plan == plan)
+      .filter((entity) => upgraded == null || entity.upgraded == upgraded)
+      .filter((entity) => !sourceType || entity.sourceType == sourceType)
+      .filter((entity) => !mode || entity.mode == mode)
+      .filter((entity) => pIdolId == null || entity.pIdolId == pIdolId)
+      .filter((entity) =>
+        normalize(`${entity.id} ${entity.name ?? entity.title}`).includes(
+          needle,
+        ),
+      )
+      .sort((a, b) => a.id - b.id)
+      .map((entity) => ({ kind, ...summary(entity) })),
+  );
   const nextOffset = offset + limit;
   return {
     total: entities.length,
     nextOffset: nextOffset < entities.length ? nextOffset : null,
-    entities: entities.slice(offset, nextOffset).map(summary),
+    entities: entities.slice(offset, nextOffset),
   };
 }

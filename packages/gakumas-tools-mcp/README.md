@@ -25,14 +25,14 @@ MCP messages.
 
 ## Tools
 
-| Tool                            | What it does                                        |
-| ------------------------------- | --------------------------------------------------- |
-| `gakumas_list_stages`           | Searches stages by name or ID, type and plan        |
-| `gakumas_get_stage`             | Reads a stage's criteria, turn counts and effects   |
-| `gakumas_simulate_loadout`      | Plays a loadout on a contest or event stage, seeded |
-| `gakumas_simulate_link_loadout` | Plays a deck per phase on a link contest, seeded    |
-| `gakumas_search_entities`       | Searches cards, items, idols and more by name or ID |
-| `gakumas_get_entity`            | Reads one of those with its parsed effects          |
+| Tool                            | What it does                                             |
+| ------------------------------- | -------------------------------------------------------- |
+| `gakumas_list_stages`           | Searches stages by name or ID, type, plan and season     |
+| `gakumas_get_stage`             | Reads a stage's criteria, turn counts and effects        |
+| `gakumas_simulate_loadout`      | Plays a loadout on a contest or event stage, seeded      |
+| `gakumas_simulate_link_loadout` | Plays a deck per phase on a link contest, seeded         |
+| `gakumas_search_entities`       | Searches cards, items, idols and more by name or ID      |
+| `gakumas_get_entity`            | Reads one with its effects, and a p-idol's signatures    |
 
 A simulation takes the website's loadout fields:
 
@@ -48,8 +48,11 @@ A simulation takes the website's loadout fields:
 ```
 
 `params` are Vo, Da, Vi and stamina. Contest stages take raw parameters unless
-`enterPercents` is true; event stages always take percentages. `supportBonus`
-is a fraction. Zero IDs are empty slots.
+`enterPercents` is true; event stages always take percentages. A contest left
+without `params` plays the website's defaults: 2700, 2000 and 800 by the
+stage's criteria, and 50 stamina. `supportBonus` is a fraction, 0.1 unless
+given, as on the website. Zero IDs are empty slots. The result has the params
+it played and a `simulatorUrl` that opens the loadout on the website.
 
 A link contest takes Vo, Da and Vi once, as displayed percentages, and a deck
 and stamina for each of the stage's phases:

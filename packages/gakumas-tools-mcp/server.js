@@ -9,9 +9,16 @@ import {
   StageEngine,
   StagePlayer,
   STRATEGIES,
+  getDefaultParams,
+  getSimulatorUrl,
   resetRand,
 } from "gakumas-engine";
-import { ENTITY_KINDS, getEntity, searchEntities } from "./entities.js";
+import {
+  ENTITY_KINDS,
+  getEntity,
+  readEntity,
+  searchEntities,
+} from "./entities.js";
 
 const READ_ONLY = { readOnlyHint: true, openWorldHint: false };
 
@@ -23,6 +30,13 @@ const listStagesSchema = z
     query: z.string().default(""),
     type: z.enum(["contest", "event", "linkContest"]).optional(),
     plan: plan.optional(),
+    season: z.number().int().min(1).optional(),
+    stage: z
+      .number()
+      .int()
+      .min(1)
+      .optional()
+      .describe("Stage number in its season"),
     includePreview: z.boolean().default(false),
     offset: z.number().int().min(0).default(0),
     limit: z.number().int().min(1).max(100).default(20),
@@ -31,9 +45,22 @@ const listStagesSchema = z
 
 const searchEntitiesSchema = z
   .object({
-    kind: z.enum(ENTITY_KINDS),
+    kind: z
+      .enum(ENTITY_KINDS)
+      .optional()
+      .describe("Leave out to search every kind"),
     query: z.string().default(""),
     plan: plan.optional(),
+    upgraded: z.boolean().optional(),
+    sourceType: z
+      .enum(["default", "pIdol", "produce", "support"])
+      .optional()
+      .describe("pIdol finds signature cards and items"),
+    mode: z
+      .enum(["stage", "produce"])
+      .optional()
+      .describe("P-items: stage items work in contests"),
+    pIdolId: id.optional(),
     offset: z.number().int().min(0).default(0),
     limit: z.number().int().min(1).max(100).default(20),
   })
@@ -58,7 +85,10 @@ const simulateSchema = z
         z.number().min(0),
         z.number().int().min(0),
       ])
-      .describe("Vo, Da, Vi, stamina"),
+      .optional()
+      .describe(
+        "Vo, Da, Vi, stamina. Contest stages default to the website's: 2700, 2000, 800 by the stage's criteria, and 50 stamina",
+      ),
     enterPercents: z
       .boolean()
       .default(false)
@@ -69,8 +99,8 @@ const simulateSchema = z
       .number()
       .min(0)
       .max(1)
-      .default(0)
-      .describe("A fraction: 0.1 is 10%"),
+      .default(0.1)
+      .describe("A fraction: 0.1 is 10%, the website's default"),
     ...deck,
     seed: z.number().int().min(0).max(0xffffffff),
     runs: z.number().int().min(1).max(100).default(1),
@@ -114,12 +144,23 @@ function stageSummary(stage) {
   return { id, name, type, plan, preview, season, criteria, turnCounts };
 }
 
-function listStages({ query, type, plan, includePreview, offset, limit }) {
+function listStages({
+  query,
+  type,
+  plan,
+  season,
+  stage: stageNumber,
+  includePreview,
+  offset,
+  limit,
+}) {
   const needle = query.trim().toLowerCase();
   const stages = Stages.getAll()
     .filter((stage) => includePreview || !stage.preview)
     .filter((stage) => !type || stage.type == type)
     .filter((stage) => !plan || stage.plan == plan)
+    .filter((stage) => season == null || stage.season == season)
+    .filter((stage) => stageNumber == null || stage.stage == stageNumber)
     .filter((stage) =>
       `${stage.id} ${stage.name}`.toLowerCase().includes(needle),
     )
@@ -137,6 +178,24 @@ function readStage({ stageId }) {
   // Stages other than link contests have NaN link turn counts.
   if (stage.type == "linkContest") stage.linkTurnCounts = linkTurnCounts;
   return { stage };
+}
+
+function resolveParams(stage, { params, enterPercents }) {
+  if (params) return params;
+  if (stage.type != "contest" || enterPercents) {
+    throw new Error(`Stage ${stage.id} needs params as percentages.`);
+  }
+  return getDefaultParams(stage);
+}
+
+function simulatorUrl(loadout) {
+  const { skillCardIdGroups, customizationGroups = [] } = loadout;
+  return getSimulatorUrl({
+    ...loadout,
+    customizationGroups: skillCardIdGroups.map((group, i) =>
+      group.map((_, j) => customizationGroups[i]?.[j] ?? {}),
+    ),
+  });
 }
 
 function checkLoadout({ pItemIds, skillCardIdGroups, customizationGroups }) {
@@ -199,13 +258,18 @@ async function simulate(loadout, signal) {
     );
   }
   checkLoadout(loadout);
+  loadout = { ...loadout, params: resolveParams(stage, loadout) };
 
   const config = new IdolStageConfig(
     new IdolConfig(loadout),
     new StageConfig(stage),
     loadout.enterPercents,
   );
-  return play(config, null, loadout, signal);
+  return {
+    ...(await play(config, null, loadout, signal)),
+    params: loadout.params,
+    simulatorUrl: simulatorUrl(loadout),
+  };
 }
 
 async function simulateLink({ stageId, params, phases, ...seeded }, signal) {
@@ -255,7 +319,7 @@ export function createMcpServer() {
     {
       title: "Find stages",
       description:
-        "Search stages by name or ID, optionally by type and plan. Preview stages are left out unless asked for.",
+        "Search stages by name or ID, optionally by type, plan, season and stage number. Preview stages are left out unless asked for.",
       inputSchema: listStagesSchema,
       annotations: READ_ONLY,
     },
@@ -278,7 +342,7 @@ export function createMcpServer() {
     {
       title: "Simulate a loadout",
       description:
-        "Play a contest or event stage with HeuristicStrategy. Run i is seeded with (seed + i) mod 2^32, so the same input gives the same scores. Zero IDs are empty slots.",
+        "Play a contest or event stage with HeuristicStrategy. Run i is seeded with (seed + i) mod 2^32, so the same input gives the same scores. Zero IDs are empty slots. Gives a link that opens the loadout in the website's simulator.",
       inputSchema: simulateSchema,
       annotations: READ_ONLY,
     },
@@ -304,7 +368,7 @@ export function createMcpServer() {
     {
       title: "Find cards, items, idols or customizations",
       description:
-        "Search one kind of entity by its name in the data, usually Japanese, or by ID. Gives the IDs and customizations a loadout needs.",
+        "Search entities by their name in the data, usually Japanese, or by ID; a p-idol's title is often English. Gives the IDs and customizations a loadout needs.",
       inputSchema: searchEntitiesSchema,
       annotations: READ_ONLY,
     },
@@ -316,11 +380,11 @@ export function createMcpServer() {
     {
       title: "Read a card, item, idol or customization",
       description:
-        "Read one entity's data and parsed effects. A customization's max is its highest level.",
+        "Read one entity's data and parsed effects. A customization's max is its highest level. A p-idol also lists its signature cards and P-items.",
       inputSchema: z.object({ kind: z.enum(ENTITY_KINDS), id }).strict(),
       annotations: READ_ONLY,
     },
-    async ({ kind, id }) => json({ entity: getEntity(kind, id) }),
+    async ({ kind, id }) => json(readEntity(kind, id)),
   );
 
   return server;
