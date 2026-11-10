@@ -141,6 +141,20 @@ test("stages page through every non-preview stage once", async (t) => {
   assert.deepEqual(ids, expected);
 });
 
+test("no tool's input schema has a tuple", async (t) => {
+  const client = await connect(t);
+  const hasTuple = (schema) =>
+    schema != null &&
+    typeof schema == "object" &&
+    (Array.isArray(schema.items) ||
+      "prefixItems" in schema ||
+      Object.values(schema).some(hasTuple));
+  const { tools } = await client.listTools();
+  for (const tool of tools) {
+    assert.ok(!hasTuple(tool.inputSchema), tool.name);
+  }
+});
+
 test("stages filter by season and stage number", async (t) => {
   const client = await connect(t);
   const ids = async (args) =>
