@@ -14,10 +14,15 @@ All notable changes to the contest simulator will be documented in this file.
 
 
 
+## 2026-11-11
+
+- Add uijin misuzu portrait
+
 ## 2026-11-10
 
 - Add gakuen seikatsu tsubame portrait
 - Add kanae episode0 support item
+- Add wildest flower saki portrait
 
 ## 2026-11-09
 
