@@ -18,6 +18,7 @@ All notable changes to the contest simulator will be documented in this file.
 
 - Add gakuen seikatsu tsubame portrait
 - Add kanae episode0 support item
+- Add wildest flower saki portrait
 
 ## 2026-11-09
 
