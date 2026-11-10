@@ -314,7 +314,6 @@ function summarize(scores) {
   };
 }
 
-// Differences of runs on the same seed cancel most of the luck both share.
 function pairedDifference(scores, baseline) {
   const diffs = scores.map((score, i) => score - baseline[i]);
   const { mean } = summarize(diffs);
@@ -399,7 +398,7 @@ function startingLoadout({ pIdolId, pItemIds, skillCardIdGroups }) {
   if (pIdolId == null) return loadout;
   getEntity("pIdol", pIdolId);
 
-  const upgraded = (kind, data) => {
+  const upgradedSignatureId = (kind, data) => {
     const ids = getSignatureIds(kind, pIdolId);
     return ids.find((id) => data.getById(id).upgraded) ?? ids[0];
   };
@@ -409,8 +408,11 @@ function startingLoadout({ pIdolId, pItemIds, skillCardIdGroups }) {
     if (open == -1) throw new Error(`No open slot for p-idol ${pIdolId}.`);
     ids[open] = id;
   };
-  place(loadout.skillCardIdGroups[0], upgraded("skillCard", SkillCards));
-  place(loadout.pItemIds, upgraded("pItem", PItems));
+  place(
+    loadout.skillCardIdGroups[0],
+    upgradedSignatureId("skillCard", SkillCards),
+  );
+  place(loadout.pItemIds, upgradedSignatureId("pItem", PItems));
   return loadout;
 }
 

@@ -134,6 +134,10 @@ export function deepCopy(state) {
   return out;
 }
 
+export function isUniqueCard(card) {
+  return card.unique && !["L", "T"].includes(card.rarity);
+}
+
 export function getBaseId(entity) {
   if (entity.upgraded) return entity.id - 1;
   return entity.id;

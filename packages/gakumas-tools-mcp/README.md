@@ -69,24 +69,13 @@ difference several standard errors from zero is real for this simulator.
 { "stageId": 190, "pIdolId": 32, "seed": 1000 }
 ```
 
-It starts from two empty memories and four empty P-item slots; `pIdolId`
-puts that p-idol's upgraded signature card in memory 1 and its P-item in the
-first slot, and nonzero cards and P-items given in `skillCardIdGroups` and
-`pItemIds` stay where they are. Each pass tries every card of `cardPool` in
-every open card slot and every P-item of `pItemPool` in every open P-item
-slot, keeping a swap when it raises the mean over `runs` shared seeds, until
-a pass keeps nothing or `timeLimitSeconds` runs out. The pools default to
-every upgraded card and every stage P-item of the stage's plan, or the
-loadout's when the stage is free, and free ones. Swaps that break the rules
-are skipped: a unique card once with its upgrade, a P-item once, one
-p-idol's signature cards per memory and no more p-idols' signatures than
-memories.
-
-The search mean flatters the deck it picked, so the result also replays it
-for `holdoutRuns` on seeds the search didn't use; that holdout mean is the
-one to quote. Searched cards get no customizations, since the data doesn't
-say how many a card can hold. A search takes minutes, reports progress to
-clients that ask for it, and holds the simulator queue until it ends.
+Nonzero cards and P-items in `skillCardIdGroups` and `pItemIds` stay; zeros
+are searched, from two empty memories and four P-item slots by default.
+`pIdolId` starts memory 1 with that p-idol's upgraded signature card and
+P-item. `cardPool` and `pItemPool` default to the stage's plan and free ones.
+Searched cards get no customizations. Quote the `holdout` mean, not
+`searchMean`: the search flatters its own pick. A search takes minutes and
+holds the simulator queue until it ends.
 
 A link contest takes Vo, Da and Vi once, as displayed percentages, and a deck
 and stamina for each of the stage's phases:

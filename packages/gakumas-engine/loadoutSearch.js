@@ -6,27 +6,19 @@ import {
 } from "gakumas-data";
 import { IdolConfig } from "./config";
 import { playScores, stageConfigFor } from "./play";
-import { getBaseId } from "./utils";
-
-const noop = () => {};
-
-function isUnique(card) {
-  return card.unique && !["L", "T"].includes(card.rarity);
-}
+import { getBaseId, isUniqueCard } from "./utils";
 
 function signaturePIdolId(entity) {
   return entity?.sourceType == "pIdol" ? entity.pIdolId : null;
 }
 
-// Each memory comes from one p-idol, so a deck holds at most one p-idol's
-// signatures per memory.
 export function loadoutProblems({ skillCardIdGroups, pItemIds }) {
   const problems = [];
 
   const uniqueBaseIds = new Set();
   for (const id of skillCardIdGroups.flat().filter(Boolean)) {
     const card = SkillCards.getById(id);
-    if (!isUnique(card)) continue;
+    if (!isUniqueCard(card)) continue;
     const baseId = getBaseId(card);
     if (uniqueBaseIds.has(baseId)) {
       problems.push(`Unique skill card ${id} is in the deck twice.`);
@@ -96,10 +88,6 @@ function mean(scores) {
   return scores.reduce((sum, score) => sum + score, 0) / scores.length;
 }
 
-// Hill climbs over the empty slots of a loadout: each pass tries every pool
-// entry in every open card and P-item slot and keeps any swap that raises the
-// mean score over the search seeds. The best loadout is then played on
-// holdout seeds the search never saw, since the search mean flatters it.
 export async function optimizeLoadout({
   stage,
   loadout,
@@ -111,8 +99,8 @@ export async function optimizeLoadout({
   deadline = Infinity,
   maxPasses = Infinity,
   signal,
-  tick = noop,
-  onImprovement = noop,
+  tick = () => {},
+  onImprovement = () => {},
 }) {
   const evaluated = new Map();
   let evaluations = 0;

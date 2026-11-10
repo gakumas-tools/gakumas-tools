@@ -11,8 +11,7 @@ export function stageConfigFor(stage, loadout) {
   );
 }
 
-// Run i is seeded with (seed + i) mod 2^32. The engine's random stream is
-// global, so plays must not interleave.
+// The engine's random stream is global, so plays must not interleave.
 export async function playScores(
   config,
   linkConfigs,
