@@ -509,3 +509,4 @@ id,name,rarity,upgraded,plan,mode,sourceType,pIdolId,welfare,effects
 508,星々を統べる輝き,SSR,FALSE,logic,stage,pIdol,163,FALSE,"at:goodImpressionTurnsIncreased { if:isDirectEffect { effectCounter+=1; if:effectCounter%4==3 { setGoodImpressionTurnsTimesBuff(1,2); setGoodImpressionTurnsEffectBuff(0.1,2); fixedStamina-=1 } } }"
 509,星々を統べる輝き+,SSR,TRUE,logic,stage,pIdol,163,FALSE,"at:goodImpressionTurnsIncreased { if:isDirectEffect { effectCounter+=1; if:effectCounter%4==3 { setGoodImpressionTurnsTimesBuff(1,2); setGoodImpressionTurnsEffectBuff(0.1,2) } } }"
 510,過激め？チョイス,SSR,FALSE,logic,produce,support,,FALSE,
+511,仲良しアルバム,SSR,FALSE,sense,produce,support,,TRUE,
