@@ -31,6 +31,7 @@ MCP messages.
 | `gakumas_get_stage`             | Reads a stage's criteria, turn counts and effects        |
 | `gakumas_simulate_loadout`      | Plays a loadout on a contest or event stage, seeded      |
 | `gakumas_compare_loadouts`      | Plays several decks on the same seeds and pairs them     |
+| `gakumas_optimize_loadout`      | Fills a loadout's open slots by hill climbing            |
 | `gakumas_simulate_link_loadout` | Plays a deck per phase on a link contest, seeded         |
 | `gakumas_search_entities`       | Searches cards, items, idols and more by name or ID      |
 | `gakumas_get_entity`            | Reads one with its effects, and a p-idol's signatures    |
@@ -61,6 +62,31 @@ it played and a `simulatorUrl` that opens the loadout on the website.
 first reports `vsFirst`: its mean difference from the first deck and that
 difference's standard error. Shared seeds cancel most of the luck, so a
 difference several standard errors from zero is real for this simulator.
+
+`gakumas_optimize_loadout` builds a deck for a contest or event stage:
+
+```json
+{ "stageId": 190, "pIdolId": 32, "seed": 1000 }
+```
+
+It starts from two empty memories and four empty P-item slots; `pIdolId`
+puts that p-idol's upgraded signature card in memory 1 and its P-item in the
+first slot, and nonzero cards and P-items given in `skillCardIdGroups` and
+`pItemIds` stay where they are. Each pass tries every card of `cardPool` in
+every open card slot and every P-item of `pItemPool` in every open P-item
+slot, keeping a swap when it raises the mean over `runs` shared seeds, until
+a pass keeps nothing or `timeLimitSeconds` runs out. The pools default to
+every upgraded card and every stage P-item of the stage's plan, or the
+loadout's when the stage is free, and free ones. Swaps that break the rules
+are skipped: a unique card once with its upgrade, a P-item once, one
+p-idol's signature cards per memory and no more p-idols' signatures than
+memories.
+
+The search mean flatters the deck it picked, so the result also replays it
+for `holdoutRuns` on seeds the search didn't use; that holdout mean is the
+one to quote. Searched cards get no customizations, since the data doesn't
+say how many a card can hold. A search takes minutes, reports progress to
+clients that ask for it, and holds the simulator queue until it ends.
 
 A link contest takes Vo, Da and Vi once, as displayed percentages, and a deck
 and stamina for each of the stage's phases:

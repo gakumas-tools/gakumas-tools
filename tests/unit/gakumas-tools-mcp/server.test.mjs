@@ -3,7 +3,12 @@ import assert from "node:assert/strict";
 import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
-import { HIDDEN_CARD_IDS, HIDDEN_ITEM_IDS, Stages } from "gakumas-data";
+import {
+  HIDDEN_CARD_IDS,
+  HIDDEN_ITEM_IDS,
+  SkillCards,
+  Stages,
+} from "gakumas-data";
 import {
   IdolConfig,
   IdolStageConfig,
@@ -204,6 +209,63 @@ test("compared loadouts play the same seeds and pair their differences", async (
   assert.equal(result.loadouts[1].vsFirst.mean, means[1] - means[0]);
   assert.ok(result.loadouts[1].vsFirst.standardError >= 0);
   assert.match(result.loadouts[1].simulatorUrl, /stage=/);
+});
+
+test("an optimized loadout starts from its p-idol and replays as reported", async (t) => {
+  const client = await connect(t);
+  const progress = [];
+  const result = (
+    await client.callTool(
+      {
+        name: "gakumas_optimize_loadout",
+        arguments: {
+          stageId: 190,
+          pIdolId: 32,
+          skillCardIdGroups: [[0, 0, 0, 0, 0, 0]],
+          cardPool: [816, 762, 752],
+          pItemPool: [141, 71],
+          seed: 7,
+          runs: 2,
+          holdoutRuns: 3,
+        },
+      },
+      undefined,
+      { onprogress: (update) => progress.push(update) },
+    )
+  ).structuredContent;
+
+  assert.equal(result.loadout.skillCardIdGroups[0][0], 279);
+  assert.equal(result.loadout.pItemIds[0], 90);
+  assert.equal(result.skillCardNames[0][0], SkillCards.getById(279).name);
+  assert.ok(result.converged);
+  assert.ok(progress.length > 0);
+
+  const holdout = await directScores({
+    stageId: 190,
+    params: result.params,
+    supportBonus: 0.1,
+    ...result.loadout,
+    seed: result.holdout.seed,
+    runs: 3,
+  });
+  assert.equal(
+    result.holdout.mean,
+    holdout.reduce((sum, score) => sum + score, 0) / holdout.length,
+  );
+  assert.equal(new URL(result.simulatorUrl).searchParams.get("stage"), "190");
+});
+
+test("an optimization that starts against the rules is refused", async (t) => {
+  const client = await connect(t);
+  const result = await client.callTool({
+    name: "gakumas_optimize_loadout",
+    arguments: {
+      stageId: 190,
+      skillCardIdGroups: [[279, 278, 0, 0, 0, 0]],
+      seed: 0,
+    },
+  });
+  assert.equal(result.isError, true);
 });
 
 test("an event stage without params is refused", async (t) => {

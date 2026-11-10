@@ -1,19 +1,23 @@
 import { setImmediate } from "node:timers/promises";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { Customizations, Stages } from "gakumas-data";
+import { Customizations, PItems, SkillCards, Stages } from "gakumas-data";
 import {
   IdolConfig,
   IdolStageConfig,
   StageConfig,
   getDefaultParams,
+  defaultPools,
   getSimulatorUrl,
+  loadoutProblems,
+  optimizeLoadout,
   playScores,
   stageConfigFor,
 } from "gakumas-engine";
 import {
   ENTITY_KINDS,
   getEntity,
+  getSignatureIds,
   readEntity,
   searchEntities,
 } from "./entities.js";
@@ -123,6 +127,62 @@ const compareSchema = z
       .max(1000)
       .default(100)
       .describe("Runs per loadout, on the same seeds for each"),
+  })
+  .strict();
+
+const optimizeSchema = z
+  .object({
+    ...stageSetup,
+    pIdolId: id
+      .optional()
+      .describe(
+        "Starts memory 1 with this p-idol's upgraded signature card and P-item",
+      ),
+    pItemIds: z
+      .array(id)
+      .length(4)
+      .default([0, 0, 0, 0])
+      .describe("Nonzero P-items stay; zeros are searched"),
+    skillCardIdGroups: z
+      .array(z.array(id).length(6))
+      .min(1)
+      .max(4)
+      .default([
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+      ])
+      .describe("One group per memory. Nonzero cards stay; zeros are searched"),
+    customizationGroups: deck.customizationGroups.describe(
+      "Customization ID to level for the cards that stay; searched cards get none",
+    ),
+    cardPool: z
+      .array(id)
+      .optional()
+      .describe(
+        "Cards to try in open slots. Defaults to every upgraded card of the plan or free",
+      ),
+    pItemPool: z
+      .array(id)
+      .optional()
+      .describe(
+        "P-items to try in open slots. Defaults to every stage P-item of the plan or free",
+      ),
+    seed,
+    runs: z
+      .number()
+      .int()
+      .min(1)
+      .max(200)
+      .default(40)
+      .describe("Runs per candidate, on the same seeds for each"),
+    holdoutRuns: z
+      .number()
+      .int()
+      .min(1)
+      .max(2000)
+      .default(500)
+      .describe("Runs of the best loadout on seeds the search didn't use"),
+    timeLimitSeconds: z.number().int().min(1).max(1800).default(300),
   })
   .strict();
 
@@ -334,6 +394,122 @@ async function compare({ loadouts: decks, seed, runs, ...setup }, signal) {
   };
 }
 
+function startingLoadout({ pIdolId, pItemIds, skillCardIdGroups }) {
+  const loadout = structuredClone({ pItemIds, skillCardIdGroups });
+  if (pIdolId == null) return loadout;
+  getEntity("pIdol", pIdolId);
+
+  const upgraded = (kind, data) => {
+    const ids = getSignatureIds(kind, pIdolId);
+    return ids.find((id) => data.getById(id).upgraded) ?? ids[0];
+  };
+  const place = (ids, id) => {
+    if (!id || ids.includes(id)) return;
+    const open = ids.indexOf(0);
+    if (open == -1) throw new Error(`No open slot for p-idol ${pIdolId}.`);
+    ids[open] = id;
+  };
+  place(loadout.skillCardIdGroups[0], upgraded("skillCard", SkillCards));
+  place(loadout.pItemIds, upgraded("pItem", PItems));
+  return loadout;
+}
+
+function checkIds(kind, ids) {
+  ids.forEach((id) => getEntity(kind, id));
+  return ids;
+}
+
+function nameOf(data, id) {
+  return id ? data.getById(id).name : null;
+}
+
+function namesOf({ skillCardIdGroups, pItemIds }) {
+  return {
+    skillCardNames: skillCardIdGroups.map((group) =>
+      group.map((id) => nameOf(SkillCards, id)),
+    ),
+    pItemNames: pItemIds.map((id) => nameOf(PItems, id)),
+  };
+}
+
+async function optimize(input, { signal, notifyProgress }) {
+  const stage = getSingleStage(input.stageId);
+  const params = resolveParams(stage, input);
+  const start = {
+    ...startingLoadout(input),
+    customizationGroups: input.customizationGroups ?? [],
+    stageId: stage.id,
+    params,
+    supportBonus: input.supportBonus,
+    enterPercents: input.enterPercents,
+  };
+  checkLoadout(start);
+  const problems = loadoutProblems(start);
+  if (problems.length) throw new Error(problems.join(" "));
+
+  const pools = defaultPools(stage, start);
+  const cardPool = checkIds("skillCard", input.cardPool ?? pools.cardPool);
+  const pItemPool = checkIds("pItem", input.pItemPool ?? pools.pItemPool);
+
+  const startedAt = Date.now();
+  let lastProgressAt = startedAt;
+  let bestMean = null;
+  const progress = async (force) => {
+    const now = Date.now();
+    if (!force && now - lastProgressAt < 5000) return;
+    lastProgressAt = now;
+    await notifyProgress({
+      progress: Math.round((now - startedAt) / 1000),
+      total: input.timeLimitSeconds,
+      message:
+        bestMean == null ? undefined : `Best mean ${Math.round(bestMean)}`,
+    });
+  };
+
+  const result = await optimizeLoadout({
+    stage,
+    loadout: start,
+    cardPool,
+    pItemPool,
+    seed: input.seed,
+    runs: input.runs,
+    holdoutRuns: input.holdoutRuns,
+    deadline: startedAt + input.timeLimitSeconds * 1000,
+    signal,
+    tick: async () => {
+      await progress(false);
+      await tick();
+    },
+    onImprovement: async ({ mean }) => {
+      bestMean = mean;
+      await progress(true);
+    },
+  });
+
+  const { pItemIds, skillCardIdGroups, customizationGroups } = result.loadout;
+  return {
+    params,
+    loadout: { pItemIds, skillCardIdGroups, customizationGroups },
+    ...namesOf(result.loadout),
+    searchMean: result.searchMean,
+    holdout: result.holdout,
+    improvements: result.improvements.map((improvement) => {
+      const data = "pItem" in improvement ? PItems : SkillCards;
+      return {
+        ...improvement,
+        fromName: nameOf(data, improvement.from),
+        toName: nameOf(data, improvement.to),
+      };
+    }),
+    evaluations: result.evaluations,
+    passes: result.passes,
+    converged: result.converged,
+    timedOut: result.timedOut,
+    poolSizes: { cards: cardPool.length, pItems: pItemPool.length },
+    simulatorUrl: simulatorUrl(result.loadout),
+  };
+}
+
 async function simulateLink({ stageId, params, phases, ...seeded }, signal) {
   const stage = getStage(stageId);
   if (stage.preview) {
@@ -423,6 +599,32 @@ export function createMcpServer() {
     },
     async (input, { signal }) =>
       json(await queueSimulation(() => compare(input, signal))),
+  );
+
+  server.registerTool(
+    "gakumas_optimize_loadout",
+    {
+      title: "Optimize a loadout",
+      description:
+        "Fill a contest or event loadout's open slots by hill climbing: each pass tries every pool card and P-item in every open slot and keeps swaps that raise the mean over the search seeds, until a pass changes nothing or time runs out. Respects unique cards and one p-idol's signatures per memory. The search mean flatters the result, so the best loadout is replayed on holdout seeds; quote the holdout mean. Searched cards get no customizations. Takes minutes and blocks other simulations meanwhile.",
+      inputSchema: optimizeSchema,
+      annotations: READ_ONLY,
+    },
+    async (input, extra) => {
+      const progressToken = extra._meta?.progressToken;
+      const notifyProgress = async (params) => {
+        if (progressToken == null) return;
+        await extra.sendNotification({
+          method: "notifications/progress",
+          params: { progressToken, ...params },
+        });
+      };
+      return json(
+        await queueSimulation(() =>
+          optimize(input, { signal: extra.signal, notifyProgress }),
+        ),
+      );
+    },
   );
 
   server.registerTool(
