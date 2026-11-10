@@ -25,14 +25,16 @@ MCP messages.
 
 ## Tools
 
-| Tool                            | What it does                                        |
-| ------------------------------- | --------------------------------------------------- |
-| `gakumas_list_stages`           | Searches stages by name or ID, type and plan        |
-| `gakumas_get_stage`             | Reads a stage's criteria, turn counts and effects   |
-| `gakumas_simulate_loadout`      | Plays a loadout on a contest or event stage, seeded |
-| `gakumas_simulate_link_loadout` | Plays a deck per phase on a link contest, seeded    |
-| `gakumas_search_entities`       | Searches cards, items, idols and more by name or ID |
-| `gakumas_get_entity`            | Reads one of those with its parsed effects          |
+| Tool                            | What it does                                             |
+| ------------------------------- | -------------------------------------------------------- |
+| `gakumas_list_stages`           | Searches stages by name or ID, type, plan and season     |
+| `gakumas_get_stage`             | Reads a stage's criteria, turn counts and effects        |
+| `gakumas_simulate_loadout`      | Plays a loadout on a contest or event stage, seeded      |
+| `gakumas_compare_loadouts`      | Plays several decks on the same seeds and pairs them     |
+| `gakumas_optimize_loadout`      | Fills a loadout's open slots by hill climbing            |
+| `gakumas_simulate_link_loadout` | Plays a deck per phase on a link contest, seeded         |
+| `gakumas_search_entities`       | Searches cards, items, idols and more by name or ID      |
+| `gakumas_get_entity`            | Reads one with its effects, and a p-idol's signatures    |
 
 A simulation takes the website's loadout fields:
 
@@ -48,8 +50,32 @@ A simulation takes the website's loadout fields:
 ```
 
 `params` are Vo, Da, Vi and stamina. Contest stages take raw parameters unless
-`enterPercents` is true; event stages always take percentages. `supportBonus`
-is a fraction. Zero IDs are empty slots.
+`enterPercents` is true; event stages always take percentages. A contest left
+without `params` plays the website's defaults: 2700, 2000 and 800 by the
+stage's criteria, and 50 stamina. `supportBonus` is a fraction, 0.1 unless
+given, as on the website. Zero IDs are empty slots. The result has the params
+it played and a `simulatorUrl` that opens the loadout on the website.
+
+`gakumas_compare_loadouts` takes the same stage fields once and a list of
+`loadouts`, each with its own `pItemIds`, `skillCardIdGroups` and
+`customizationGroups`. Every deck plays the same seeds, so each one after the
+first reports `vsFirst`: its mean difference from the first deck and that
+difference's standard error. Shared seeds cancel most of the luck, so a
+difference several standard errors from zero is real for this simulator.
+
+`gakumas_optimize_loadout` builds a deck for a contest or event stage:
+
+```json
+{ "stageId": 190, "pIdolId": 32, "seed": 1000 }
+```
+
+Nonzero cards and P-items in `skillCardIdGroups` and `pItemIds` stay; zeros
+are searched, from two empty memories and four P-item slots by default.
+`pIdolId` starts memory 1 with that p-idol's upgraded signature card and
+P-item. `cardPool` and `pItemPool` default to the stage's plan and free ones.
+Searched cards get no customizations. Quote the `holdout` mean, not
+`searchMean`: the search flatters its own pick. A search takes minutes and
+holds the simulator queue until it ends.
 
 A link contest takes Vo, Da and Vi once, as displayed percentages, and a deck
 and stamina for each of the stage's phases:

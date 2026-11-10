@@ -8,21 +8,21 @@ import {
   useRef,
   useState,
 } from "react";
-import { usePathname } from "@/i18n/routing";
-import LoadoutUrlContext from "@/contexts/LoadoutUrlContext";
-import WorkspaceContext from "@/contexts/WorkspaceContext";
 import {
+  fixCustomizationGroups,
   getDefaultParams,
   getSimulatorUrl,
   getStage,
   knownStageId,
-} from "@/utils/simulator";
+} from "gakumas-loadout";
+import { usePathname } from "@/i18n/routing";
+import LoadoutUrlContext from "@/contexts/LoadoutUrlContext";
+import WorkspaceContext from "@/contexts/WorkspaceContext";
 import {
   getMemorySlotCustomizations,
   setMemorySlot,
 } from "@/utils/memorySlots";
 import { synchronizeLinkLoadouts } from "@/utils/linkLoadouts";
-import { fixCustomizationGroups } from "@/utils/customizations";
 
 const LoadoutContext = createContext();
 

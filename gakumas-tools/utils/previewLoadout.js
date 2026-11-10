@@ -1,7 +1,7 @@
 import {
   loadoutFromSearchParams,
   loadoutsFromSearchParams,
-} from "@/utils/simulator";
+} from "gakumas-loadout";
 
 // Link contest share URLs carry each idol's loadout in a repeated `loadout`
 // param instead of top-level stage/items/cards; preview the first idol's.

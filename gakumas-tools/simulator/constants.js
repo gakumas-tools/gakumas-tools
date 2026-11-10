@@ -14,22 +14,3 @@ export const WORKER_MESSAGE = {
   RESULT: "result",
   ERROR: "error",
 };
-
-export const FALLBACK_STAGE = {
-  id: "custom",
-  type: "custom",
-  plan: "free",
-  turnCounts: { vocal: 4, dance: 4, visual: 4 },
-  firstTurns: {
-    vocal: 0.33,
-    dance: 0.33,
-    visual: 0.33,
-  },
-  criteria: {
-    vocal: 0,
-    dance: 0,
-    visual: 0,
-  },
-  effects: [],
-  linkTurnCounts: [],
-};

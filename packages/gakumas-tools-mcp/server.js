@@ -1,17 +1,24 @@
 import { setImmediate } from "node:timers/promises";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { Customizations, Stages } from "gakumas-data";
+import { Customizations, PItems, SkillCards, Stages } from "gakumas-data";
+import { IdolConfig, IdolStageConfig, StageConfig } from "gakumas-engine";
 import {
-  IdolConfig,
-  IdolStageConfig,
-  StageConfig,
-  StageEngine,
-  StagePlayer,
-  STRATEGIES,
-  resetRand,
-} from "gakumas-engine";
-import { ENTITY_KINDS, getEntity, searchEntities } from "./entities.js";
+  defaultPools,
+  getDefaultParams,
+  getSimulatorUrl,
+  loadoutProblems,
+  optimizeLoadout,
+  playScores,
+  stageConfigFor,
+  withPIdolSignatures,
+} from "gakumas-loadout";
+import {
+  ENTITY_KINDS,
+  getEntity,
+  readEntity,
+  searchEntities,
+} from "./entities.js";
 
 const READ_ONLY = { readOnlyHint: true, openWorldHint: false };
 
@@ -23,6 +30,13 @@ const listStagesSchema = z
     query: z.string().default(""),
     type: z.enum(["contest", "event", "linkContest"]).optional(),
     plan: plan.optional(),
+    season: z.number().int().min(1).optional(),
+    stage: z
+      .number()
+      .int()
+      .min(1)
+      .optional()
+      .describe("Stage number in its season"),
     includePreview: z.boolean().default(false),
     offset: z.number().int().min(0).default(0),
     limit: z.number().int().min(1).max(100).default(20),
@@ -31,9 +45,22 @@ const listStagesSchema = z
 
 const searchEntitiesSchema = z
   .object({
-    kind: z.enum(ENTITY_KINDS),
+    kind: z
+      .enum(ENTITY_KINDS)
+      .optional()
+      .describe("Leave out to search every kind"),
     query: z.string().default(""),
     plan: plan.optional(),
+    upgraded: z.boolean().optional(),
+    sourceType: z
+      .enum(["default", "pIdol", "produce", "support"])
+      .optional()
+      .describe("pIdol finds signature cards and items"),
+    mode: z
+      .enum(["stage", "produce"])
+      .optional()
+      .describe("P-items: stage items work in contests"),
+    pIdolId: id.optional(),
     offset: z.number().int().min(0).default(0),
     limit: z.number().int().min(1).max(100).default(20),
   })
@@ -48,34 +75,114 @@ const deck = {
     .describe("Customization ID to level, for each card slot"),
 };
 
+const seed = z.number().int().min(0).max(0xffffffff);
+
+const stageSetup = {
+  stageId: id,
+  // An array, not a tuple: tuple schemas become draft-07 array-form
+  // `items`, which some MCP clients (e.g. the Anthropic API) reject.
+  params: z
+    .array(z.number().min(0))
+    .length(4)
+    .refine((params) => params.length !== 4 || Number.isInteger(params[3]), {
+      message: "Invalid input: expected int, received number",
+      path: [3],
+    })
+    .optional()
+    .describe(
+      "[Vo, Da, Vi, stamina]; stamina is an integer. Contest stages default to the website's: 2700, 2000, 800 by the stage's criteria, and 50 stamina",
+    ),
+  enterPercents: z
+    .boolean()
+    .default(false)
+    .describe(
+      "Contest stages only: Vo/Da/Vi are displayed percentages, not raw parameters. Event stages always take percentages.",
+    ),
+  supportBonus: z
+    .number()
+    .min(0)
+    .max(1)
+    .default(0.1)
+    .describe("A fraction: 0.1 is 10%, the website's default"),
+};
+
 const simulateSchema = z
   .object({
-    stageId: id,
-    // An array, not a tuple: tuple schemas become draft-07 array-form
-    // `items`, which some MCP clients (e.g. the Anthropic API) reject.
-    params: z
-      .array(z.number().min(0))
-      .length(4)
-      .refine((params) => params.length !== 4 || Number.isInteger(params[3]), {
-        message: "Invalid input: expected int, received number",
-        path: [3],
-      })
-      .describe("[Vo, Da, Vi, stamina]; stamina is an integer"),
-    enterPercents: z
-      .boolean()
-      .default(false)
-      .describe(
-        "Contest stages only: Vo/Da/Vi are displayed percentages, not raw parameters. Event stages always take percentages.",
-      ),
-    supportBonus: z
-      .number()
-      .min(0)
-      .max(1)
-      .default(0)
-      .describe("A fraction: 0.1 is 10%"),
+    ...stageSetup,
     ...deck,
-    seed: z.number().int().min(0).max(0xffffffff),
+    seed,
     runs: z.number().int().min(1).max(100).default(1),
+  })
+  .strict();
+
+const compareSchema = z
+  .object({
+    ...stageSetup,
+    loadouts: z.array(z.object(deck).strict()).min(2).max(10),
+    seed,
+    runs: z
+      .number()
+      .int()
+      .min(1)
+      .max(1000)
+      .default(100)
+      .describe("Runs per loadout, on the same seeds for each"),
+  })
+  .strict();
+
+const optimizeSchema = z
+  .object({
+    ...stageSetup,
+    pIdolId: id
+      .optional()
+      .describe(
+        "Starts memory 1 with this p-idol's upgraded signature card and P-item",
+      ),
+    pItemIds: z
+      .array(id)
+      .length(4)
+      .default([0, 0, 0, 0])
+      .describe("Nonzero P-items stay; zeros are searched"),
+    skillCardIdGroups: z
+      .array(z.array(id).length(6))
+      .min(1)
+      .max(4)
+      .default([
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+      ])
+      .describe("One group per memory. Nonzero cards stay; zeros are searched"),
+    customizationGroups: deck.customizationGroups.describe(
+      "Customization ID to level for the cards that stay; searched cards get none",
+    ),
+    cardPool: z
+      .array(id)
+      .optional()
+      .describe(
+        "Cards to try in open slots. Defaults to every upgraded card of the plan or free",
+      ),
+    pItemPool: z
+      .array(id)
+      .optional()
+      .describe(
+        "P-items to try in open slots. Defaults to every stage P-item of the plan or free",
+      ),
+    seed,
+    runs: z
+      .number()
+      .int()
+      .min(1)
+      .max(200)
+      .default(40)
+      .describe("Runs per candidate, on the same seeds for each"),
+    holdoutRuns: z
+      .number()
+      .int()
+      .min(1)
+      .max(2000)
+      .default(500)
+      .describe("Runs of the best loadout on seeds the search didn't use"),
+    timeLimitSeconds: z.number().int().min(1).max(1800).default(300),
   })
   .strict();
 
@@ -91,7 +198,7 @@ const simulateLinkSchema = z
         z.object({ stamina: z.number().int().min(0), ...deck }).strict(),
       )
       .min(1),
-    seed: z.number().int().min(0).max(0xffffffff),
+    seed,
     runs: z.number().int().min(1).max(100).default(1),
   })
   .strict();
@@ -117,12 +224,23 @@ function stageSummary(stage) {
   return { id, name, type, plan, preview, season, criteria, turnCounts };
 }
 
-function listStages({ query, type, plan, includePreview, offset, limit }) {
+function listStages({
+  query,
+  type,
+  plan,
+  season,
+  stage: stageNumber,
+  includePreview,
+  offset,
+  limit,
+}) {
   const needle = query.trim().toLowerCase();
   const stages = Stages.getAll()
     .filter((stage) => includePreview || !stage.preview)
     .filter((stage) => !type || stage.type == type)
     .filter((stage) => !plan || stage.plan == plan)
+    .filter((stage) => season == null || stage.season == season)
+    .filter((stage) => stageNumber == null || stage.stage == stageNumber)
     .filter((stage) =>
       `${stage.id} ${stage.name}`.toLowerCase().includes(needle),
     )
@@ -140,6 +258,14 @@ function readStage({ stageId }) {
   // Stages other than link contests have NaN link turn counts.
   if (stage.type == "linkContest") stage.linkTurnCounts = linkTurnCounts;
   return { stage };
+}
+
+function resolveParams(stage, { params, enterPercents }) {
+  if (params) return params;
+  if (stage.type != "contest" || enterPercents) {
+    throw new Error(`Stage ${stage.id} needs params as percentages.`);
+  }
+  return getDefaultParams(stage);
 }
 
 function checkLoadout({ pItemIds, skillCardIdGroups, customizationGroups }) {
@@ -168,31 +294,45 @@ function checkLoadout({ pItemIds, skillCardIdGroups, customizationGroups }) {
   }
 }
 
-async function play(config, linkConfigs, { seed, runs }, signal) {
-  const engine = new StageEngine(config, linkConfigs);
-  const strategy = new STRATEGIES.HeuristicStrategy(engine);
-  engine.strategy = strategy;
+// Lets a cancellation arrive between runs.
+const tick = () => setImmediate();
 
-  const scores = [];
-  for (let i = 0; i < runs; i++) {
-    signal.throwIfAborted();
-    resetRand((seed + i) >>> 0);
-    const { score } = await new StagePlayer(engine, strategy).play();
-    scores.push(score);
-    // Lets a cancellation arrive between runs.
-    await setImmediate();
-  }
+function summarize(scores) {
   return {
-    typeMultipliers: config.typeMultipliers,
-    scores,
     min: Math.min(...scores),
     max: Math.max(...scores),
     mean: scores.reduce((sum, score) => sum + score, 0) / scores.length,
   };
 }
 
-async function simulate(loadout, signal) {
-  const stage = getStage(loadout.stageId);
+function pairedDifference(scores, baseline) {
+  const diffs = scores.map((score, i) => score - baseline[i]);
+  const { mean } = summarize(diffs);
+  const variance =
+    diffs.reduce((sum, diff) => sum + (diff - mean) ** 2, 0) /
+    (diffs.length - 1);
+  return {
+    mean,
+    standardError: diffs.length > 1 ? Math.sqrt(variance / diffs.length) : null,
+  };
+}
+
+async function play(config, linkConfigs, { seed, runs }, signal) {
+  const scores = await playScores(config, linkConfigs, {
+    seed,
+    runs,
+    signal,
+    tick,
+  });
+  return {
+    typeMultipliers: config.typeMultipliers,
+    scores,
+    ...summarize(scores),
+  };
+}
+
+function getSingleStage(stageId) {
+  const stage = getStage(stageId);
   if (stage.preview) {
     throw new Error(`Stage ${stage.id} is a preview and can't be simulated.`);
   }
@@ -201,14 +341,149 @@ async function simulate(loadout, signal) {
       `Stage ${stage.id} is a link contest: use gakumas_simulate_link_loadout.`,
     );
   }
-  checkLoadout(loadout);
+  return stage;
+}
 
-  const config = new IdolStageConfig(
-    new IdolConfig(loadout),
-    new StageConfig(stage),
-    loadout.enterPercents,
-  );
-  return play(config, null, loadout, signal);
+async function simulate(loadout, signal) {
+  const stage = getSingleStage(loadout.stageId);
+  checkLoadout(loadout);
+  loadout = { ...loadout, params: resolveParams(stage, loadout) };
+
+  return {
+    ...(await play(stageConfigFor(stage, loadout), null, loadout, signal)),
+    params: loadout.params,
+    simulatorUrl: getSimulatorUrl(loadout),
+  };
+}
+
+async function compare({ loadouts: decks, seed, runs, ...setup }, signal) {
+  const stage = getSingleStage(setup.stageId);
+  decks.forEach(checkLoadout);
+  const params = resolveParams(stage, setup);
+
+  const plays = [];
+  for (const deck of decks) {
+    const loadout = { ...setup, ...deck, params };
+    const scores = await playScores(stageConfigFor(stage, loadout), null, {
+      seed,
+      runs,
+      signal,
+      tick,
+    });
+    plays.push({ loadout, scores });
+  }
+
+  const baseline = plays[0].scores;
+  return {
+    params,
+    loadouts: plays.map(({ loadout, scores }, i) => ({
+      ...summarize(scores),
+      ...(i > 0 && { vsFirst: pairedDifference(scores, baseline) }),
+      simulatorUrl: getSimulatorUrl(loadout),
+    })),
+  };
+}
+
+function checkIds(kind, ids) {
+  ids.forEach((id) => getEntity(kind, id));
+  return ids;
+}
+
+function nameOf(data, id) {
+  return id ? data.getById(id).name : null;
+}
+
+function namesOf({ skillCardIdGroups, pItemIds }) {
+  return {
+    skillCardNames: skillCardIdGroups.map((group) =>
+      group.map((id) => nameOf(SkillCards, id)),
+    ),
+    pItemNames: pItemIds.map((id) => nameOf(PItems, id)),
+  };
+}
+
+async function optimize(input, { signal, notifyProgress }) {
+  const stage = getSingleStage(input.stageId);
+  const params = resolveParams(stage, input);
+  const { pIdolId } = input;
+  if (pIdolId != null) getEntity("pIdol", pIdolId);
+  const deck = {
+    pItemIds: input.pItemIds,
+    skillCardIdGroups: input.skillCardIdGroups,
+  };
+  const start = {
+    ...(pIdolId == null ? deck : withPIdolSignatures(deck, pIdolId)),
+    customizationGroups: input.customizationGroups ?? [],
+    stageId: stage.id,
+    params,
+    supportBonus: input.supportBonus,
+    enterPercents: input.enterPercents,
+  };
+  checkLoadout(start);
+  const problems = loadoutProblems(start);
+  if (problems.length) throw new Error(problems.join(" "));
+
+  const pools = defaultPools(stage, start);
+  const cardPool = checkIds("skillCard", input.cardPool ?? pools.cardPool);
+  const pItemPool = checkIds("pItem", input.pItemPool ?? pools.pItemPool);
+
+  const startedAt = Date.now();
+  let lastProgressAt = startedAt;
+  let bestMean = null;
+  const progress = async (force) => {
+    const now = Date.now();
+    if (!force && now - lastProgressAt < 5000) return;
+    lastProgressAt = now;
+    await notifyProgress({
+      progress: Math.round((now - startedAt) / 1000),
+      total: input.timeLimitSeconds,
+      message:
+        bestMean == null ? undefined : `Best mean ${Math.round(bestMean)}`,
+    });
+  };
+
+  const result = await optimizeLoadout({
+    stage,
+    loadout: start,
+    cardPool,
+    pItemPool,
+    seed: input.seed,
+    runs: input.runs,
+    holdoutRuns: input.holdoutRuns,
+    deadline: startedAt + input.timeLimitSeconds * 1000,
+    signal,
+    tick: async () => {
+      await progress(false);
+      await tick();
+    },
+    onImprovement: async ({ mean }) => {
+      bestMean = mean;
+      await progress(true);
+    },
+  });
+
+  const { pItemIds, skillCardIdGroups, customizationGroups } = result.loadout;
+  return {
+    params,
+    loadout: { pItemIds, skillCardIdGroups, customizationGroups },
+    ...namesOf(result.loadout),
+    searchMean: result.searchMean,
+    holdout: result.holdout,
+    improvements: result.improvements.map((improvement) => {
+      const data = "pItem" in improvement ? PItems : SkillCards;
+      return {
+        ...improvement,
+        fromName: nameOf(data, improvement.from),
+        toName: nameOf(data, improvement.to),
+      };
+    }),
+    evaluations: result.evaluations,
+    passes: result.passes,
+    converged: result.converged,
+    timedOut: result.timedOut,
+    poolSizes: { cards: cardPool.length, pItems: pItemPool.length },
+    simulatorUrl: getSimulatorUrl(result.loadout),
+  };
 }
 
 async function simulateLink({ stageId, params, phases, ...seeded }, signal) {
@@ -258,7 +533,7 @@ export function createMcpServer() {
     {
       title: "Find stages",
       description:
-        "Search stages by name or ID, optionally by type and plan. Preview stages are left out unless asked for.",
+        "Search stages by name or ID, optionally by type, plan, season and stage number. Preview stages are left out unless asked for.",
       inputSchema: listStagesSchema,
       annotations: READ_ONLY,
     },
@@ -281,12 +556,51 @@ export function createMcpServer() {
     {
       title: "Simulate a loadout",
       description:
-        "Play a contest or event stage with HeuristicStrategy. Run i is seeded with (seed + i) mod 2^32, so the same input gives the same scores. Zero IDs are empty slots.",
+        "Play a contest or event stage with HeuristicStrategy. Run i is seeded with (seed + i) mod 2^32, so the same input gives the same scores. Zero IDs are empty slots. Gives a link that opens the loadout in the website's simulator.",
       inputSchema: simulateSchema,
       annotations: READ_ONLY,
     },
     async (input, { signal }) =>
       json(await queueSimulation(() => simulate(input, signal))),
+  );
+
+  server.registerTool(
+    "gakumas_compare_loadouts",
+    {
+      title: "Compare loadouts",
+      description:
+        "Play several decks on one stage with the same params and seeds, as gakumas_simulate_loadout does. Each deck after the first gives its mean difference from the first, with a standard error: shared seeds cancel most of the luck, so this tells small differences apart in far fewer runs.",
+      inputSchema: compareSchema,
+      annotations: READ_ONLY,
+    },
+    async (input, { signal }) =>
+      json(await queueSimulation(() => compare(input, signal))),
+  );
+
+  server.registerTool(
+    "gakumas_optimize_loadout",
+    {
+      title: "Optimize a loadout",
+      description:
+        "Fill a contest or event loadout's open slots by hill climbing: each pass tries every pool card and P-item in every open slot and keeps swaps that raise the mean over the search seeds, until a pass changes nothing or time runs out. Respects unique cards and one p-idol's signatures per memory. The search mean flatters the result, so the best loadout is replayed on holdout seeds; quote the holdout mean. Searched cards get no customizations. Takes minutes and blocks other simulations meanwhile.",
+      inputSchema: optimizeSchema,
+      annotations: READ_ONLY,
+    },
+    async (input, extra) => {
+      const progressToken = extra._meta?.progressToken;
+      const notifyProgress = async (params) => {
+        if (progressToken == null) return;
+        await extra.sendNotification({
+          method: "notifications/progress",
+          params: { progressToken, ...params },
+        });
+      };
+      return json(
+        await queueSimulation(() =>
+          optimize(input, { signal: extra.signal, notifyProgress }),
+        ),
+      );
+    },
   );
 
   server.registerTool(
@@ -307,7 +621,7 @@ export function createMcpServer() {
     {
       title: "Find cards, items, idols or customizations",
       description:
-        "Search one kind of entity by its name in the data, usually Japanese, or by ID. Gives the IDs and customizations a loadout needs.",
+        "Search entities by their name in the data, usually Japanese, or by ID; a p-idol's title is often English. Gives the IDs and customizations a loadout needs.",
       inputSchema: searchEntitiesSchema,
       annotations: READ_ONLY,
     },
@@ -319,11 +633,11 @@ export function createMcpServer() {
     {
       title: "Read a card, item, idol or customization",
       description:
-        "Read one entity's data and parsed effects. A customization's max is its highest level.",
+        "Read one entity's data and parsed effects. A customization's max is its highest level. A p-idol also lists its signature cards and P-items.",
       inputSchema: z.object({ kind: z.enum(ENTITY_KINDS), id }).strict(),
       annotations: READ_ONLY,
     },
-    async ({ kind, id }) => json({ entity: getEntity(kind, id) }),
+    async ({ kind, id }) => json(readEntity(kind, id)),
   );
 
   return server;

@@ -33,7 +33,8 @@
   },
   "dependencies": {
     "gakumas-data": "workspace:*",
-    "gakumas-engine": "workspace:*"
+    "gakumas-engine": "workspace:*",
+    "gakumas-loadout": "workspace:*"
   },
   "devDependencies": {
     "onnxruntime-node": "1.24",

@@ -1,6 +1,6 @@
 import { Customizations } from "gakumas-data";
 import gkImg from "gakumas-images";
-import { countCustomizations } from "@/utils/customizations";
+import { countCustomizations } from "gakumas-loadout";
 import { iconSrc } from "./iconSrc";
 import PreviewIcon from "./PreviewIcon";
 import styles, { CARD_SIZE } from "./Preview.styles";

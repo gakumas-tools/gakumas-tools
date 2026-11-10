@@ -1,5 +1,5 @@
 import { PItems, SkillCards } from "gakumas-data";
-import { countCustomizations } from "./customizations";
+import { countCustomizations } from "gakumas-loadout";
 
 export const COST_RANGES = [
   { rank: "SSS+", min: 546, max: 858 },

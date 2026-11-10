@@ -2,8 +2,8 @@ import { memo, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { PItems, SkillCards } from "gakumas-data";
 import gkImg from "gakumas-images";
+import { getStage } from "gakumas-loadout";
 import Image from "@/components/Image";
-import { getStage } from "@/utils/simulator";
 import { formatStageName } from "@/utils/stages";
 import styles from "./LoadoutHistory.module.scss";
 

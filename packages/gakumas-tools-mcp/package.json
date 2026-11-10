@@ -7,6 +7,7 @@
     "@modelcontextprotocol/sdk": "1.32.2",
     "gakumas-data": "workspace:*",
     "gakumas-engine": "workspace:*",
+    "gakumas-loadout": "workspace:*",
     "zod": "4.6.7"
   }
 }

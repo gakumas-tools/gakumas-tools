@@ -3,7 +3,12 @@ import assert from "node:assert/strict";
 import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
-import { HIDDEN_CARD_IDS, HIDDEN_ITEM_IDS, Stages } from "gakumas-data";
+import {
+  HIDDEN_CARD_IDS,
+  HIDDEN_ITEM_IDS,
+  SkillCards,
+  Stages,
+} from "gakumas-data";
 import {
   IdolConfig,
   IdolStageConfig,
@@ -13,6 +18,7 @@ import {
   STRATEGIES,
   resetRand,
 } from "gakumas-engine";
+import { getDefaultParams } from "gakumas-loadout";
 import { createMcpServer } from "../../../packages/gakumas-tools-mcp/server.js";
 import { loadSuite, loadoutFromQuery } from "../../lib.mjs";
 
@@ -133,6 +139,160 @@ test("stages page through every non-preview stage once", async (t) => {
     .map((stage) => stage.id)
     .sort((a, b) => a - b);
   assert.deepEqual(ids, expected);
+});
+
+test("no tool's input schema has a tuple", async (t) => {
+  const client = await connect(t);
+  const hasTuple = (schema) =>
+    schema != null &&
+    typeof schema == "object" &&
+    (Array.isArray(schema.items) ||
+      "prefixItems" in schema ||
+      Object.values(schema).some(hasTuple));
+  const { tools } = await client.listTools();
+  for (const tool of tools) {
+    assert.ok(!hasTuple(tool.inputSchema), tool.name);
+  }
+});
+
+test("stages filter by season and stage number", async (t) => {
+  const client = await connect(t);
+  const ids = async (args) =>
+    (await call(client, "gakumas_list_stages", args)).stages.map(
+      (stage) => stage.id,
+    );
+  const season = Stages.getById(190).season;
+  const expected = Stages.getAll()
+    .filter((stage) => !stage.preview && stage.season == season)
+    .map((stage) => stage.id)
+    .sort((a, b) => a - b);
+
+  assert.deepEqual(await ids({ season }), expected);
+  assert.deepEqual(
+    await ids({ season, stage: Stages.getById(190).stage }),
+    [190],
+  );
+});
+
+test("a contest without params plays the website's defaults", async (t) => {
+  const client = await connect(t);
+  const { params, ...args } = loadout(undefined, {
+    stageId: 190,
+    supportBonus: undefined,
+  });
+  const result = await call(client, "gakumas_simulate_loadout", args);
+  const defaults = getDefaultParams(Stages.getById(190));
+
+  assert.deepEqual(result.params, defaults);
+  assert.deepEqual(
+    result.scores,
+    await directScores({ ...args, params: defaults, supportBonus: 0.1 }),
+  );
+  const url = new URL(result.simulatorUrl);
+  assert.equal(url.searchParams.get("stage"), "190");
+  assert.equal(url.searchParams.get("params"), defaults.join("-"));
+});
+
+test("compared loadouts play the same seeds and pair their differences", async (t) => {
+  const client = await connect(t);
+  const base = loadout("seed1-002", { runs: 5 });
+  const other = loadout("seed1-001");
+  const deck = ({ pItemIds, skillCardIdGroups, customizationGroups }) => ({
+    pItemIds,
+    skillCardIdGroups,
+    customizationGroups,
+  });
+  const result = await call(client, "gakumas_compare_loadouts", {
+    stageId: base.stageId,
+    params: base.params,
+    supportBonus: base.supportBonus,
+    loadouts: [deck(base), deck(other)],
+    seed: base.seed,
+    runs: base.runs,
+  });
+
+  const expected = [
+    await directScores(base),
+    await directScores({ ...base, ...deck(other) }),
+  ];
+  const means = expected.map(
+    (scores) => scores.reduce((sum, score) => sum + score, 0) / scores.length,
+  );
+  assert.deepEqual(result.loadouts.map(({ mean }) => mean), means);
+  assert.equal(result.loadouts[0].vsFirst, undefined);
+  assert.equal(result.loadouts[1].vsFirst.mean, means[1] - means[0]);
+  assert.ok(result.loadouts[1].vsFirst.standardError >= 0);
+  assert.match(result.loadouts[1].simulatorUrl, /stage=/);
+});
+
+test("an optimized loadout starts from its p-idol and replays as reported", async (t) => {
+  const client = await connect(t);
+  const progress = [];
+  const result = (
+    await client.callTool(
+      {
+        name: "gakumas_optimize_loadout",
+        arguments: {
+          stageId: 190,
+          pIdolId: 32,
+          skillCardIdGroups: [[0, 0, 0, 0, 0, 0]],
+          cardPool: [816, 762, 752],
+          pItemPool: [141, 71],
+          seed: 7,
+          runs: 2,
+          holdoutRuns: 3,
+        },
+      },
+      undefined,
+      { onprogress: (update) => progress.push(update) },
+    )
+  ).structuredContent;
+
+  assert.equal(result.loadout.skillCardIdGroups[0][0], 279);
+  assert.equal(result.loadout.pItemIds[0], 90);
+  assert.equal(result.skillCardNames[0][0], SkillCards.getById(279).name);
+  assert.ok(result.converged);
+  assert.ok(progress.length > 0);
+
+  const holdout = await directScores({
+    stageId: 190,
+    params: result.params,
+    supportBonus: 0.1,
+    ...result.loadout,
+    seed: result.holdout.seed,
+    runs: 3,
+  });
+  assert.equal(
+    result.holdout.mean,
+    holdout.reduce((sum, score) => sum + score, 0) / holdout.length,
+  );
+  assert.equal(new URL(result.simulatorUrl).searchParams.get("stage"), "190");
+});
+
+test("an optimization that starts against the rules is refused", async (t) => {
+  const client = await connect(t);
+  const result = await client.callTool({
+    name: "gakumas_optimize_loadout",
+    arguments: {
+      stageId: 190,
+      skillCardIdGroups: [[279, 278, 0, 0, 0, 0]],
+      seed: 0,
+    },
+  });
+  assert.equal(result.isError, true);
+});
+
+test("an event stage without params is refused", async (t) => {
+  const client = await connect(t);
+  const event = Stages.getAll().find(
+    (stage) => stage.type == "event" && !stage.preview,
+  );
+  const { params, ...args } = loadout(undefined, { stageId: event.id });
+  const result = await client.callTool({
+    name: "gakumas_simulate_loadout",
+    arguments: args,
+  });
+  assert.equal(result.isError, true);
 });
 
 test("a stage reads as its data, link turn counts only for link contests", async (t) => {

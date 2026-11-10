@@ -6,7 +6,7 @@ import {
   fixCardCustomizations,
   fixCustomizationGroups,
   serializeCustomizations,
-} from "../../../../gakumas-tools/utils/customizations.js";
+} from "gakumas-loadout";
 
 const CARD = 25;
 const MAX = Customizations.getById(65).max;

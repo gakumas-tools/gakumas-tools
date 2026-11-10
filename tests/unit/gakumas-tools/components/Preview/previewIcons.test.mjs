@@ -6,7 +6,7 @@ import {
   boundPreviewLoadout,
   collectIcons,
 } from "../../../../../gakumas-tools/components/Preview/previewIcons.js";
-import { loadoutFromSearchParams } from "../../../../../gakumas-tools/utils/simulator.js";
+import { loadoutFromSearchParams } from "gakumas-loadout";
 
 const lookups = {
   itemIcon: (item) => `https://cdn.test/items/${item.id}.png`,

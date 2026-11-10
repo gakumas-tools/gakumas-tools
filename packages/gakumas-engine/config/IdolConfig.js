@@ -1,5 +1,5 @@
 import { Customizations, PIdols, PItems, SkillCards } from "gakumas-data";
-import { getBaseId } from "../utils";
+import { getBaseId, isUniqueCard } from "../utils";
 
 export default class IdolConfig {
   constructor(loadout) {
@@ -112,7 +112,7 @@ export default class IdolConfig {
 
     for (let i = 0; i < sortedCards.length; i++) {
       const skillCard = SkillCards.getById(sortedCards[i].id);
-      if (skillCard.unique && !["L", "T"].includes(skillCard.rarity)) {
+      if (isUniqueCard(skillCard)) {
         const baseId = getBaseId(skillCard);
         if (dedupedCards.some((d) => [baseId, baseId + 1].includes(d.id))) {
           dupeIndices.push(sortedCards[i].index);

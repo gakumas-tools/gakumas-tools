@@ -20,6 +20,7 @@
     "gakumas-data": "workspace:*",
     "gakumas-engine": "workspace:*",
     "gakumas-images": "workspace:*",
+    "gakumas-loadout": "workspace:*",
     "html2canvas": "^1.4.1",
     "mongodb": "^7.2.0",
     "next": "^16.4.2",

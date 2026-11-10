@@ -1,5 +1,5 @@
 import { Customizations, SkillCards } from "gakumas-data";
-import { countCustomizations } from "./customizations";
+import { countCustomizations } from "gakumas-loadout";
 
 function defined(object) {
   return Object.fromEntries(

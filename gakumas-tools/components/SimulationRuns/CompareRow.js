@@ -11,10 +11,10 @@ import {
 } from "react-icons/fa6";
 import { SkillCards, Stages } from "gakumas-data";
 import gkImg from "gakumas-images";
+import { FALLBACK_STAGE } from "gakumas-loadout";
 import Collapse from "@/components/Collapse";
 import Image from "@/components/Image";
 import LoadoutSummary from "@/components/LoadoutHistory/LoadoutSummary";
-import { FALLBACK_STAGE } from "@/simulator/constants";
 import { MAX_NAME_LENGTH } from "@/utils/apiValidation";
 import c from "@/utils/classNames";
 import { formatRelative } from "@/utils/simulationRun";

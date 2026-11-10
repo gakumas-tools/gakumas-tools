@@ -8,6 +8,7 @@ import {
 } from "gakumas-data";
 import {
   getEntity,
+  readEntity,
   searchEntities,
 } from "../../../packages/gakumas-tools-mcp/entities.js";
 
@@ -55,4 +56,43 @@ test("hidden cards and items can't be found or read", (t) => {
   assert.ok(!foundIds("pItem", "506").includes(506));
   assert.throws(() => getEntity("skillCard", 915));
   assert.throws(() => getEntity("pItem", 506));
+});
+
+test("a search without a kind finds a p-idol by its title", () => {
+  const { entities } = searchEntities({
+    query: "Yellow Big Bang",
+    offset: 0,
+    limit: 100,
+  });
+  assert.deepEqual(
+    entities.map(({ kind, id }) => [kind, id]),
+    [["pIdol", 32]],
+  );
+});
+
+test("filters narrow a search to a p-idol's upgraded signature card", () => {
+  const { entities } = searchEntities({
+    kind: "skillCard",
+    query: "",
+    upgraded: true,
+    sourceType: "pIdol",
+    pIdolId: 32,
+    offset: 0,
+    limit: 100,
+  });
+  assert.deepEqual(
+    entities.map(({ id }) => id),
+    [279],
+  );
+});
+
+test("a p-idol reads with its signature cards and items", () => {
+  const { entity, signatureSkillCardIds, signaturePItemIds } = readEntity(
+    "pIdol",
+    32,
+  );
+  assert.equal(entity, PIdols.getById(32));
+  assert.deepEqual(signatureSkillCardIds, [278, 279]);
+  assert.deepEqual(signaturePItemIds, [89, 90]);
+  assert.deepEqual(Object.keys(readEntity("skillCard", 279)), ["entity"]);
 });

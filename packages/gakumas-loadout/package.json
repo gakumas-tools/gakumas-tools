@@ -1,0 +1,11 @@
+{
+  "name": "gakumas-loadout",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "dependencies": {
+    "gakumas-data": "workspace:*",
+    "gakumas-engine": "workspace:*"
+  }
+}
