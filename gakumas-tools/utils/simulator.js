@@ -1,12 +1,25 @@
 import { PIdols, PItems, SkillCards, Stages } from "gakumas-data";
-import { GRAPHED_FIELDS, S } from "gakumas-engine";
+import {
+  GRAPHED_FIELDS,
+  S,
+  getDefaultParams,
+  getSimulatorUrl,
+  loadoutToSearchParams,
+  loadoutsToSearchParams,
+} from "gakumas-engine";
 import { FALLBACK_STAGE, MIN_BUCKET_SIZE } from "@/simulator/constants";
 import {
   deserializeCustomizations,
   fixCustomizationGroups,
-  serializeCustomizations,
 } from "./customizations";
-import { deserializeIds, serializeIds } from "./ids";
+import { deserializeIds } from "./ids";
+
+export {
+  getDefaultParams,
+  getSimulatorUrl,
+  loadoutToSearchParams,
+  loadoutsToSearchParams,
+};
 
 const DEFAULTS = {
   stageId: Stages.findLast((s) => s.type == "contest" && !s.preview).id,
@@ -15,23 +28,6 @@ const DEFAULTS = {
   skillCardIdGroups: "0-0-0-0-0-0_0-0-0-0-0-0",
   customizationGroups: "-----_-----",
 };
-
-const DEFAULT_PARAMS_BY_TREND_RANK = [2700, 2000, 800];
-const DEFAULT_STAMINA = 50;
-
-export function getDefaultParams(stage) {
-  const criteria = [
-    stage.criteria.vocal,
-    stage.criteria.dance,
-    stage.criteria.visual,
-  ];
-  const trendOrder = [0, 1, 2].sort((a, b) => criteria[b] - criteria[a]);
-  const params = [];
-  trendOrder.forEach((paramIndex, rank) => {
-    params[paramIndex] = DEFAULT_PARAMS_BY_TREND_RANK[rank];
-  });
-  return [...params, DEFAULT_STAMINA];
-}
 
 export function getStage(stageId, customStage) {
   if (stageId == "custom") return customStage;
@@ -51,20 +47,6 @@ function knownPItemId(id) {
 
 function knownSkillCardId(id) {
   return SkillCards.getById(id) ? id : 0;
-}
-
-const SIMULATOR_BASE_URL = "https://gktools.ris.moe/simulator";
-
-export function getSimulatorUrl(loadout, loadouts) {
-  const stage = Stages.getById(loadout.stageId);
-  if (!stage) return null;
-  if (stage.type === "linkContest") {
-    const searchParams = loadoutsToSearchParams(loadouts);
-    return `${SIMULATOR_BASE_URL}/?${searchParams.toString()}`;
-  } else {
-    const searchParams = loadoutToSearchParams(loadout);
-    return `${SIMULATOR_BASE_URL}/?${searchParams.toString()}`;
-  }
 }
 
 export function loadoutFromSearchParams(searchParams) {
@@ -122,32 +104,6 @@ export function loadoutFromSearchParams(searchParams) {
   };
 }
 
-export function loadoutToSearchParams(loadout) {
-  const {
-    stageId,
-    enterPercents,
-    supportBonus,
-    params,
-    pItemIds,
-    skillCardIdGroups,
-    customizationGroups,
-  } = loadout;
-  const searchParams = new URLSearchParams();
-  searchParams.set("stage", stageId);
-  if (enterPercents) searchParams.set("enter_percents", "1");
-  if (supportBonus != null) {
-    searchParams.set("support_bonus", supportBonus);
-  }
-  searchParams.set("params", serializeIds(params));
-  searchParams.set("items", serializeIds(pItemIds));
-  searchParams.set("cards", skillCardIdGroups.map(serializeIds).join("_"));
-  searchParams.set(
-    "customizations",
-    customizationGroups.map(serializeCustomizations).join("_")
-  );
-  return searchParams;
-}
-
 export function loadoutsFromSearchParams(searchParams) {
   let loadouts = [];
   const loadoutParams = searchParams.getAll("loadout");
@@ -163,21 +119,6 @@ export function loadoutsFromSearchParams(searchParams) {
     loadouts.push(loadout);
   }
   return loadouts;
-}
-
-export function loadoutsToSearchParams(loadouts) {
-  const searchParams = new URLSearchParams();
-  for (let loadout of loadouts) {
-    const loadoutSearchParams = loadoutToSearchParams({
-      ...loadout,
-      supportBonus: null,
-    });
-    searchParams.append(
-      "loadout",
-      encodeURIComponent(loadoutSearchParams.toString())
-    );
-  }
-  return searchParams;
 }
 
 export function bucketScores(scores) {
