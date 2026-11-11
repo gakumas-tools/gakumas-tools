@@ -136,6 +136,7 @@ import image_150 from "./150.png";
 import image_156 from "./156.png";
 import image_160 from "./160.png";
 import image_161 from "./161.png";
+import image_163 from "./163.png";
 
 const IMAGES = {
   '1': image_1,
@@ -276,6 +277,7 @@ const IMAGES = {
   '156': image_156,
   '160': image_160,
   '161': image_161,
+  '163': image_163,
 };
 
 export default IMAGES;
