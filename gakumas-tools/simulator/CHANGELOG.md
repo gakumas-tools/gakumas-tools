@@ -18,6 +18,7 @@ All notable changes to the contest simulator will be documented in this file.
 
 - Add uijin misuzu portrait
 - Add garakutaroad sena portrait
+- Add nee icchauyo misuzu portrait
 
 ## 2026-11-10
 
