@@ -21,6 +21,7 @@ All notable changes to the contest simulator will be documented in this file.
 - Add nee icchauyo misuzu portrait
 - Add garakutaroad china portrait
 - Add garakutaroad saki portrait
+- Add shirube mao portrait
 
 ## 2026-11-10
 
