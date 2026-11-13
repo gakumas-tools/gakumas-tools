@@ -107,6 +107,7 @@ import image_109 from "./109.png";
 import image_110 from "./110.png";
 import image_111 from "./111.png";
 import image_112 from "./112.png";
+import image_113 from "./113.png";
 import image_114 from "./114.png";
 import image_115 from "./115.png";
 import image_116 from "./116.png";
@@ -125,6 +126,7 @@ import image_130 from "./130.png";
 import image_134 from "./134.png";
 import image_135 from "./135.png";
 import image_136 from "./136.png";
+import image_137 from "./137.png";
 import image_138 from "./138.png";
 import image_139 from "./139.png";
 import image_140 from "./140.png";
@@ -137,9 +139,11 @@ import image_150 from "./150.png";
 import image_151 from "./151.png";
 import image_155 from "./155.png";
 import image_156 from "./156.png";
+import image_157 from "./157.png";
 import image_160 from "./160.png";
 import image_161 from "./161.png";
 import image_162 from "./162.png";
+import image_163 from "./163.png";
 
 const IMAGES = {
   '1': image_1,
@@ -251,6 +255,7 @@ const IMAGES = {
   '110': image_110,
   '111': image_111,
   '112': image_112,
+  '113': image_113,
   '114': image_114,
   '115': image_115,
   '116': image_116,
@@ -269,6 +274,7 @@ const IMAGES = {
   '134': image_134,
   '135': image_135,
   '136': image_136,
+  '137': image_137,
   '138': image_138,
   '139': image_139,
   '140': image_140,
@@ -281,9 +287,11 @@ const IMAGES = {
   '151': image_151,
   '155': image_155,
   '156': image_156,
+  '157': image_157,
   '160': image_160,
   '161': image_161,
   '162': image_162,
+  '163': image_163,
 };
 
 export default IMAGES;
