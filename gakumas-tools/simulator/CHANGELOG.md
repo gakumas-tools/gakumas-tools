@@ -15,6 +15,10 @@ All notable changes to the contest simulator will be documented in this file.
 
 
 
+## 2026-11-14
+
+- Add agitato saki portrait
+
 ## 2026-11-12
 
 - Add gamushara ni ikou kotone portrait
