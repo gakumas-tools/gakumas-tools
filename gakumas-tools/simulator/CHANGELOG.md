@@ -18,6 +18,7 @@ All notable changes to the contest simulator will be documented in this file.
 ## 2026-11-14
 
 - Add agitato saki portrait
+- Add sugar flavor rinami portrait
 
 ## 2026-11-12
 
