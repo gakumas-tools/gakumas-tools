@@ -14,6 +14,12 @@ All notable changes to the contest simulator will be documented in this file.
 
 
 
+
+## 2026-11-12
+
+- Add gamushara ni ikou kotone portrait
+- Add veil misuzu portrait
+
 ## 2026-11-11
 
 - Add uijin misuzu portrait
