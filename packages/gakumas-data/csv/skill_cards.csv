@@ -923,3 +923,5 @@ id,name,availableCustomizations,rarity,type,plan,unlockPlv,upgraded,unique,sourc
 922,認めてくれるひと+,,SSR,active,logic,1,TRUE,TRUE,pIdol,163,FALSE,,cost-=6,goodImpressionTurns+=3; if:countCards[removed]>=7 { goodImpressionTurns+=5 }; if:countCards[removed]>=11 { score+=goodImpressionTurns*2.8 },,
 923,柔らかな光の中で,,SSR,active,sense,1,FALSE,TRUE,pIdol,164,FALSE,,,,,
 924,柔らかな光の中で+,,SSR,active,sense,1,TRUE,TRUE,pIdol,164,FALSE,if:concentration>=3,cost-=4,cardUsesRemaining+=1; score+=2; at:endOfTurn { score+=2; score+=2; limit:1; delay:0 }; at:endOfTurn { score+=2; score+=2; score+=2; limit:1; delay:1 },1,
+925,忠義を胸に,,SR,mental,sense,1,FALSE,TRUE,pIdol,165,FALSE,,,,,
+926,忠義を胸に+,,SR,mental,sense,1,TRUE,TRUE,pIdol,165,FALSE,,cost-=1,goodConditionTurns+=4; concentration+=1; perfectConditionTurns+=1,1,
