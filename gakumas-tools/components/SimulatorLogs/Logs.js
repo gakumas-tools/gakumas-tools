@@ -28,6 +28,7 @@ const BUFF_LOG_TYPES = {
   setFullPowerChargeBuff: "fullPowerChargeBuff",
   setFullPowerEffectBuff: "fullPowerEffectBuff",
   setStrengthEffectBuff: "strengthEffectBuff",
+  setHandDecrease: "handDecrease",
 };
 
 const FLAT_BUFF_LOG_TYPES = new Set([
@@ -36,6 +37,7 @@ const FLAT_BUFF_LOG_TYPES = new Set([
   "setGoodConditionTurnsAdditionBuff",
   "setConcentrationAdditionBuff",
   "setMotivationAdditionBuff",
+  "setHandDecrease",
 ]);
 
 const TILE_LOG_TYPES = {

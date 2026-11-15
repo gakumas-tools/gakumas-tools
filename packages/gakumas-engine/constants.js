@@ -152,6 +152,12 @@ export const ALL_FIELDS = [
   "doubleCardEffectCards",
   "noActiveTurns",
   "noMentalTurns",
+  "noGoodConditionTurnsTurns",
+  "noConcentrationTurns",
+  "noGoodImpressionTurnsTurns",
+  "noMotivationTurns",
+  "noStrengthTurns",
+  "noFullPowerChargeTurns",
   "poorConditionTurns",
   "uneaseTurns",
   "scoreBuffs",
@@ -180,6 +186,7 @@ export const ALL_FIELDS = [
   "prevStance",
   "lockStanceTurns",
   "strengthEffectBuffs",
+  "handDecreases",
   "fullPowerCharge",
   "fullPowerChargeBuffs",
   "fullPowerEffectBuffs",
@@ -262,6 +269,7 @@ export const BUFF_LIST_FIELDS = [
   S.fullPowerChargeBuffs,
   S.fullPowerEffectBuffs,
   S.strengthEffectBuffs,
+  S.handDecreases,
 ];
 
 // Slots whose writers always replace the value rather than mutate it, so
@@ -329,6 +337,12 @@ export const EOT_DECREMENT_FIELDS = [
   S.poorConditionTurns,
   S.noActiveTurns,
   S.noMentalTurns,
+  S.noGoodConditionTurnsTurns,
+  S.noConcentrationTurns,
+  S.noGoodImpressionTurnsTurns,
+  S.noMotivationTurns,
+  S.noStrengthTurns,
+  S.noFullPowerChargeTurns,
   S.uneaseTurns,
   S.noCardUseTurns,
 ];
@@ -350,6 +364,12 @@ export const DEBUFF_FIELDS = [
   S.nullifyGenkiTurns,
   S.noActiveTurns,
   S.noMentalTurns,
+  S.noGoodConditionTurnsTurns,
+  S.noConcentrationTurns,
+  S.noGoodImpressionTurnsTurns,
+  S.noMotivationTurns,
+  S.noStrengthTurns,
+  S.noFullPowerChargeTurns,
   S.uneaseTurns,
   S.poorConditionTurns,
   S.lockStanceTurns,
@@ -359,6 +379,7 @@ export const DEBUFF_FIELDS = [
 export const DEBUFF_SPECIAL_ACTIONS = [
   "setScoreDebuff",
   "decreaseFullPowerCharge",
+  "setHandDecrease",
 ];
 
 export const INCREASE_TRIGGER_FIELDS = [
@@ -439,6 +460,12 @@ export const LOGGED_FIELDS = [
   S.cardUsesRemaining,
   S.noActiveTurns,
   S.noMentalTurns,
+  S.noGoodConditionTurnsTurns,
+  S.noConcentrationTurns,
+  S.noGoodImpressionTurnsTurns,
+  S.noMotivationTurns,
+  S.noStrengthTurns,
+  S.noFullPowerChargeTurns,
   S.noCardUseTurns,
   S.uneaseTurns,
 ];

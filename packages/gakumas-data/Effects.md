@@ -187,6 +187,8 @@ for example `score+=floor(cumulativeFullPowerCharge*0.6)`.
 | 全力値増加量増加                          | `setFullPowerChargeBuff(amount, turns?)`                                 |
 | 全力強化                                 | `setFullPowerEffectBuff(amount, turns?)`                                 |
 | 強気強化                                 | `setStrengthEffectBuff(amount, turns?)`                                  |
+| 手札減少（未検証）                               | `setHandDecrease(amount, turns?)`                                        |
+| Pアイテムの使用回数を増加（未検証）                      | `incrementPIdolPItemLimit(n?)`                                           |
 
 ## Target rules
 
@@ -401,6 +403,12 @@ They are also valid as assignment LHS unless marked read-only.
 | 低下状態無効                   | `nullifyDebuff`                |
 | アクティブ使用不可             | `noActiveTurns`                |
 | メンタル使用不可               | `noMentalTurns`                |
+| 好調効果使用不可 | `noGoodConditionTurnsTurns` |
+| 集中効果使用不可 | `noConcentrationTurns` |
+| 好印象効果使用不可 | `noGoodImpressionTurnsTurns` |
+| やる気効果使用不可 | `noMotivationTurns` |
+| 強気効果使用不可 | `noStrengthTurns` |
+| 全力効果使用不可 | `noFullPowerChargeTurns` |
 | カード使用不可                 | `noCardUseTurns`               |
 | 不調                           | `poorConditionTurns`           |
 | 不安                           | `uneaseTurns`                  |
@@ -431,6 +439,7 @@ Function-like names resolvable in conditions/expressions.
 | 直接発動か                       | `isDirectEffect`                        |
 | 指針変更回数                     | `stanceChangedTimes`                    |
 | 好印象効果倍率                   | `goodImpressionTurnsEffectBuff`         |
+| 低下状態の数（未検証）           | `countDebuffs`                          |
 | 使用カード ID                    | `usedCardId`                            |
 | 使用カードベース ID              | `usedCardBaseId`                        |
 | 前使用カード種類                 | `lastUsedCardType`                      |

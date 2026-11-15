@@ -18,6 +18,7 @@ const LOGGED_BUFFS_FIELDS = [
   S.fullPowerChargeBuffs,
   S.fullPowerEffectBuffs,
   S.strengthEffectBuffs,
+  S.handDecreases,
 ];
 
 const HAND_STATE_FIELDS = LOGGED_FIELDS.filter(
