@@ -22,6 +22,9 @@ export function formatStageName(stage, t) {
       stage: stage.stage,
       round: stage.round,
     });
+  } else if (stage.type == "idolRoad") {
+    // The name as the game shows it, from stages.csv.
+    stageName = stage.name;
   }
   if (stage.preview) {
     stageName += "*";
@@ -52,6 +55,8 @@ export function formatStageShortName(stage, t) {
     );
   } else if (stage.type == "event") {
     stageName = `${stage.stage} - ${stage.round}`;
+  } else if (stage.type == "idolRoad") {
+    stageName = `${stage.stage}`;
   }
   return stageName;
 }

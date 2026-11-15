@@ -1,4 +1,6 @@
+import { IdolRoad } from "gakumas-data";
 import { calculateTypeMultipliers } from "../typeMultipliers";
+import StageConfig from "./StageConfig";
 
 const CONTEST_DEFAULT_CARD_IDS_BY_PLAN = {
   sense: [5, 7, 1, 1, 15, 15, 17, 17],
@@ -17,6 +19,13 @@ const EVENT_DEFAULT_CARD_IDS_BY_RECOMMENDED_EFFECT = {
 
 export default class IdolStageConfig {
   constructor(idolConfig, stageConfig, enterPercents) {
+    // Idol Road stages differ per P-idol, so resolve them before anything
+    // reads the criteria or turn counts.
+    if (stageConfig.type === "idolRoad") {
+      stageConfig = new StageConfig(
+        IdolRoad.resolveStage({ ...stageConfig }, idolConfig.pIdolId),
+      );
+    }
     this.idol = idolConfig;
     this.stage = stageConfig;
     this.typeMultipliers = this.calculateTypeMultipliers(

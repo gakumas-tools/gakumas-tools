@@ -35,6 +35,7 @@ const SKILL_CARDS = readCsv("skill_cards.csv");
 const P_ITEMS = readCsv("p_items.csv");
 const STAGES = readCsv("stages.csv");
 const P_DRINKS = readCsv("p_drinks.csv");
+const IDOL_ROAD_EFFECTS = readCsv("idol_road_effects.csv");
 
 let totalErrors = 0;
 
@@ -127,6 +128,10 @@ for (const item of P_ITEMS) {
 }
 for (const stage of STAGES) {
   validateEffectField("stage", stage.id, "effects", stage.effects);
+}
+for (const row of IDOL_ROAD_EFFECTS) {
+  const id = `${row.stageId}:${row.recommendedEffect}`;
+  validateEffectField("idolRoadEffect", id, "effects", row.effects);
 }
 // --- P-drinks: immediate actions only ---
 for (const drink of P_DRINKS) {
