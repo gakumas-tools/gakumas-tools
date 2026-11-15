@@ -183,11 +183,20 @@ export function resolveScore(state, score, growth, rhsNode, getTurnMultiplier) {
       scoreBuff += Math.min(buffAmount * 0.02, 0.5);
     }
 
+    // メタモルフォーゼ (披露): パラメータ上昇量を25%増加
+    if (state[S.metamorphosis] == "metamorphosisPerformance") {
+      scoreBuff += 0.25;
+    }
+
     score *= 1 + scoreBuff;
 
     // Score debuff effects
     score *= Math.max(
-      state[S.scoreDebuffs].reduce((acc, cur) => acc - cur.amount, 1),
+      state[S.scoreDebuffs].reduce(
+        (acc, cur) => acc - cur.amount,
+        // メタモルフォーゼ (支度): パラメータ上昇量を25%減少
+        state[S.metamorphosis] == "metamorphosisPreparation" ? 0.75 : 1,
+      ),
       0,
     );
 
@@ -232,7 +241,17 @@ export function resolveMotivation(state, motivation) {
   state[S.motivation] += motivation;
 }
 
+// メタモルフォーゼ: 支度 adds 1 to each increase of 集中, 好調 and 絶好調;
+// 披露 takes 1 off.
+function metamorphosisAddition(state, amount) {
+  if (amount <= 0) return 0;
+  if (state[S.metamorphosis] == "metamorphosisPreparation") return 1;
+  if (state[S.metamorphosis] == "metamorphosisPerformance") return -1;
+  return 0;
+}
+
 export function resolveGoodConditionTurns(state, goodConditionTurns) {
+  goodConditionTurns += metamorphosisAddition(state, goodConditionTurns);
   // Apply good condition turns addition buffs
   goodConditionTurns += state[S.goodConditionTurnsAdditionBuffs].reduce(
     (acc, cur) => acc + cur.amount,
@@ -248,6 +267,7 @@ export function resolveGoodConditionTurns(state, goodConditionTurns) {
 }
 
 export function resolveConcentration(state, concentration) {
+  concentration += metamorphosisAddition(state, concentration);
   // Apply concentration addition buffs
   concentration += state[S.concentrationAdditionBuffs].reduce(
     (acc, cur) => acc + cur.amount,
@@ -260,6 +280,11 @@ export function resolveConcentration(state, concentration) {
   );
 
   state[S.concentration] += concentration;
+}
+
+export function resolvePerfectConditionTurns(state, perfectConditionTurns) {
+  perfectConditionTurns += metamorphosisAddition(state, perfectConditionTurns);
+  state[S.perfectConditionTurns] += perfectConditionTurns;
 }
 
 export function resolveGenki(state, genki) {

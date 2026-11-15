@@ -69,6 +69,9 @@ export default class BuffManager extends EngineComponent {
       removeDebuffs: (state, amount) =>
         this.removeDebuffs(state, parseInt(amount, 10)),
       setStance: (state, stance) => this.setStance(state, stance),
+      setMetamorphosis: (state) => {
+        state[S.metamorphosis] = "metamorphosisPreparation";
+      },
       decreaseFullPowerCharge: (state, amount) => {
         state[S.fullPowerCharge] = Math.max(
           0,
@@ -136,6 +139,7 @@ export default class BuffManager extends EngineComponent {
     state[S.goodImpressionTurns] = 0;
     state[S.motivation] = 0;
     state[S.prideTurns] = 0;
+    state[S.metamorphosis] = "none";
 
     // Anomaly
     state[S.stance] = "none";

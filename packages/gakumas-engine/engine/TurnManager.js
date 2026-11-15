@@ -169,6 +169,16 @@ export default class TurnManager extends EngineComponent {
     state[S.turnsElapsed]++;
     state[S.turnsRemaining]--;
 
+    // メタモルフォーゼ (支度) becomes (披露) once the first half of the
+    // stage's turns has ended
+    if (
+      state[S.metamorphosis] == "metamorphosisPreparation" &&
+      state[S.turnsElapsed] >=
+        Math.floor(this.getConfig(state).stage.turnCount / 2)
+    ) {
+      state[S.metamorphosis] = "metamorphosisPerformance";
+    }
+
     this.logger.pushGraphData(state);
 
     // Start next turn

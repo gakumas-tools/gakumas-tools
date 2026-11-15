@@ -63,6 +63,7 @@ const INTERMEDIATE_ON_ADD = new Set([
   "motivation",
   "goodConditionTurns",
   "concentration",
+  "perfectConditionTurns",
   "enthusiasm",
   "fullPowerCharge",
   "genki",
@@ -108,6 +109,8 @@ export default class Executor extends EngineComponent {
         resolvers.resolveGoodConditionTurns(state, value),
       concentration: (state, value) =>
         resolvers.resolveConcentration(state, value),
+      perfectConditionTurns: (state, value) =>
+        resolvers.resolvePerfectConditionTurns(state, value),
       genki: (state, value) => resolvers.resolveGenki(state, value),
       stamina: (state, value) => resolvers.resolveStamina(state, value),
       enthusiasm: (state, value) => resolvers.resolveEnthusiasm(state, value),

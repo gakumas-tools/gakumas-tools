@@ -169,6 +169,7 @@ for example `score+=floor(cumulativeFullPowerCharge*0.6)`.
 | 特定カードを除外 (ランダム)               | `removeRandom[...]`                                                      |
 | 保留カードを手札に移動                    | `moveHeldCardsToHand`                                                    |
 | 低下状態を解除                            | `removeDebuffs(n)`                                                       |
+| メタモルフォーゼ(支度)になる              | `setMetamorphosis`                                                       |
 | 指針を変更                                | `setStance(stance)`                                                      |
 | 全力値を減少                              | `decreaseFullPowerCharge(n)`                                             |
 | スコア上昇量増加                          | `setScoreBuff(amount, turns?)`                                           |
@@ -376,6 +377,7 @@ They are also valid as assignment LHS unless marked read-only.
 | ステージ中に消費した好印象     | `consumedGoodImpressionTurns`  |
 | やる気                         | `motivation`                   |
 | 誇り                           | `prideTurns`                   |
+| メタモルフォーゼ               | `metamorphosis`                |
 | 指針                           | `stance`                       |
 | 前の指針                       | `prevStance`                   |
 | 指針固定                       | `lockStanceTurns`              |
@@ -468,3 +470,15 @@ pnpm validate:data
 
 Unknown phases, variables, actions, or target identifiers will fail the
 build with a specific error.
+
+
+## メタモルフォーゼ
+
+`setMetamorphosis` puts the idol in メタモルフォーゼ(支度). While it lasts, every
+increase of 集中, 好調 and 絶好調 gets +1, and the score gain is cut by 25%
+(counted with the other score debuffs). Once the first half of the stage's
+turns has ended (half of the stage's turn count, rounded down), it becomes
+メタモルフォーゼ(披露) for the rest of the stage: increases of 集中, 好調 and
+絶好調 get -1, and the score gain rises by 25% (counted with the score buffs).
+`metamorphosis` is `none`, `metamorphosisPreparation` or
+`metamorphosisPerformance`.
