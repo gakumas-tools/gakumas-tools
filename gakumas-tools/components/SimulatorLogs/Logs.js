@@ -49,6 +49,8 @@ const ADD_CARD_LOG_TYPES = {
   drawCard: "cardDrawn",
   addCardToHand: "addedCardToHand",
   addCardToTopOfDeck: "addedCardToTopOfDeck",
+  addCardToBottomOfDeck: "addedCardToBottomOfDeck",
+  addCardToDiscarded: "addedCardToDiscarded",
   addCardToDeckAtRandom: "addedCardToDeckAtRandom",
   upgradeRandomCardInHand: "upgradedCard",
   growth: "cardGrowth",
@@ -56,6 +58,7 @@ const ADD_CARD_LOG_TYPES = {
   discardCard: "discardedCard",
   moveCardToHand: "movedCardToHand",
   moveCardToTopOfDeck: "movedCardToTopOfDeck",
+  moveCardToBottomOfDeck: "movedCardToBottomOfDeck",
   moveCardToDeckAtRandom: "movedCardToDeckAtRandom",
   removeCard: "removedCard",
 };

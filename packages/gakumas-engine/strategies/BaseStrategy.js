@@ -40,6 +40,14 @@ export default class BaseStrategy {
   }
 
   /**
+   * Given a state and list of cards, selects cards to copy.
+   * Returns the indices of the cards to copy. Picks like holding by default.
+   */
+  pickCardsToCopy(state, cards, num = 1, optional = false) {
+    return this.pickCardsToHold(state, cards, num, optional);
+  }
+
+  /**
    * Given a state and list of cards, selects a card to use for free.
    * Returns the indices of the cards to use.
    * Can be async for strategies that need to await user input (ManualStrategy).
