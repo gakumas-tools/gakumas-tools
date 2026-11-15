@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { SkillCards } from "gakumas-data";
-import { IdolConfig, StageEngine, S } from "gakumas-engine";
+import { IdolConfig, StageEngine, S, G } from "gakumas-engine";
 import { hasIngameFixtures, loadIngameFixture } from "./ingameFixtures.mjs";
 
 const FIXTURES = [
@@ -15,6 +15,7 @@ const FIXTURES = [
   "training-exam-full-power",
   "training-exam-strength",
   "training-lesson-anomaly",
+  "training-lesson-growth",
   "training-lesson-good-condition",
   "training-lesson-concentration",
   "training-lesson-impression",
@@ -143,6 +144,13 @@ function replay(capture, play) {
     const card = action.useReturnedHeldCard
       ? heldCard
       : hand.find((c) => state[S.cardMap][c].id == action.cardId);
+    for (const [field, value] of Object.entries(action.growthBefore ?? {})) {
+      assert.equal(
+        state[S.cardMap][card].growth[G[field]],
+        value,
+        `turn ${turn} ${field} (${action.growthCapture})`,
+      );
+    }
 
     let holds = 0;
     engine.strategy = holdAsCaptured(action.hold, (held) => {
