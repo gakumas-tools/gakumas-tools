@@ -110,12 +110,18 @@ function findDot(imageData, box, { dot }) {
   );
 }
 
-function findBadge(imageData, box, region, color, rightPad = BADGE_PAD) {
+function findBadge(
+  imageData,
+  box,
+  region,
+  color,
+  { rightPad = BADGE_PAD, minFill = MIN_BADGE_FILL } = {},
+) {
   const found = blobs(imageData, area(box, region, imageData), color);
   if (!found.length) return null;
   const parts = found.filter(({ n }) => n >= 0.15 * found[0].n);
   const total = parts.reduce((sum, { n }) => sum + n, 0);
-  if (total < MIN_BADGE_FILL * box.width * box.height) return null;
+  if (total < minFill * box.width * box.height) return null;
   const pad = Math.round(BADGE_PAD * box.width);
   const right = Math.round(rightPad * box.width);
   return {
@@ -178,8 +184,19 @@ export function badgeGlyphs(imageData, box, layout) {
     });
   const dot = findDot(imageData, box, layout);
   const shield = findBadge(imageData, box, layout.genki, isShieldBlue);
+  let genki = shield && white(shield);
+  // Two digits leave less blue background visible.
+  if (!shield) {
+    const smallShield = findBadge(imageData, box, layout.genki, isShieldBlue, {
+      minFill: 0.019,
+    });
+    const digits = smallShield && white(smallShield);
+    if (digits?.length > 1) genki = digits;
+  }
   // A cost's last digit can stick out past the right of its heart.
-  const heart = findBadge(imageData, box, layout.cost, isHeart, COST_BADGE_PAD);
+  const heart = findBadge(imageData, box, layout.cost, isHeart, {
+    rightPad: COST_BADGE_PAD,
+  });
   const cost = (predicate) =>
     adjacentRun(
       heart
@@ -197,7 +214,7 @@ export function badgeGlyphs(imageData, box, layout) {
       }),
       false,
     ),
-    genki: shield && white(shield),
+    genki,
     cost: cost(isCostWhite),
     // The stricter mask can thin an antialiased digit away.
     costFallback: cost(isWhite),

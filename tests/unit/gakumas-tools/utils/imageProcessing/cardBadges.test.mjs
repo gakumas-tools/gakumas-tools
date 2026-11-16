@@ -36,3 +36,21 @@ test("a number with an unrecognized digit is unread", () => {
   assert.equal(readBadge([one, unknown, two], templates), undefined);
   assert.equal(readBadge([unknown, one], templates, true), undefined);
 });
+
+test("a two-digit genki badge with a narrow colored background reads", async () => {
+  const image = await loadImage(
+    new URL("../../../../fixtures/contest_loadout/10.webp", import.meta.url)
+      .pathname,
+  );
+  const { mainBoxes } = detectLoadoutBoxes(image);
+  assert.equal(readBadges(image, mainBoxes[0], CONTEST_LAYOUT).genki, 10);
+});
+
+test("blue card art without a genki number stays empty", async () => {
+  const image = await loadImage(
+    new URL("../../../../fixtures/contest_loadout/40.jpg", import.meta.url)
+      .pathname,
+  );
+  const { subBoxes } = detectLoadoutBoxes(image);
+  assert.equal(readBadges(image, subBoxes[0], CONTEST_LAYOUT).genki, null);
+});
