@@ -21,6 +21,7 @@ import { exactFloor } from "@/utils/exactFloor";
 import { getRank, TARGET_RATING_BY_RANK } from "@/utils/produceRank";
 import {
   BALANCE_BY_IDOL,
+  hasNiaData,
   calculateBonusParams,
   calculateChallengeParams,
   calculateGainedParams,
@@ -47,7 +48,7 @@ const AFFECTION_OPTIONS = [...new Array(11)].map((x, i) => ({
 }));
 
 const IDOL_OPTIONS = Idols.getAll()
-  .filter((idol) => idol.id !== 14)
+  .filter((idol) => idol.id !== 14 && hasNiaData(idol.id))
   .map((idol) => ({
     id: idol.id,
     iconSrc: gkImg(idol).icon,
