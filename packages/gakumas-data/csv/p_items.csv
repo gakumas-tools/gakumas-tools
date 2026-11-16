@@ -121,7 +121,7 @@ id,name,rarity,upgraded,plan,mode,sourceType,pIdolId,welfare,effects
 120,初声の証・ことね,R,FALSE,sense,stage,pIdol,43,FALSE,at:cardUsed { if:usedCardBaseId==326 { goodConditionTurns+=2 }; limit:1 }
 121,初声の証・ことね+,R,TRUE,sense,stage,pIdol,43,FALSE,at:cardUsed { if:usedCardBaseId==326 { goodConditionTurns+=2; fixedGenki+=5 }; limit:1 }
 122,ときめきのいっぱい,SSR,FALSE,sense,stage,pIdol,44,FALSE,at:startOfTurn { if:turnsRemaining==1 { score+=3+3*cardsUsed; fixedStamina-=2 }; limit:1 }
-123,ときめきのいっぱい+,SSR,TRUE,sense,stage,pIdol,44,FALSE,at:startOfTurn { if:turnsRemaining==1 { score+=5+3*cardsUsed }; limit:1 }
+123,ときめきのいっぱい+,SSR,TRUE,sense,stage,pIdol,44,FALSE,at:startOfTurn { if:turnsRemaining==1 { score+=5+3*cardsUsed; fixedStamina-=1 }; limit:1 }
 124,ほっこりまんぷく,SSR,FALSE,sense,produce,support,,FALSE,
 125,きっかけの帯,SR,FALSE,sense,produce,support,,FALSE,
 126,初心の証・リーリヤ,R,FALSE,sense,stage,pIdol,45,FALSE,at:endOfTurn { if:goodConditionTurns>=6 { goodConditionTurns+=2; fixedStamina-=1 }; limit:2 }
