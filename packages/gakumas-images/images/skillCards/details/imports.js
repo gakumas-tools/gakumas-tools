@@ -919,6 +919,12 @@ import image_919 from "./919.png";
 import image_920 from "./920.png";
 import image_921 from "./921.png";
 import image_922 from "./922.png";
+import image_923 from "./923.png";
+import image_924 from "./924.png";
+import image_925 from "./925.png";
+import image_926 from "./926.png";
+import image_927 from "./927.png";
+import image_928 from "./928.png";
 
 const IMAGES = {
   '1': image_1,
@@ -1842,6 +1848,12 @@ const IMAGES = {
   '920': image_920,
   '921': image_921,
   '922': image_922,
+  '923': image_923,
+  '924': image_924,
+  '925': image_925,
+  '926': image_926,
+  '927': image_927,
+  '928': image_928,
 };
 
 export default IMAGES;
