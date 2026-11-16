@@ -16,6 +16,11 @@ All notable changes to the contest simulator will be documented in this file.
 
 
 
+## 2026-11-16
+
+- Update metamorphose kanae
+- Update akogare wo daite ippozutsu kanae
+
 ## 2026-11-15
 
 - Add preview of metamorphose kanae
