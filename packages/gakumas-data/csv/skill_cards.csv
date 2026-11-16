@@ -925,3 +925,5 @@ id,name,availableCustomizations,rarity,type,plan,unlockPlv,upgraded,unique,sourc
 924,柔らかな光の中で+,,SSR,active,sense,1,TRUE,TRUE,pIdol,164,FALSE,if:concentration>=3,cost-=4,cardUsesRemaining+=1; score+=2; at:endOfTurn { score+=2; score+=2; limit:1; delay:0 }; at:endOfTurn { score+=2; score+=2; score+=2; limit:1; delay:1 },1,
 925,忠義を胸に,,SR,mental,sense,1,FALSE,TRUE,pIdol,165,FALSE,,cost-=4,goodConditionTurns+=4; concentration+=1; perfectConditionTurns+=1,1,
 926,忠義を胸に+,,SR,mental,sense,1,TRUE,TRUE,pIdol,165,FALSE,,cost-=1,goodConditionTurns+=4; concentration+=1; perfectConditionTurns+=1,1,
+927,一途な従者,,R,active,sense,1,FALSE,TRUE,pIdol,166,FALSE,,cost-=5,score+=3; at:endOfTurn { score+=3; score+=3; limit:1; delay:0 },1,
+928,一途な従者+,,R,active,sense,1,TRUE,TRUE,pIdol,166,FALSE,,cost-=2,score+=3; at:endOfTurn { score+=3; score+=3; limit:1; delay:0 },1,

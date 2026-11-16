@@ -20,6 +20,7 @@ All notable changes to the contest simulator will be documented in this file.
 
 - Update metamorphose kanae
 - Update akogare wo daite ippozutsu kanae
+- Add gakuen seikatsu kanae
 
 ## 2026-11-15
 

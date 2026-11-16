@@ -516,3 +516,5 @@ id,name,rarity,upgraded,plan,mode,sourceType,pIdolId,welfare,effects
 515,お返しの髪飾り+,SR,TRUE,sense,stage,pIdol,165,FALSE,"at:endOfTurn { if:turnsRemaining<=2 { score+=5 }; limit:2 }"
 516,お嬢様おでかけセット,SSR,FALSE,sense,produce,support,,FALSE,
 517,お掃除の成果,SR,FALSE,sense,produce,support,,FALSE,
+518,従者の必需品,R,FALSE,sense,stage,pIdol,166,FALSE,"at:afterStartOfStage { concentration+=2; setScoreDebuff(0.1,2); limit:1 }"
+519,従者の必需品+,R,TRUE,sense,stage,pIdol,166,FALSE,"at:afterStartOfStage { concentration+=3; setScoreDebuff(0.1,2); limit:1 }"
