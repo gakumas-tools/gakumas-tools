@@ -1,15 +1,15 @@
 {
-  "median_ms": 1385,
+  "median_ms": 1335,
   "trials_ms": [
-    1445,
-    1359,
-    1436,
-    1377,
-    1420,
-    1363,
-    1385
+    1337,
+    1335,
+    1336,
+    1333,
+    1316,
+    1310,
+    1341
   ],
-  "results_sha256": "4697108c561750e11a30454687bff2b4f9bcfd6e0dde01d5ad3f988badd61e71",
+  "results_sha256": "f2d9093d5b1a6940ea0ac8da32ad2fe058fb552a91b95d404ca8e7d61c8bab6c",
   "workload": {
     "stride": 25,
     "runs": 200,
@@ -39,8 +39,8 @@
       "sweep-stage-29"
     ]
   },
-  "commit": "a82c3a3a5de41d2bd6130ad08bb88136dfa1977e",
-  "node": "v24.22.3",
-  "machine": "unknown x12, linux arm64",
-  "captured_at": "2026-11-17T00:07:27.542Z"
+  "commit": "4b647fc573fbb2445e7b21a03079c4762711155a",
+  "node": "v26.12.1",
+  "machine": "Apple M5 x10, darwin arm64",
+  "captured_at": "2026-11-17T13:55:42.445Z"
 }
