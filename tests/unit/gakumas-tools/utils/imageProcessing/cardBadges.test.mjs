@@ -55,3 +55,21 @@ test("a customization badge distinguishes an upgraded card from its base art", a
   assert.equal(skillCardIdGroups[1][1], 621);
   assert.equal(skillCardIdGroups[0][4], 162);
 });
+
+test("a two-digit genki badge with a narrow colored background reads", async () => {
+  const image = await loadImage(
+    new URL("../../../../fixtures/contest_loadout/10.webp", import.meta.url)
+      .pathname,
+  );
+  const { mainBoxes } = detectLoadoutBoxes(image);
+  assert.equal(readBadges(image, mainBoxes[0], CONTEST_LAYOUT).genki, 10);
+});
+
+test("blue card art without a genki number stays empty", async () => {
+  const image = await loadImage(
+    new URL("../../../../fixtures/contest_loadout/40.jpg", import.meta.url)
+      .pathname,
+  );
+  const { subBoxes } = detectLoadoutBoxes(image);
+  assert.equal(readBadges(image, subBoxes[0], CONTEST_LAYOUT).genki, null);
+});
