@@ -9,7 +9,7 @@
  * Usage:
  *   pnpm test:contest-loadout              # check against labels
  *   pnpm test:contest-loadout --visualize  # also write box overlays
- *   pnpm test:contest-loadout --digits     # rebuild digit templates from labels
+ *   pnpm test:contest-loadout --digits     # rebuild param digit templates from labels
  *
  * Badges are labeled as shown, [dot, score, genki, cost, bottom icon?], null
  * when absent.
@@ -32,7 +32,6 @@ import {
   ICON_SIZE,
 } from "../gakumas-tools/utils/imageProcessing/entityClassifier.js";
 import {
-  badgeGlyphs,
   CONTEST_LAYOUT,
   readBadges,
   readLoadoutCards,
@@ -40,9 +39,7 @@ import {
 import {
   addGlyphs,
   BADGE_KEYS,
-  buildBadgeTemplates,
   compareBadges,
-  labeledContestCards,
   loadContestFixture,
   loadImage,
   writeTemplates,
@@ -58,10 +55,6 @@ const PUBLIC = join(REPO_ROOT, "gakumas-tools/public");
 const DIGITS_PATH = join(
   REPO_ROOT,
   "gakumas-tools/utils/imageProcessing/contestLoadoutDigits.json",
-);
-const BADGE_DIGITS_PATH = join(
-  REPO_ROOT,
-  "gakumas-tools/utils/imageProcessing/cardBadgeDigits.json",
 );
 const MIN_ICON_ACCURACY = 0.98;
 const MAX_BADGE_MISREAD_RATE = 0.005;
@@ -167,14 +160,6 @@ async function buildDigitTemplates(fixture) {
   writeTemplates(sums, DIGITS_PATH);
 }
 
-async function badgeSamples(fixture) {
-  const samples = [];
-  for await (const { image, box, label } of labeledContestCards(fixture)) {
-    samples.push({ glyphs: badgeGlyphs(image, box, CONTEST_LAYOUT), label });
-  }
-  return samples;
-}
-
 function planOf(params, pItemIds, skillCardIdGroups) {
   return new IdolConfig({ params, pItemIds, skillCardIdGroups }).plan;
 }
@@ -198,7 +183,8 @@ async function main() {
   const fixture = loadContestFixture();
   if (DIGITS) {
     await buildDigitTemplates(fixture);
-    await buildBadgeTemplates(await badgeSamples(fixture), BADGE_DIGITS_PATH);
+    // Card badge templates also need the memory screens' labels.
+    console.log("Card badge templates: pnpm test:memory --digits");
     return;
   }
 

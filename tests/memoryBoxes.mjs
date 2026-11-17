@@ -30,6 +30,7 @@
  * Usage:
  *   pnpm test:memory              # compare; non-zero exit on a new or fixed miss
  *   pnpm test:memory --visualize  # also write overlays to tests/overlays/memory/
+ *   pnpm test:memory --digits     # rebuild card badge digit templates (with contest labels)
  *
  * Tesseract auto-downloads its English language model on first run; the
  * harness directs that download into tests/.tesseract-cache/ (gitignored)
@@ -54,15 +55,30 @@ import {
 import {
   MEMORY_LAYOUT,
   readBadges,
+  badgeGlyphs,
+  CONTEST_LAYOUT,
   readCustomizations,
 } from "../gakumas-tools/utils/imageProcessing/cardBadges.js";
 import { calculateContestPower } from "../gakumas-tools/utils/contestPower.js";
-import { closestIcon, compareBadges } from "./badges.mjs";
+import {
+  buildBadgeTemplates,
+  closestIcon,
+  compareBadges,
+  labeledContestCards,
+  loadContestFixture,
+} from "./badges.mjs";
 import { predictBadges } from "../gakumas-tools/utils/inferCustomizations.js";
 
 const HARNESS_DIR = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(HARNESS_DIR, "..");
 const FIXTURE_PATH = join(HARNESS_DIR, "memoryBoxes.jsonl");
+const BADGE_DIGITS_PATH = join(
+  REPO_ROOT,
+  "gakumas-tools/utils/imageProcessing/cardBadgeDigits.json",
+);
+// The badge digit templates come from both the contest loadouts' and these
+// memories' labels: only memory screens show some dark score digits (3, 7).
+const DIGITS = process.argv.includes("--digits");
 const OVERLAY_DIR = join(HARNESS_DIR, "overlays", "memory");
 const TESSERACT_CACHE = join(HARNESS_DIR, ".tesseract-cache");
 const PUBLIC = join(REPO_ROOT, "gakumas-tools/public");
@@ -81,21 +97,6 @@ const KNOWN = new Set([
   // (params, P-items and cards all right), so a data value or the formula is off. Cause not found yet.
   "power: tests/fixtures/memory/account/m15.webp expected 5364 got 5385",
   "power: tests/fixtures/memory/account/m32.webp expected 1683 got 1794",
-  // The memory screen's dark top-left digits: 7 reads as 2, and 27/13 misread.
-  "badge: tests/fixtures/memory/account/m01.webp #5 score read 2 shown 7",
-  "badge: tests/fixtures/memory/account/m02.webp #1 score read 2 shown 7",
-  "badge: tests/fixtures/memory/account/m06.webp #1 score read 2 shown 7",
-  "badge: tests/fixtures/memory/account/m07.webp #5 score read 2 shown 7",
-  "badge: tests/fixtures/memory/account/m09.webp #1 score read 2 shown 7",
-  "badge: tests/fixtures/memory/account/m10.webp #1 score read 22 shown 27",
-  "badge: tests/fixtures/memory/account/m10.webp #3 score read 15 shown 13",
-  "badge: tests/fixtures/memory/account/m11.webp #0 score read 2 shown 7",
-  "badge: tests/fixtures/memory/account/m12.webp #0 score read 2 shown 7",
-  "badge: tests/fixtures/memory/account/m13.webp #0 score read 2 shown 7",
-  "badge: tests/fixtures/memory/account/m15.webp #2 score read 2 shown 7",
-  "badge: tests/fixtures/memory/account/m17.webp #1 score read 2 shown 7",
-  "badge: tests/fixtures/memory/account/m24.webp #1 score read 2 shown 7",
-  "badge: tests/fixtures/memory/account/m29.webp #0 score read 2 shown 7",
   // Bottom icons of uncustomized cards. "data null": the predictor gives no icon where
   // the card shows one (conditional lines); the rest are reader or predictor misses, not sorted yet.
   "badge: tests/fixtures/memory/account/m01.webp #1 bottom icon read goodImpression data strength",
@@ -361,6 +362,7 @@ async function main() {
     power: [0, 0],
   };
 
+  const badgeSamples = [];
   for (const entry of fixture) {
     const absPath = join(REPO_ROOT, entry.file);
     const image = await loadImage(absPath);
@@ -427,6 +429,11 @@ async function main() {
     );
     (entry.badges || []).forEach((label, i) => {
       if (!label || skillCards[i] !== entry.skillCards[i]) return;
+      if (DIGITS) {
+        const glyphs = badgeGlyphs(imageData, detection.skillCardBoxes[i], MEMORY_LAYOUT);
+        badgeSamples.push({ glyphs, label });
+        return;
+      }
       tally.badges[1]++;
       const read = readBadges(imageData, detection.skillCardBoxes[i], MEMORY_LAYOUT);
       const { misread, unread, inconsistent, iconRight } = compareBadges(`#${i}`, skillCards[i], read, label);
@@ -457,6 +464,13 @@ async function main() {
   }
 
   await ocrWorker.terminate();
+  if (DIGITS) {
+    for await (const { image, box, label } of labeledContestCards(loadContestFixture())) {
+      badgeSamples.push({ glyphs: badgeGlyphs(image, box, CONTEST_LAYOUT), label });
+    }
+    buildBadgeTemplates(badgeSamples, BADGE_DIGITS_PATH);
+    return;
+  }
 
   const newMisses = misses.filter((m) => !KNOWN.has(m));
   const fixed = [...KNOWN].filter((m) => !misses.includes(m));
