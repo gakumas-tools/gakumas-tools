@@ -1,3 +1,4 @@
+import { PItems } from "gakumas-data";
 import {
   DEBUFF_FIELDS,
   EOT_DECREMENT_FIELDS,
@@ -33,7 +34,13 @@ const BUFF_TYPES = [
   { action: "setFullPowerChargeBuff", field: S.fullPowerChargeBuffs },
   { action: "setFullPowerEffectBuff", field: S.fullPowerEffectBuffs },
   { action: "setStrengthEffectBuff", field: S.strengthEffectBuffs },
+  // 手札減少: draw this many fewer cards at the start of each turn it lasts.
+  // UNVERIFIED: not yet checked against a capture.
+  { action: "setHandDecrease", field: S.handDecreases },
 ];
+
+// Debuffs kept as buff lists; each entry counts as one debuff.
+const DEBUFF_LIST_FIELDS = [S.scoreDebuffs, S.handDecreases];
 
 export default class BuffManager extends EngineComponent {
   constructor(engine) {
@@ -63,6 +70,10 @@ export default class BuffManager extends EngineComponent {
           (acc, buff) => acc + buff.amount,
           1,
         ),
+      // UNVERIFIED: our reading of 低下状態の数 (each active debuff counter,
+      // plus each score-debuff and hand-decrease entry); not checked against
+      // a capture.
+      countDebuffs: (state) => this.countDebuffs(state),
     };
 
     this.specialActions = {
@@ -78,6 +89,8 @@ export default class BuffManager extends EngineComponent {
           state[S.fullPowerCharge] - parseInt(amount, 10),
         );
       },
+      incrementPIdolPItemLimit: (state, amount = 1) =>
+        this.incrementPIdolPItemLimit(state, parseInt(amount, 10)),
     };
 
     // Generate buff methods and special actions
@@ -107,6 +120,12 @@ export default class BuffManager extends EngineComponent {
     state[S.doubleCardEffectCards] = 0;
     state[S.noActiveTurns] = 0;
     state[S.noMentalTurns] = 0;
+    state[S.noGoodConditionTurnsTurns] = 0;
+    state[S.noConcentrationTurns] = 0;
+    state[S.noGoodImpressionTurnsTurns] = 0;
+    state[S.noMotivationTurns] = 0;
+    state[S.noStrengthTurns] = 0;
+    state[S.noFullPowerChargeTurns] = 0;
     state[S.noCardUseTurns] = 0;
     state[S.poorConditionTurns] = 0;
     state[S.uneaseTurns] = 0;
@@ -129,6 +148,7 @@ export default class BuffManager extends EngineComponent {
     state[S.fullPowerChargeBuffs] = [];
     state[S.fullPowerEffectBuffs] = [];
     state[S.strengthEffectBuffs] = [];
+    state[S.handDecreases] = [];
 
     // Sense
     state[S.goodConditionTurns] = 0;
@@ -307,4 +327,42 @@ export default class BuffManager extends EngineComponent {
     state[S.prevStance] = state[S.stance];
     state[S.stance] = "none";
   }
+
+  countDebuffs(state) {
+    let count = 0;
+    for (let i = 0; i < DEBUFF_FIELDS.length; i++) {
+      if (state[DEBUFF_FIELDS[i]] > 0) count++;
+    }
+    for (let i = 0; i < DEBUFF_LIST_FIELDS.length; i++) {
+      count += state[DEBUFF_LIST_FIELDS[i]].length;
+    }
+    return count;
+  }
+
+  getHandDecrease(state) {
+    return state[S.handDecreases].reduce((acc, buff) => acc + buff.amount, 0);
+  }
+
+  // Raises the use limit of the P-idol's own p-item (the one that comes with
+  // the P-idol card), including one already used up.
+  // UNVERIFIED: not yet checked against a capture.
+  incrementPIdolPItemLimit(state, amount) {
+    for (let i = 0; i < state[S.effects].length; i++) {
+      const effect = state[S.effects][i];
+      if (!isPIdolPItemEffect(effect)) continue;
+      // Effects are shared between cloned states; replace, don't mutate.
+      state[S.effects][i] = { ...effect, limit: effect.limit + amount };
+      this.logger.log(state, "incrementPIdolPItemLimit", {
+        type: "pItem",
+        id: effect.source.id,
+        amount,
+      });
+    }
+  }
+}
+
+export function isPIdolPItemEffect(effect) {
+  if (effect?.limit == null) return false;
+  if (effect.source?.type !== "pItem" || !effect.source.primary) return false;
+  return PItems.getById(effect.source.id)?.sourceType === "pIdol";
 }

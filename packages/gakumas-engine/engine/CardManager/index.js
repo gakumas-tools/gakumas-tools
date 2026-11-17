@@ -5,6 +5,18 @@ import { getBaseId, getRand, shallowCopy, shuffle } from "../../utils";
 import { getTargetRuleCards } from "./targeting";
 import { normalizeEffect } from "../../normalizeEffect";
 
+// Debuffs that block every card with one effect (好調効果のスキルカード使用不可
+// and the like). UNVERIFIED: which effect each one blocks is not yet checked
+// against a capture.
+const NO_EFFECT_CARD_DEBUFFS = [
+  { field: S.noGoodConditionTurnsTurns, effect: "goodConditionTurns" },
+  { field: S.noConcentrationTurns, effect: "concentration" },
+  { field: S.noGoodImpressionTurnsTurns, effect: "goodImpressionTurns" },
+  { field: S.noMotivationTurns, effect: "motivation" },
+  { field: S.noStrengthTurns, effect: "strength" },
+  { field: S.noFullPowerChargeTurns, effect: "fullPowerCharge" },
+];
+
 const PATCHABLE_FIELDS = [
   "phase",
   "filter",
@@ -151,6 +163,8 @@ export default class CardManager extends EngineComponent {
         this.addCardToTopOfDeck(state, cardId),
       addCardToDeck: (state, cardId) => this.addCardToDeck(state, cardId),
       addCardToHand: (state, cardId) => this.addCardToHand(state, cardId),
+      addCardToDiscarded: (state, cardId) =>
+        this.addCardToDiscarded(state, cardId),
       moveCardToTopOfDeck: (state, cardId, exact) =>
         this.moveCardToTopOfDeck(state, cardId, parseInt(exact, 10)),
       moveCardToHand: (state, cardId, exact) =>
@@ -195,6 +209,8 @@ export default class CardManager extends EngineComponent {
         ),
       moveAllToTopOfDeck: (state, targetRule) =>
         this.moveAllToTopOfDeckByTarget(state, targetRule),
+      moveAllToBottomOfDeck: (state, targetRule) =>
+        this.moveAllToBottomOfDeckByTarget(state, targetRule),
       moveAllToDeck: (state, targetRule) =>
         this.moveToDeckByTarget(state, targetRule),
       holdRandom: (state, targetRule, num = 1) =>
@@ -211,6 +227,21 @@ export default class CardManager extends EngineComponent {
         this.useAllCardsFree(state, targetRule),
       removeRandom: (state, targetRule) =>
         this.removeCardByTarget(state, targetRule),
+      removeAll: (state, targetRule) =>
+        this.removeAllCardsByTarget(state, targetRule),
+      copySelectedToBottomOfDeck: (state, targetRule, num = 1) =>
+        this.copySelectedToBottomOfDeckByTarget(
+          state,
+          targetRule,
+          parseInt(num, 10),
+        ),
+      copySelectedToBottomOfDeckUpto: (state, targetRule, num = 1) =>
+        this.copySelectedToBottomOfDeckByTarget(
+          state,
+          targetRule,
+          parseInt(num, 10),
+          true,
+        ),
 
       // Legacy action aliases (keep for backward-compat during migration).
       moveToHand: (state, targetRule, num = 1) =>
@@ -475,6 +506,12 @@ export default class CardManager extends EngineComponent {
     if (state[S.noCardUseTurns]) return false;
     if (state[S.noActiveTurns] && skillCard.type == "active") return false;
     if (state[S.noMentalTurns] && skillCard.type == "mental") return false;
+    for (let i = 0; i < NO_EFFECT_CARD_DEBUFFS.length; i++) {
+      const { field, effect } = NO_EFFECT_CARD_DEBUFFS[i];
+      if (state[field] && this.getCardEffects(state, card).has(effect)) {
+        return false;
+      }
+    }
 
     const conditions = this.getConditions(state, card);
     for (let i = 0; i < conditions.length; i++) {
@@ -843,6 +880,20 @@ export default class CardManager extends EngineComponent {
     });
   }
 
+  addCardToDiscarded(state, cardId) {
+    const skillCard = SkillCards.getById(cardId);
+
+    state[S.cardMap].push({
+      id: skillCard.id,
+      baseId: getBaseId(skillCard),
+    });
+    state[S.discardedCards].push(state[S.cardMap].length - 1);
+    this.logger.log(state, "addCardToDiscarded", {
+      type: "skillCard",
+      id: skillCard.id,
+    });
+  }
+
   moveCardToHand(state, cardId, exact) {
     if (state[S.handCards].length >= 5) return;
 
@@ -1155,6 +1206,26 @@ export default class CardManager extends EngineComponent {
     });
   }
 
+  // UNVERIFIED: which piles 全て除外 reaches is not yet checked against a
+  // capture.
+  removeAllCardsByTarget(state, targetRule) {
+    const targetCards = this.getTargetRuleCards(state, targetRule, null);
+    const piles = [S.deckCards, S.discardedCards, S.handCards];
+    for (const pile of piles) {
+      // Walk backwards so splicing keeps the remaining indices valid.
+      for (let i = state[pile].length - 1; i >= 0; i--) {
+        const cardIdx = state[pile][i];
+        if (!targetCards.has(cardIdx)) continue;
+        state[pile].splice(i, 1);
+        state[S.removedCards].push(cardIdx);
+        this.logger.log(state, "removeCard", {
+          type: "skillCard",
+          id: state[S.cardMap][cardIdx].id,
+        });
+      }
+    }
+  }
+
   moveAllToHandByTarget(state, targetRule) {
     const targetCards = this.getTargetRuleCards(state, targetRule, null);
     const piles = [S.deckCards, S.discardedCards, S.removedCards];
@@ -1203,6 +1274,61 @@ export default class CardManager extends EngineComponent {
       this.logger.log(state, "moveCardToTopOfDeck", {
         type: "skillCard",
         id: state[S.cardMap][pick.cardIdx].id,
+      });
+    }
+  }
+
+  // The bottom of the deck is index 0 (cards are drawn from the end).
+  // UNVERIFIED: which piles this reaches, and the order the cards end up
+  // in, are not yet checked against a capture.
+  moveAllToBottomOfDeckByTarget(state, targetRule) {
+    const targetCards = this.getTargetRuleCards(state, targetRule, null);
+    const piles = [S.handCards, S.deckCards, S.discardedCards, S.removedCards];
+    // Take every match out first, then put them under the deck, so moving
+    // one card never shifts the deck index of another.
+    const moved = [];
+    for (const pile of piles) {
+      const kept = [];
+      for (const cardIdx of state[pile]) {
+        (targetCards.has(cardIdx) ? moved : kept).push(cardIdx);
+      }
+      state[pile] = kept;
+    }
+    if (!moved.length) return;
+    state[S.deckCards] = moved.concat(state[S.deckCards]);
+    for (const cardIdx of moved) {
+      state[S.movedCard] = cardIdx;
+      this.logger.log(state, "moveCardToBottomOfDeck", {
+        type: "skillCard",
+        id: state[S.cardMap][cardIdx].id,
+      });
+    }
+  }
+
+  // Copies keep the original's growth and customizations.
+  // UNVERIFIED: not yet checked against a capture.
+  copySelectedToBottomOfDeckByTarget(state, targetRule, num = 1, optional = false) {
+    if (state[S.nullifySelect]) return;
+
+    const targetCards = this.getTargetRuleCards(state, targetRule, null);
+    const cards = Array.from(targetCards);
+    if (!cards.length) return;
+
+    const selectedIndices = this.engine.strategy.pickCardsToCopy(
+      state,
+      cards,
+      Math.min(num, cards.length),
+      optional,
+    );
+
+    for (const selectedIndex of selectedIndices) {
+      const original = state[S.cardMap][cards[selectedIndex]];
+      if (original == null) continue;
+      state[S.cardMap].push({ ...original });
+      state[S.deckCards].unshift(state[S.cardMap].length - 1);
+      this.logger.log(state, "addCardToBottomOfDeck", {
+        type: "skillCard",
+        id: original.id,
       });
     }
   }

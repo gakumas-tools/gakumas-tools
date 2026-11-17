@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { SkillCards } from "gakumas-data";
+import { PDrinks, SkillCards } from "gakumas-data";
 import { IdolConfig, StageEngine, S, G } from "gakumas-engine";
 import { hasIngameFixtures, loadIngameFixture } from "./ingameFixtures.mjs";
 
@@ -24,6 +24,8 @@ const FIXTURES = [
   "training-exam-concentration",
   "training-lesson-sense",
   "training-lesson-logic",
+  "produce-exam-impression",
+  "produce-exam-good-condition",
 ];
 
 function getTypeMultipliers(capture) {
@@ -157,6 +159,11 @@ function replay(capture, play) {
       holds++;
       heldCard = held;
     });
+    for (const drink of action.drinksBefore ?? []) {
+      const pDrink = PDrinks.getById(drink.id);
+      assert.equal(pDrink.name, drink.name);
+      engine.effectManager.triggerEffects(state, pDrink.actions);
+    }
     assert.ok(engine.isCardUsable(state, card), `turn ${turn}: usable`);
     state = engine.useCard(state, card);
 

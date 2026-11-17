@@ -4,6 +4,7 @@ import {
   CONTEST_LAYOUT,
   readBadge,
   readBadges,
+  readLoadoutCards,
 } from "../../../../../gakumas-tools/utils/imageProcessing/cardBadges.js";
 import { detectLoadoutBoxes } from "../../../../../gakumas-tools/utils/imageProcessing/contestLoadoutGeometry.js";
 import { loadImage } from "../../../../badges.mjs";
@@ -35,4 +36,40 @@ test("a number with an unrecognized digit is unread", () => {
   assert.equal(readBadge([one, two], templates), 12);
   assert.equal(readBadge([one, unknown, two], templates), undefined);
   assert.equal(readBadge([unknown, one], templates, true), undefined);
+});
+
+test("a customization badge distinguishes an upgraded card from its base art", async () => {
+  const image = await loadImage(
+    new URL("../../../../fixtures/contest_loadout/45.webp", import.meta.url)
+      .pathname,
+  );
+  const { mainBoxes, subBoxes } = detectLoadoutBoxes(image);
+  const { skillCardIdGroups } = readLoadoutCards(
+    image,
+    [mainBoxes, subBoxes],
+    [
+      [796, 117, 752, 762, 162, 599],
+      [489, 620, 705, 709, 752, 168],
+    ],
+  );
+  assert.equal(skillCardIdGroups[1][1], 621);
+  assert.equal(skillCardIdGroups[0][4], 162);
+});
+
+test("a two-digit genki badge with a narrow colored background reads", async () => {
+  const image = await loadImage(
+    new URL("../../../../fixtures/contest_loadout/10.webp", import.meta.url)
+      .pathname,
+  );
+  const { mainBoxes } = detectLoadoutBoxes(image);
+  assert.equal(readBadges(image, mainBoxes[0], CONTEST_LAYOUT).genki, 10);
+});
+
+test("blue card art without a genki number stays empty", async () => {
+  const image = await loadImage(
+    new URL("../../../../fixtures/contest_loadout/40.jpg", import.meta.url)
+      .pathname,
+  );
+  const { subBoxes } = detectLoadoutBoxes(image);
+  assert.equal(readBadges(image, subBoxes[0], CONTEST_LAYOUT).genki, null);
 });

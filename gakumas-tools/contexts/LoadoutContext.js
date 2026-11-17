@@ -20,6 +20,7 @@ import LoadoutUrlContext from "@/contexts/LoadoutUrlContext";
 import WorkspaceContext from "@/contexts/WorkspaceContext";
 import {
   getMemorySlotCustomizations,
+  getMemorySlotSkillCardIds,
   setMemorySlot,
 } from "@/utils/memorySlots";
 import { synchronizeLinkLoadouts } from "@/utils/linkLoadouts";
@@ -45,11 +46,16 @@ export function LoadoutContextProvider({ children }) {
   const [supportBonus, setSupportBonus] = useState(initialLoadout.supportBonus);
   const [params, setParams] = useState(initialLoadout.params);
   const [pItemIds, setPItemIds] = useState(initialLoadout.pItemIds);
-  const [skillCardIdGroups, setSkillCardIdGroups] = useState(
-    initialLoadout.skillCardIdGroups
+  const [skillCardIdGroups, setSkillCardIdGroups] = useState(() =>
+    initialLoadout.skillCardIdGroups.map((skillCardIds) =>
+      getMemorySlotSkillCardIds({ skillCardIds }),
+    ),
   );
-  const [customizationGroups, setCustomizationGroups] = useState(
-    initialLoadout.customizationGroups
+  const [customizationGroups, setCustomizationGroups] = useState(() =>
+    fixCustomizationGroups(
+      skillCardIdGroups,
+      initialLoadout.customizationGroups,
+    ),
   );
 
   const stage = getStage(stageId, customStage);
@@ -107,12 +113,12 @@ export function LoadoutContextProvider({ children }) {
     setMemorySlots([null, null]);
     setParams(loadout.params);
     setPItemIds(loadout.pItemIds);
-    setSkillCardIdGroups(loadout.skillCardIdGroups);
+    const groups = loadout.skillCardIdGroups.map((skillCardIds) =>
+      getMemorySlotSkillCardIds({ skillCardIds }),
+    );
+    setSkillCardIdGroups(groups);
     setCustomizationGroups(
-      fixCustomizationGroups(
-        loadout.skillCardIdGroups,
-        loadout.customizationGroups
-      )
+      fixCustomizationGroups(groups, loadout.customizationGroups),
     );
   }, []);
 
@@ -321,7 +327,7 @@ export function LoadoutContextProvider({ children }) {
     }
     setSkillCardIdGroups((cur) => {
       const next = [...cur];
-      next[index] = memory.skillCardIds;
+      next[index] = getMemorySlotSkillCardIds(memory);
       return next;
     });
     setCustomizationGroups((cur) => {

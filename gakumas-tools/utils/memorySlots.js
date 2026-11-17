@@ -9,6 +9,10 @@ export function getFilledSkillCardSlots(skillCardIds) {
     .filter(({ skillCard }) => skillCard);
 }
 
+export function getMemorySlotSkillCardIds(memory) {
+  return Array.from({ length: 6 }, (_, i) => memory.skillCardIds?.[i] || 0);
+}
+
 export function setMemorySlot(
   { params, slots },
   index,

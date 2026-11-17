@@ -38,3 +38,31 @@ test("other recommended effects keep their event decks", () => {
   assert.equal(config.idol.recommendedEffect, "goodConditionTurns");
   assert.deepEqual(config.defaultCardIds, [15, 15, 5, 1, 1, 3, 13, 13]);
 });
+
+test("an Idol Road stage is resolved for the loadout's P-idol", () => {
+  // 182 is the signature card of p-idol 1 (sense). The stage is a stand-in
+  // made from contest stage 1; no Idol Road row exists yet.
+  const idol = new IdolConfig({
+    params: [1000, 1000, 1000, 40],
+    supportBonus: 0,
+    pItemIds: [],
+    skillCardIdGroups: [[182]],
+    customizationGroups: [[]],
+  });
+  const stage = new StageConfig({
+    ...Stages.getById(1),
+    id: 900,
+    type: "idolRoad",
+    plan: "free",
+  });
+  const config = new IdolStageConfig(idol, stage);
+  assert.equal(config.stage.type, "idolRoad");
+  assert.equal(config.stage.id, 900);
+  assert.equal(config.stage.plan, "sense");
+  assert.equal(config.stage.turnCount, stage.turnCount);
+  assert.equal(stage.plan, "free");
+
+  const engine = new StageEngine(config);
+  engine.logger.disable();
+  assert.doesNotThrow(() => engine.getInitialState());
+});

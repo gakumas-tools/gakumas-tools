@@ -27,6 +27,10 @@ export default function StageSelectModal() {
     { value: "contest", label: t("contest") },
     { value: "linkContest", label: t("linkContest") },
     { value: "event", label: t("event") },
+    // Shown once stages.csv has an Idol Road row.
+    ...(stagesByType.idolRoad
+      ? [{ value: "idolRoad", label: t("idolRoad") }]
+      : []),
     { value: "custom", label: t("custom") },
   ];
 

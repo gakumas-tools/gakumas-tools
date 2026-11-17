@@ -47,6 +47,12 @@ export const BALANCE_BY_IDOL = {
   14: "flat",
 };
 
+// An idol needs both a param order and a balance before the calculator can
+// offer her; a new idol stays out until hers are read from the game.
+export function hasNiaData(idolId) {
+  return idolId in PARAM_ORDER_BY_IDOL && idolId in BALANCE_BY_IDOL;
+}
+
 export const PARAM_REGIMES_BY_DIFF_STAGE_BALANCE_ORDER = {
   pro: {
     melobang: {

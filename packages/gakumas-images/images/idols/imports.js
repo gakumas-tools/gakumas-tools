@@ -12,6 +12,7 @@ import image_11 from "./11.png";
 import image_12 from "./12.png";
 import image_13 from "./13.png";
 import image_14 from "./14.png";
+import image_15 from "./15.png";
 
 const IMAGES = {
   '1': image_1,
@@ -28,6 +29,7 @@ const IMAGES = {
   '12': image_12,
   '13': image_13,
   '14': image_14,
+  '15': image_15,
 };
 
 export default IMAGES;

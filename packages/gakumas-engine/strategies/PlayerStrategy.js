@@ -34,6 +34,10 @@ export default class PlayerStrategy {
     return this.pickCardsToHold(state, cards, num, optional);
   }
 
+  pickCardsToCopy(state, cards, num = 1, optional = false) {
+    return this.pickCardsToHold(state, cards, num, optional);
+  }
+
   pickCardsToUseFree(state, cards, num = 1) {
     return this.pickCardsToHold(state, cards, num);
   }
