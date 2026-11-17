@@ -31,6 +31,8 @@
  *   pnpm test:memory              # compare; non-zero exit on a new or fixed miss
  *   pnpm test:memory --visualize  # also write overlays to tests/overlays/memory/
  *   pnpm test:memory --digits     # rebuild card badge digit templates (with contest labels)
+ *   pnpm test:memory --icons      # rebuild bottom effect icon templates (with art and contest
+ *                                 # labels), and check them leaving each screen out
  *
  * Tesseract auto-downloads its English language model on first run; the
  * harness directs that download into tests/.tesseract-cache/ (gitignored)
@@ -67,6 +69,7 @@ import {
   labeledContestCards,
   loadContestFixture,
 } from "./badges.mjs";
+import { buildIconTemplates, iconSample } from "./effectIconTemplates.mjs";
 import { predictBadges } from "../gakumas-tools/utils/inferCustomizations.js";
 
 const HARNESS_DIR = dirname(fileURLToPath(import.meta.url));
@@ -79,6 +82,7 @@ const BADGE_DIGITS_PATH = join(
 // The badge digit templates come from both the contest loadouts' and these
 // memories' labels: only memory screens show some dark score digits (3, 7).
 const DIGITS = process.argv.includes("--digits");
+const ICONS = process.argv.includes("--icons");
 const OVERLAY_DIR = join(HARNESS_DIR, "overlays", "memory");
 const TESSERACT_CACHE = join(HARNESS_DIR, ".tesseract-cache");
 const PUBLIC = join(REPO_ROOT, "gakumas-tools/public");
@@ -97,34 +101,10 @@ const KNOWN = new Set([
   // (params, P-items and cards all right), so a data value or the formula is off. Cause not found yet.
   "power: tests/fixtures/memory/account/m15.webp expected 5364 got 5385",
   "power: tests/fixtures/memory/account/m32.webp expected 1683 got 1794",
-  // Bottom icons of uncustomized cards. Each was checked against the screen and the card's
-  // gk-img art: the data's icon is the one shown, so these are the reader's misses. Where
-  // the data says null the card shows no icon, and the reader sees one in the frame.
-  "badge: tests/fixtures/memory/account/m01.webp #1 bottom icon read goodImpression data strength",
-  "badge: tests/fixtures/memory/account/m01.webp #4 bottom icon read deck data null",
-  "badge: tests/fixtures/memory/account/m02.webp #3 bottom icon read deck data null",
-  "badge: tests/fixtures/memory/account/m03.webp #3 bottom icon read deck data null",
-  "badge: tests/fixtures/memory/account/m04.webp #1 bottom icon read draw data delayed",
-  "badge: tests/fixtures/memory/account/m05.webp #2 bottom icon read concentration data scaling",
-  "badge: tests/fixtures/memory/account/m07.webp #1 bottom icon read goodImpression data strength",
-  "badge: tests/fixtures/memory/account/m12.webp #1 bottom icon read perfectCondition data goodCondition",
-  "badge: tests/fixtures/memory/account/m12.webp #4 bottom icon read deck data null",
-  "badge: tests/fixtures/memory/account/m13.webp #1 bottom icon read perfectCondition data goodCondition",
-  "badge: tests/fixtures/memory/account/m14.webp #3 bottom icon read deck data null",
-  "badge: tests/fixtures/memory/account/m15.webp #1 bottom icon read scaling data delayed",
-  "badge: tests/fixtures/memory/account/m16.webp #3 bottom icon read deck data null",
-  "badge: tests/fixtures/memory/account/m17.webp #0 bottom icon read fullPower data goodImpression",
-  "badge: tests/fixtures/memory/account/m17.webp #4 bottom icon read fullPower data goodImpression",
+  // Bottom icons of uncustomized cards, checked against the screen and the card's gk-img
+  // art: the data's icon is the one shown. 練習再開！+'s +1 card (cardUses) is as close to
+  // the draw icon as to its own templates, here and in the contest fixtures.
   "badge: tests/fixtures/memory/account/m18.webp #1 bottom icon read draw data cardUses",
-  "badge: tests/fixtures/memory/account/m21.webp #3 bottom icon read deck data null",
-  "badge: tests/fixtures/memory/account/m22.webp #0 bottom icon read fullPower data goodImpression",
-  "badge: tests/fixtures/memory/account/m23.webp #0 bottom icon read fullPower data goodImpression",
-  "badge: tests/fixtures/memory/account/m23.webp #4 bottom icon read goodCondition data motivation",
-  "badge: tests/fixtures/memory/account/m25.webp #4 bottom icon read fullPower data motivation",
-  "badge: tests/fixtures/memory/account/m27.webp #0 bottom icon read goodImpression data strength",
-  "badge: tests/fixtures/memory/account/m27.webp #1 bottom icon read goodImpression data strength",
-  "badge: tests/fixtures/memory/account/m27.webp #3 bottom icon read deck data strength",
-  "badge: tests/fixtures/memory/account/m29.webp #1 bottom icon read perfectCondition data goodCondition",
 ]);
 
 const args = process.argv.slice(2);
@@ -353,6 +333,7 @@ async function main() {
   };
 
   const badgeSamples = [];
+  const iconSamples = [];
   for (const entry of fixture) {
     const absPath = join(REPO_ROOT, entry.file);
     const image = await loadImage(absPath);
@@ -424,6 +405,13 @@ async function main() {
         badgeSamples.push({ glyphs, label });
         return;
       }
+      if (ICONS) {
+        if (label[0] === 0) {
+          const box = detection.skillCardBoxes[i];
+          iconSamples.push(iconSample(imageData, box, MEMORY_LAYOUT.icon, skillCards[i], entry.file));
+        }
+        return;
+      }
       tally.badges[1]++;
       const read = readBadges(imageData, detection.skillCardBoxes[i], MEMORY_LAYOUT);
       const { misread, unread, inconsistent, iconRight } = compareBadges(`#${i}`, skillCards[i], read, label);
@@ -459,6 +447,10 @@ async function main() {
       badgeSamples.push({ glyphs: badgeGlyphs(image, box, CONTEST_LAYOUT), label });
     }
     buildBadgeTemplates(badgeSamples, BADGE_DIGITS_PATH);
+    return;
+  }
+  if (ICONS) {
+    await buildIconTemplates(iconSamples.filter(Boolean));
     return;
   }
 

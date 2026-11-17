@@ -2,12 +2,13 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   CONTEST_LAYOUT,
+  MEMORY_LAYOUT,
   readBadge,
   readBadges,
   readLoadoutCards,
 } from "../../../../../gakumas-tools/utils/imageProcessing/cardBadges.js";
 import { detectLoadoutBoxes } from "../../../../../gakumas-tools/utils/imageProcessing/contestLoadoutGeometry.js";
-import { loadImage } from "../../../../badges.mjs";
+import { closestIcon, loadImage } from "../../../../badges.mjs";
 
 async function costs(file, cards) {
   const image = await loadImage(
@@ -72,4 +73,24 @@ test("blue card art without a genki number stays empty", async () => {
   );
   const { subBoxes } = detectLoadoutBoxes(image);
   assert.equal(readBadges(image, subBoxes[0], CONTEST_LAYOUT).genki, null);
+});
+
+// Cards on the account's memory screens (1080x2424): the bottom-left card of
+// the second row, and the first card of the first row.
+async function memoryIcon(file, box) {
+  const image = await loadImage(
+    new URL(`../../../../fixtures/memory/account/${file}`, import.meta.url)
+      .pathname,
+  );
+  return closestIcon(readBadges(image, box, MEMORY_LAYOUT).icon);
+}
+
+test("a basic card's orange corner is not read as an icon", async () => {
+  const box = { x: 78.39, y: 1861.79, width: 215.76, height: 215.76 };
+  assert.equal(await memoryIcon("m01.webp", box), null);
+});
+
+test("好印象 at memory scale reads as goodImpression, not fullPower", async () => {
+  const box = { x: 78.39, y: 1587.74, width: 215.76, height: 215.76 };
+  assert.equal(await memoryIcon("m17.webp", box), "goodImpression");
 });

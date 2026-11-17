@@ -113,8 +113,10 @@ for (let y = 0; y < ICON_GRID; y++) {
   }
 }
 
+// Memory screens place the icon up to 3 cells off where the diamond search
+// centers it, so a template may sit that far up or down.
 const SHIFTS = [];
-for (let sy = -2; sy <= 2; sy++) {
+for (let sy = -3; sy <= 3; sy++) {
   for (let sx = -1; sx <= 1; sx++) {
     SHIFTS.push(INNER.map((i) => i + sy * ICON_GRID + sx));
   }
@@ -149,7 +151,19 @@ function iconDistances(colors) {
   return distances;
 }
 
+// Every effect icon has a white glyph on its diamond. A card with no icon can
+// still show a diamond of plain frame color (the basic cards' orange corner),
+// which has none.
+const MIN_GLYPH = 0.01;
+
+export function hasGlyph(colors) {
+  const white = INNER.filter((i) => colors[i] === WHITE).length;
+  return white / INNER.length >= MIN_GLYPH;
+}
+
 export function readBottomIcon(imageData, box, layout) {
   const icon = findBottomIcon(imageData, box, layout);
-  return icon && iconDistances(iconColors(imageData, icon));
+  if (!icon) return null;
+  const colors = iconColors(imageData, icon);
+  return hasGlyph(colors) ? iconDistances(colors) : null;
 }
