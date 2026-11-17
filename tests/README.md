@@ -23,7 +23,7 @@ node --loader ./scripts/extensionless-loader.mjs --test tests/unit/<path>.test.m
 
 `tests/unit/` mirrors the source tree, one file per module, without the `packages/` prefix: `gakumas-tools/utils/simulator.js` is tested in `tests/unit/gakumas-tools/utils/simulator.test.mjs`, `packages/gakumas-engine/engine/Executor/index.js` in `tests/unit/gakumas-engine/engine/Executor.test.mjs`. Add a test to the file of the module it exercises; create a file only for a module that has none. `layout.test.mjs` fails on a file that doesn't match a source module. Engine tests build their engine with `tests/unit/gakumas-engine/helpers.mjs`.
 
-Fixture harnesses (`test:draft`, `test:memory`, `test:contest-loadout`, `test:rehearsal`, `test:regression`) take their mode as a flag, e.g. `pnpm test:draft --update`.
+Fixture harnesses (`test:draft`, `test:memory`, `test:contest-loadout`, `test:rehearsal`, `test:regression`) take their mode as a flag, e.g. `pnpm test:draft --update`. `test:memory` has no `--update`: its fixture is hand labels from the screens, and every miss it allows is listed in KNOWN in `tests/memoryBoxes.mjs`.
 
 ### Correctness
 

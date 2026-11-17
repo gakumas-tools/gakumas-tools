@@ -8,18 +8,34 @@
  *   3. Compute p-item / skill-card boxes with the same geometry the browser
  *      uses (`memoryGeometry.js`).
  *   4. Crop each box, run the matching ONNX classifier, collect IDs.
- *   5. Compare IDs + parsed stat params against the pinned baseline.
+ *   5. Compare against hand labels (memoryBoxes.jsonl): params, P-items,
+ *      cards, card badges, the P-idol, each card's cost kind, and the game's
+ *      displayed total, recomputed from what was read.
+ *
+ * The labels were made by hand from the screens, not from the importer's
+ * output, so there is no --update. Every miss must be listed in KNOWN: the
+ * harness fails on a miss that isn't, and on a listed miss that no longer
+ * happens. Entries with `rejects` are screens that aren't a memory's stage
+ * loadout (the プロデュース tab), which the import must refuse.
+ *
+ * Labels: badges per card are [customization dot, top-left number, genki
+ * shield, cost]; costKinds per card are "normal" (green heart), "hp" (red
+ * heart) or "other" (a plain number); power is the total shown over the
+ * memory's art.
+ *
+ * tests/fixtures/memory/account holds the account's 32 memories (ステージ tab,
+ * phone 1080x2424, 2026-11-17, WebP q90). Card names are printed under each
+ * card; every label was checked against its screen.
  *
  * Usage:
- *   pnpm test:memory              # compare; non-zero exit on mismatch
- *   pnpm test:memory --update     # rewrite the fixture with current outputs
+ *   pnpm test:memory              # compare; non-zero exit on a new or fixed miss
  *   pnpm test:memory --visualize  # also write overlays to tests/overlays/memory/
  *
  * Tesseract auto-downloads its English language model on first run; the
  * harness directs that download into tests/.tesseract-cache/ (gitignored)
  * rather than the repo root.
  */
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, mkdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve, join, basename, parse } from "node:path";
 import sharp from "sharp";
@@ -38,8 +54,11 @@ import {
 import {
   MEMORY_LAYOUT,
   readBadges,
+  readCustomizations,
 } from "../gakumas-tools/utils/imageProcessing/cardBadges.js";
-import { compareBadges } from "./badges.mjs";
+import { calculateContestPower } from "../gakumas-tools/utils/contestPower.js";
+import { closestIcon, compareBadges } from "./badges.mjs";
+import { predictBadges } from "../gakumas-tools/utils/inferCustomizations.js";
 
 const HARNESS_DIR = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(HARNESS_DIR, "..");
@@ -52,9 +71,77 @@ const SKILL_CARD_CLASSES = join(PUBLIC, "skill_card_classes.json");
 const P_ITEM_MODEL = join(PUBLIC, "p_item_model.onnx");
 const P_ITEM_CLASSES = join(PUBLIC, "p_item_classes.json");
 
+// Misses the importer makes today. Each is checked against the screen.
+const KNOWN = new Set([
+  // 03's two cards under the nav pill, and the total that follows from them.
+  "card: tests/fixtures/memory/03.png [4] expected せのびの魔法+ got 希望が届くまで",
+  "card: tests/fixtures/memory/03.png [5] expected 私がスター+ got 開花",
+  "power: tests/fixtures/memory/03.png expected 19776 got 19521",
+  // The game's total differs from contest power recomputed from labels that match the screen
+  // (params, P-items and cards all right), so a data value or the formula is off. Cause not found yet.
+  "power: tests/fixtures/memory/account/m15.webp expected 5364 got 5385",
+  "power: tests/fixtures/memory/account/m32.webp expected 1683 got 1794",
+  // The memory screen's dark top-left digits: 7 reads as 2, and 27/13 misread.
+  "badge: tests/fixtures/memory/account/m01.webp #5 score read 2 shown 7",
+  "badge: tests/fixtures/memory/account/m02.webp #1 score read 2 shown 7",
+  "badge: tests/fixtures/memory/account/m06.webp #1 score read 2 shown 7",
+  "badge: tests/fixtures/memory/account/m07.webp #5 score read 2 shown 7",
+  "badge: tests/fixtures/memory/account/m09.webp #1 score read 2 shown 7",
+  "badge: tests/fixtures/memory/account/m10.webp #1 score read 22 shown 27",
+  "badge: tests/fixtures/memory/account/m10.webp #3 score read 15 shown 13",
+  "badge: tests/fixtures/memory/account/m11.webp #0 score read 2 shown 7",
+  "badge: tests/fixtures/memory/account/m12.webp #0 score read 2 shown 7",
+  "badge: tests/fixtures/memory/account/m13.webp #0 score read 2 shown 7",
+  "badge: tests/fixtures/memory/account/m15.webp #2 score read 2 shown 7",
+  "badge: tests/fixtures/memory/account/m17.webp #1 score read 2 shown 7",
+  "badge: tests/fixtures/memory/account/m24.webp #1 score read 2 shown 7",
+  "badge: tests/fixtures/memory/account/m29.webp #0 score read 2 shown 7",
+  // Bottom icons of uncustomized cards. "data null": the predictor gives no icon where
+  // the card shows one (conditional lines); the rest are reader or predictor misses, not sorted yet.
+  "badge: tests/fixtures/memory/account/m01.webp #1 bottom icon read goodImpression data strength",
+  "badge: tests/fixtures/memory/account/m01.webp #4 bottom icon read deck data null",
+  "badge: tests/fixtures/memory/account/m02.webp #3 bottom icon read deck data null",
+  "badge: tests/fixtures/memory/account/m03.webp #1 bottom icon read scaling data null",
+  "badge: tests/fixtures/memory/account/m03.webp #3 bottom icon read deck data null",
+  "badge: tests/fixtures/memory/account/m04.webp #1 bottom icon read draw data delayed",
+  "badge: tests/fixtures/memory/account/m05.webp #2 bottom icon read concentration data scaling",
+  "badge: tests/fixtures/memory/account/m07.webp #1 bottom icon read goodImpression data strength",
+  "badge: tests/fixtures/memory/account/m10.webp #0 bottom icon read scaling data null",
+  "badge: tests/fixtures/memory/account/m10.webp #3 bottom icon read scaling data null",
+  "badge: tests/fixtures/memory/account/m11.webp #0 bottom icon read scaling data null",
+  "badge: tests/fixtures/memory/account/m11.webp #1 bottom icon read scaling data null",
+  "badge: tests/fixtures/memory/account/m12.webp #0 bottom icon read scaling data null",
+  "badge: tests/fixtures/memory/account/m12.webp #1 bottom icon read perfectCondition data goodCondition",
+  "badge: tests/fixtures/memory/account/m12.webp #4 bottom icon read deck data null",
+  "badge: tests/fixtures/memory/account/m13.webp #0 bottom icon read scaling data null",
+  "badge: tests/fixtures/memory/account/m13.webp #1 bottom icon read perfectCondition data goodCondition",
+  "badge: tests/fixtures/memory/account/m13.webp #2 bottom icon read scaling data null",
+  "badge: tests/fixtures/memory/account/m14.webp #3 bottom icon read deck data null",
+  "badge: tests/fixtures/memory/account/m15.webp #1 bottom icon read scaling data delayed",
+  "badge: tests/fixtures/memory/account/m16.webp #3 bottom icon read deck data null",
+  "badge: tests/fixtures/memory/account/m17.webp #0 bottom icon read fullPower data goodImpression",
+  "badge: tests/fixtures/memory/account/m17.webp #4 bottom icon read fullPower data goodImpression",
+  "badge: tests/fixtures/memory/account/m18.webp #0 bottom icon read scaling data null",
+  "badge: tests/fixtures/memory/account/m18.webp #1 bottom icon read draw data cardUses",
+  "badge: tests/fixtures/memory/account/m19.webp #3 bottom icon read scaling data deck",
+  "badge: tests/fixtures/memory/account/m21.webp #0 bottom icon read scaling data null",
+  "badge: tests/fixtures/memory/account/m21.webp #3 bottom icon read deck data null",
+  "badge: tests/fixtures/memory/account/m22.webp #0 bottom icon read fullPower data goodImpression",
+  "badge: tests/fixtures/memory/account/m23.webp #0 bottom icon read fullPower data goodImpression",
+  "badge: tests/fixtures/memory/account/m23.webp #4 bottom icon read goodCondition data motivation",
+  "badge: tests/fixtures/memory/account/m25.webp #4 bottom icon read fullPower data motivation",
+  "badge: tests/fixtures/memory/account/m27.webp #0 bottom icon read goodImpression data strength",
+  "badge: tests/fixtures/memory/account/m27.webp #1 bottom icon read goodImpression data strength",
+  "badge: tests/fixtures/memory/account/m27.webp #3 bottom icon read deck data strength",
+  "badge: tests/fixtures/memory/account/m29.webp #1 bottom icon read perfectCondition data goodCondition",
+]);
+
 const args = process.argv.slice(2);
-const UPDATE = args.includes("--update");
 const VISUALIZE = args.includes("--visualize");
+
+function arraysEqual(a, b) {
+  return a.length === b.length && a.every((v, i) => v === b[i]);
+}
 
 let _models;
 async function getModels() {
@@ -225,158 +312,170 @@ ${detection.skillCardBoxes.map((b) => rect(b, "red")).join("\n")}
 }
 
 function loadFixture() {
-  let text;
-  try {
-    text = readFileSync(FIXTURE_PATH, "utf8");
-  } catch (err) {
-    if (err.code === "ENOENT") return [];
-    throw err;
-  }
-  return text
+  return readFileSync(FIXTURE_PATH, "utf8")
     .split(/\r?\n/)
     .map((l) => l.trim())
-    .filter((l) => l && !l.startsWith("#"))
+    .filter(Boolean)
     .map((l) => JSON.parse(l));
 }
 
-const FIXTURE_FIELD_ORDER = ["file", "note", "params", "pItems", "skillCards", "badges"];
-
-function writeFixture(entries) {
-  const lines = entries.map((e) => {
-    const ordered = {};
-    for (const k of FIXTURE_FIELD_ORDER) {
-      if (e[k] !== undefined) ordered[k] = e[k];
-    }
-    return JSON.stringify(ordered);
-  });
-  writeFileSync(FIXTURE_PATH, lines.join("\n") + "\n");
+// Cost kinds, as the card's badge shows them: a green heart ("normal": genki
+// first, then stamina), a red heart ("hp": stamina directly), or a plain
+// number ("other": another resource, such as 好印象 turns).
+function costKind(cardId) {
+  const action = (SkillCards.getById(cardId)?.cost || [])
+    .flatMap((line) => line.actions || [])
+    .find((a) => a.op === "-=");
+  if (!action || action.lhs === "cost") return "normal";
+  return action.lhs === "stamina" ? "hp" : "other";
 }
 
-function arraysEqual(a, b) {
-  if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length) return false;
-  for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
-  return true;
+// The P-idol the importer gives the memory, as getMemoryFromFile does: from
+// the first card with one, flagged when the P-items name another.
+function pIdolOf(pItems, skillCards) {
+  const of = (ids, get) =>
+    ids.filter(Boolean).map(get).find((e) => e?.pIdolId)?.pIdolId;
+  return {
+    cards: of(skillCards, SkillCards.getById),
+    items: of(pItems, PItems.getById),
+  };
 }
 
 async function main() {
   const fixture = loadFixture();
-  if (fixture.length === 0) {
-    console.error(
-      `Fixture is empty: ${FIXTURE_PATH}\n` +
-        `Add entries with: pnpm test:memory --update`,
-    );
-    process.exit(2);
-  }
-
   const [{ skillCard, pItem }, ocrWorker] = await Promise.all([
     getModels(),
     getOcrWorker(),
   ]);
 
-  const updated = [];
-  let failed = 0;
+  const misses = [];
+  const miss = (kind, file, text) => misses.push(`${kind}: ${file} ${text}`);
+  const tally = {
+    screens: 0,
+    rejected: 0,
+    params: 0,
+    pItems: [0, 0],
+    cards: [0, 0],
+    badges: [0, 0],
+    unread: 0,
+    power: [0, 0],
+  };
+
   for (const entry of fixture) {
     const absPath = join(REPO_ROOT, entry.file);
-    let image, detection, pItems, skillCards, params;
+    const image = await loadImage(absPath);
+    let detection;
     try {
-      image = await loadImage(absPath);
       detection = await detectMemory(image, ocrWorker);
-      params = detection.params;
-      pItems = await classifyBoxes(image, detection.pItemBoxes, pItem.session, pItem.classes);
-      skillCards = await classifyBoxes(
-        image,
-        detection.skillCardBoxes,
-        skillCard.session,
-        skillCard.classes,
-      );
     } catch (err) {
-      failed++;
-      console.error(`✗ ${entry.file}  threw: ${err.message}`);
-      updated.push(entry);
+      if (entry.rejects) {
+        tally.rejected++;
+        console.log(`✓ ${entry.file}  refused: ${err.message}`);
+      } else {
+        miss("threw", entry.file, err.message);
+      }
       continue;
     }
+    if (entry.rejects) {
+      miss("accepted", entry.file, "read as a memory, but it has no stage loadout");
+      continue;
+    }
+    tally.screens++;
 
-    const hasBaseline =
-      Array.isArray(entry.pItems) &&
-      Array.isArray(entry.skillCards) &&
-      Array.isArray(entry.params);
-    if (!hasBaseline) {
-      failed++;
-      console.error(
-        `? ${entry.file}  (no baseline; rerun with --update to capture)\n` +
-          `    params: [${params.join(", ")}]\n` +
-          `    pItems: [${pItems.map(pItemName).join(", ")}]\n` +
-          `    cards:  [${skillCards.map(cardName).join(", ")}]`,
-      );
-    } else if (
-      arraysEqual(entry.params, params) &&
-      arraysEqual(entry.pItems, pItems) &&
-      arraysEqual(entry.skillCards, skillCards)
-    ) {
-      console.log(
-        `✓ ${entry.file}  params=[${params.join(",")}]  ` +
-          `pItems=[${pItems.map(pItemName).join(", ")}]  ` +
-          `cards=[${skillCards.map(cardName).join(", ")}]`,
-      );
-    } else {
-      failed++;
-      console.error(`✗ ${entry.file}`);
-      if (!arraysEqual(entry.params, params)) {
-        console.error(`    params expected [${entry.params.join(", ")}] got [${params.join(", ")}]`);
+    const { params } = detection;
+    const pItems = await classifyBoxes(image, detection.pItemBoxes, pItem.session, pItem.classes);
+    const skillCards = await classifyBoxes(
+      image,
+      detection.skillCardBoxes,
+      skillCard.session,
+      skillCard.classes,
+    );
+
+    if (arraysEqual(entry.params, params)) tally.params++;
+    else miss("params", entry.file, `expected ${entry.params} got ${params}`);
+    entry.pItems.forEach((id, i) => {
+      tally.pItems[1]++;
+      if (pItems[i] === id) tally.pItems[0]++;
+      else miss("pItem", entry.file, `[${i}] expected ${pItemName(id)} got ${pItemName(pItems[i])}`);
+    });
+    entry.skillCards.forEach((id, i) => {
+      tally.cards[1]++;
+      if (skillCards[i] === id) tally.cards[0]++;
+      else miss("card", entry.file, `[${i}] expected ${cardName(id)} got ${cardName(skillCards[i])}`);
+    });
+
+    // A card's cost kind comes from its data, so this checks the labeled card
+    // against its screen, not the reader.
+    (entry.costKinds || []).forEach((kind, i) => {
+      const id = entry.skillCards[i];
+      if (kind && costKind(id) !== kind) {
+        miss("cost kind", entry.file, `[${i}] ${cardName(id)} is ${costKind(id)} in the data, ${kind} on screen`);
       }
-      if (!arraysEqual(entry.pItems, pItems)) {
-        console.error(`    pItems expected [${entry.pItems.map(pItemName).join(", ")}]`);
-        console.error(`           got      [${pItems.map(pItemName).join(", ")}]`);
-      }
-      if (!arraysEqual(entry.skillCards, skillCards)) {
-        console.error(`    cards  expected [${entry.skillCards.map(cardName).join(", ")}]`);
-        console.error(`           got      [${skillCards.map(cardName).join(", ")}]`);
-      }
+    });
+
+    const pIdol = pIdolOf(pItems, skillCards);
+    if (entry.pIdolId !== undefined && pIdol.cards !== entry.pIdolId) {
+      miss("pIdol", entry.file, `expected ${entry.pIdolId} got ${pIdol.cards}`);
+    }
+    if (pIdol.items && pIdol.cards && pIdol.items !== pIdol.cards) {
+      miss("pIdol", entry.file, `P-items say ${pIdol.items}, cards say ${pIdol.cards}`);
     }
 
     const imageData = { data: image.pixels, width: image.width, height: image.height };
-    const badgeProblems = (entry.badges || []).flatMap((label, i) => {
-      if (!label || skillCards[i] !== entry.skillCards[i]) return [];
+    const customizations = skillCards.map((id, i) =>
+      readCustomizations(imageData, detection.skillCardBoxes[i], MEMORY_LAYOUT, id),
+    );
+    (entry.badges || []).forEach((label, i) => {
+      if (!label || skillCards[i] !== entry.skillCards[i]) return;
+      tally.badges[1]++;
       const read = readBadges(imageData, detection.skillCardBoxes[i], MEMORY_LAYOUT);
-      const { misread, inconsistent, iconRight } = compareBadges(`#${i}`, skillCards[i], read, label);
-      const wrongIcon = iconRight === false && `#${i} bottom icon misread`;
-      return [...misread, inconsistent, wrongIcon].filter(Boolean);
+      const { misread, unread, inconsistent, iconRight } = compareBadges(`#${i}`, skillCards[i], read, label);
+      tally.unread += unread;
+      if (!misread.length && !inconsistent) tally.badges[0]++;
+      for (const m of misread) miss("badge", entry.file, m);
+      if (inconsistent) miss("customization", entry.file, inconsistent);
+      if (iconRight === false) {
+        const predicted = predictBadges(skillCards[i]).icon;
+        miss("badge", entry.file, `#${i} bottom icon read ${closestIcon(read.icon)} data ${predicted}`);
+      }
     });
-    if (badgeProblems.length) {
-      failed++;
-      console.error(`✗ ${entry.file}  badges`);
-      for (const problem of badgeProblems) console.error(`    ${problem}`);
+
+    // The game's own total: the importer flags a memory whose total it can't
+    // reproduce, so this checks params, P-items, cards, customizations and
+    // the data's contest power together.
+    if (entry.power !== undefined) {
+      tally.power[1]++;
+      const power = calculateContestPower(params, pItems, skillCards, customizations);
+      if (power === entry.power) tally.power[0]++;
+      else miss("power", entry.file, `expected ${entry.power} got ${power}`);
     }
 
     if (VISUALIZE) {
       const out = await writeOverlay(image, absPath, detection);
       console.log(`    overlay → ${out}`);
     }
-
-    updated.push({
-      file: entry.file,
-      ...(entry.note !== undefined && { note: entry.note }),
-      params,
-      pItems,
-      skillCards,
-      ...(entry.badges !== undefined && { badges: entry.badges }),
-    });
   }
 
   await ocrWorker.terminate();
 
-  if (UPDATE) {
-    writeFixture(updated);
-    console.log(`\nFixture rewritten (${updated.length} entries).`);
-    process.exit(0);
+  const newMisses = misses.filter((m) => !KNOWN.has(m));
+  const fixed = [...KNOWN].filter((m) => !misses.includes(m));
+  for (const m of misses) {
+    (KNOWN.has(m) ? console.log : console.error)(`  ${m}${KNOWN.has(m) ? " (known)" : ""}`);
   }
-
-  if (failed > 0) {
-    console.error(`\n${failed} of ${fixture.length} cases failed.`);
-    console.error(`If the change is intentional, rerun with --update.`);
+  for (const m of fixed) console.error(`✗ now right, remove from KNOWN: ${m}`);
+  const rejects = fixture.filter((e) => e.rejects).length;
+  console.log(
+    `\n${tally.screens} memory screens: params ${tally.params}/${tally.screens}, ` +
+      `P-items ${tally.pItems[0]}/${tally.pItems[1]}, cards ${tally.cards[0]}/${tally.cards[1]}, ` +
+      `badges ${tally.badges[0]}/${tally.badges[1]} (${tally.unread} unread), ` +
+      `power ${tally.power[0]}/${tally.power[1]}; ${tally.rejected}/${rejects} other screens refused`,
+  );
+  if (newMisses.length || fixed.length) {
+    console.error(`\n${newMisses.length} new misses, ${fixed.length} known misses now right.`);
     process.exit(1);
   }
-  console.log(`\nAll ${fixture.length} cases passed.`);
+  console.log("Every miss is known.");
 }
 
 await main();
