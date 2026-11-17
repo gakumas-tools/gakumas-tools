@@ -8,7 +8,8 @@
  * (passed in by `pnpm test:memory --icons`, which reads those screens). Each
  * is labeled with the icon its card's data predicts. The memory screens are
  * needed: at their scale some icons (好印象, 好調, やる気) look closer to
- * another type's art than to their own.
+ * another type's art than to their own, and cardUses and draw come only from
+ * screens (see SCREEN_ONLY).
  *
  * Every sample is kept unless one of the same type already kept is within
  * KEEP_DISTANCE of it, art first. The check then reads every fixture card
@@ -37,6 +38,9 @@ const OUT_PATH = join(
 );
 const GALLERY_LAYOUT = { x: 0.125, half: 0.115, bottom: [0.76, 0.92] };
 const KEEP_DISTANCE = 0.12;
+// The art is 96 px wide, so its icons are 22 px and the +1 on cardUses blurs
+// into the plain card of draw. Those two come from the screens only.
+const SCREEN_ONLY = new Set(["cardUses", "draw"]);
 
 export function iconSample(image, box, layout, cardId, screen) {
   const type = predictBadges(cardId).icon;
@@ -57,7 +61,8 @@ async function gallerySamples() {
     if (!file) continue;
     const image = await loadImage(join(ICON_DIR, file));
     const box = { x: 0, y: 0, width: image.width, height: image.height };
-    samples.push(iconSample(image, box, GALLERY_LAYOUT, card.id, null));
+    const sample = iconSample(image, box, GALLERY_LAYOUT, card.id, null);
+    if (sample && !SCREEN_ONLY.has(sample.type)) samples.push(sample);
   }
   return samples.filter(Boolean);
 }

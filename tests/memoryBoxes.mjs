@@ -101,10 +101,6 @@ const KNOWN = new Set([
   // (params, P-items and cards all right), so a data value or the formula is off. Cause not found yet.
   "power: tests/fixtures/memory/account/m15.webp expected 5364 got 5385",
   "power: tests/fixtures/memory/account/m32.webp expected 1683 got 1794",
-  // Bottom icons of uncustomized cards, checked against the screen and the card's gk-img
-  // art: the data's icon is the one shown. 練習再開！+'s +1 card (cardUses) is as close to
-  // the draw icon as to its own templates, here and in the contest fixtures.
-  "badge: tests/fixtures/memory/account/m18.webp #1 bottom icon read draw data cardUses",
 ]);
 
 const args = process.argv.slice(2);

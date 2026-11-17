@@ -139,3 +139,11 @@ test("handles customizations that patch an existing effect", () => {
   );
   assert.doesNotThrow(() => inferCustomizations(ICHIBAN_TAKAI_HOSHI, badges));
 });
+
+test("仕切り直し and 全身全霊 show no draw icon, so +1 is their bottom icon", () => {
+  for (const id of [160, 161, 438, 439]) {
+    assert.equal(predictBadges(id).icon, "cardUses");
+  }
+  // アイドル宣言's drawCard(2) shows the draw icon.
+  assert.equal(predictBadges(98).icon, "draw");
+});

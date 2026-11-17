@@ -93,6 +93,10 @@ const ICONS = {
   "setStance:preservation": "preservation",
 };
 const MAX_ICONS = 4;
+// Cards whose drawCard shows no icon, though other cards' drawCard(n) does
+// (アイドル宣言, 完全無欠, フルスロットル). Checked on the gk-img art and on
+// contest screens: 仕切り直し and 全身全霊 show three icons, ending in +1.
+const NO_DRAW_ICON = new Set([160, 161, 438, 439]);
 const SILENT = new Set(["genki", "limit", "ttl", "delay"]);
 // Setting these multipliers for the card's own score shows the scaling icon;
 // goodConditionTurnsMultiplier shows none.
@@ -173,6 +177,7 @@ export function predictBadges(cardId, c11n = {}) {
     cost: costValue(card, growth),
     icon:
       [...actions.flatMap(lineIcons), ...(card.effects || []).map(effectIcon)]
+        .filter((icon) => icon !== "draw" || !NO_DRAW_ICON.has(card.id))
         .slice(0, MAX_ICONS)
         .at(-1) ?? null,
   };
