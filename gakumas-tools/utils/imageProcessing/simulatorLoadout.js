@@ -5,7 +5,11 @@ import { readLoadoutCards } from "./cardBadges";
 import { DEBUG, getImageData, loadImageFromFile } from "./common";
 import { detectLoadoutBoxes } from "./contestLoadoutGeometry";
 import { readStats } from "./contestLoadoutStats";
-import { firstPItemFilter } from "./entityClassifier";
+import {
+  firstPItemFilter,
+  samePlanFilter,
+  slotFilters,
+} from "./entityClassifier";
 import { extractEntities } from "./memory";
 import { loadPItemModel, loadSkillCardModel } from "./models";
 
@@ -37,6 +41,8 @@ export async function getSimulatorLoadoutFromFile(file, currentStageId) {
     [...mainBoxes, ...subBoxes],
     skillCardSession,
     skillCardClasses,
+    undefined,
+    samePlanFilter([...mainBoxes.map(() => 0), ...subBoxes.map(() => 1)]),
   );
   const pItemIds = await classifySlots(
     img,
@@ -92,14 +98,16 @@ export async function getSimulatorLoadoutFromFile(file, currentStageId) {
 }
 
 // Slots cut off by the screenshot's edge come back null and stay empty.
-async function classifySlots(img, boxes, session, classes, allowed) {
+async function classifySlots(img, boxes, session, classes, allowed, refine) {
   const slots = boxes.flatMap((box, i) => (box ? [i] : []));
+  const filters = slotFilters(slots, boxes.length, allowed, refine);
   const ids = await extractEntities(
     img,
     slots.map((i) => boxes[i]),
     session,
     classes,
-    allowed && ((id, i) => allowed(id, slots[i])),
+    filters.allowed,
+    filters.refine,
   );
   return boxes.map((box) => (box ? ids.shift() : 0));
 }

@@ -49,6 +49,53 @@ export function firstPItemFilter(mainCardIds) {
     slot > 0 || !pIdolIds.size || pIdolIds.has(PItems.getById(id)?.pIdolId);
 }
 
+// A produce deals only cards of its P-idol's plan and free cards, so every
+// card of one memory shares a plan. rows[slot] says which memory a slot is
+// from. Given the first reads by slot, each memory's plan is the one most of
+// its non-free reads agree on (none on a tie), and the second read keeps to
+// it.
+export function samePlanFilter(rows) {
+  const planOf = (id) => SkillCards.getById(id)?.plan;
+  return (ids) => {
+    const votes = new Map();
+    ids.forEach((id, slot) => {
+      const plan = planOf(id);
+      if (!plan || plan == "free") return;
+      const row = votes.get(rows[slot]) || {};
+      row[plan] = (row[plan] || 0) + 1;
+      votes.set(rows[slot], row);
+    });
+    const plans = new Map();
+    for (const [row, counts] of votes) {
+      const [first, second] = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+      if (!second || first[1] > second[1]) plans.set(row, first[0]);
+    }
+    return (id, slot) => {
+      const plan = plans.get(rows[slot]);
+      const own = planOf(id);
+      return !plan || !own || own == "free" || own == plan;
+    };
+  };
+}
+
+// Only slots with a box are cropped; this maps slot-indexed filters onto the
+// order of the crops.
+export function slotFilters(slots, numSlots, allowed, refine) {
+  return {
+    allowed: allowed && ((id, i) => allowed(id, slots[i])),
+    refine:
+      refine &&
+      ((ids) => {
+        const bySlot = new Array(numSlots).fill(0);
+        slots.forEach((slot, i) => (bySlot[slot] = ids[i]));
+        const second = refine(bySlot);
+        return (id, i) => second(id, slots[i]);
+      }),
+  };
+}
+
+// refine(ids), if given, returns a second allowed() from the first reads;
+// the crops are then read again from the same logits.
 export async function classifyCrops(
   ort,
   session,
@@ -56,6 +103,7 @@ export async function classifyCrops(
   crops,
   channels,
   allowed,
+  refine,
 ) {
   if (!crops.length) return [];
   const input = new ort.Tensor("float32", packCrops(crops, channels), [
@@ -65,5 +113,13 @@ export async function classifyCrops(
     ICON_SIZE,
   ]);
   const output = await session.run({ input }, ["classifier"]);
-  return decodeEntityIds(output.classifier.data, classes, allowed);
+  const logits = output.classifier.data;
+  const ids = decodeEntityIds(logits, classes, allowed);
+  if (!refine) return ids;
+  const second = refine(ids);
+  return decodeEntityIds(
+    logits,
+    classes,
+    (id, i) => (!allowed || allowed(id, i)) && second(id, i),
+  );
 }
