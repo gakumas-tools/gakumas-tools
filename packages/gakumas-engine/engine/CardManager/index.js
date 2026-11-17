@@ -5,6 +5,18 @@ import { getBaseId, getRand, shallowCopy, shuffle } from "../../utils";
 import { getTargetRuleCards } from "./targeting";
 import { normalizeEffect } from "../../normalizeEffect";
 
+// Debuffs that block every card with one effect (好調効果のスキルカード使用不可
+// and the like). UNVERIFIED: which effect each one blocks is not yet checked
+// against a capture.
+const NO_EFFECT_CARD_DEBUFFS = [
+  { field: S.noGoodConditionTurnsTurns, effect: "goodConditionTurns" },
+  { field: S.noConcentrationTurns, effect: "concentration" },
+  { field: S.noGoodImpressionTurnsTurns, effect: "goodImpressionTurns" },
+  { field: S.noMotivationTurns, effect: "motivation" },
+  { field: S.noStrengthTurns, effect: "strength" },
+  { field: S.noFullPowerChargeTurns, effect: "fullPowerCharge" },
+];
+
 const PATCHABLE_FIELDS = [
   "phase",
   "filter",
@@ -494,6 +506,12 @@ export default class CardManager extends EngineComponent {
     if (state[S.noCardUseTurns]) return false;
     if (state[S.noActiveTurns] && skillCard.type == "active") return false;
     if (state[S.noMentalTurns] && skillCard.type == "mental") return false;
+    for (let i = 0; i < NO_EFFECT_CARD_DEBUFFS.length; i++) {
+      const { field, effect } = NO_EFFECT_CARD_DEBUFFS[i];
+      if (state[field] && this.getCardEffects(state, card).has(effect)) {
+        return false;
+      }
+    }
 
     const conditions = this.getConditions(state, card);
     for (let i = 0; i < conditions.length; i++) {
