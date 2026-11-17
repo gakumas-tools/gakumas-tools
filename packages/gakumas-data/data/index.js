@@ -1,4 +1,5 @@
 export { default as Customizations } from "./customizations";
+export { default as IdolRoad } from "./idolRoad";
 export { default as Idols } from "./idols";
 export { default as PDrinks } from "./pDrinks";
 export { default as PIdols } from "./pIdols";
