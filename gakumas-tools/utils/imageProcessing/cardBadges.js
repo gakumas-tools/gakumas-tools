@@ -1,5 +1,7 @@
+import { SkillCards } from "gakumas-data";
 import BADGE_TEMPLATES from "./cardBadgeDigits.json";
 import { inferCustomizations } from "../inferCustomizations";
+import { getOtherVersionId } from "../upgrades";
 import { readBottomIcon } from "./effectIcons";
 import {
   classifyGlyph,
@@ -256,7 +258,16 @@ export function readLoadoutCards(imageData, boxGroups, idGroups) {
   );
   const shared = greyed[1][0];
   const skillCardIdGroups = idGroups.map((ids, row) =>
-    ids.map((id, i) => (greyed[row][i] ? 0 : id)),
+    ids.map((id, i) => {
+      if (greyed[row][i]) return 0;
+      const card = SkillCards.getById(id);
+      const box = boxGroups[row][i];
+      if (card?.upgraded || !box || !findDot(imageData, box, CONTEST_LAYOUT)) {
+        return id;
+      }
+      // Customization badges only appear on upgraded cards.
+      return getOtherVersionId(SkillCards, card) ?? id;
+    }),
   );
   const customizationGroups = skillCardIdGroups.map((ids, row) =>
     ids.map((id, i) =>
