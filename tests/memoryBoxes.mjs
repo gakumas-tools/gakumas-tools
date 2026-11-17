@@ -97,35 +97,25 @@ const KNOWN = new Set([
   // (params, P-items and cards all right), so a data value or the formula is off. Cause not found yet.
   "power: tests/fixtures/memory/account/m15.webp expected 5364 got 5385",
   "power: tests/fixtures/memory/account/m32.webp expected 1683 got 1794",
-  // Bottom icons of uncustomized cards. "data null": the predictor gives no icon where
-  // the card shows one (conditional lines); the rest are reader or predictor misses, not sorted yet.
+  // Bottom icons of uncustomized cards. Each was checked against the screen and the card's
+  // gk-img art: the data's icon is the one shown, so these are the reader's misses. Where
+  // the data says null the card shows no icon, and the reader sees one in the frame.
   "badge: tests/fixtures/memory/account/m01.webp #1 bottom icon read goodImpression data strength",
   "badge: tests/fixtures/memory/account/m01.webp #4 bottom icon read deck data null",
   "badge: tests/fixtures/memory/account/m02.webp #3 bottom icon read deck data null",
-  "badge: tests/fixtures/memory/account/m03.webp #1 bottom icon read scaling data null",
   "badge: tests/fixtures/memory/account/m03.webp #3 bottom icon read deck data null",
   "badge: tests/fixtures/memory/account/m04.webp #1 bottom icon read draw data delayed",
   "badge: tests/fixtures/memory/account/m05.webp #2 bottom icon read concentration data scaling",
   "badge: tests/fixtures/memory/account/m07.webp #1 bottom icon read goodImpression data strength",
-  "badge: tests/fixtures/memory/account/m10.webp #0 bottom icon read scaling data null",
-  "badge: tests/fixtures/memory/account/m10.webp #3 bottom icon read scaling data null",
-  "badge: tests/fixtures/memory/account/m11.webp #0 bottom icon read scaling data null",
-  "badge: tests/fixtures/memory/account/m11.webp #1 bottom icon read scaling data null",
-  "badge: tests/fixtures/memory/account/m12.webp #0 bottom icon read scaling data null",
   "badge: tests/fixtures/memory/account/m12.webp #1 bottom icon read perfectCondition data goodCondition",
   "badge: tests/fixtures/memory/account/m12.webp #4 bottom icon read deck data null",
-  "badge: tests/fixtures/memory/account/m13.webp #0 bottom icon read scaling data null",
   "badge: tests/fixtures/memory/account/m13.webp #1 bottom icon read perfectCondition data goodCondition",
-  "badge: tests/fixtures/memory/account/m13.webp #2 bottom icon read scaling data null",
   "badge: tests/fixtures/memory/account/m14.webp #3 bottom icon read deck data null",
   "badge: tests/fixtures/memory/account/m15.webp #1 bottom icon read scaling data delayed",
   "badge: tests/fixtures/memory/account/m16.webp #3 bottom icon read deck data null",
   "badge: tests/fixtures/memory/account/m17.webp #0 bottom icon read fullPower data goodImpression",
   "badge: tests/fixtures/memory/account/m17.webp #4 bottom icon read fullPower data goodImpression",
-  "badge: tests/fixtures/memory/account/m18.webp #0 bottom icon read scaling data null",
   "badge: tests/fixtures/memory/account/m18.webp #1 bottom icon read draw data cardUses",
-  "badge: tests/fixtures/memory/account/m19.webp #3 bottom icon read scaling data deck",
-  "badge: tests/fixtures/memory/account/m21.webp #0 bottom icon read scaling data null",
   "badge: tests/fixtures/memory/account/m21.webp #3 bottom icon read deck data null",
   "badge: tests/fixtures/memory/account/m22.webp #0 bottom icon read fullPower data goodImpression",
   "badge: tests/fixtures/memory/account/m23.webp #0 bottom icon read fullPower data goodImpression",

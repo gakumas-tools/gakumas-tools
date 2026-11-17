@@ -94,11 +94,27 @@ const ICONS = {
 };
 const MAX_ICONS = 4;
 const SILENT = new Set(["genki", "limit", "ttl", "delay"]);
+// Setting these multipliers for the card's own score shows the scaling icon;
+// goodConditionTurnsMultiplier shows none.
+const SCALING_MULTIPLIERS = new Set([
+  "concentrationMultiplier",
+  "motivationMultiplier",
+]);
 
-function actionIcon(action) {
+// A gain on a line with its own conditions can't be shown as a badge, so it
+// shows an icon instead: scaling for score, genki for genki.
+function actionIcon(action, conditional) {
   if (action.type === "assignment") {
+    if (action.lhs === "genki" && action.op === "+=" && conditional) {
+      return "genki";
+    }
     if (action.lhs === "score") {
-      return leadingConstant(action.rhs) === null ? "scaling" : null;
+      return conditional || leadingConstant(action.rhs) === null
+        ? "scaling"
+        : null;
+    }
+    if (action.op === "=" && SCALING_MULTIPLIERS.has(action.lhs)) {
+      return "scaling";
     }
     if (SILENT.has(action.lhs) || action.op === "=") return null;
     return ICONS[action.lhs] || `other:${action.lhs}`;
@@ -110,13 +126,17 @@ function actionIcon(action) {
   return ICONS[name] || `other:${name}`;
 }
 
+// A line shows each icon once, however many of its actions give it.
 function lineIcons(line) {
   if (line.phase === "turn") return ["delayed"];
   if (line.phase) return ["lasting"];
   if (line.targets?.length) return ["growth"];
+  const conditional = !!line.conditions?.length;
   return [
-    ...(line.actions || []).map(actionIcon),
-    ...(line.effects || []).flatMap(lineIcons),
+    ...new Set([
+      ...(line.actions || []).map((a) => actionIcon(a, conditional)),
+      ...(line.effects || []).flatMap(lineIcons),
+    ]),
   ].filter(Boolean);
 }
 
