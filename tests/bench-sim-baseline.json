@@ -1,0 +1,46 @@
+{
+  "median_ms": 1385,
+  "trials_ms": [
+    1445,
+    1359,
+    1436,
+    1377,
+    1420,
+    1363,
+    1385
+  ],
+  "results_sha256": "4697108c561750e11a30454687bff2b4f9bcfd6e0dde01d5ad3f988badd61e71",
+  "workload": {
+    "stride": 25,
+    "runs": 200,
+    "seed": 1,
+    "strategy": "HeuristicStrategy",
+    "ids": [
+      "seed1-001",
+      "seed1-026",
+      "seed1-051",
+      "seed1-076",
+      "seed1-101",
+      "seed1-126",
+      "seed1-151",
+      "seed1-176",
+      "seed1-201",
+      "seed1-226",
+      "seed1-251",
+      "seed1-276",
+      "seed1-301",
+      "seed1-326",
+      "seed1-351",
+      "seed1-376",
+      "seed1-401",
+      "seed1-426",
+      "seed1-451",
+      "seed1-476",
+      "sweep-stage-29"
+    ]
+  },
+  "commit": "a82c3a3a5de41d2bd6130ad08bb88136dfa1977e",
+  "node": "v24.22.3",
+  "machine": "unknown x12, linux arm64",
+  "captured_at": "2026-11-17T00:07:27.542Z"
+}

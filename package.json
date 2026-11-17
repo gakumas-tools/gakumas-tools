@@ -24,6 +24,7 @@
     "fidelity:training": "node --no-warnings --loader ./scripts/extensionless-loader.mjs --test ./tests/trainingFidelity.mjs",
     "fidelity:contest": "node --no-warnings --loader ./scripts/extensionless-loader.mjs --test ./tests/contestFidelity.mjs",
     "bench": "node --loader ./scripts/extensionless-loader.mjs ./tests/bench.mjs",
+    "bench:sim": "node --no-warnings --loader ./scripts/extensionless-loader.mjs ./tests/benchSim.mjs",
     "bench:choices": "node --no-warnings --loader ./scripts/extensionless-loader.mjs ./tests/choiceWeightStudy.mjs",
     "validate:data": "node --loader ./scripts/extensionless-loader.mjs ./scripts/validate-data.mjs",
     "check:images": "python3 -m scripts.missing_images --since 0",
