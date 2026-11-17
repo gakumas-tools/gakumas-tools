@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {
   getFilledSkillCardSlots,
   getMemorySlotCustomizations,
+  getMemorySlotSkillCardIds,
   setMemorySlot,
 } from "../../../../gakumas-tools/utils/memorySlots.js";
 
@@ -72,4 +73,16 @@ test("Flat card indexes still reach the second memory after an empty first", () 
   ];
   // LoadoutContext addresses card slot groupIndex * 6 + index.
   assert.deepEqual([].concat(...groups)[6], { 3: 1 });
+});
+
+test("short memories keep the next row's cards and customizations aligned", () => {
+  const memories = [
+    { skillCardIds: [25], customizations: [{ 65: 1 }] },
+    { skillCardIds: [35], customizations: [{ 29: 1 }] },
+  ];
+  const cards = memories.map(getMemorySlotSkillCardIds).flat();
+  const customizations = memories.map(getMemorySlotCustomizations).flat();
+  assert.deepEqual(cards, [25, 0, 0, 0, 0, 0, 35, 0, 0, 0, 0, 0]);
+  assert.equal(cards[6], 35);
+  assert.deepEqual(customizations[6], { 29: 1 });
 });

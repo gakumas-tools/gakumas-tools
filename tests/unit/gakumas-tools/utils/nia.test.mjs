@@ -3,6 +3,8 @@ import assert from "node:assert/strict";
 import {
   PARAM_REGIMES_BY_DIFF_STAGE_BALANCE_ORDER,
   PARAM_ORDER_BY_IDOL,
+  BALANCE_BY_IDOL,
+  hasNiaData,
   VOTE_REGIMES_BY_DIFF_STAGE,
   calculateBonusParams,
   calculateChallengeParams,
@@ -81,4 +83,11 @@ test("an already maxed param needs no score", () => {
   const regimes = PARAM_REGIMES_BY_DIFF_STAGE_BALANCE_ORDER.pro.finale;
   const maxScores = calculateMaxScores(regimes, 2000, [1, 2, 3], [2000, 0, 0], [0, 0, 0]);
   assert.equal(maxScores[0], 0);
+});
+
+test("an idol is offered only with both a param order and a balance", () => {
+  for (const id of Object.keys(PARAM_ORDER_BY_IDOL)) {
+    assert.equal(hasNiaData(Number(id)), id in BALANCE_BY_IDOL);
+  }
+  assert.equal(hasNiaData(999), false);
 });

@@ -921,7 +921,9 @@ id,name,availableCustomizations,rarity,type,plan,unlockPlv,upgraded,unique,sourc
 920,ありのままのわたし+,,SSR,mental,logic,1,TRUE,TRUE,pIdol,163,FALSE,,cost-=5,genki+=4; setGoodImpressionTurnsEffectBuff(0.5),1,at:goodImpressionTurnsIncreased { if:isDirectEffect & countCards[baseId(919) & removed] > 0 { effectCounter+=1; if:effectCounter%3==2 & effectCounter(turn)==0 { effectCounter(turn)+=1; useRandomCardFree[baseId(919)]; limit:2 } } }; at:beforeStartOfTurn { effectCounter(turn)=0 }
 921,認めてくれるひと,,SSR,active,logic,1,FALSE,TRUE,pIdol,163,FALSE,,cost-=6,goodImpressionTurns+=3; if:countCards[removed]>=7 { goodImpressionTurns+=5 }; if:countCards[removed]>=11 { score+=goodImpressionTurns*1.7 },,
 922,認めてくれるひと+,,SSR,active,logic,1,TRUE,TRUE,pIdol,163,FALSE,,cost-=6,goodImpressionTurns+=3; if:countCards[removed]>=7 { goodImpressionTurns+=5 }; if:countCards[removed]>=11 { score+=goodImpressionTurns*2.8 },,
-923,柔らかな光の中で,,SSR,active,sense,1,FALSE,TRUE,pIdol,164,FALSE,,,,,
+923,柔らかな光の中で,,SSR,active,sense,1,FALSE,TRUE,pIdol,164,FALSE,if:concentration>=3,cost-=5,cardUsesRemaining+=1; at:endOfTurn { score+=2; score+=2; limit:1; delay:0 }; at:endOfTurn { score+=2; score+=2; score+=2; limit:1; delay:1 },1,
 924,柔らかな光の中で+,,SSR,active,sense,1,TRUE,TRUE,pIdol,164,FALSE,if:concentration>=3,cost-=4,cardUsesRemaining+=1; score+=2; at:endOfTurn { score+=2; score+=2; limit:1; delay:0 }; at:endOfTurn { score+=2; score+=2; score+=2; limit:1; delay:1 },1,
-925,忠義を胸に,,SR,mental,sense,1,FALSE,TRUE,pIdol,165,FALSE,,,,,
+925,忠義を胸に,,SR,mental,sense,1,FALSE,TRUE,pIdol,165,FALSE,,cost-=4,goodConditionTurns+=4; concentration+=1; perfectConditionTurns+=1,1,
 926,忠義を胸に+,,SR,mental,sense,1,TRUE,TRUE,pIdol,165,FALSE,,cost-=1,goodConditionTurns+=4; concentration+=1; perfectConditionTurns+=1,1,
+927,一途な従者,,R,active,sense,1,FALSE,TRUE,pIdol,166,FALSE,,cost-=5,score+=3; at:endOfTurn { score+=3; score+=3; limit:1; delay:0 },1,
+928,一途な従者+,,R,active,sense,1,TRUE,TRUE,pIdol,166,FALSE,,cost-=2,score+=3; at:endOfTurn { score+=3; score+=3; limit:1; delay:0 },1,
