@@ -70,8 +70,6 @@ const KNOWN = new Set([
   "icon: tests/fixtures/contest_loadout/41.webp sub[1] expected ほぐれるひととき+ got 気合十分！+",
   "customization: tests/fixtures/contest_loadout/21.webp #2 inferred badges 1,,,5,motivation shown 2,,,5",
   "customization: tests/fixtures/contest_loadout/26.webp #8 inferred badges 1,,,0,cardUses shown 1,,,1",
-  "badge: tests/fixtures/contest_loadout/54.webp #7 score read 78 shown 28",
-  "badge: tests/fixtures/contest_loadout/55.jpg #8 icon read delayed shown goodCondition",
 ]);
 
 const args = process.argv.slice(2);
