@@ -38,6 +38,7 @@
     "gakumas-loadout": "workspace:*"
   },
   "devDependencies": {
+    "@tesseract.js-data/eng": "1.0.0",
     "onnxruntime-node": "1.24",
     "sharp": "^0.35.5",
     "tesseract.js": "^7.0.0"

@@ -15,12 +15,13 @@
  *   pnpm test:memory --update     # rewrite the fixture with current outputs
  *   pnpm test:memory --visualize  # also write overlays to tests/overlays/memory/
  *
- * Tesseract auto-downloads its English language model on first run; the
- * harness directs that download into tests/.tesseract-cache/ (gitignored)
- * rather than the repo root.
+ * Tesseract's English model comes from the @tesseract.js-data/eng
+ * devDependency (4.0.0_best_int, the model the site loads for
+ * createWorker("eng", 1)), so the harness runs with no network.
  */
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import { createRequire } from "node:module";
 import { dirname, resolve, join, basename, parse } from "node:path";
 import sharp from "sharp";
 import * as ort from "onnxruntime-node";
@@ -45,7 +46,10 @@ const HARNESS_DIR = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(HARNESS_DIR, "..");
 const FIXTURE_PATH = join(HARNESS_DIR, "memoryBoxes.jsonl");
 const OVERLAY_DIR = join(HARNESS_DIR, "overlays", "memory");
-const TESSERACT_CACHE = join(HARNESS_DIR, ".tesseract-cache");
+const TESSDATA = join(
+  dirname(createRequire(import.meta.url).resolve("@tesseract.js-data/eng/package.json")),
+  "4.0.0_best_int"
+);
 const PUBLIC = join(REPO_ROOT, "gakumas-tools/public");
 const SKILL_CARD_MODEL = join(PUBLIC, "skill_card_model.onnx");
 const SKILL_CARD_CLASSES = join(PUBLIC, "skill_card_classes.json");
@@ -80,8 +84,10 @@ async function getModels() {
 let _ocrWorker;
 async function getOcrWorker() {
   if (!_ocrWorker) {
-    mkdirSync(TESSERACT_CACHE, { recursive: true });
-    _ocrWorker = await createWorker("eng", 1, { cachePath: TESSERACT_CACHE });
+    _ocrWorker = await createWorker("eng", 1, {
+      langPath: TESSDATA,
+      cacheMethod: "none",
+    });
   }
   return _ocrWorker;
 }
