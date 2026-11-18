@@ -68,6 +68,12 @@ function isBright(r, g, b) {
   return 0.299 * r + 0.587 * g + 0.114 * b >= 165;
 }
 
+// A dot's digit can touch the dot's white ring through its antialiased edge
+// (21.webp #2); a stricter cut keeps them apart.
+function isVeryBright(r, g, b) {
+  return 0.299 * r + 0.587 * g + 0.114 * b >= 180;
+}
+
 function isDark(r, g, b) {
   const max = Math.max(r, g, b);
   return max < 120 && max - Math.min(r, g, b) < 35;
@@ -185,6 +191,10 @@ export function badgeGlyphs(imageData, box, layout) {
       minAspect: 0.2,
     });
   const dot = findDot(imageData, box, layout);
+  const dotGlyphs = (found) => {
+    const glyphs = white(found, true, isBright);
+    return glyphs.length ? glyphs : white(found, true, isVeryBright);
+  };
   const shield = findBadge(imageData, box, layout.genki, isShieldBlue);
   let genki = shield && white(shield);
   // Two digits leave less blue background visible.
@@ -207,7 +217,7 @@ export function badgeGlyphs(imageData, box, layout) {
       true,
     );
   return {
-    dot: dot && white(dot, true, isBright),
+    dot: dot && dotGlyphs(dot),
     score: adjacentRun(
       componentGlyphs(imageData, area(box, layout.score, imageData), isDark, {
         height: layout.scoreDigit.map((d) => d * box.height),
