@@ -3,8 +3,10 @@
  *
  * Fixtures are hand-labeled ground truth (tests/contestLoadout.jsonl), so
  * failures mean the parser is wrong, not that the baseline needs updating.
- * Stat numbers and stage inference must be exact; icon classification must
- * stay at or above MIN_ICON_ACCURACY.
+ * Stat numbers and stage inference must be exact. Icons, badges and
+ * customizations must be exact too, except for the misses listed in KNOWN:
+ * a miss that isn't listed fails, and so does a listed one that no longer
+ * happens, so the list only ever shrinks.
  *
  * Usage:
  *   pnpm test:contest-loadout              # check against labels
@@ -30,6 +32,8 @@ import {
   classifyCrops,
   firstPItemFilter,
   ICON_SIZE,
+  samePlanFilter,
+  slotFilters,
 } from "../gakumas-tools/utils/imageProcessing/entityClassifier.js";
 import {
   CONTEST_LAYOUT,
@@ -38,7 +42,6 @@ import {
 } from "../gakumas-tools/utils/imageProcessing/cardBadges.js";
 import {
   addGlyphs,
-  BADGE_KEYS,
   compareBadges,
   loadContestFixture,
   loadImage,
@@ -56,10 +59,20 @@ const DIGITS_PATH = join(
   REPO_ROOT,
   "gakumas-tools/utils/imageProcessing/contestLoadoutDigits.json",
 );
-const MIN_ICON_ACCURACY = 0.98;
-const MAX_BADGE_MISREAD_RATE = 0.005;
-const MIN_CUSTOMIZATION_ACCURACY = 0.98;
 const MIN_ICON_READ_ACCURACY = 0.75;
+// Each checked against its screenshot. The card misses are customized cards
+// whose customization icons cover part of the art.
+const KNOWN = new Set([
+  "icon: tests/fixtures/contest_loadout/08.webp sub[1] expected 対戦お願いします！+ got 本領発揮+",
+  "icon: tests/fixtures/contest_loadout/12.webp sub[1] expected 対戦お願いします！+ got 本領発揮+",
+  "icon: tests/fixtures/contest_loadout/23.webp sub[2] expected ファンシーチャーム+ got 止められない想い+",
+  "icon: tests/fixtures/contest_loadout/24.webp sub[5] expected 本領発揮+ got 結果としての今+",
+  "icon: tests/fixtures/contest_loadout/41.webp sub[1] expected ほぐれるひととき+ got 気合十分！+",
+  "customization: tests/fixtures/contest_loadout/21.webp #2 inferred badges 1,,,5,motivation shown 2,,,5",
+  "customization: tests/fixtures/contest_loadout/26.webp #8 inferred badges 1,,,0,cardUses shown 1,,,1",
+  "badge: tests/fixtures/contest_loadout/54.webp #7 score read 78 shown 28",
+  "badge: tests/fixtures/contest_loadout/55.jpg #8 icon read delayed shown goodCondition",
+]);
 
 const args = process.argv.slice(2);
 const VISUALIZE = args.includes("--visualize");
@@ -103,16 +116,18 @@ async function crop(image, box) {
     .toBuffer();
 }
 
-async function classify(image, boxes, { session, classes }, allowed) {
+async function classify(image, boxes, { session, classes }, allowed, refine) {
   const slots = boxes.flatMap((box, i) => (box ? [i] : []));
   const crops = await Promise.all(slots.map((i) => crop(image, boxes[i])));
+  const filters = slotFilters(slots, boxes.length, allowed, refine);
   const ids = await classifyCrops(
     ort,
     session,
     classes,
     crops,
     3,
-    allowed && ((id, i) => allowed(id, slots[i])),
+    filters.allowed,
+    filters.refine,
   );
   return boxes.map((box) => (box ? ids.shift() : 0));
 }
@@ -215,7 +230,16 @@ async function main() {
     }
 
     const cardBoxes = [...boxes.mainBoxes, ...boxes.subBoxes];
-    const classified = await classify(image, cardBoxes, skillCardModel);
+    const classified = await classify(
+      image,
+      cardBoxes,
+      skillCardModel,
+      undefined,
+      samePlanFilter([
+        ...boxes.mainBoxes.map(() => 0),
+        ...boxes.subBoxes.map(() => 1),
+      ]),
+    );
     const pItems = await classify(
       image,
       boxes.pItemBoxes,
@@ -305,9 +329,15 @@ async function main() {
 
   const accuracy = 1 - iconErrors.length / iconSlots;
   const badgeAccuracy = 1 - inconsistentCards.length / badgeCards;
-  for (const error of iconErrors) console.log(`  icon: ${error}`);
-  for (const misread of misreadBadges) console.log(`  badge: ${misread}`);
-  for (const card of inconsistentCards) console.log(`  customization: ${card}`);
+  const misses = [
+    ...iconErrors.map((error) => `icon: ${error}`),
+    ...misreadBadges.map((misread) => `badge: ${misread}`),
+    ...inconsistentCards.map((card) => `customization: ${card}`),
+  ];
+  const newMisses = misses.filter((miss) => !KNOWN.has(miss));
+  const fixed = [...KNOWN].filter((miss) => !misses.includes(miss));
+  for (const miss of misses) console.log(`  ${miss}${KNOWN.has(miss) ? " (known)" : ""}`);
+  for (const miss of fixed) console.error(`✗ now right, remove from KNOWN: ${miss}`);
   for (const failure of readFailures) console.error(`✗ ${failure}`);
   for (const failure of failures) console.error(`✗ ${failure}`);
   console.log(
@@ -322,11 +352,8 @@ async function main() {
   if (
     failures.length ||
     readFailures.length ||
-    accuracy < MIN_ICON_ACCURACY ||
-    misreadBadges.length >
-      MAX_BADGE_MISREAD_RATE *
-        (BADGE_KEYS.length * badgeCards - unreadBadges) ||
-    badgeAccuracy < MIN_CUSTOMIZATION_ACCURACY ||
+    newMisses.length ||
+    fixed.length ||
     iconsRead < MIN_ICON_READ_ACCURACY * iconCards
   ) {
     process.exit(1);
