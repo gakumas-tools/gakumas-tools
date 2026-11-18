@@ -44,6 +44,7 @@ import { dirname, resolve, join, basename, parse } from "node:path";
 import sharp from "sharp";
 import * as ort from "onnxruntime-node";
 import { createWorker } from "tesseract.js";
+import { CROPS_OUT, isTrainingScreen, writeCrop } from "./classifierCrops.mjs";
 import { PItems, SkillCards } from "gakumas-data";
 import { findParams } from "../gakumas-tools/utils/imageProcessing/memory.js";
 import {
@@ -94,9 +95,9 @@ const P_ITEM_CLASSES = join(PUBLIC, "p_item_classes.json");
 // Misses the importer makes today. Each is checked against the screen.
 const KNOWN = new Set([
   // 03's two cards under the nav pill, and the total that follows from them.
-  "card: tests/fixtures/memory/03.png [4] expected せのびの魔法+ got 希望が届くまで",
-  "card: tests/fixtures/memory/03.png [5] expected 私がスター+ got 開花",
-  "power: tests/fixtures/memory/03.png expected 19776 got 19521",
+  "card: tests/fixtures/memory/03.png [4] expected せのびの魔法+ got 魅惑のパフォーマンス",
+  "card: tests/fixtures/memory/03.png [5] expected 私がスター+ got 魅惑のパフォーマンス",
+  "power: tests/fixtures/memory/03.png expected 19776 got 19668",
   // The game's total differs from contest power recomputed from labels that match the screen
   // (params, P-items and cards all right), so a data value or the formula is off. Cause not found yet.
   "power: tests/fixtures/memory/account/m15.webp expected 5364 got 5385",
@@ -202,6 +203,37 @@ function extractLines(result) {
   return result.data.blocks
     .map((b) => b.paragraphs.map((p) => p.lines))
     .flat(2);
+}
+
+// Round/clamp because the OCR-derived box origin is fractional.
+function clampBox(image, box) {
+  const left = Math.max(0, Math.round(box.x));
+  const top = Math.max(0, Math.round(box.y));
+  const width = Math.min(image.width - left, Math.round(box.width));
+  const height = Math.min(image.height - top, Math.round(box.height));
+  return { left, top, width, height };
+}
+
+async function cropBox(image, box) {
+  return sharp(image.pixels, { raw: image.raw })
+    .extract(clampBox(image, box))
+    .resize(ICON_SIZE, ICON_SIZE, { fit: "fill" })
+    .removeAlpha()
+    .raw()
+    .toBuffer();
+}
+
+async function exportCrops(image, entry, boxes, model) {
+  for (const [i, box] of boxes.entries()) {
+    const id = entry.skillCards[i];
+    if (!id) continue;
+    const { data, info } = await sharp(image.pixels, { raw: image.raw })
+      .extract(clampBox(image, box))
+      .raw()
+      .toBuffer({ resolveWithObject: true });
+    const native = { data, raw: { width: info.width, height: info.height, channels: info.channels } };
+    await writeCrop(model, entry.file, i, id, native, await cropBox(image, box));
+  }
 }
 
 async function classifyBoxes(image, boxes, session, classes) {
@@ -347,6 +379,10 @@ async function main() {
     }
     if (entry.rejects) {
       miss("accepted", entry.file, "read as a memory, but it has no stage loadout");
+      continue;
+    }
+    if (CROPS_OUT) {
+      if (isTrainingScreen(entry.file)) await exportCrops(image, entry, detection.skillCardBoxes, skillCard);
       continue;
     }
     tally.screens++;
