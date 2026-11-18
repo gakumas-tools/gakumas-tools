@@ -35,7 +35,9 @@ export async function* labeledContestCards(fixture) {
     const boxes = [...mainBoxes, ...subBoxes];
     const ids = entry.skillCards.flat();
     for (const [i, label] of entry.badges.flat().entries()) {
-      if (label && boxes[i]) yield { image, box: boxes[i], label, id: ids[i] };
+      if (label && boxes[i]) {
+        yield { image, box: boxes[i], label, id: ids[i], file: entry.file };
+      }
     }
   }
 }

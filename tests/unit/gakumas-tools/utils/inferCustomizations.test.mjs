@@ -15,6 +15,11 @@ const WAKUWAKU = 129;
 const HACHIKU = 597;
 const HABATAKE = 780;
 const SEKAIICHI = 619;
+const HIGH_TOUCH = 34;
+const HIYAKU = 78;
+const SPURT = 372;
+const CHOKOGAKUREKI = 196;
+const TREND_LEADER = 550;
 
 test("predicts the badges of an uncustomized card", () => {
   assert.deepEqual(predictBadges(SEISHIN_TOUITSU), {
@@ -44,6 +49,24 @@ test("puts an added effect's icon at the bottom", () => {
 test("shows card effects after actions, and no icon for resets", () => {
   assert.equal(predictBadges(HABATAKE).icon, "growth");
   assert.equal(predictBadges(SEKAIICHI).icon, "scaling");
+});
+
+// Checked against each card's art in gk-img and the account's memory screens.
+test("shows the scaling icon for a conditional score gain", () => {
+  assert.equal(predictBadges(HIYAKU).icon, "scaling");
+  assert.equal(predictBadges(SPURT).icon, "scaling");
+});
+
+test("shows the scaling icon for setting the card's score multiplier", () => {
+  assert.equal(predictBadges(HIGH_TOUCH).icon, "scaling");
+});
+
+test("shows the genki icon for a conditional genki gain", () => {
+  assert.equal(predictBadges(CHOKOGAKUREKI).icon, "genki");
+});
+
+test("shows each icon once per line", () => {
+  assert.equal(predictBadges(TREND_LEADER).icon, "growth");
 });
 
 test("breaks ties with the closest candidate icon", () => {
@@ -115,4 +138,12 @@ test("handles customizations that patch an existing effect", () => {
     ),
   );
   assert.doesNotThrow(() => inferCustomizations(ICHIBAN_TAKAI_HOSHI, badges));
+});
+
+test("仕切り直し and 全身全霊 show no draw icon, so +1 is their bottom icon", () => {
+  for (const id of [160, 161, 438, 439]) {
+    assert.equal(predictBadges(id).icon, "cardUses");
+  }
+  // アイドル宣言's drawCard(2) shows the draw icon.
+  assert.equal(predictBadges(98).icon, "draw");
 });

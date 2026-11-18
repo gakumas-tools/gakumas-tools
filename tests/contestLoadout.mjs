@@ -11,7 +11,7 @@
  * Usage:
  *   pnpm test:contest-loadout              # check against labels
  *   pnpm test:contest-loadout --visualize  # also write box overlays
- *   pnpm test:contest-loadout --digits     # rebuild digit templates from labels
+ *   pnpm test:contest-loadout --digits     # rebuild param digit templates from labels
  *
  * Badges are labeled as shown, [dot, score, genki, cost, bottom icon?], null
  * when absent.
@@ -36,16 +36,13 @@ import {
   slotFilters,
 } from "../gakumas-tools/utils/imageProcessing/entityClassifier.js";
 import {
-  badgeGlyphs,
   CONTEST_LAYOUT,
   readBadges,
   readLoadoutCards,
 } from "../gakumas-tools/utils/imageProcessing/cardBadges.js";
 import {
   addGlyphs,
-  buildBadgeTemplates,
   compareBadges,
-  labeledContestCards,
   loadContestFixture,
   loadImage,
   writeTemplates,
@@ -62,10 +59,6 @@ const DIGITS_PATH = join(
   REPO_ROOT,
   "gakumas-tools/utils/imageProcessing/contestLoadoutDigits.json",
 );
-const BADGE_DIGITS_PATH = join(
-  REPO_ROOT,
-  "gakumas-tools/utils/imageProcessing/cardBadgeDigits.json",
-);
 const MIN_ICON_READ_ACCURACY = 0.75;
 // Each checked against its screenshot. The card misses are customized cards
 // whose customization icons cover part of the art.
@@ -75,10 +68,10 @@ const KNOWN = new Set([
   "icon: tests/fixtures/contest_loadout/23.webp sub[2] expected ファンシーチャーム+ got 止められない想い+",
   "icon: tests/fixtures/contest_loadout/24.webp sub[5] expected 本領発揮+ got 結果としての今+",
   "icon: tests/fixtures/contest_loadout/41.webp sub[1] expected ほぐれるひととき+ got 気合十分！+",
-  "badge: tests/fixtures/contest_loadout/33.jpg #2 score read 5 shown 6",
-  "badge: tests/fixtures/contest_loadout/55.jpg #8 icon read perfectCondition shown goodCondition",
   "customization: tests/fixtures/contest_loadout/21.webp #2 inferred badges 1,,,5,motivation shown 2,,,5",
   "customization: tests/fixtures/contest_loadout/26.webp #8 inferred badges 1,,,0,cardUses shown 1,,,1",
+  "badge: tests/fixtures/contest_loadout/54.webp #7 score read 78 shown 28",
+  "badge: tests/fixtures/contest_loadout/55.jpg #8 icon read delayed shown goodCondition",
 ]);
 
 const args = process.argv.slice(2);
@@ -182,14 +175,6 @@ async function buildDigitTemplates(fixture) {
   writeTemplates(sums, DIGITS_PATH);
 }
 
-async function badgeSamples(fixture) {
-  const samples = [];
-  for await (const { image, box, label } of labeledContestCards(fixture)) {
-    samples.push({ glyphs: badgeGlyphs(image, box, CONTEST_LAYOUT), label });
-  }
-  return samples;
-}
-
 function planOf(params, pItemIds, skillCardIdGroups) {
   return new IdolConfig({ params, pItemIds, skillCardIdGroups }).plan;
 }
@@ -213,7 +198,8 @@ async function main() {
   const fixture = loadContestFixture();
   if (DIGITS) {
     await buildDigitTemplates(fixture);
-    await buildBadgeTemplates(await badgeSamples(fixture), BADGE_DIGITS_PATH);
+    // Card badge templates also need the memory screens' labels.
+    console.log("Card badge templates: pnpm test:memory --digits");
     return;
   }
 
