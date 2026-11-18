@@ -47,6 +47,7 @@ import {
   loadImage,
   writeTemplates,
 } from "./badges.mjs";
+import { CROPS_OUT, isTrainingScreen, writeCrop } from "./classifierCrops.mjs";
 import { findStageCandidates } from "../gakumas-tools/utils/supportBonus.js";
 
 const bestStage = (...args) => findStageCandidates(...args)[0] ?? null;
@@ -60,14 +61,8 @@ const DIGITS_PATH = join(
   "gakumas-tools/utils/imageProcessing/contestLoadoutDigits.json",
 );
 const MIN_ICON_READ_ACCURACY = 0.75;
-// Each checked against its screenshot. The card misses are customized cards
-// whose customization icons cover part of the art.
+// Each checked against its screenshot.
 const KNOWN = new Set([
-  "icon: tests/fixtures/contest_loadout/08.webp sub[1] expected 対戦お願いします！+ got 本領発揮+",
-  "icon: tests/fixtures/contest_loadout/12.webp sub[1] expected 対戦お願いします！+ got 本領発揮+",
-  "icon: tests/fixtures/contest_loadout/23.webp sub[2] expected ファンシーチャーム+ got 止められない想い+",
-  "icon: tests/fixtures/contest_loadout/24.webp sub[5] expected 本領発揮+ got 結果としての今+",
-  "icon: tests/fixtures/contest_loadout/41.webp sub[1] expected ほぐれるひととき+ got 気合十分！+",
 ]);
 
 const args = process.argv.slice(2);
@@ -86,7 +81,7 @@ async function loadModel(name) {
 }
 
 // Pads boxes that overhang the image edge, like canvas drawImage does.
-async function crop(image, box) {
+async function padded(image, box) {
   const left = Math.max(0, box.x);
   const top = Math.max(0, box.y);
   const right = Math.min(image.width, box.x + box.width);
@@ -103,9 +98,12 @@ async function crop(image, box) {
       background: { r: 0, g: 0, b: 0, alpha: 0 },
     })
     .toBuffer();
-  return sharp(extracted, {
-    raw: { width: box.width, height: box.height, channels: 4 },
-  })
+  return { data: extracted, raw: { width: box.width, height: box.height, channels: 4 } };
+}
+
+async function crop(image, box) {
+  const { data, raw } = await padded(image, box);
+  return sharp(data, { raw })
     .resize(ICON_SIZE, ICON_SIZE, { fit: "fill" })
     .removeAlpha()
     .raw()
@@ -252,6 +250,13 @@ async function main() {
     );
     const cards = skillCards.flat();
     const labeledIds = entry.skillCards.flat();
+    if (CROPS_OUT && isTrainingScreen(entry.file)) {
+      for (const [i, box] of cardBoxes.entries()) {
+        if (!box || !labeledIds[i]) continue;
+        await writeCrop(skillCardModel, entry.file, i, labeledIds[i], await padded(image, box), await crop(image, box));
+      }
+      continue;
+    }
     iconSlots += entry.pItems.length + labeledIds.length;
     iconErrors.push(
       ...compareIcons(entry.file, "pItems", entry.pItems, pItems, pItemName),
