@@ -15,6 +15,8 @@ import { readNumber, segmentGlyphs } from "./glyphs";
 import {
   getPItemBoundingBoxes,
   getSkillCardBoundingBoxes,
+  findNavPillTop,
+  hiddenByNavPill,
 } from "./memoryGeometry";
 import { calculateContestPower } from "../contestPower";
 
@@ -91,12 +93,10 @@ export async function getMemoryFromFile(
     pItemSession,
     pItemClasses
   );
-  const skillCards = await extractEntities(
-    img,
-    skillCardBoxes,
-    skillCardSession,
-    skillCardClasses
-  );
+  const pillTop = findNavPillTop(imageData);
+  const skillCards = (
+    await extractEntities(img, skillCardBoxes, skillCardSession, skillCardClasses)
+  ).map((id, i) => (hiddenByNavPill(skillCardBoxes[i], pillTop) ? 0 : id));
 
   const customizations = skillCards.map((id, i) =>
     readCustomizations(imageData, skillCardBoxes[i], MEMORY_LAYOUT, id)

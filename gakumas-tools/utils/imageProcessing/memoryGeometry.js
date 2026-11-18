@@ -42,3 +42,46 @@ export function getSkillCardBoundingBoxes(anchorPoint, contentWidth) {
   }
   return skillCardBoxes;
 }
+
+// The game's nav pill (home, help, back) floats over the bottom of the screen.
+// On a short screen it covers the second row of skill cards, so what shows of
+// those cards is a sliver and their cost badges, not enough to tell the card.
+// The pill is a band of plain grey about a tenth of the screen's width tall
+// across its left half. Returns the band's top row, or null if there is none.
+export function findNavPillTop({ data, width, height }) {
+  const channels = Math.round(data.length / (width * height));
+  const x0 = Math.round(width * 0.06);
+  const x1 = Math.round(width * 0.45);
+  const minRun = width * 0.07;
+  const maxRun = width * 0.15;
+  const from = Math.max(0, Math.round(height - width * 0.35));
+  const isPillRow = (y) => {
+    let grey = 0;
+    for (let x = x0; x < x1; x++) {
+      const o = (y * width + x) * channels;
+      const r = data[o];
+      const g = data[o + 1];
+      const b = data[o + 2];
+      const mean = (r + g + b) / 3;
+      if (Math.max(r, g, b) - Math.min(r, g, b) <= 35 && mean >= 100 && mean <= 200) grey++;
+    }
+    return grey >= (x1 - x0) * 0.6;
+  };
+  let runEnd = -1;
+  for (let y = height - 1; y >= from; y--) {
+    if (isPillRow(y)) {
+      if (runEnd < 0) runEnd = y;
+    } else if (runEnd >= 0) {
+      const length = runEnd - y;
+      if (length >= minRun && length <= maxRun) return y + 1;
+      runEnd = -1;
+    }
+  }
+  return null;
+}
+
+// A card more than half under the pill can't be read; leave its slot empty
+// for the player to fill rather than guess.
+export function hiddenByNavPill(box, pillTop) {
+  return pillTop != null && box.y + box.height / 2 > pillTop;
+}

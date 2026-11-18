@@ -50,6 +50,8 @@ import { findParams } from "../gakumas-tools/utils/imageProcessing/memory.js";
 import {
   getPItemBoundingBoxes,
   getSkillCardBoundingBoxes,
+  findNavPillTop,
+  hiddenByNavPill,
 } from "../gakumas-tools/utils/imageProcessing/memoryGeometry.js";
 import {
   classifyCrops,
@@ -94,10 +96,6 @@ const P_ITEM_CLASSES = join(PUBLIC, "p_item_classes.json");
 
 // Misses the importer makes today. Each is checked against the screen.
 const KNOWN = new Set([
-  // 03's two cards under the nav pill, and the total that follows from them.
-  "card: tests/fixtures/memory/03.png [4] expected せのびの魔法+ got 魅惑のパフォーマンス",
-  "card: tests/fixtures/memory/03.png [5] expected 私がスター+ got 魅惑のパフォーマンス",
-  "power: tests/fixtures/memory/03.png expected 19776 got 19668",
   // The game's total differs from contest power recomputed from labels that match the screen
   // (params, P-items and cards all right), so a data value or the formula is off. Cause not found yet.
   "power: tests/fixtures/memory/account/m15.webp expected 5364 got 5385",
@@ -226,7 +224,8 @@ async function cropBox(image, box) {
 async function exportCrops(image, entry, boxes, model) {
   for (const [i, box] of boxes.entries()) {
     const id = entry.skillCards[i];
-    if (!id) continue;
+    // A card under the nav pill shows too little to learn from.
+    if (!id || entry.hidden?.includes(i)) continue;
     const { data, info } = await sharp(image.pixels, { raw: image.raw })
       .extract(clampBox(image, box))
       .raw()
@@ -355,6 +354,7 @@ async function main() {
     params: 0,
     pItems: [0, 0],
     cards: [0, 0],
+    hidden: [0, 0],
     badges: [0, 0],
     unread: 0,
     power: [0, 0],
@@ -389,12 +389,12 @@ async function main() {
 
     const { params } = detection;
     const pItems = await classifyBoxes(image, detection.pItemBoxes, pItem.session, pItem.classes);
-    const skillCards = await classifyBoxes(
-      image,
-      detection.skillCardBoxes,
-      skillCard.session,
-      skillCard.classes,
-    );
+    // As the importer does: a card more than half under the nav pill is left
+    // empty for the player to fill.
+    const pillTop = findNavPillTop({ data: image.pixels, width: image.width, height: image.height });
+    const skillCards = (
+      await classifyBoxes(image, detection.skillCardBoxes, skillCard.session, skillCard.classes)
+    ).map((id, i) => (hiddenByNavPill(detection.skillCardBoxes[i], pillTop) ? 0 : id));
 
     if (arraysEqual(entry.params, params)) tally.params++;
     else miss("params", entry.file, `expected ${entry.params} got ${params}`);
@@ -404,6 +404,13 @@ async function main() {
       else miss("pItem", entry.file, `[${i}] expected ${pItemName(id)} got ${pItemName(pItems[i])}`);
     });
     entry.skillCards.forEach((id, i) => {
+      // A hidden card (labeled from the total) should come back empty.
+      if (entry.hidden?.includes(i)) {
+        tally.hidden[1]++;
+        if (skillCards[i] === 0) tally.hidden[0]++;
+        else miss("hidden", entry.file, `[${i}] is under the nav pill, read as ${cardName(skillCards[i])}`);
+        return;
+      }
       tally.cards[1]++;
       if (skillCards[i] === id) tally.cards[0]++;
       else miss("card", entry.file, `[${i}] expected ${cardName(id)} got ${cardName(skillCards[i])}`);
@@ -460,7 +467,9 @@ async function main() {
     // The game's own total: the importer flags a memory whose total it can't
     // reproduce, so this checks params, P-items, cards, customizations and
     // the data's contest power together.
-    if (entry.power !== undefined) {
+    // A memory with hidden cards can't reproduce its total; the importer
+    // flags it for the player.
+    if (entry.power !== undefined && !entry.hidden) {
       tally.power[1]++;
       const power = calculateContestPower(params, pItems, skillCards, customizations);
       if (power === entry.power) tally.power[0]++;
@@ -495,7 +504,7 @@ async function main() {
   const rejects = fixture.filter((e) => e.rejects).length;
   console.log(
     `\n${tally.screens} memory screens: params ${tally.params}/${tally.screens}, ` +
-      `P-items ${tally.pItems[0]}/${tally.pItems[1]}, cards ${tally.cards[0]}/${tally.cards[1]}, ` +
+      `P-items ${tally.pItems[0]}/${tally.pItems[1]}, cards ${tally.cards[0]}/${tally.cards[1]} (+${tally.hidden[0]}/${tally.hidden[1]} hidden left empty), ` +
       `badges ${tally.badges[0]}/${tally.badges[1]} (${tally.unread} unread), ` +
       `power ${tally.power[0]}/${tally.power[1]}; ${tally.rejected}/${rejects} other screens refused`,
   );
