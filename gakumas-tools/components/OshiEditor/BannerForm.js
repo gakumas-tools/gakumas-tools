@@ -24,6 +24,7 @@ const LANGUAGES = [
   { value: "en", label: "English" },
   { value: "zh-Hans", label: "简体中文" },
   { value: "ko", label: "한국어" },
+  { value: "es", label: "Español" },
 ];
 
 const ACTIONS = [
