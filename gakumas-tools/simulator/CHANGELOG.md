@@ -16,6 +16,11 @@ All notable changes to the contest simulator will be documented in this file.
 
 
 
+## 2026-11-20
+
+- Add preview of unbalance tsubame
+- Add preview of unbalance mao
+
 ## 2026-11-19
 
 - Add endless dance ume portrait
