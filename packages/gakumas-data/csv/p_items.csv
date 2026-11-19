@@ -285,7 +285,7 @@ id,name,rarity,upgraded,plan,mode,sourceType,pIdolId,welfare,effects
 284,世界を救ったマイク,SSR,FALSE,sense,stage,pIdol,95,FALSE,at:cardUsed { if:cardHasEffect(concentration) { halfCostTurns+=2 }; limit:2 }
 285,世界を救ったマイク+,SSR,TRUE,sense,stage,pIdol,95,FALSE,at:cardUsed { if:cardHasEffect(concentration) { halfCostTurns+=2 }; limit:3 }
 286,勝利をその手に,SSR,FALSE,sense,stage,support,,FALSE,at:afterStartOfStage { addCardToHand(111); limit:1 }
-287,迷子のお呼び出し,SSR,FALSE,logic,stage,support,,FALSE,at:afterStartOfStage { addCardToHand(131); limit:1 }
+287,迷子のお呼び出し,SSR,FALSE,logic,stage,support,,TRUE,at:afterStartOfStage { addCardToHand(131); limit:1 }
 288,麻央にぴったし,SSR,FALSE,anomaly,stage,support,,FALSE,at:afterStartOfStage { addCardToHand(421); limit:1 }
 289,シルヴェスタ出撃！,SSR,FALSE,logic,stage,pIdol,96,FALSE,"at:endOfTurn { if:turnsElapsed%2==1 & countCards[removed]<=8 { setGoodImpressionTurnsEffectBuff(0.7,3); fixedStamina-=1 } }"
 290,シルヴェスタ出撃！+,SSR,TRUE,logic,stage,pIdol,96,FALSE,"at:endOfTurn { if:turnsElapsed%2==1 & countCards[removed]<=8 { setGoodImpressionTurnsEffectBuff(0.7,3) } }"

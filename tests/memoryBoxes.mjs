@@ -99,8 +99,8 @@ const KNOWN = new Set([
   "card: tests/fixtures/memory/03.png [5] expected 私がスター+ got 魅惑のパフォーマンス",
   "power: tests/fixtures/memory/03.png expected 19776 got 19668",
   // The game's total differs from contest power recomputed from labels that match the screen
-  // (params, P-items and cards all right), so a data value or the formula is off. Cause not found yet.
-  "power: tests/fixtures/memory/account/m15.webp expected 5364 got 5385",
+  // (params, P-items and cards all right). m32 is the only labelled memory with N cards (3) and
+  // params under 100, and the gap is 37 per N card; which of the two it is is not settled yet.
   "power: tests/fixtures/memory/account/m32.webp expected 1683 got 1794",
 ]);
 
