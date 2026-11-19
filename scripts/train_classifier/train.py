@@ -10,7 +10,7 @@ from PIL import Image
 from . import gallery
 from .augment import augment
 from .models import EMBEDDING_DIM, INPUT_SIZE, CosineMarginHead, Encoder, PrototypeClassifier
-from .prepare import ENTITY_CONFIG, load_upgraded_ids
+from .prepare import COVERED_CLASS_ID, ENTITY_CONFIG, has_covered_class, load_upgraded_ids
 
 DEFAULT_EPOCHS = 120
 BATCH_SIZE = 128
@@ -67,6 +67,10 @@ def train_encoder(entity_type, samples, class_names, device, epochs):
             device=device,
         )
 
+    covered_label = (
+        class_names.index(COVERED_CLASS_ID) if has_covered_class(entity_type) else None
+    )
+
     encoder = Encoder().to(device)
     head = CosineMarginHead(len(class_names)).to(device)
     params = list(encoder.parameters()) + list(head.parameters())
@@ -83,8 +87,12 @@ def train_encoder(entity_type, samples, class_names, device, epochs):
         for step in range(steps_per_epoch):
             batch = order[step * BATCH_SIZE : (step + 1) * BATCH_SIZE]
             batch_upgraded = upgraded[batch] if upgraded is not None else None
-            logits = head(encoder(augment(images[batch], donors, batch_upgraded)), labels[batch])
-            loss = F.cross_entropy(logits, labels[batch], label_smoothing=0.05)
+            x, covered = augment(images[batch], donors, batch_upgraded, return_covered=True)
+            batch_labels = labels[batch]
+            if covered_label is not None:
+                batch_labels = torch.where(covered, covered_label, batch_labels)
+            logits = head(encoder(x), batch_labels)
+            loss = F.cross_entropy(logits, batch_labels, label_smoothing=0.05)
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()

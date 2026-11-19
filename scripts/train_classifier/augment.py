@@ -23,6 +23,19 @@ UPGRADE_BADGE_OUTLINE = 0.025
 UPGRADE_BADGE_RED = (0.94, 0.33, 0.40)
 UPGRADE_BADGE_YELLOW = (0.94, 0.70, 0.30)
 DEGRADED_RESOLUTIONS = [24, 32, 40, 48, 64, 80, 96]
+# The game's nav pill: a translucent gray capsule with white icons that floats
+# over the bottom of the screen and can lie across a row of cards. It is drawn
+# only the way it covers cards on short screens (across the middle); lighter
+# pills over otherwise readable cards cost clear reads elsewhere.
+NAV_PILL_PROBABILITY = 0.2
+NAV_PILL_CENTER = (0.4, 0.6)
+NAV_PILL_HALF_HEIGHT = (0.22, 0.32)
+NAV_PILL_ALPHA = (0.65, 0.9)
+NAV_PILL_GRAY = (0.35, 0.6)
+NAV_PILL_STROKE = 0.025
+# A card the pill hides at least this much of is trained as the covered class:
+# what is left (the cost and a strip of frame) does not name the card.
+NAV_PILL_COVERED_FRACTION = 0.4
 
 
 def _uniform(shape, low, high, device):
@@ -74,6 +87,47 @@ def _draw_upgrade_badge(x, upgraded):
     return torch.where(outline & draw.view(shape), badge, x)
 
 
+def _draw_nav_pill(x):
+    batch, _, height, width = x.shape
+    device = x.device
+    draw = torch.rand(batch, device=device) < NAV_PILL_PROBABILITY
+    if not draw.any():
+        return x, torch.zeros_like(draw)
+    shape = (batch, 1, 1, 1)
+    py = torch.linspace(0, 1, height, device=device).view(1, 1, height, 1)
+    px = torch.linspace(0, 1, width, device=device).view(1, 1, 1, width)
+    cy = _uniform(shape, *NAV_PILL_CENTER, device)
+    half = _uniform(shape, *NAV_PILL_HALF_HEIGHT, device)
+    # Either end of the capsule may fall inside the card, or neither.
+    left = _uniform(shape, -0.8, 0.4, device)
+    right = torch.maximum(_uniform(shape, 0.6, 1.8, device), left + 2 * half)
+    spine_x = px.clamp(min=left + half, max=right - half)
+    inside = (px - spine_x) ** 2 + (py - cy) ** 2 <= half**2
+
+    alpha = _uniform(shape, *NAV_PILL_ALPHA, device)
+    gray = _uniform(shape, *NAV_PILL_GRAY, device) + _uniform(
+        (batch, 3, 1, 1), -0.03, 0.03, device
+    )
+    band = x * (1 - alpha) + gray * alpha
+
+    # Its icons: white separators and rings, like the home, help and back marks.
+    separator_x = _uniform(shape, 0, 1, device)
+    separator = ((px - separator_x).abs() < NAV_PILL_STROKE / 2) & (
+        (py - cy).abs() < half * 0.5
+    )
+    ring_x = _uniform(shape, 0, 1, device)
+    ring_r = half * _uniform(shape, 0.4, 0.6, device)
+    ring_distance = ((px - ring_x) ** 2 + (py - cy) ** 2).sqrt()
+    ring = (ring_distance - ring_r).abs() < NAV_PILL_STROKE
+    strokes = (separator & (torch.rand(shape, device=device) < 0.6)) | (
+        ring & (torch.rand(shape, device=device) < 0.7)
+    )
+    band = torch.where(strokes, torch.full_like(band, 0.96), band)
+    covered = draw & (inside.float().mean((1, 2, 3)) >= NAV_PILL_COVERED_FRACTION)
+    # Only covering pills are drawn (see NAV_PILL_PROBABILITY).
+    return torch.where(inside & covered.view(shape), band, x), covered
+
+
 def _jitter_framing(x):
     batch, device = x.shape[0], x.device
     scale = _uniform(batch, 0.9, 1.12, device)
@@ -121,13 +175,19 @@ def to_model_input(x):
     )
 
 
-def augment(x, overlay_donors=None, upgraded=None):
+# With return_covered, also says which samples the nav pill covers (see
+# NAV_PILL_COVERED_FRACTION).
+def augment(x, overlay_donors=None, upgraded=None, return_covered=False):
     x = x.float() / 255
+    covered = torch.zeros(x.shape[0], dtype=torch.bool, device=x.device)
     if overlay_donors is not None:
         x = _swap_overlay_regions(x, overlay_donors, SKILL_CARD_OVERLAY_REGIONS)
+        x, covered = _draw_nav_pill(x)
     if upgraded is not None:
         x = _draw_upgrade_badge(x, upgraded)
     x = _jitter_framing(x)
     x = _degrade_resolution(x)
     x = _jitter_color(x)
+    if return_covered:
+        return to_model_input(x), covered
     return to_model_input(x)
