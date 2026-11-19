@@ -36,6 +36,8 @@ export function SimulationRunsContextProvider({ children }) {
   const [savedLoading, setSavedLoading] = useState(true);
   const [savedError, setSavedError] = useState(false);
   const [savedWanted, setSavedWanted] = useState(false);
+  // Saved run id → the id of its shared copy, for the user's shared runs.
+  const [sharedIds, setSharedIds] = useState({});
   const savedRunsRef = useRef(savedRuns);
   savedRunsRef.current = savedRuns;
   const didInitRef = useRef(false);
@@ -65,6 +67,21 @@ export function SimulationRunsContextProvider({ children }) {
     saveHistoryToStorage(history);
   }, [history, loaded]);
 
+  // Which saved runs are shared only marks them; a failure here leaves
+  // the saved runs usable.
+  const fetchShared = useCallback(async () => {
+    try {
+      const res = await fetch("/api/share");
+      if (!res.ok) throw new Error(`GET /api/share failed with ${res.status}`);
+      const list = await res.json();
+      setSharedIds(
+        Object.fromEntries(list.map(({ id, loadoutId }) => [loadoutId, id])),
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  }, []);
+
   const fetchSaved = useCallback(async ({ quiet = false } = {}) => {
     if (!quiet) setSavedLoading(true);
     try {
@@ -75,13 +92,14 @@ export function SimulationRunsContextProvider({ children }) {
       const list = await res.json();
       setSavedRuns(list.map(normalizeSavedRun).filter(Boolean));
       setSavedError(false);
+      fetchShared();
     } catch (err) {
       console.error(err);
       setSavedError(true);
     } finally {
       setSavedLoading(false);
     }
-  }, []);
+  }, [fetchShared]);
 
   const mutateSaved = useCallback(
     async (method, body) => {
@@ -109,6 +127,7 @@ export function SimulationRunsContextProvider({ children }) {
       if (savedWanted) fetchSaved();
     } else if (status === "unauthenticated") {
       setSavedRuns([]);
+      setSharedIds({});
       setSavedLoading(false);
     }
   }, [status, savedWanted, fetchSaved]);
@@ -200,6 +219,57 @@ export function SimulationRunsContextProvider({ children }) {
     [mutateSavedOptimistically],
   );
 
+  const shareSaved = useCallback(async (loadoutId) => {
+    const res = await fetch("/api/share", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ loadoutId }),
+    });
+    if (!res.ok) throw new Error(`POST /api/share failed with ${res.status}`);
+    const { id } = await res.json();
+    setSharedIds((cur) => ({ ...cur, [loadoutId]: id }));
+    return id;
+  }, []);
+
+  const unshareSaved = useCallback(
+    async (loadoutId) => {
+      const id = sharedIds[loadoutId];
+      if (!id) return;
+      const res = await fetch("/api/share", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      // 404: already taken down.
+      if (!res.ok && res.status != 404) {
+        throw new Error(`DELETE /api/share failed with ${res.status}`);
+      }
+      setSharedIds(({ [loadoutId]: _, ...rest }) => rest);
+    },
+    [sharedIds],
+  );
+
+  // Puts someone else's run (a shared one) at the top of the history, so it
+  // can be loaded and compared like the user's own.
+  const addToHistory = useCallback((run) => {
+    const entry = {
+      id: newRunId(),
+      createdAt: new Date().toISOString(),
+      name: run.name || null,
+      loadout: extractLoadoutFields(run.loadout),
+      linkLoadouts: run.linkLoadouts?.map(extractLoadoutFields) || null,
+      stats: run.stats || null,
+      derived: run.derived || deriveRunMeta(run.loadout),
+    };
+    setHistory((cur) =>
+      [entry, ...cur.filter((r) => !sameRunInputs(r, entry))].slice(
+        0,
+        MAX_HISTORY,
+      ),
+    );
+    return entry;
+  }, []);
+
   const loadRun = useCallback(
     (run) => {
       setLoadout(run.loadout);
@@ -222,6 +292,10 @@ export function SimulationRunsContextProvider({ children }) {
       saveRun,
       deleteSaved,
       renameSaved,
+      sharedIds,
+      shareSaved,
+      unshareSaved,
+      addToHistory,
       loadRun,
       requestSaved,
       refetchSaved: fetchSaved,
@@ -237,6 +311,10 @@ export function SimulationRunsContextProvider({ children }) {
       saveRun,
       deleteSaved,
       renameSaved,
+      sharedIds,
+      shareSaved,
+      unshareSaved,
+      addToHistory,
       loadRun,
       requestSaved,
       fetchSaved,

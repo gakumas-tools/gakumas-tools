@@ -16,6 +16,7 @@ import {
   stageLabelOf,
 } from "@/utils/simulationRun";
 import c from "@/utils/classNames";
+import { copyWhenReady, sharedRunUrl } from "@/utils/sharedRunUrl";
 import usePersistedState from "@/utils/usePersistedState";
 import AxisRow from "./AxisRow";
 import CompareRow from "./CompareRow";
@@ -36,11 +37,20 @@ function CompareTab({ currentRun, onAfterLoad }) {
     deleteHistoryRun,
     deleteSaved,
     renameSaved,
+    sharedIds,
+    shareSaved,
+    unshareSaved,
     loadRun,
     requestSaved,
   } = useContext(SimulationRunsContext);
 
-  const [deleteErrors, setDeleteErrors] = useState({});
+  // Per saved run: what last went wrong with it (delete, share, unshare).
+  const [rowErrors, setRowErrors] = useState({});
+
+  const clearRowError = (run) =>
+    setRowErrors(({ [run.id]: _, ...rest }) => rest);
+  const setRowError = (run, message) =>
+    setRowErrors((cur) => ({ ...cur, [run.id]: message }));
 
   useEffect(() => {
     requestSaved();
@@ -177,10 +187,10 @@ function CompareTab({ currentRun, onAfterLoad }) {
     if (onAfterLoad) onAfterLoad();
   }
 
-  function confirmDelete(onConfirm) {
+  function confirmDelete(onConfirm, message = t("confirmDelete")) {
     setModal(
       <ConfirmModal
-        message={t("confirmDelete")}
+        message={message}
         confirmLabel={t("delete")}
         danger
         onConfirm={onConfirm}
@@ -193,15 +203,61 @@ function CompareTab({ currentRun, onAfterLoad }) {
   }
 
   function handleDeleteSaved(run) {
+    const loadoutId = run._id || run.id;
+    const shared = !!sharedIds[loadoutId];
     confirmDelete(async () => {
-      setDeleteErrors(({ [run.id]: _, ...rest }) => rest);
+      clearRowError(run);
       try {
-        await deleteSaved([run._id || run.id]);
+        await deleteSaved([loadoutId]);
+        // Its link would be left with no way to take it down.
+        if (shared) {
+          await unshareSaved(loadoutId).catch((err) => console.error(err));
+        }
       } catch (err) {
         console.error(err);
-        setDeleteErrors((cur) => ({ ...cur, [run.id]: t("deleteFailed") }));
+        setRowError(run, t("deleteFailed"));
       }
-    });
+    }, shared ? t("confirmDeleteShared") : undefined);
+  }
+
+  // Shares the run (or finds its link again) and copies the link. Whether
+  // the link was copied.
+  async function handleShare(run) {
+    clearRowError(run);
+    const link = shareSaved(run._id || run.id).then((id) => sharedRunUrl(id));
+    try {
+      await copyWhenReady(link);
+      return true;
+    } catch (err) {
+      console.error(err);
+      const url = await link.catch(() => null);
+      if (url) {
+        // Shared, but the browser wouldn't copy: let the player copy it.
+        window.prompt(t("copyThisLink"), url);
+      } else {
+        setRowError(run, t("shareFailed"));
+      }
+      return false;
+    }
+  }
+
+  function handleUnshare(run) {
+    setModal(
+      <ConfirmModal
+        message={t("confirmUnshare")}
+        confirmLabel={t("unshare")}
+        danger
+        onConfirm={async () => {
+          clearRowError(run);
+          try {
+            await unshareSaved(run._id || run.id);
+          } catch (err) {
+            console.error(err);
+            setRowError(run, t("unshareFailed"));
+          }
+        }}
+      />,
+    );
   }
 
   const filterCls = (v) => c(styles.filter, v !== "all" && styles.filterActive);
@@ -344,13 +400,18 @@ function CompareTab({ currentRun, onAfterLoad }) {
               xMax={range.max}
               ticks={ticks}
               showTime={subTab === "history"}
-              error={subTab === "saved" ? deleteErrors[run.id] : undefined}
+              error={subTab === "saved" ? rowErrors[run.id] : undefined}
               onLoad={handleLoad}
               onSave={subTab === "history" ? handleSave : undefined}
               onRename={subTab === "saved" ? handleRename : undefined}
               onDelete={
                 subTab === "saved" ? handleDeleteSaved : handleDeleteHistory
               }
+              shareId={
+                subTab === "saved" ? sharedIds[run._id || run.id] : undefined
+              }
+              onShare={subTab === "saved" ? handleShare : undefined}
+              onUnshare={subTab === "saved" ? handleUnshare : undefined}
             />
           ))}
           {hasActiveFilters && hiddenCount > 0 && (

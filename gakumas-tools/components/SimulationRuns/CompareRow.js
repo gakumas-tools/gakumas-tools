@@ -3,9 +3,11 @@ import { useLocale, useTranslations } from "next-intl";
 import {
   FaChevronDown,
   FaCheck,
+  FaLinkSlash,
   FaPenToSquare,
   FaRegFloppyDisk,
   FaRegTrashCan,
+  FaShareNodes,
   FaUpload,
   FaXmark,
 } from "react-icons/fa6";
@@ -37,6 +39,9 @@ function CompareRow({
   onSave,
   onRename,
   onDelete,
+  shareId,
+  onShare,
+  onUnshare,
   error,
 }) {
   const t = useTranslations("CompareTab");
@@ -50,6 +55,7 @@ function CompareRow({
   const [editError, setEditError] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const [copied, setCopied] = useState(false);
   const savingRef = useRef(false);
   const editSessionRef = useRef(0);
   const inputRef = useRef(null);
@@ -61,6 +67,12 @@ function CompareRow({
       inputRef.current.select();
     }
   }, [editMode]);
+
+  useEffect(() => {
+    if (!copied) return;
+    const timer = setTimeout(() => setCopied(false), 2000);
+    return () => clearTimeout(timer);
+  }, [copied]);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -180,6 +192,24 @@ function CompareRow({
         onClick: closeMenuAfter(startSave),
       });
     }
+    if (onShare) {
+      items.push({
+        key: "share",
+        icon: FaShareNodes,
+        label: shareId ? t("copyLink") : t("share"),
+        onClick: closeMenuAfter(async () => {
+          if (await onShare(run)) setCopied(true);
+        }),
+      });
+    }
+    if (onUnshare && shareId) {
+      items.push({
+        key: "unshare",
+        icon: FaLinkSlash,
+        label: t("unshare"),
+        onClick: closeMenuAfter(() => onUnshare(run)),
+      });
+    }
     if (onDelete) {
       items.push({
         key: "delete",
@@ -234,6 +264,8 @@ function CompareRow({
       <div className={styles.stageCell}>
         <div className={styles.tagRow}>
           {current && <span className={styles.tag}>{t("current")}</span>}
+          {shareId && <span className={styles.tag}>{t("shared")}</span>}
+          {copied && <span className={styles.time}>{t("linkCopied")}</span>}
           {relative && <span className={styles.time}>{relative}</span>}
         </div>
         {editMode ? (
