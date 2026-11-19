@@ -13,9 +13,11 @@ import DIGIT_TEMPLATES from "./contestLoadoutDigits.json";
 import { classifyCrops, ICON_SIZE } from "./entityClassifier";
 import { readNumber, segmentGlyphs } from "./glyphs";
 import {
+  findNavPill,
   getPItemBoundingBoxes,
   getSkillCardBoundingBoxes,
 } from "./memoryGeometry";
+import { coversCards, readCoveredCards } from "./coveredCards";
 import { calculateContestPower } from "../contestPower";
 
 // No `g` flag: a global regex keeps lastIndex between .test() calls, which
@@ -91,12 +93,32 @@ export async function getMemoryFromFile(
     pItemSession,
     pItemClasses
   );
-  const skillCards = await extractEntities(
+  let skillCards = await extractEntities(
     img,
     skillCardBoxes,
     skillCardSession,
     skillCardClasses
   );
+  const pill = findNavPill(imageData);
+  if (pill && coversCards(skillCardBoxes, pill, imageData.height)) {
+    skillCards = readCoveredCards(imageData, skillCardBoxes, skillCards, {
+      pill,
+      thumbs: await loadCardThumbs(),
+      pIdolId: skillCards
+        .map(SkillCards.getById)
+        .find((card) => card?.pIdolId)?.pIdolId,
+      powerCandidates,
+      powerOf: (ids) =>
+        calculateContestPower(
+          params,
+          pItems,
+          ids,
+          ids.map((id, i) =>
+            readCustomizations(imageData, skillCardBoxes[i], MEMORY_LAYOUT, id)
+          )
+        ),
+    });
+  }
 
   const customizations = skillCards.map((id, i) =>
     readCustomizations(imageData, skillCardBoxes[i], MEMORY_LAYOUT, id)
@@ -139,6 +161,26 @@ export async function getMemoryFromFile(
     skillCardIds: skillCards,
     customizations,
   };
+}
+
+// The card icons covered cards are matched with: loaded only for a screen
+// with the nav pill, as it is about a megabyte.
+let cardThumbs;
+async function loadCardThumbs() {
+  if (!cardThumbs) {
+    cardThumbs = import("./cardThumbs.json").then(async ({ default: pack }) => {
+      const bytes = Uint8Array.from(atob(pack.png), (c) => c.charCodeAt(0));
+      const bitmap = await createImageBitmap(
+        new Blob([bytes], { type: "image/png" })
+      );
+      const canvas = new OffscreenCanvas(bitmap.width, bitmap.height);
+      const ctx = canvas.getContext("2d", { willReadFrequently: true });
+      ctx.drawImage(bitmap, 0, 0);
+      const { data } = ctx.getImageData(0, 0, bitmap.width, bitmap.height);
+      return { ...pack, data, width: bitmap.width };
+    });
+  }
+  return cardThumbs;
 }
 
 function debugBoundingBoxes(img, boxes) {

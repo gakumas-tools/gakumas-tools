@@ -33,12 +33,14 @@
  *   pnpm test:memory --digits     # rebuild card badge digit templates (with contest labels)
  *   pnpm test:memory --icons      # rebuild bottom effect icon templates (with art and contest
  *                                 # labels), and check them leaving each screen out
+ *   pnpm test:memory --thumbs     # rebuild cardThumbs.json, the card icons the nav pill's
+ *                                 # covered cards are matched with, from gk-img
  *
  * Tesseract auto-downloads its English language model on first run; the
  * harness directs that download into tests/.tesseract-cache/ (gitignored)
  * rather than the repo root.
  */
-import { readFileSync, mkdirSync } from "node:fs";
+import { readFileSync, readdirSync, mkdirSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve, join, basename, parse } from "node:path";
 import sharp from "sharp";
@@ -46,11 +48,13 @@ import * as ort from "onnxruntime-node";
 import { createWorker } from "tesseract.js";
 import { CROPS_OUT, isTrainingScreen, writeCrop } from "./classifierCrops.mjs";
 import { PItems, SkillCards } from "gakumas-data";
-import { findParams } from "../gakumas-tools/utils/imageProcessing/memory.js";
+import { extractPower, findParams } from "../gakumas-tools/utils/imageProcessing/memory.js";
 import {
+  findNavPill,
   getPItemBoundingBoxes,
   getSkillCardBoundingBoxes,
 } from "../gakumas-tools/utils/imageProcessing/memoryGeometry.js";
+import { readCoveredCards, THUMB_SIZE } from "../gakumas-tools/utils/imageProcessing/coveredCards.js";
 import {
   classifyCrops,
   ICON_SIZE,
@@ -84,6 +88,10 @@ const BADGE_DIGITS_PATH = join(
 // memories' labels: only memory screens show some dark score digits (3, 7).
 const DIGITS = process.argv.includes("--digits");
 const ICONS = process.argv.includes("--icons");
+const THUMBS = process.argv.includes("--thumbs");
+const CARD_THUMBS = join(REPO_ROOT, "gakumas-tools/utils/imageProcessing/cardThumbs.json");
+const GK_IMG_CARD_ICONS = join(REPO_ROOT, "gk-img/docs/skill_cards/icons");
+const THUMB_COLUMNS = 64;
 const OVERLAY_DIR = join(HARNESS_DIR, "overlays", "memory");
 const TESSERACT_CACHE = join(HARNESS_DIR, ".tesseract-cache");
 const PUBLIC = join(REPO_ROOT, "gakumas-tools/public");
@@ -94,10 +102,6 @@ const P_ITEM_CLASSES = join(PUBLIC, "p_item_classes.json");
 
 // Misses the importer makes today. Each is checked against the screen.
 const KNOWN = new Set([
-  // 03's two cards under the nav pill, and the total that follows from them.
-  "card: tests/fixtures/memory/03.png [4] expected せのびの魔法+ got 魅惑のパフォーマンス",
-  "card: tests/fixtures/memory/03.png [5] expected 私がスター+ got 魅惑のパフォーマンス",
-  "power: tests/fixtures/memory/03.png expected 19776 got 19668",
   // The game's total differs from contest power recomputed from labels that match the screen
   // (params, P-items and cards all right), so a data value or the formula is off. Cause not found yet.
   "power: tests/fixtures/memory/account/m15.webp expected 5364 got 5385",
@@ -340,7 +344,57 @@ function pIdolOf(pItems, skillCards) {
   };
 }
 
+// Every card icon gk-img has, shrunk to THUMB_SIZE and laid out in one PNG,
+// in cardThumbs.json beside the order of their names.
+async function buildThumbs() {
+  const keys = readdirSync(GK_IMG_CARD_ICONS)
+    .filter((f) => f.endsWith(".webp"))
+    .map((f) => f.slice(0, -5))
+    .sort((a, b) => parseInt(a, 10) - parseInt(b, 10) || a.localeCompare(b));
+  const S = THUMB_SIZE;
+  const width = THUMB_COLUMNS * S;
+  const height = Math.ceil(keys.length / THUMB_COLUMNS) * S;
+  const atlas = Buffer.alloc(width * height * 3, 255);
+  for (const [k, key] of keys.entries()) {
+    const thumb = await sharp(join(GK_IMG_CARD_ICONS, `${key}.webp`))
+      .flatten({ background: "#ffffff" })
+      .resize(S, S, { fit: "fill", kernel: "cubic" })
+      .removeAlpha()
+      .raw()
+      .toBuffer();
+    const x0 = (k % THUMB_COLUMNS) * S;
+    const y0 = Math.floor(k / THUMB_COLUMNS) * S;
+    for (let y = 0; y < S; y++) thumb.copy(atlas, ((y0 + y) * width + x0) * 3, y * S * 3, (y + 1) * S * 3);
+  }
+  const png = await sharp(atlas, { raw: { width, height, channels: 3 } }).png({ compressionLevel: 9 }).toBuffer();
+  writeFileSync(CARD_THUMBS, JSON.stringify({ cols: THUMB_COLUMNS, keys, png: png.toString("base64") }) + "\n");
+  console.log(`${keys.length} card icons → ${CARD_THUMBS} (${png.length} bytes of PNG)`);
+}
+
+let _thumbs;
+async function getThumbs() {
+  if (!_thumbs) {
+    const pack = JSON.parse(readFileSync(CARD_THUMBS, "utf8"));
+    const { data, info } = await sharp(Buffer.from(pack.png, "base64")).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+    _thumbs = { ...pack, data, width: info.width };
+  }
+  return _thumbs;
+}
+
+// The totals OCR reads off the screen, as the importer reads them: white text only.
+async function readPowers(image, ocrWorker) {
+  const { pixels, width, height } = image;
+  const out = Buffer.alloc(width * height * 3);
+  for (let i = 0, o = 0; i < pixels.length; i += 4, o += 3) {
+    const v = pixels[i] > 252 && pixels[i + 1] > 252 && pixels[i + 2] > 252 ? 0 : 255;
+    out[o] = out[o + 1] = out[o + 2] = v;
+  }
+  const png = await sharp(out, { raw: { width, height, channels: 3 } }).png().toBuffer();
+  return extractPower(await ocrWorker.recognize(png));
+}
+
 async function main() {
+  if (THUMBS) return buildThumbs();
   const fixture = loadFixture();
   const [{ skillCard, pItem }, ocrWorker] = await Promise.all([
     getModels(),
@@ -389,12 +443,29 @@ async function main() {
 
     const { params } = detection;
     const pItems = await classifyBoxes(image, detection.pItemBoxes, pItem.session, pItem.classes);
-    const skillCards = await classifyBoxes(
+    let skillCards = await classifyBoxes(
       image,
       detection.skillCardBoxes,
       skillCard.session,
       skillCard.classes,
     );
+    const imageData = { data: image.pixels, width: image.width, height: image.height };
+    const pill = findNavPill(imageData);
+    if (pill) {
+      skillCards = readCoveredCards(imageData, detection.skillCardBoxes, skillCards, {
+        pill,
+        thumbs: await getThumbs(),
+        pIdolId: pIdolOf(pItems, skillCards).cards,
+        powerCandidates: await readPowers(image, ocrWorker),
+        powerOf: (ids) =>
+          calculateContestPower(
+            params,
+            pItems,
+            ids,
+            ids.map((id, i) => readCustomizations(imageData, detection.skillCardBoxes[i], MEMORY_LAYOUT, id)),
+          ),
+      });
+    }
 
     if (arraysEqual(entry.params, params)) tally.params++;
     else miss("params", entry.file, `expected ${entry.params} got ${params}`);
@@ -426,7 +497,6 @@ async function main() {
       miss("pIdol", entry.file, `P-items say ${pIdol.items}, cards say ${pIdol.cards}`);
     }
 
-    const imageData = { data: image.pixels, width: image.width, height: image.height };
     const customizations = skillCards.map((id, i) =>
       readCustomizations(imageData, detection.skillCardBoxes[i], MEMORY_LAYOUT, id),
     );
