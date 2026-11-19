@@ -26,6 +26,7 @@ const FIXTURES = [
   "training-lesson-logic",
   "produce-exam-impression",
   "produce-exam-good-condition",
+  "produce-exam-impression-final",
 ];
 
 function getTypeMultipliers(capture) {
