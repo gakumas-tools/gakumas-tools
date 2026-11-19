@@ -127,6 +127,37 @@ const P_ITEM_PITCH = 0.771;
 const P_ITEM_SIZE = 0.75;
 // Contest frames are thicker relative to the icon than the reference art.
 const ICON_INSET = 0.02;
+// The edit view's panel can end partway down the sub row, with the dark stage
+// bar over the rest. Half a card misreads, so a card needs this much showing.
+const MIN_VISIBLE = 0.75;
+const COVER_DARK = 0.9;
+
+function isCover(r, g, b) {
+  const max = Math.max(r, g, b);
+  return max < 90 && max - Math.min(r, g, b) < 25;
+}
+
+// The share of a box above its first fully dark row, the panel's edge. A
+// greyed-out card's dark label sits in its top quarter, so the search starts
+// below it.
+const COVER_SEARCH_FROM = 0.3;
+
+export function visibleFraction({ data, width, height }, box) {
+  const x1 = Math.min(width, box.x + box.width);
+  const y1 = Math.min(height, box.y + box.height);
+  const y0 = Math.round(box.y + COVER_SEARCH_FROM * box.height);
+  for (let y = y0; y < y1; y++) {
+    let dark = 0;
+    for (let x = box.x; x < x1; x++) {
+      const i = (y * width + x) * 4;
+      if (isCover(data[i], data[i + 1], data[i + 2])) dark++;
+    }
+    if (dark >= COVER_DARK * (x1 - box.x)) {
+      return (y - box.y) / box.height;
+    }
+  }
+  return 1;
+}
 
 export function detectLoadoutBoxes(imageData) {
   const { width, height } = imageData;
@@ -142,7 +173,8 @@ export function detectLoadoutBoxes(imageData) {
     cards,
   );
 
-  const slots = ({ x, y, size, pitch }, count) =>
+  const isCovered = (box) => visibleFraction(imageData, box) < MIN_VISIBLE;
+  const slots = ({ x, y, size, pitch }, count, covered = () => false) =>
     Array.from({ length: count }, (_, i) => {
       const inset = size * ICON_INSET;
       const box = {
@@ -151,7 +183,9 @@ export function detectLoadoutBoxes(imageData) {
         width: Math.round(size - 2 * inset),
         height: Math.round(size - 2 * inset),
       };
-      return box.x + box.width / 2 < width && box.y + box.height / 2 < height
+      return box.x + box.width / 2 < width &&
+        box.y + box.height / 2 < height &&
+        !covered(box)
         ? box
         : null;
     });
@@ -159,8 +193,8 @@ export function detectLoadoutBoxes(imageData) {
   return {
     mainRow: cards.main,
     pItemBoxes: slots(pItems, P_ITEMS_PER_ROW),
-    mainBoxes: slots(cards.main, SKILL_CARDS_PER_ROW),
-    subBoxes: slots(cards.sub, SKILL_CARDS_PER_ROW),
+    mainBoxes: slots(cards.main, SKILL_CARDS_PER_ROW, isCovered),
+    subBoxes: slots(cards.sub, SKILL_CARDS_PER_ROW, isCovered),
   };
 }
 
