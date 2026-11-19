@@ -130,3 +130,66 @@ export async function unshareRun(db, userId, id) {
     .deleteOne({ _id: id, userId });
   return deletedCount > 0;
 }
+
+export const BROWSE_PAGE_SIZE = 20;
+const MAX_BROWSE_STAGES = 100;
+
+/** A stage id from a query string: a positive integer, or null. */
+export function parseStageId(value) {
+  if (typeof value != "string" || !/^[1-9]\d{0,5}$/.test(value)) return null;
+  return Number(value);
+}
+
+/** A paging cursor from a query string: a valid date, or null. */
+export function parseBefore(value) {
+  if (typeof value != "string" || value.length > 40) return null;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+/**
+ * Everyone's shared runs, newest first, for one stage or all of them:
+ * { runs, next }, where next is the cursor for the page after this one
+ * (the last run's createdAt) or null when there's no more.
+ */
+export async function browseSharedRuns(db, { stageId = null, before = null } = {}) {
+  const filter = {};
+  if (stageId != null) filter.stageId = stageId;
+  if (before) filter.createdAt = { $lt: before };
+  const docs = await db
+    .collection(SHARED_RUNS)
+    .find(filter, { projection: { userId: 0, sourceId: 0 } })
+    .sort({ createdAt: -1, _id: -1 })
+    .limit(BROWSE_PAGE_SIZE + 1)
+    .toArray();
+  const runs = docs.slice(0, BROWSE_PAGE_SIZE).map((doc) => ({
+    id: doc._id,
+    ...publicFields(doc),
+    createdAt: doc.createdAt ?? null,
+  }));
+  const more = docs.length > BROWSE_PAGE_SIZE;
+  return { runs, next: more ? runs.at(-1).createdAt : null };
+}
+
+/**
+ * The stages that have shared runs (custom stages aside, since two of them
+ * needn't be the same stage): [{ stageId, count }], latest share first.
+ */
+export async function sharedRunStages(db) {
+  const groups = await db
+    .collection(SHARED_RUNS)
+    .aggregate([
+      { $match: { stageId: { $type: "number" } } },
+      {
+        $group: {
+          _id: "$stageId",
+          count: { $sum: 1 },
+          latest: { $max: "$createdAt" },
+        },
+      },
+      { $sort: { latest: -1 } },
+      { $limit: MAX_BROWSE_STAGES },
+    ])
+    .toArray();
+  return groups.map(({ _id, count }) => ({ stageId: _id, count }));
+}
