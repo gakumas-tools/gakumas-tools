@@ -18,6 +18,9 @@ All notable changes to the contest simulator will be documented in this file.
 
 ## 2026-11-19
 
+- Add endless dance ume portrait
+- Add nee icchauyo temari portrait
+- Add agitato lilja portrait
 - Confirm contest season 56 stages
 
 ## 2026-11-16
