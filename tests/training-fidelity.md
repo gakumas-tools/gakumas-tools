@@ -39,6 +39,12 @@ or rank thresholds. Comparing whole stages and loadouts is
   the state read from the screenshot after it; and `capture`, that
   screenshot's name. A card that gives an extra use leaves the turn open, so
   the next action records `turnsElapsed` where it isn't one turn per card.
+- `stageEffects`: a produce exam's stage rules (応援 and the like), each
+  with the game's `text` verbatim, the `capture` it was read from, and its
+  `effect` in the engine's effect syntax, which the replay runs as the
+  stage's effects. A rule that fires as a turn starts lands inside the
+  previous action, since playing a card ends the turn, so that action's
+  `expected` is read after the rule fired.
 - `growthBefore`: growth read from the card detail before playing it, with
   `growthCapture` naming that screenshot.
 - For a card that holds another from the hand, the action records the whole

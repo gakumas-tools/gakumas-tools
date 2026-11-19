@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { PDrinks, SkillCards } from "gakumas-data";
+import { PDrinks, SkillCards, deserializeEffectSequence } from "gakumas-data";
 import { IdolConfig, StageEngine, S, G } from "gakumas-engine";
 import { hasIngameFixtures, loadIngameFixture } from "./ingameFixtures.mjs";
 
@@ -54,7 +54,9 @@ function createEngine(capture, play) {
     stage: {
       type: "capturedTraining",
       turnCount: capture.turnTypes.length,
-      effects: [],
+      effects: (capture.stageEffects ?? []).flatMap((e) =>
+        deserializeEffectSequence(e.effect),
+      ),
     },
   });
   engine.turnManager.generateTurnTypes = () => [...capture.turnTypes];
