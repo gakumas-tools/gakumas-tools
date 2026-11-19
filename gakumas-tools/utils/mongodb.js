@@ -17,6 +17,7 @@ if (!MONGODB_DB) {
 const INDEXES = {
   memories: { userId: 1 },
   loadouts: { userId: 1, createdAt: -1 },
+  sharedRuns: { userId: 1, sourceId: 1 },
 };
 
 /**
