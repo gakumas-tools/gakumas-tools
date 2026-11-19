@@ -51,6 +51,26 @@ export async function generateMetadataForReference(entity, slug, locale) {
   });
 }
 
+export async function generateMetadataForSharedRun(run, locale) {
+  const t_meta = await getTranslations({ locale, namespace: "metadata" });
+  const t = await getTranslations({ locale, namespace: "SharedRun" });
+  const title = `${run.name || t("untitled")} - ${t_meta("title")}`;
+  const description = Number.isFinite(run.stats?.mean)
+    ? t("metaDescription", {
+        mean: Math.round(run.stats.mean).toLocaleString(locale),
+        median: Math.round(run.stats.median).toLocaleString(locale),
+      })
+    : t("metaDescriptionNoScores");
+  return buildMetadata({
+    locale,
+    path: `/s/${run.id}`,
+    title,
+    description,
+    ogDescription: description,
+    twitterCard: "summary_large_image",
+  });
+}
+
 function buildMetadata({
   locale,
   path,
