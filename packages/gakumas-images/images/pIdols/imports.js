@@ -98,7 +98,9 @@ import image_97 from "./97.png";
 import image_98 from "./98.png";
 import image_99 from "./99.png";
 import image_100 from "./100.png";
+import image_101 from "./101.png";
 import image_102 from "./102.png";
+import image_103 from "./103.png";
 import image_104 from "./104.png";
 import image_105 from "./105.png";
 import image_106 from "./106.png";
@@ -124,6 +126,7 @@ import image_125 from "./125.png";
 import image_126 from "./126.png";
 import image_127 from "./127.png";
 import image_128 from "./128.png";
+import image_129 from "./129.png";
 import image_130 from "./130.png";
 import image_134 from "./134.png";
 import image_135 from "./135.png";
@@ -137,12 +140,15 @@ import image_142 from "./142.png";
 import image_143 from "./143.png";
 import image_144 from "./144.png";
 import image_145 from "./145.png";
+import image_146 from "./146.png";
 import image_147 from "./147.png";
 import image_148 from "./148.png";
 import image_149 from "./149.png";
 import image_150 from "./150.png";
 import image_151 from "./151.png";
 import image_152 from "./152.png";
+import image_153 from "./153.png";
+import image_154 from "./154.png";
 import image_155 from "./155.png";
 import image_156 from "./156.png";
 import image_157 from "./157.png";
@@ -153,6 +159,7 @@ import image_161 from "./161.png";
 import image_162 from "./162.png";
 import image_163 from "./163.png";
 import image_164 from "./164.png";
+import image_165 from "./165.png";
 
 const IMAGES = {
   '1': image_1,
@@ -255,7 +262,9 @@ const IMAGES = {
   '98': image_98,
   '99': image_99,
   '100': image_100,
+  '101': image_101,
   '102': image_102,
+  '103': image_103,
   '104': image_104,
   '105': image_105,
   '106': image_106,
@@ -281,6 +290,7 @@ const IMAGES = {
   '126': image_126,
   '127': image_127,
   '128': image_128,
+  '129': image_129,
   '130': image_130,
   '134': image_134,
   '135': image_135,
@@ -294,12 +304,15 @@ const IMAGES = {
   '143': image_143,
   '144': image_144,
   '145': image_145,
+  '146': image_146,
   '147': image_147,
   '148': image_148,
   '149': image_149,
   '150': image_150,
   '151': image_151,
   '152': image_152,
+  '153': image_153,
+  '154': image_154,
   '155': image_155,
   '156': image_156,
   '157': image_157,
@@ -310,6 +323,7 @@ const IMAGES = {
   '162': image_162,
   '163': image_163,
   '164': image_164,
+  '165': image_165,
 };
 
 export default IMAGES;
