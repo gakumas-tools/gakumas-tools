@@ -15,11 +15,11 @@ export const CONTEST_LAYOUT = {
   digit: [0.08, 0.24],
   scoreDigit: [0.13, 0.28],
   dot: { x: [0.36, 0.7], y: [0.66, 1.06], diameter: [0.17, 0.3] },
-  score: { x: [0.03, 0.4], y: [0.03, 0.3] },
+  score: { x: [0.03, 0.4], y: [0, 0.3] },
   genki: { x: [0.62, 1.02], y: [-0.03, 0.32] },
   cost: { x: [0.62, 1], y: [0.66, 1.08] },
   plainCost: { x: [0.68, 1], y: [0.77, 1] },
-  icon: { x: 0.17, half: 0.16, bottom: [0.72, 0.95] },
+  icon: { x: 0.17, half: 0.17, bottom: [0.72, 0.95] },
 };
 
 export const MEMORY_LAYOUT = {
