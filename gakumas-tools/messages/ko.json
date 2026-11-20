@@ -452,6 +452,12 @@
     "danceShort": "Da",
     "visualShort": "Vi"
   },
+  "StagePDrinks": {
+    "label": "P드링크",
+    "turn": "{turn}턴",
+    "turnLabel": "P드링크 {slot}을(를) 마실 턴",
+    "note": "고른 턴의 시작 시, 첫 카드 전에 마십니다. 게임에서는 언제든 마실 수 있습니다."
+  },
   "StageCustomizer": {
     "type": "타입",
     "contest": "콘테스트",
@@ -679,6 +685,7 @@
     "stageEffect": "스테이지 효과",
     "skillCard": "스킬 카드",
     "pItem": "P아이템",
+    "pDrink": "P드링크",
     "numTurns": "{num} 턴",
     "hand": "손패",
     "turnN": "{n} 턴",

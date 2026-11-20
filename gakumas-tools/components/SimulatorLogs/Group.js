@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { useTranslations } from "next-intl";
-import { PItems, SkillCards } from "gakumas-data";
+import { PDrinks, PItems, SkillCards } from "gakumas-data";
 import gkImg from "gakumas-images";
 import Image from "@/components/Image";
 import Logs from "./Logs";
@@ -14,6 +14,8 @@ function Group({ entity, childLogs, idolId, pendingDecision, onDecision }) {
     resolvedEntity = SkillCards.getById(entity.id);
   } else if (entity.type == "pItem") {
     resolvedEntity = PItems.getById(entity.id);
+  } else if (entity.type == "pDrink") {
+    resolvedEntity = PDrinks.getById(entity.id);
   }
 
   const { icon } = gkImg(resolvedEntity, idolId);
@@ -45,6 +47,12 @@ function Group({ entity, childLogs, idolId, pendingDecision, onDecision }) {
           <>
             <Image src={icon} width={24} height={24} alt="" />
             {t("pItem")}「{resolvedEntity.name}」
+          </>
+        )}
+        {entity.type == "pDrink" && (
+          <>
+            <Image src={icon} width={24} height={24} alt="" />
+            {t("pDrink")}「{resolvedEntity.name}」
           </>
         )}
       </div>

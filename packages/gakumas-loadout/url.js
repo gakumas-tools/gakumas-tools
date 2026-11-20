@@ -1,4 +1,4 @@
-import { PItems, SkillCards, Stages } from "gakumas-data";
+import { PDrinks, PItems, SkillCards, Stages } from "gakumas-data";
 import {
   deserializeCustomizations,
   fixCustomizationGroups,
@@ -40,6 +40,27 @@ const DEFAULTS = {
 
 function knownPItemId(id) {
   return PItems.getById(id) ? id : 0;
+}
+
+function knownPDrinkId(id) {
+  return PDrinks.getById(id) ? id : 0;
+}
+
+// P-drinks are held only in produce exams: 3 slots, "drinks=5-11-18".
+export const P_DRINK_SLOTS = 3;
+
+export function deserializePDrinkIds(value) {
+  const ids = value ? deserializeIds(value).map(knownPDrinkId) : [];
+  return Array.from({ length: P_DRINK_SLOTS }, (_, i) => ids[i] || 0);
+}
+
+// The turn each drink is drunk at the start of: "drink_turns=1-11-11",
+// 1-based, 1 when missing.
+export function deserializePDrinkTurns(value) {
+  const turns = value ? deserializeIds(value) : [];
+  return Array.from({ length: P_DRINK_SLOTS }, (_, i) =>
+    Math.max(1, turns[i] || 1),
+  );
 }
 
 function knownSkillCardId(id) {
@@ -88,6 +109,12 @@ export function loadoutFromSearchParams(searchParams) {
     ? deserializeTurnTypes(searchParams.get("turns"))
     : null;
   const customStage = turnTypes ? { turnTypes } : {};
+  const pDrinkIds = deserializePDrinkIds(
+    isProduceExam ? searchParams.get("drinks") : null
+  );
+  const pDrinkTurns = deserializePDrinkTurns(
+    isProduceExam ? searchParams.get("drink_turns") : null
+  );
   supportBonus = parseFloat(supportBonus);
   if (isNaN(supportBonus)) supportBonus = null;
   params = params
@@ -117,6 +144,8 @@ export function loadoutFromSearchParams(searchParams) {
     supportBonus,
     params,
     pItemIds,
+    pDrinkIds,
+    pDrinkTurns,
     skillCardIdGroups,
     customizationGroups,
     hasDataFromParams,
@@ -131,6 +160,8 @@ export function loadoutToSearchParams(loadout) {
     supportBonus,
     params,
     pItemIds,
+    pDrinkIds,
+    pDrinkTurns,
     skillCardIdGroups,
     customizationGroups,
   } = loadout;
@@ -139,6 +170,15 @@ export function loadoutToSearchParams(loadout) {
   if (produceExamIdOf(stageId)) {
     const { turnTypes } = getStage(stageId, customStage);
     searchParams.set("turns", serializeTurnTypes(turnTypes));
+    if (pDrinkIds?.some((id) => id)) {
+      searchParams.set("drinks", serializeIds(pDrinkIds));
+      if (pDrinkTurns?.some((turn, i) => pDrinkIds[i] && turn > 1)) {
+        searchParams.set(
+          "drink_turns",
+          serializeIds(pDrinkIds.map((id, i) => (id && pDrinkTurns[i]) || 1)),
+        );
+      }
+    }
   }
   if (enterPercents) searchParams.set("enter_percents", "1");
   if (supportBonus != null) {

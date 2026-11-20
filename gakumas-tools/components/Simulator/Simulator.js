@@ -28,6 +28,7 @@ import LoadoutSummary from "@/components/LoadoutHistory/LoadoutSummary";
 import SimulatorResult from "@/components/SimulatorResult";
 import StageSelect from "@/components/StageSelect";
 import StrategyPicker from "@/components/StrategyPicker";
+import StagePDrinks from "@/components/StagePDrinks";
 import TurnOrder from "@/components/TurnOrder";
 import LoadoutContext from "@/contexts/LoadoutContext";
 import SimulationRunsContext from "@/contexts/SimulationRunsContext";
@@ -275,7 +276,12 @@ export default function Simulator() {
       <div className={styles.configurator}>
         {stage.preview && <Alert>{t("previewNote")}</Alert>}
         <StageSelect />
-        {stage.type == "produceExam" && <TurnOrder />}
+        {stage.type == "produceExam" && (
+          <>
+            <TurnOrder />
+            <StagePDrinks />
+          </>
+        )}
         {stage.type !== "contest" ? (
           <Alert>{t("enterPercents")}</Alert>
         ) : (

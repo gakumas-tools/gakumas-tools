@@ -460,6 +460,12 @@
     "danceShort": "Da",
     "visualShort": "Vi"
   },
+  "StagePDrinks": {
+    "label": "Pドリンク",
+    "turn": "{turn}ターン目",
+    "turnLabel": "Pドリンク{slot}を飲むターン",
+    "note": "選んだターンの開始時、最初のカードの前に飲みます。ゲームではいつでも飲めます。"
+  },
   "StageCustomizer": {
     "type": "タイプ",
     "contest": "コンテスト",
@@ -687,6 +693,7 @@
     "stageEffect": "ステージ効果",
     "skillCard": "スキルカード",
     "pItem": "Pアイテム",
+    "pDrink": "Pドリンク",
     "numTurns": "{num}ターン",
     "hand": "手札",
     "turnN": "{n}ターン目",
