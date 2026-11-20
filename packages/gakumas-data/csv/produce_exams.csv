@@ -1,0 +1,2 @@
+id,name,scenario,difficulty,exam,turnCounts,effects,source
+1,初 プロ 最終試験,hajime,pro,final,"3,3,5","at:startOfTurn { if:turnsElapsed==2 { genki+=3 }; limit:1 } at:startOfTurn { if:turnsElapsed==4 { if:goodImpressionTurns>=3 { goodImpressionTurns+=8 } }; limit:1 } at:startOfTurn { if:turnsElapsed==7 { if:goodImpressionTurns>=14 { goodImpressionTurns+=11 } }; limit:1 }","in game with 花海咲季 (ロジック), runs #8 and #9, 2026-11-19/20"
