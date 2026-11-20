@@ -26,6 +26,8 @@ All notable changes to the contest simulator will be documented in this file.
 - Add shirube china portrait
 - Add shirube sumika portrait
 - Add akogare wo daite ippozutsu kanae portrait
+- Add preview of unbalance tsubame
+- Add preview of unbalance mao
 
 ## 2026-11-19
 
