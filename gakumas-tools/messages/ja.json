@@ -441,6 +441,7 @@
     "linkContest": "リンクコンテスト",
     "event": "イベント",
     "idolRoad": "アイドルへの道",
+    "produceExam": "プロデュース試験",
     "custom": "カスタム"
   },
   "StageSummary": {
@@ -448,6 +449,16 @@
     "eventStageName": "{name} ステージ{stage} {round}周目",
     "custom": "カスタム",
     "activeSeason": "開催中のシーズン"
+  },
+  "TurnOrder": {
+    "label": "ターン順（ゲーム内の表示どおり）",
+    "turnLabel": "{turn}ターン目: {type}",
+    "vocal": "ボーカル",
+    "dance": "ダンス",
+    "visual": "ビジュアル",
+    "vocalShort": "Vo",
+    "danceShort": "Da",
+    "visualShort": "Vi"
   },
   "StageCustomizer": {
     "type": "タイプ",

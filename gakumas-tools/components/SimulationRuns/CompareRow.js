@@ -9,9 +9,9 @@ import {
   FaUpload,
   FaXmark,
 } from "react-icons/fa6";
-import { SkillCards, Stages } from "gakumas-data";
+import { SkillCards } from "gakumas-data";
 import gkImg from "gakumas-images";
-import { FALLBACK_STAGE } from "gakumas-loadout";
+import { FALLBACK_STAGE, getStage } from "gakumas-loadout";
 import Collapse from "@/components/Collapse";
 import Image from "@/components/Image";
 import LoadoutSummary from "@/components/LoadoutHistory/LoadoutSummary";
@@ -77,10 +77,7 @@ function CompareRow({
     if (loadout.stageId === "custom") {
       return loadout.customStage || FALLBACK_STAGE;
     }
-    if (loadout.stageId) {
-      return Stages.getById(loadout.stageId) || FALLBACK_STAGE;
-    }
-    return FALLBACK_STAGE;
+    return getStage(loadout.stageId, loadout.customStage);
   }, [loadout]);
 
   const signatureCard = derived?.signatureCardId
