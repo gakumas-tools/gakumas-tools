@@ -9,6 +9,7 @@ import SharedRun from "@/components/SharedRun";
 import { generateMetadataForSharedRun } from "@/utils/metadata";
 import { connect } from "@/utils/mongodb";
 import { OG_SIZE } from "@/utils/og";
+import { recordShareOpen } from "@/utils/recordShareOpen";
 import { getSharedRun } from "@/utils/sharedRuns";
 
 // One read per request, shared by the metadata and the page.
@@ -40,6 +41,7 @@ export default async function SharedRunPage({ params }) {
   setRequestLocale(locale);
   const run = await findRun(id);
   if (!run) notFound();
+  await recordShareOpen("sharedRun", new URLSearchParams({ id }));
 
   return (
     <SharedRun
