@@ -168,12 +168,14 @@ test("copySelectedToBottomOfDeckUpto may copy nothing", () => {
   assert.deepEqual(pilesOf(state), before);
 });
 
-test("スキルカードサポート raises base to +, + to ++, and stops where the game shows no change", () => {
-  // 手拍子 44 → 手拍子+ 45 → 手拍子++; ふれあい+ 123 has no ++ (変化なし in the game's ログ).
-  const engine = createEngine({ skillCardIds: [44, 123] });
+test("スキルカードサポート raises base to +, + to ++, and stops at ++ or an unread ++", () => {
+  // 手拍子 44 → 手拍子+ 45 → 手拍子++; ふれあい+ 123 → ふれあい++ (run #10's popup);
+  // 200%スマイル+ 149 has no ++ read from the game yet.
+  const engine = createEngine({ skillCardIds: [44, 123, 149] });
   const state = engine.getInitialState(true);
   const clap = state[S.cardMap].findIndex((c) => c.id === 44);
   const touch = state[S.cardMap].findIndex((c) => c.id === 123);
+  const smile = state[S.cardMap].findIndex((c) => c.id === 149);
   const name = (card) => SkillCards.getById(state[S.cardMap][card].id).name;
 
   assert.equal(engine.cardManager.supportUpgrade(state, clap), true);
@@ -182,8 +184,11 @@ test("スキルカードサポート raises base to +, + to ++, and stops where 
   assert.equal(name(clap), "手拍子++");
   assert.equal(state[S.cardMap][clap].baseId, 44);
   assert.equal(engine.cardManager.supportUpgrade(state, clap), false);
-  assert.equal(engine.cardManager.supportUpgrade(state, touch), false);
-  assert.equal(name(touch), "ふれあい+");
+  assert.equal(engine.cardManager.supportUpgrade(state, touch), true);
+  assert.equal(name(touch), "ふれあい++");
+  assert.equal(state[S.cardMap][touch].id, 10123);
+  assert.equal(engine.cardManager.supportUpgrade(state, smile), false);
+  assert.equal(name(smile), "200%スマイル+");
 });
 
 test("++ cards are found by id but never listed", () => {

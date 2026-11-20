@@ -4,3 +4,7 @@ id,name,availableCustomizations,rarity,type,plan,unlockPlv,upgraded,unique,sourc
 10043,もう少しだけ++,,R,active,logic,1,TRUE,FALSE,produce,,FALSE,,cost-=5,score+=19; motivation+=4,,,43
 10045,手拍子++,,R,active,logic,13,TRUE,FALSE,produce,,FALSE,,cost-=4,score+=goodImpressionTurns*2,1,,45
 10089,ラブリーウインク++,,SR,active,logic,1,TRUE,FALSE,produce,,FALSE,,cost-=4,goodImpressionTurns+=5; score+=goodImpressionTurns*0.9,,,89
+10010,可愛い仕草++,,N,active,logic,1,TRUE,FALSE,default,,FALSE,,cost-=4,goodImpressionTurns+=3; score+=goodImpressionTurns*1.2,1,,10
+10039,今日もおはよう++,,R,active,logic,1,TRUE,FALSE,produce,,FALSE,,cost-=4,score+=12; goodImpressionTurns+=4,,,39
+10123,ふれあい++,,SR,mental,logic,1,TRUE,FALSE,produce,,FALSE,,cost-=5,genki+=10; goodImpressionTurns+=5,,,123
+10125,幸せな時間++,,SR,mental,logic,7,TRUE,FALSE,produce,,FALSE,,cost-=4,goodImpressionTurns+=8,,,125
