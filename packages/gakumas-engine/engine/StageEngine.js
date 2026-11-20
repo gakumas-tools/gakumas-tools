@@ -1,3 +1,4 @@
+import { PDrinks } from "gakumas-data";
 import { ALL_FIELDS, S } from "../constants";
 import BuffManager from "./BuffManager";
 import CardManager from "./CardManager";
@@ -87,7 +88,25 @@ export default class StageEngine {
     this.effectManager.triggerEffectsForPhase(state, "afterStartOfStage");
     this.logger.pushGraphData(state);
     this.turnManager.startTurn(state);
+    this.drinkPDrinks(state);
     return state;
+  }
+
+  // P-drinks (produce exams). SIMPLIFICATION: in the game a drink can be
+  // drunk at any time during a turn; v1 drinks every held drink once, in
+  // slot order, right after turn 1 starts (the hand is already drawn).
+  // Each drink applies its actions exactly as the fidelity harness's
+  // drinksBefore does (effectManager.triggerEffects on the drink's actions).
+  drinkPDrinks(state) {
+    const pDrinkIds = this.getConfig(state).idol?.pDrinkIds || [];
+    for (let i = 0; i < pDrinkIds.length; i++) {
+      const pDrink = PDrinks.getById(pDrinkIds[i]);
+      if (!pDrink) continue;
+      const source = { type: "pDrink", id: pDrink.id };
+      this.logger.log(state, "entityStart", source);
+      this.effectManager.triggerEffects(state, pDrink.actions);
+      this.logger.log(state, "entityEnd", source);
+    }
   }
 
   isCardUsable(state, card) {

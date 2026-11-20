@@ -100,6 +100,7 @@ export function validateLoadout(loadout) {
   for (const field of [
     "params",
     "pItemIds",
+    "pDrinkIds",
     "skillCardIdGroups",
     "customizationGroups",
     "linkLoadouts",

@@ -452,6 +452,10 @@
     "danceShort": "Da",
     "visualShort": "Vi"
   },
+  "StagePDrinks": {
+    "label": "P-drinks",
+    "note": "Drunk at the start of turn 1. In the game you can drink them at any time; the simulator doesn't choose when yet."
+  },
   "StageCustomizer": {
     "type": "Type",
     "contest": "Contest",
@@ -679,6 +683,7 @@
     "stageEffect": "Stage effect",
     "skillCard": "Skill card",
     "pItem": "P-item",
+    "pDrink": "P-drink",
     "numTurns": "{num} {num, plural, =1 {turn} other {turns}}",
     "hand": "Hand",
     "turnN": "Turn {n}",

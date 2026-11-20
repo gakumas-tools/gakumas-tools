@@ -452,6 +452,10 @@
     "danceShort": "Da",
     "visualShort": "Vi"
   },
+  "StagePDrinks": {
+    "label": "P 饮料",
+    "note": "在第1回合开始时饮用。游戏中可以随时饮用，模拟器暂不选择饮用时机。"
+  },
   "StageCustomizer": {
     "type": "类型",
     "contest": "竞技场",
@@ -679,6 +683,7 @@
     "stageEffect": "舞台效果",
     "skillCard": "技能卡",
     "pItem": "P 道具",
+    "pDrink": "P 饮料",
     "numTurns": "第 {num} 回合",
     "hand": "持有技能卡",
     "turnN": "回合 {n}",

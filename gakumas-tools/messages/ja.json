@@ -460,6 +460,10 @@
     "danceShort": "Da",
     "visualShort": "Vi"
   },
+  "StagePDrinks": {
+    "label": "Pドリンク",
+    "note": "1ターン目の開始時に飲みます。ゲームではいつでも飲めますが、シミュレーターはまだ飲むタイミングを選びません。"
+  },
   "StageCustomizer": {
     "type": "タイプ",
     "contest": "コンテスト",
@@ -687,6 +691,7 @@
     "stageEffect": "ステージ効果",
     "skillCard": "スキルカード",
     "pItem": "Pアイテム",
+    "pDrink": "Pドリンク",
     "numTurns": "{num}ターン",
     "hand": "手札",
     "turnN": "{n}ターン目",

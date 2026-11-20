@@ -1,4 +1,4 @@
-import { PItems, SkillCards, Stages } from "gakumas-data";
+import { PDrinks, PItems, SkillCards, Stages } from "gakumas-data";
 import {
   deserializeCustomizations,
   fixCustomizationGroups,
@@ -40,6 +40,18 @@ const DEFAULTS = {
 
 function knownPItemId(id) {
   return PItems.getById(id) ? id : 0;
+}
+
+function knownPDrinkId(id) {
+  return PDrinks.getById(id) ? id : 0;
+}
+
+// P-drinks are held only in produce exams: 3 slots, "drinks=5-11-18".
+export const P_DRINK_SLOTS = 3;
+
+export function deserializePDrinkIds(value) {
+  const ids = value ? deserializeIds(value).map(knownPDrinkId) : [];
+  return Array.from({ length: P_DRINK_SLOTS }, (_, i) => ids[i] || 0);
 }
 
 function knownSkillCardId(id) {
@@ -88,6 +100,9 @@ export function loadoutFromSearchParams(searchParams) {
     ? deserializeTurnTypes(searchParams.get("turns"))
     : null;
   const customStage = turnTypes ? { turnTypes } : {};
+  const pDrinkIds = deserializePDrinkIds(
+    isProduceExam ? searchParams.get("drinks") : null
+  );
   supportBonus = parseFloat(supportBonus);
   if (isNaN(supportBonus)) supportBonus = null;
   params = params
@@ -117,6 +132,7 @@ export function loadoutFromSearchParams(searchParams) {
     supportBonus,
     params,
     pItemIds,
+    pDrinkIds,
     skillCardIdGroups,
     customizationGroups,
     hasDataFromParams,
@@ -131,6 +147,7 @@ export function loadoutToSearchParams(loadout) {
     supportBonus,
     params,
     pItemIds,
+    pDrinkIds,
     skillCardIdGroups,
     customizationGroups,
   } = loadout;
@@ -139,6 +156,9 @@ export function loadoutToSearchParams(loadout) {
   if (produceExamIdOf(stageId)) {
     const { turnTypes } = getStage(stageId, customStage);
     searchParams.set("turns", serializeTurnTypes(turnTypes));
+    if (pDrinkIds?.some((id) => id)) {
+      searchParams.set("drinks", serializeIds(pDrinkIds));
+    }
   }
   if (enterPercents) searchParams.set("enter_percents", "1");
   if (supportBonus != null) {

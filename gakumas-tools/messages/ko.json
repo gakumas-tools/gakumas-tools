@@ -452,6 +452,10 @@
     "danceShort": "Da",
     "visualShort": "Vi"
   },
+  "StagePDrinks": {
+    "label": "P드링크",
+    "note": "1턴 시작 시에 마십니다. 게임에서는 언제든 마실 수 있지만, 시뮬레이터는 아직 마실 타이밍을 고르지 않습니다."
+  },
   "StageCustomizer": {
     "type": "타입",
     "contest": "콘테스트",
@@ -679,6 +683,7 @@
     "stageEffect": "스테이지 효과",
     "skillCard": "스킬 카드",
     "pItem": "P아이템",
+    "pDrink": "P드링크",
     "numTurns": "{num} 턴",
     "hand": "손패",
     "turnN": "{n} 턴",

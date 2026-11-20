@@ -148,3 +148,29 @@ test("empty customization slots keep later cards' customizations in place", () =
   const restored = loadoutFromSearchParams(loadoutToSearchParams(source));
   assert.deepEqual(restored.customizationGroups, [[{}, { 65: 1 }, {}]]);
 });
+
+test("P-drinks round-trip in the URL for produce exams only", () => {
+  const exam = loadoutFromSearchParams(
+    new URLSearchParams(`stage=exam-1&drinks=5-${UNKNOWN_ID}-18-11`),
+  );
+  assert.deepEqual(exam.pDrinkIds, [5, 0, 18]);
+  const params = loadoutToSearchParams(exam);
+  assert.equal(params.get("drinks"), "5-0-18");
+  assert.deepEqual(
+    loadoutFromSearchParams(new URLSearchParams(params.toString())).pDrinkIds,
+    [5, 0, 18],
+  );
+
+  const none = loadoutFromSearchParams(new URLSearchParams("stage=exam-1"));
+  assert.deepEqual(none.pDrinkIds, [0, 0, 0]);
+  assert.equal(loadoutToSearchParams(none).has("drinks"), false);
+
+  const contest = loadoutFromSearchParams(
+    new URLSearchParams(`stage=${knownStage.id}&drinks=5-11-18`),
+  );
+  assert.deepEqual(contest.pDrinkIds, [0, 0, 0]);
+  assert.equal(
+    loadoutToSearchParams({ ...contest, pDrinkIds: [5, 11, 18] }).has("drinks"),
+    false,
+  );
+});

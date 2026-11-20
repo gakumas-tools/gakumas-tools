@@ -1,5 +1,13 @@
-import { Customizations, PIdols, PItems, SkillCards } from "gakumas-data";
+import {
+  Customizations,
+  PDrinks,
+  PIdols,
+  PItems,
+  SkillCards,
+} from "gakumas-data";
 import { getBaseId, isUniqueCard } from "../utils";
+
+export const MAX_P_DRINKS = 3;
 
 export default class IdolConfig {
   constructor(loadout) {
@@ -7,6 +15,7 @@ export default class IdolConfig {
       params,
       supportBonus,
       pItemIds,
+      pDrinkIds,
       skillCardIdGroups,
       customizationGroups,
     } = loadout;
@@ -39,6 +48,11 @@ export default class IdolConfig {
 
     // P-items and skill cards
     this.pItemIds = [...new Set(pItemIds.filter((id) => id))];
+    // P-drinks (produce exams only). Up to 3, as in the game's drink slots;
+    // the same drink may be held more than once, so no dedupe.
+    this.pDrinkIds = (pDrinkIds || [])
+      .filter((id) => PDrinks.getById(id))
+      .slice(0, MAX_P_DRINKS);
     const { dedupedCards, dupeIndices } = this.getDedupedCards(cards);
     dedupedCards.forEach((c) => {
       delete c.index;

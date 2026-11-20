@@ -10,6 +10,7 @@ const LOADOUT_FIELDS = [
   "supportBonus",
   "params",
   "pItemIds",
+  "pDrinkIds",
   "skillCardIdGroups",
   "customizationGroups",
 ];
