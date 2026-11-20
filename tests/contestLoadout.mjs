@@ -63,7 +63,6 @@ const DIGITS_PATH = join(
 const MIN_ICON_READ_ACCURACY = 0.75;
 // Each checked against its screenshot.
 const KNOWN = new Set([
-  "customization: tests/fixtures/contest_loadout/21.webp #2 inferred badges 1,,,5,motivation shown 2,,,5",
   "customization: tests/fixtures/contest_loadout/26.webp #8 inferred badges 1,,,0,cardUses shown 1,,,1",
 ]);
 
