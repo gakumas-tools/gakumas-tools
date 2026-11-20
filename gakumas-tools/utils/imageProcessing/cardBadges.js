@@ -68,6 +68,12 @@ function isBright(r, g, b) {
   return 0.299 * r + 0.587 * g + 0.114 * b >= 165;
 }
 
+// A dot digit blurred into the dot's white ring only comes apart at a
+// higher threshold (contest 21.webp #2).
+function isBrighter(r, g, b) {
+  return 0.299 * r + 0.587 * g + 0.114 * b >= 185;
+}
+
 function isDark(r, g, b) {
   const max = Math.max(r, g, b);
   return max < 120 && max - Math.min(r, g, b) < 35;
@@ -185,6 +191,10 @@ export function badgeGlyphs(imageData, box, layout) {
       minAspect: 0.2,
     });
   const dot = findDot(imageData, box, layout);
+  const dotGlyphs = (region) => {
+    const glyphs = white(region, true, isBright);
+    return glyphs.length ? glyphs : white(region, true, isBrighter);
+  };
   const shield = findBadge(imageData, box, layout.genki, isShieldBlue);
   let genki = shield && white(shield);
   // Two digits leave less blue background visible.
@@ -207,7 +217,7 @@ export function badgeGlyphs(imageData, box, layout) {
       true,
     );
   return {
-    dot: dot && white(dot, true, isBright),
+    dot: dot && dotGlyphs(dot),
     score: adjacentRun(
       componentGlyphs(imageData, area(box, layout.score, imageData), isDark, {
         height: layout.scoreDigit.map((d) => d * box.height),
