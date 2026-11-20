@@ -433,6 +433,7 @@
     "linkContest": "Link Contest",
     "event": "Event",
     "idolRoad": "Idol Road",
+    "produceExam": "Produce exam",
     "custom": "Custom"
   },
   "StageSummary": {
@@ -440,6 +441,16 @@
     "eventStageName": "{name} - Stage {stage} - Round {round}",
     "custom": "Custom",
     "activeSeason": "Current season"
+  },
+  "TurnOrder": {
+    "label": "Turn order (as shown in game)",
+    "turnLabel": "Turn {turn}: {type}",
+    "vocal": "Vocal",
+    "dance": "Dance",
+    "visual": "Visual",
+    "vocalShort": "Vo",
+    "danceShort": "Da",
+    "visualShort": "Vi"
   },
   "StageCustomizer": {
     "type": "Type",

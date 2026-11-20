@@ -433,6 +433,7 @@
     "linkContest": "Link Contest",
     "event": "活动",
     "idolRoad": "Idol Road",
+    "produceExam": "培育考试",
     "custom": "自定义"
   },
   "StageSummary": {
@@ -440,6 +441,16 @@
     "eventStageName": "{name} - 第 {stage} 舞台 - {round} 回合",
     "custom": "自定义",
     "activeSeason": "当前赛季"
+  },
+  "TurnOrder": {
+    "label": "回合顺序（按游戏内显示）",
+    "turnLabel": "第{turn}回合：{type}",
+    "vocal": "声乐",
+    "dance": "舞蹈",
+    "visual": "形象",
+    "vocalShort": "Vo",
+    "danceShort": "Da",
+    "visualShort": "Vi"
   },
   "StageCustomizer": {
     "type": "类型",

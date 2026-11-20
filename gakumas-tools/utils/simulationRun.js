@@ -1,4 +1,5 @@
 import { Idols, PIdols, SkillCards, Stages } from "gakumas-data";
+import { getStage } from "gakumas-loadout";
 
 export const MAX_HISTORY = 20;
 
@@ -80,7 +81,7 @@ export function deriveRunMeta(loadout) {
   if (stageId === "custom") {
     stageName = customStage?.name || null;
   } else if (stageId) {
-    const stage = Stages.getById(stageId);
+    const stage = getStage(stageId, customStage);
     if (stage) {
       stageName = stage.name;
       season = stage.season || null;
