@@ -15,7 +15,8 @@
  * The labels were made by hand from the screens, not from the importer's
  * output, so there is no --update. Every miss must be listed in KNOWN: the
  * harness fails on a miss that isn't, and on a listed miss that no longer
- * happens. Entries with `rejects` are screens that aren't a memory's stage
+ * happens. A card the nav pill covers (COVERED) may read as covered: the
+ * importer leaves it empty and flags the memory, so its total isn't checked. Entries with `rejects` are screens that aren't a memory's stage
  * loadout (the プロデュース tab), which the import must refuse.
  *
  * Labels: badges per card are [customization dot, top-left number, genki
@@ -53,6 +54,7 @@ import {
 } from "../gakumas-tools/utils/imageProcessing/memoryGeometry.js";
 import {
   classifyCrops,
+  COVERED_ENTITY_ID,
   ICON_SIZE,
 } from "../gakumas-tools/utils/imageProcessing/entityClassifier.js";
 import {
@@ -94,14 +96,22 @@ const P_ITEM_CLASSES = join(PUBLIC, "p_item_classes.json");
 
 // Misses the importer makes today. Each is checked against the screen.
 const KNOWN = new Set([
-  // 03's two cards under the nav pill, and the total that follows from them.
-  "card: tests/fixtures/memory/03.png [4] expected せのびの魔法+ got 魅惑のパフォーマンス",
-  "card: tests/fixtures/memory/03.png [5] expected 私がスター+ got 魅惑のパフォーマンス",
-  "power: tests/fixtures/memory/03.png expected 19776 got 19668",
   // The game's total differs from contest power recomputed from labels that match the screen
   // (params, P-items and cards all right). m32 is the only labelled memory with N cards (3) and
   // params under 100, and the gap is 37 per N card; which of the two it is is not settled yet.
   "power: tests/fixtures/memory/account/m32.webp expected 1683 got 1794",
+]);
+
+// Card slots the game's nav pill lies across, checked on each screen: all
+// that shows is the cost and a strip of frame (or, for an empty slot, the
+// pill over the background). pill/p* are the n* screens drawn at 1080x1960.
+const COVERED = new Set([
+  "tests/fixtures/memory/03.png [4]",
+  "tests/fixtures/memory/03.png [5]",
+  ...Array.from({ length: 11 }, (_, n) => String(n + 1).padStart(2, "0")).flatMap((n) => [
+    `tests/fixtures/memory/pill/p${n}.webp [4]`,
+    `tests/fixtures/memory/pill/p${n}.webp [5]`,
+  ]),
 ]);
 
 const args = process.argv.slice(2);
@@ -236,7 +246,7 @@ async function exportCrops(image, entry, boxes, model) {
   }
 }
 
-async function classifyBoxes(image, boxes, session, classes) {
+async function classifyBoxes(image, boxes, session, classes, keepCovered) {
   const crops = await Promise.all(
     boxes.map(async (box) => {
       // Round/clamp because the OCR-derived box origin is fractional.
@@ -252,7 +262,7 @@ async function classifyBoxes(image, boxes, session, classes) {
         .toBuffer();
     }),
   );
-  return classifyCrops(ort, session, classes, crops, 3);
+  return classifyCrops(ort, session, classes, crops, 3, undefined, undefined, keepCovered);
 }
 
 async function detectMemory(image, ocrWorker) {
@@ -355,6 +365,7 @@ async function main() {
     params: 0,
     pItems: [0, 0],
     cards: [0, 0],
+    covered: [0, 0],
     badges: [0, 0],
     unread: 0,
     power: [0, 0],
@@ -389,12 +400,15 @@ async function main() {
 
     const { params } = detection;
     const pItems = await classifyBoxes(image, detection.pItemBoxes, pItem.session, pItem.classes);
-    const skillCards = await classifyBoxes(
+    const reads = await classifyBoxes(
       image,
       detection.skillCardBoxes,
       skillCard.session,
       skillCard.classes,
+      true,
     );
+    const coveredReads = reads.map((id) => id === COVERED_ENTITY_ID);
+    const skillCards = reads.map((id) => (id === COVERED_ENTITY_ID ? 0 : id));
 
     if (arraysEqual(entry.params, params)) tally.params++;
     else miss("params", entry.file, `expected ${entry.params} got ${params}`);
@@ -404,8 +418,12 @@ async function main() {
       else miss("pItem", entry.file, `[${i}] expected ${pItemName(id)} got ${pItemName(pItems[i])}`);
     });
     entry.skillCards.forEach((id, i) => {
-      tally.cards[1]++;
-      if (skillCards[i] === id) tally.cards[0]++;
+      const covered = COVERED.has(`${entry.file} [${i}]`);
+      if (covered) tally.covered[1]++;
+      else tally.cards[1]++;
+      if (coveredReads[i] && covered) tally.covered[0]++;
+      else if (coveredReads[i]) miss("card", entry.file, `[${i}] expected ${cardName(id)} got (covered)`);
+      else if (skillCards[i] === id) tally[covered ? "covered" : "cards"][0]++;
       else miss("card", entry.file, `[${i}] expected ${cardName(id)} got ${cardName(skillCards[i])}`);
     });
 
@@ -460,7 +478,7 @@ async function main() {
     // The game's own total: the importer flags a memory whose total it can't
     // reproduce, so this checks params, P-items, cards, customizations and
     // the data's contest power together.
-    if (entry.power !== undefined) {
+    if (entry.power !== undefined && !coveredReads.some(Boolean)) {
       tally.power[1]++;
       const power = calculateContestPower(params, pItems, skillCards, customizations);
       if (power === entry.power) tally.power[0]++;
@@ -495,7 +513,8 @@ async function main() {
   const rejects = fixture.filter((e) => e.rejects).length;
   console.log(
     `\n${tally.screens} memory screens: params ${tally.params}/${tally.screens}, ` +
-      `P-items ${tally.pItems[0]}/${tally.pItems[1]}, cards ${tally.cards[0]}/${tally.cards[1]}, ` +
+      `P-items ${tally.pItems[0]}/${tally.pItems[1]}, cards ${tally.cards[0]}/${tally.cards[1]} ` +
+      `(covered by the nav pill: ${tally.covered[0]}/${tally.covered[1]} read or left for the player), ` +
       `badges ${tally.badges[0]}/${tally.badges[1]} (${tally.unread} unread), ` +
       `power ${tally.power[0]}/${tally.power[1]}; ${tally.rejected}/${rejects} other screens refused`,
   );
