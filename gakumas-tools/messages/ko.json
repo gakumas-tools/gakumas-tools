@@ -404,7 +404,9 @@
     "failed": "가져오기에 실패했습니다. 스크린샷을 확인하고 다시 시도해 주세요.",
     "unreadable": "읽지 못한 스크린샷: {files}",
     "selectScreenshots": "스크린샷 선택",
-    "dropHint": "탭하여 선택하거나 스크린샷을 여기에 드롭하세요"
+    "dropHint": "탭하여 선택하거나 스크린샷을 여기에 드롭하세요",
+    "covered": "메뉴 바에 가려진 스킬 카드는 비워 두었습니다. 직접 선택해 주세요:",
+    "coveredSlots": "{name}: {slots}번째 카드"
   },
   "Simulator": {
     "supportBonus": "서포트 보너스 %",

@@ -27,6 +27,7 @@ function MemoryImporterModal({ onSuccess, multiple = true }) {
   const [progress, setProgress] = useState(0);
   const [total, setTotal] = useState(0);
   const [failedFiles, setFailedFiles] = useState([]);
+  const [coveredMemories, setCoveredMemories] = useState([]);
   const ocrPoolRef = useRef(null);
   const busy = BUSY_STATUSES.includes(status);
 
@@ -43,6 +44,7 @@ function MemoryImporterModal({ onSuccess, multiple = true }) {
       setTotal(files.length);
       setProgress(0);
       setFailedFiles([]);
+      setCoveredMemories([]);
       setStatus("preparing");
 
       try {
@@ -77,7 +79,15 @@ function MemoryImporterModal({ onSuccess, multiple = true }) {
           })
         );
         console.timeEnd("All memories parsed");
-        const results = parsed.filter(Boolean);
+        // coveredSlots is only for this message: it isn't saved with the memory.
+        const read = parsed.filter(Boolean);
+        const results = read.map(({ coveredSlots, ...memory }) => memory);
+        const covered = read
+          .filter((memory) => memory.coveredSlots?.length)
+          .map((memory) => ({
+            name: memory.name,
+            slots: memory.coveredSlots.join(", "),
+          }));
         const failed = files
           .filter((_, i) => !parsed[i])
           .map((file) => file.name);
@@ -92,6 +102,7 @@ function MemoryImporterModal({ onSuccess, multiple = true }) {
         if ((await onSuccess(results)) === false) {
           throw new Error("Couldn't save imported memories");
         }
+        setCoveredMemories(covered);
         setStatus("done");
       } catch (err) {
         console.error(err);
@@ -154,6 +165,16 @@ function MemoryImporterModal({ onSuccess, multiple = true }) {
             failedFiles.length > 0 &&
             t("unreadable", { files: failedFiles.join(", ") })}
         </div>
+        {status == "done" && coveredMemories.length > 0 && (
+          <div className={styles.covered}>
+            <p>{t("covered")}</p>
+            <ul>
+              {coveredMemories.map(({ name, slots }, i) => (
+                <li key={i}>{t("coveredSlots", { name, slots })}</li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </Modal>
   );
