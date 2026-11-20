@@ -101,6 +101,7 @@ export function validateLoadout(loadout) {
     "params",
     "pItemIds",
     "pDrinkIds",
+    "pDrinkTurns",
     "skillCardIdGroups",
     "customizationGroups",
     "linkLoadouts",

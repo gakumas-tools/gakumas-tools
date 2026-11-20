@@ -454,7 +454,9 @@
   },
   "StagePDrinks": {
     "label": "P-drinks",
-    "note": "Drunk at the start of turn 1. In the game you can drink them at any time; the simulator doesn't choose when yet."
+    "turn": "Turn {turn}",
+    "turnLabel": "Turn to drink P-drink {slot}",
+    "note": "Drunk at the start of the turn chosen under each drink, before its first card. In the game you can drink them at any time."
   },
   "StageCustomizer": {
     "type": "Type",

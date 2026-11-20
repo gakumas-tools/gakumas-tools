@@ -454,7 +454,9 @@
   },
   "StagePDrinks": {
     "label": "P 饮料",
-    "note": "在第1回合开始时饮用。游戏中可以随时饮用，模拟器暂不选择饮用时机。"
+    "turn": "第{turn}回合",
+    "turnLabel": "饮用 P 饮料 {slot} 的回合",
+    "note": "在所选回合开始时、打出第一张卡之前饮用。游戏中可以随时饮用。"
   },
   "StageCustomizer": {
     "type": "类型",

@@ -16,6 +16,17 @@
   gap: 4px;
 }
 
+.slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.turn {
+  font-size: 12px;
+}
+
 .note {
   margin: 0;
   font-size: 12px;

@@ -60,3 +60,39 @@ test("P-drinks: unknown ids are dropped and at most 3 are held", () => {
   const engine = createEngine({ pDrinkIds: [5, 0, 99999, 11, 18, 5] });
   assert.deepEqual(engine.config.idol.pDrinkIds, [5, 11, 18]);
 });
+
+test("a P-drink set for a later turn is drunk at that turn's start, as the harness drinks it", () => {
+  const deck = [1, 3, 5, 13, 43, 45];
+  resetRand(11);
+  const drinker = createEngine({
+    skillCardIds: deck,
+    pDrinkIds: [5, 11],
+    pDrinkTurns: [1, 3],
+  });
+  let drunk = drinker.startStage(drinker.getInitialState());
+  assert.equal(drunk[S.goodImpressionTurns], 3);
+  drunk = drinker.endTurn(drunk);
+  drunk = drinker.endTurn(drunk);
+
+  resetRand(11);
+  const plain = createEngine({ skillCardIds: deck });
+  let harness = plain.startStage(plain.getInitialState());
+  plain.effectManager.triggerEffects(harness, PDrinks.getById(5).actions);
+  harness = plain.endTurn(harness);
+  // Turn 2 had nothing to drink.
+  assert.equal(harness[S.turnsElapsed], 1);
+  harness = plain.endTurn(harness);
+  plain.effectManager.triggerEffects(harness, PDrinks.getById(11).actions);
+
+  assert.equal(drunk[S.turnsElapsed], 2);
+  assert.deepEqual(stripLogs(drunk), stripLogs(harness));
+});
+
+test("P-drink turns default to 1 and stay with their drink when slots are dropped", () => {
+  const engine = createEngine({
+    pDrinkIds: [5, 99999, 11, 18],
+    pDrinkTurns: [4, 2, undefined, 0],
+  });
+  assert.deepEqual(engine.config.idol.pDrinkIds, [5, 11, 18]);
+  assert.deepEqual(engine.config.idol.pDrinkTurns, [4, 1, 1]);
+});

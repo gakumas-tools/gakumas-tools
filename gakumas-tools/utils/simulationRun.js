@@ -11,6 +11,7 @@ const LOADOUT_FIELDS = [
   "params",
   "pItemIds",
   "pDrinkIds",
+  "pDrinkTurns",
   "skillCardIdGroups",
   "customizationGroups",
 ];

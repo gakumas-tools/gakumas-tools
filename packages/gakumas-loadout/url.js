@@ -54,6 +54,15 @@ export function deserializePDrinkIds(value) {
   return Array.from({ length: P_DRINK_SLOTS }, (_, i) => ids[i] || 0);
 }
 
+// The turn each drink is drunk at the start of: "drink_turns=1-11-11",
+// 1-based, 1 when missing.
+export function deserializePDrinkTurns(value) {
+  const turns = value ? deserializeIds(value) : [];
+  return Array.from({ length: P_DRINK_SLOTS }, (_, i) =>
+    Math.max(1, turns[i] || 1),
+  );
+}
+
 function knownSkillCardId(id) {
   return SkillCards.getById(id) ? id : 0;
 }
@@ -103,6 +112,9 @@ export function loadoutFromSearchParams(searchParams) {
   const pDrinkIds = deserializePDrinkIds(
     isProduceExam ? searchParams.get("drinks") : null
   );
+  const pDrinkTurns = deserializePDrinkTurns(
+    isProduceExam ? searchParams.get("drink_turns") : null
+  );
   supportBonus = parseFloat(supportBonus);
   if (isNaN(supportBonus)) supportBonus = null;
   params = params
@@ -133,6 +145,7 @@ export function loadoutFromSearchParams(searchParams) {
     params,
     pItemIds,
     pDrinkIds,
+    pDrinkTurns,
     skillCardIdGroups,
     customizationGroups,
     hasDataFromParams,
@@ -148,6 +161,7 @@ export function loadoutToSearchParams(loadout) {
     params,
     pItemIds,
     pDrinkIds,
+    pDrinkTurns,
     skillCardIdGroups,
     customizationGroups,
   } = loadout;
@@ -158,6 +172,12 @@ export function loadoutToSearchParams(loadout) {
     searchParams.set("turns", serializeTurnTypes(turnTypes));
     if (pDrinkIds?.some((id) => id)) {
       searchParams.set("drinks", serializeIds(pDrinkIds));
+      if (pDrinkTurns?.some((turn, i) => pDrinkIds[i] && turn > 1)) {
+        searchParams.set(
+          "drink_turns",
+          serializeIds(pDrinkIds.map((id, i) => (id && pDrinkTurns[i]) || 1)),
+        );
+      }
     }
   }
   if (enterPercents) searchParams.set("enter_percents", "1");

@@ -88,18 +88,22 @@ export default class StageEngine {
     this.effectManager.triggerEffectsForPhase(state, "afterStartOfStage");
     this.logger.pushGraphData(state);
     this.turnManager.startTurn(state);
-    this.drinkPDrinks(state);
     return state;
   }
 
-  // P-drinks (produce exams). SIMPLIFICATION: in the game a drink can be
-  // drunk at any time during a turn; v1 drinks every held drink once, in
-  // slot order, right after turn 1 starts (the hand is already drawn).
-  // Each drink applies its actions exactly as the fidelity harness's
-  // drinksBefore does (effectManager.triggerEffects on the drink's actions).
+  // P-drinks (produce exams), called by TurnManager at the end of each
+  // turn's start (the hand is already drawn). Each held drink is drunk once,
+  // at the start of the turn set for it (default turn 1), in slot order.
+  // SIMPLIFICATION: in the game a drink can be drunk at any time during a
+  // turn, not only before the turn's first card. Each drink applies its
+  // actions exactly as the fidelity harness's drinksBefore does
+  // (effectManager.triggerEffects on the drink's actions).
   drinkPDrinks(state) {
-    const pDrinkIds = this.getConfig(state).idol?.pDrinkIds || [];
+    const { pDrinkIds = [], pDrinkTurns = [] } =
+      this.getConfig(state).idol || {};
+    const turn = state[S.turnsElapsed] + 1;
     for (let i = 0; i < pDrinkIds.length; i++) {
+      if ((pDrinkTurns[i] || 1) != turn) continue;
       const pDrink = PDrinks.getById(pDrinkIds[i]);
       if (!pDrink) continue;
       const source = { type: "pDrink", id: pDrink.id };

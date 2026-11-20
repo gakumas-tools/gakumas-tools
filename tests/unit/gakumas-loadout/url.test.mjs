@@ -174,3 +174,25 @@ test("P-drinks round-trip in the URL for produce exams only", () => {
     false,
   );
 });
+
+test("P-drink turns round-trip and default to 1", () => {
+  const exam = loadoutFromSearchParams(
+    new URLSearchParams("stage=exam-1&drinks=5-11-18&drink_turns=1-11-x"),
+  );
+  assert.deepEqual(exam.pDrinkTurns, [1, 11, 1]);
+  assert.equal(loadoutToSearchParams(exam).get("drink_turns"), "1-11-1");
+
+  const allFirst = loadoutFromSearchParams(
+    new URLSearchParams("stage=exam-1&drinks=5-11"),
+  );
+  assert.deepEqual(allFirst.pDrinkTurns, [1, 1, 1]);
+  assert.equal(loadoutToSearchParams(allFirst).has("drink_turns"), false);
+
+  // An empty slot's turn isn't kept.
+  const emptySlot = loadoutToSearchParams({
+    ...allFirst,
+    pDrinkIds: [5, 0, 0],
+    pDrinkTurns: [3, 7, 1],
+  });
+  assert.equal(emptySlot.get("drink_turns"), "3-1-1");
+});

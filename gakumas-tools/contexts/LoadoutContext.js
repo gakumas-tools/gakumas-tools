@@ -14,6 +14,7 @@ import {
   getSimulatorUrl,
   getStage,
   deserializePDrinkIds,
+  deserializePDrinkTurns,
   knownStageId,
   produceExamIdOf,
 } from "gakumas-loadout";
@@ -56,6 +57,9 @@ export function LoadoutContextProvider({ children }) {
   const [pDrinkIds, setPDrinkIds] = useState(() =>
     deserializePDrinkIds(initialLoadout.pDrinkIds?.join("-")),
   );
+  const [pDrinkTurns, setPDrinkTurns] = useState(() =>
+    deserializePDrinkTurns(initialLoadout.pDrinkTurns?.join("-")),
+  );
   const [skillCardIdGroups, setSkillCardIdGroups] = useState(() =>
     initialLoadout.skillCardIdGroups.map((skillCardIds) =>
       getMemorySlotSkillCardIds({ skillCardIds }),
@@ -87,6 +91,7 @@ export function LoadoutContextProvider({ children }) {
       params,
       pItemIds,
       pDrinkIds: produceExamIdOf(stageId) ? pDrinkIds : [0, 0, 0],
+      pDrinkTurns: produceExamIdOf(stageId) ? pDrinkTurns : [1, 1, 1],
       skillCardIdGroups,
       customizationGroups,
     }),
@@ -99,6 +104,7 @@ export function LoadoutContextProvider({ children }) {
       params,
       pItemIds,
       pDrinkIds,
+      pDrinkTurns,
       skillCardIdGroups,
       customizationGroups,
     ]
@@ -138,6 +144,7 @@ export function LoadoutContextProvider({ children }) {
     setPItemIds(loadout.pItemIds);
     if (produceExamIdOf(loadout.stageId)) {
       setPDrinkIds(deserializePDrinkIds(loadout.pDrinkIds?.join("-")));
+      setPDrinkTurns(deserializePDrinkTurns(loadout.pDrinkTurns?.join("-")));
     }
     const groups = loadout.skillCardIdGroups.map((skillCardIds) =>
       getMemorySlotSkillCardIds({ skillCardIds }),
@@ -192,6 +199,7 @@ export function LoadoutContextProvider({ children }) {
     setParams(getDefaultParams(stageRef.current));
     setPItemIds([0, 0, 0, 0]);
     setPDrinkIds([0, 0, 0]);
+    setPDrinkTurns([1, 1, 1]);
     setSkillCardIdGroups([
       [0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0],
@@ -214,6 +222,14 @@ export function LoadoutContextProvider({ children }) {
     setPDrinkIds((cur) => {
       const next = [...cur];
       next[index] = drinkId;
+      return next;
+    });
+  }, []);
+
+  const setPDrinkTurn = useCallback((index, turn) => {
+    setPDrinkTurns((cur) => {
+      const next = [...cur];
+      next[index] = turn;
       return next;
     });
   }, []);
@@ -390,6 +406,7 @@ export function LoadoutContextProvider({ children }) {
       setParams,
       replacePItemId,
       replacePDrinkId,
+      setPDrinkTurn,
       swapPItemIds,
       replaceSkillCardId,
       swapSkillCardIds,
@@ -408,6 +425,7 @@ export function LoadoutContextProvider({ children }) {
       setTurnType,
       replacePItemId,
       replacePDrinkId,
+      setPDrinkTurn,
       swapPItemIds,
       replaceSkillCardId,
       swapSkillCardIds,
