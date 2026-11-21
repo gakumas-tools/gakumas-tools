@@ -571,11 +571,7 @@
     "shareFailed": "Share failed",
     "unshareFailed": "Stop sharing failed",
     "copyThisLink": "Copy this link",
-    "confirmDeleteShared": "Delete this run? Its shared link will stop working too.",
-    "listOnStage": "Show on the stage's page",
-    "unlistFromStage": "Hide from the stage's page",
-    "listed": "Listed",
-    "listFailed": "Couldn't change where it's shown"
+    "confirmDeleteShared": "Delete this run? Its shared link will stop working too."
   },
   "SharedRun": {
     "untitled": "Shared run",
@@ -593,14 +589,6 @@
     "hint": "Open in simulator puts this run in your history, so the Compare tab shows it beside your own runs.",
     "metaDescription": "A shared simulator run: mean {mean}, median {median}.",
     "metaDescriptionNoScores": "A shared simulator loadout."
-  },
-  "StageSharedRuns": {
-    "title": "Shared runs for this stage",
-    "loading": "Loading…",
-    "empty": "No one has listed a run for this stage yet.",
-    "failed": "Couldn't load shared runs.",
-    "untitled": "Untitled run",
-    "howToList": "To list yours, share a saved run in Compare and choose \"Show on the stage's page\"."
   },
   "SimulatorStats": {
     "total": "Total",

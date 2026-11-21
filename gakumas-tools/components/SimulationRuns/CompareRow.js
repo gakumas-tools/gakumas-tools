@@ -3,8 +3,6 @@ import { useLocale, useTranslations } from "next-intl";
 import {
   FaChevronDown,
   FaCheck,
-  FaEye,
-  FaEyeSlash,
   FaLinkSlash,
   FaPenToSquare,
   FaRegFloppyDisk,
@@ -44,8 +42,6 @@ function CompareRow({
   shareId,
   onShare,
   onUnshare,
-  listed,
-  onToggleListed,
   error,
 }) {
   const t = useTranslations("CompareTab");
@@ -206,14 +202,6 @@ function CompareRow({
         }),
       });
     }
-    if (onToggleListed && shareId) {
-      items.push({
-        key: "listed",
-        icon: listed ? FaEyeSlash : FaEye,
-        label: listed ? t("unlistFromStage") : t("listOnStage"),
-        onClick: closeMenuAfter(() => onToggleListed(run, !listed)),
-      });
-    }
     if (onUnshare && shareId) {
       items.push({
         key: "unshare",
@@ -276,11 +264,7 @@ function CompareRow({
       <div className={styles.stageCell}>
         <div className={styles.tagRow}>
           {current && <span className={styles.tag}>{t("current")}</span>}
-          {shareId && (
-            <span className={styles.tag}>
-              {listed ? t("listed") : t("shared")}
-            </span>
-          )}
+          {shareId && <span className={styles.tag}>{t("shared")}</span>}
           {copied && <span className={styles.time}>{t("linkCopied")}</span>}
           {relative && <span className={styles.time}>{relative}</span>}
         </div>

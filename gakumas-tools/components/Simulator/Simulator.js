@@ -27,7 +27,6 @@ import LoadoutEditor from "@/components/LoadoutEditor";
 import LoadoutSummary from "@/components/LoadoutHistory/LoadoutSummary";
 import SimulatorResult from "@/components/SimulatorResult";
 import StageSelect from "@/components/StageSelect";
-import StageSharedRuns from "@/components/StageSharedRuns";
 import StrategyPicker from "@/components/StrategyPicker";
 import LoadoutContext from "@/contexts/LoadoutContext";
 import SimulationRunsContext from "@/contexts/SimulationRunsContext";
@@ -410,10 +409,6 @@ export default function Simulator() {
           >
             {t("lastUpdated")}: 2026-11-20
           </a>
-        </div>
-
-        <div data-export-hide="true">
-          <StageSharedRuns stageId={stage.id} />
         </div>
       </div>
 

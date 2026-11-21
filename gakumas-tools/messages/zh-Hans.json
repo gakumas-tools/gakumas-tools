@@ -571,11 +571,7 @@
     "shareFailed": "分享失败",
     "unshareFailed": "停止分享失败",
     "copyThisLink": "请复制此链接",
-    "confirmDeleteShared": "确定要删除吗？分享链接也将失效。",
-    "listOnStage": "在舞台页面展示",
-    "unlistFromStage": "从舞台页面移除",
-    "listed": "展示中",
-    "listFailed": "无法更改展示设置"
+    "confirmDeleteShared": "确定要删除吗？分享链接也将失效。"
   },
   "SharedRun": {
     "untitled": "分享的编组",
@@ -593,14 +589,6 @@
     "hint": "在模拟器中打开会将其加入历史，可在比较标签页中与自己的编组并排查看。",
     "metaDescription": "分享的模拟器编组：平均 {mean}，中位数 {median}。",
     "metaDescriptionNoScores": "分享的模拟器编组。"
-  },
-  "StageSharedRuns": {
-    "title": "本舞台的分享记录",
-    "loading": "加载中…",
-    "empty": "还没有人在本舞台展示记录。",
-    "failed": "无法加载分享记录。",
-    "untitled": "未命名记录",
-    "howToList": "要展示你的记录，请在比较页分享已保存的记录，并选择“在舞台页面展示”。"
   },
   "SimulatorStats": {
     "total": "合计",
