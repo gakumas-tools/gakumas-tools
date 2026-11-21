@@ -404,7 +404,9 @@
     "failed": "Import failed. Check the screenshots and try again.",
     "unreadable": "Couldn't read: {files}",
     "selectScreenshots": "Select screenshots",
-    "dropHint": "Tap to select, or drop screenshots here"
+    "dropHint": "Tap to select, or drop screenshots here",
+    "covered": "The menu bar covered some cards, so they were left empty. Pick them yourself:",
+    "coveredSlots": "{name}: card {slots}"
   },
   "Simulator": {
     "supportBonus": "Support bonus %",
