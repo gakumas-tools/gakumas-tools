@@ -209,56 +209,68 @@ async function shareRuns(db, means, { stageId = 52, userId = "owner" } = {}) {
   return ids;
 }
 
+// Stands in for the engine: the server's mean is the one in the run's name
+// ("run 2400"), whatever its stats field says; "run null" can't be
+// simulated.
+async function fakeSimulate(doc) {
+  const mean = Number(doc.name?.split(" ")[1]);
+  if (!Number.isFinite(mean)) return null;
+  return { stats: { mean, median: mean, min: 0, max: mean }, numRuns: 1000 };
+}
+const list = (db, userId, id, listed = true) =>
+  setListed(db, userId, id, listed, fakeSimulate);
+
 test("a shared run is unlisted until its owner lists it", async () => {
   const db = fakeDb();
   const [id] = await shareRuns(db, [2000]);
   assert.equal(db.collection("sharedRuns").docs[0].listed, false);
   assert.deepEqual(await listStageRuns(db, 52), []);
 
-  assert.equal(await setListed(db, "someone", id, true), false);
+  assert.equal((await list(db, "someone", id)).status, 404);
   assert.deepEqual(await listStageRuns(db, 52), []);
 
-  assert.equal(await setListed(db, "owner", id, true), true);
+  assert.deepEqual(await list(db, "owner", id), { ok: true });
   assert.deepEqual(
     (await listStageRuns(db, 52)).map((r) => r.id),
     [id],
   );
-  assert.equal(await setListed(db, "owner", id, false), true);
+  assert.deepEqual(await list(db, "owner", id, false), { ok: true });
   assert.deepEqual(await listStageRuns(db, 52), []);
 });
 
 test("listing takes only a real id and a boolean", async () => {
   const db = fakeDb();
   const [id] = await shareRuns(db, [2000]);
-  assert.equal(await setListed(db, "owner", id, "yes"), false);
-  assert.equal(await setListed(db, "owner", { $ne: null }, true), false);
-  assert.equal(await setListed(db, "owner", "ZZZZZZZZ", true), false);
+  assert.equal((await list(db, "owner", id, "yes")).status, 404);
+  assert.equal((await list(db, "owner", { $ne: null })).status, 404);
+  assert.equal((await list(db, "owner", "ZZZZZZZZ")).status, 404);
   assert.equal(db.collection("sharedRuns").docs[0].listed, false);
 });
 
 test("re-sharing a listed run keeps it listed", async () => {
   const db = fakeDb();
   const [id] = await shareRuns(db, [2000]);
-  await setListed(db, "owner", id, true);
+  await list(db, "owner", id);
   const { sourceId } = db.collection("sharedRuns").docs[0];
   assert.equal((await shareLoadout(db, "owner", sourceId.toString())).id, id);
   assert.equal((await listStageRuns(db, 52)).length, 1);
 });
 
-test("a stage's listing is its own listed runs, best mean first, without owners", async () => {
+test("a stage's listing is its own listed runs, best server mean first, without owners", async () => {
   const db = fakeDb();
-  const ids = await shareRuns(db, [1500, 2400, null, 1900]);
+  const ids = await shareRuns(db, [1500, 2400, 1900]);
   const [other] = await shareRuns(db, [9999], { stageId: 53 });
-  for (const id of [...ids, other]) await setListed(db, "owner", id, true);
+  for (const id of [...ids, other]) await list(db, "owner", id);
 
   const runs = await listStageRuns(db, 52);
   assert.deepEqual(
     runs.map((r) => r.name),
-    ["run 2400", "run 1900", "run 1500", "run null"],
+    ["run 2400", "run 1900", "run 1500"],
   );
   for (const run of runs) {
     assert.ok(isShareId(run.id));
-    for (const field of ["userId", "sourceId", "_id", "listed"]) {
+    assert.equal(run.stats.numRuns, 1000);
+    for (const field of ["userId", "sourceId", "_id", "listed", "serverStats"]) {
       assert.equal(field in run, false);
     }
   }
@@ -268,12 +280,41 @@ test("a stage's listing is its own listed runs, best mean first, without owners"
   );
 });
 
+test("forged stats don't move a run up: the stage page ranks and shows the server's", async () => {
+  const db = fakeDb();
+  const [honest, forged] = await shareRuns(db, [2400, 1500]);
+  // The browser can send any stats with a saved run.
+  db.collection("sharedRuns").docs[1].stats = { mean: 999999, median: 999999 };
+  for (const id of [honest, forged]) await list(db, "owner", id);
+
+  const runs = await listStageRuns(db, 52);
+  assert.deepEqual(runs.map((r) => r.id), [honest, forged]);
+  assert.equal(runs[1].stats.mean, 1500);
+});
+
+test("a run the server can't simulate isn't listed", async () => {
+  const db = fakeDb();
+  const [id] = await shareRuns(db, [null]);
+  assert.equal((await list(db, "owner", id)).status, 422);
+  assert.equal(db.collection("sharedRuns").docs[0].listed, false);
+  assert.deepEqual(await listStageRuns(db, 52), []);
+});
+
+test("a listed run is simulated once, not on every re-list", async () => {
+  const db = fakeDb();
+  const [id] = await shareRuns(db, [2000]);
+  let calls = 0;
+  const counting = async (doc) => (calls++, fakeSimulate(doc));
+  await setListed(db, "owner", id, true, counting);
+  await setListed(db, "owner", id, false, counting);
+  await setListed(db, "owner", id, true, counting);
+  assert.equal(calls, 1);
+});
+
 test("a stage's listing is capped", async () => {
   const db = fakeDb();
   const means = Array.from({ length: 60 }, (_, i) => 1000 + i);
-  for (const id of await shareRuns(db, means)) {
-    await setListed(db, "owner", id, true);
-  }
+  for (const id of await shareRuns(db, means)) await list(db, "owner", id);
   assert.equal((await listStageRuns(db, 52)).length, STAGE_RUNS_LIMIT);
   assert.equal((await listStageRuns(db, 52, 5))[0].name, "run 1059");
   assert.equal((await listStageRuns(db, 52, 1000)).length, 50);
@@ -286,11 +327,13 @@ test("custom and malformed stages have no listing", async () => {
     assert.deepEqual(await listStageRuns(db, bad), []);
   }
   assert.equal(isListableStageId(52), true);
+  const [id] = await shareRuns(db, [2000], { stageId: "custom" });
+  assert.equal((await list(db, "owner", id)).status, 400);
 });
 
 test("the owner's list says which shared runs are listed", async () => {
   const db = fakeDb();
   const [id] = await shareRuns(db, [2000]);
-  await setListed(db, "owner", id, true);
+  await list(db, "owner", id);
   assert.equal((await listSharedRuns(db, "owner"))[0].listed, true);
 });
