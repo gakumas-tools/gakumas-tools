@@ -17,6 +17,8 @@ export const SERVER_RUNS = 1000;
 export const SERVER_TIME_LIMIT_MS = 5000;
 // Fewer runs than this and the mean isn't worth ranking on.
 const MIN_RUNS = 200;
+const YIELD_EVERY = 50;
+const yieldToServer = () => new Promise((resolve) => setImmediate(resolve));
 
 function stageConfigFor(doc) {
   if (!Number.isSafeInteger(doc?.stageId)) return null;
@@ -71,6 +73,8 @@ export async function simulateRunStats(
       const result = await new StagePlayer(engine, strategy).play();
       if (!Number.isFinite(result?.score)) return null;
       scores.push(result.score);
+      // Let the server answer other requests between batches.
+      if (scores.length % YIELD_EVERY == 0) await yieldToServer();
     }
     if (scores.length < Math.min(MIN_RUNS, numRuns)) return null;
     return { stats: summarizeScores(scores), numRuns: scores.length };

@@ -9,6 +9,7 @@ import {
   listSharedRuns,
   listStageRuns,
   newShareId,
+  refreshStageRuns,
   setListed,
   shareLoadout,
   unshareRun,
@@ -300,15 +301,88 @@ test("a run the server can't simulate isn't listed", async () => {
   assert.deepEqual(await listStageRuns(db, 52), []);
 });
 
-test("a listed run is simulated once, not on every re-list", async () => {
+test("a listed run is simulated once per engine version, not on every re-list", async () => {
   const db = fakeDb();
   const [id] = await shareRuns(db, [2000]);
   let calls = 0;
   const counting = async (doc) => (calls++, fakeSimulate(doc));
-  await setListed(db, "owner", id, true, counting);
-  await setListed(db, "owner", id, false, counting);
-  await setListed(db, "owner", id, true, counting);
+  await setListed(db, "owner", id, true, counting, "v1");
+  await setListed(db, "owner", id, false, counting, "v1");
+  await setListed(db, "owner", id, true, counting, "v1");
   assert.equal(calls, 1);
+  await setListed(db, "owner", id, false, counting, "v2");
+  await setListed(db, "owner", id, true, counting, "v2");
+  assert.equal(calls, 2);
+  assert.equal(db.collection("sharedRuns").docs[0].serverStats.version, "v2");
+});
+
+// The engine after a fix: every run scores 10 more than before.
+const fixedEngine = async (doc) => {
+  const before = await fakeSimulate(doc);
+  if (!before) return null;
+  const mean = before.stats.mean + 10;
+  return { stats: { ...before.stats, mean, max: mean }, numRuns: 1000 };
+};
+
+test("a new engine version re-simulates a stage's listed runs, a few at a time", async () => {
+  const db = fakeDb();
+  const ids = await shareRuns(db, [1500, 2400, 1900]);
+  for (const id of ids) await setListed(db, "owner", id, true, fakeSimulate, "v1");
+  const means = async () => (await listStageRuns(db, 52)).map((r) => r.stats.mean);
+
+  // Same version: nothing to do.
+  assert.equal(await refreshStageRuns(db, 52, "v1", { simulate: fixedEngine }), 0);
+  assert.deepEqual(await means(), [2400, 1900, 1500]);
+
+  assert.equal(await refreshStageRuns(db, 52, "v2", { simulate: fixedEngine }), 1);
+  assert.deepEqual(await means(), [2410, 1900, 1500]);
+  assert.equal(
+    await refreshStageRuns(db, 52, "v2", { simulate: fixedEngine, max: 5 }),
+    2,
+  );
+  assert.deepEqual(await means(), [2410, 1910, 1510]);
+  assert.equal(await refreshStageRuns(db, 52, "v2", { simulate: fixedEngine }), 0);
+  // The engine version is stored, not shown.
+  for (const run of await listStageRuns(db, 52)) {
+    assert.equal("version" in run.stats, false);
+  }
+});
+
+test("a run the new engine can't simulate keeps its stats and isn't retried", async () => {
+  const db = fakeDb();
+  const [id] = await shareRuns(db, [2000]);
+  await setListed(db, "owner", id, true, fakeSimulate, "v1");
+  let calls = 0;
+  const failing = async () => (calls++, null);
+  assert.equal(await refreshStageRuns(db, 52, "v2", { simulate: failing }), 1);
+  assert.equal(await refreshStageRuns(db, 52, "v2", { simulate: failing }), 0);
+  assert.equal(calls, 1);
+  assert.equal((await listStageRuns(db, 52))[0].stats.mean, 2000);
+});
+
+test("without a known engine version, stored stats stand", async () => {
+  const db = fakeDb();
+  const [id] = await shareRuns(db, [2000]);
+  await list(db, "owner", id);
+  assert.equal(await refreshStageRuns(db, 52, null, { simulate: fixedEngine }), 0);
+  assert.equal((await listStageRuns(db, 52))[0].stats.mean, 2000);
+});
+
+test("unlisted and other stages' runs aren't re-simulated", async () => {
+  const db = fakeDb();
+  const [listed, hidden] = await shareRuns(db, [2000, 2100]);
+  const [other] = await shareRuns(db, [2200], { stageId: 53 });
+  for (const id of [listed, hidden, other]) {
+    await setListed(db, "owner", id, true, fakeSimulate, "v1");
+  }
+  await setListed(db, "owner", hidden, false, fakeSimulate, "v1");
+  assert.equal(
+    await refreshStageRuns(db, 52, "v2", { simulate: fixedEngine, max: 10 }),
+    1,
+  );
+  const docs = db.collection("sharedRuns").docs;
+  assert.equal(docs.find((d) => d._id === hidden).serverStats.mean, 2100);
+  assert.equal(docs.find((d) => d._id === other).serverStats.mean, 2200);
 });
 
 test("a stage's listing is capped", async () => {
