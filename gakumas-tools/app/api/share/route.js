@@ -48,7 +48,8 @@ export async function GET(request) {
         derived,
         createdAt,
       })),
-      { headers: { "cache-control": "public, max-age=60" } },
+      // Not cached: a player who lists or hides a run sees it at once.
+      { headers: { "cache-control": "no-store" } },
     );
   }
 

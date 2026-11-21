@@ -574,7 +574,7 @@
     "confirmDeleteShared": "Delete this run? Its shared link will stop working too.",
     "listOnStage": "Show on the stage's page",
     "unlistFromStage": "Hide from the stage's page",
-    "listed": "On stage page",
+    "listed": "Listed",
     "listFailed": "Couldn't change where it's shown"
   },
   "SharedRun": {

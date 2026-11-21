@@ -276,9 +276,10 @@ function CompareRow({
       <div className={styles.stageCell}>
         <div className={styles.tagRow}>
           {current && <span className={styles.tag}>{t("current")}</span>}
-          {shareId && <span className={styles.tag}>{t("shared")}</span>}
-          {shareId && listed && (
-            <span className={styles.tag}>{t("listed")}</span>
+          {shareId && (
+            <span className={styles.tag}>
+              {listed ? t("listed") : t("shared")}
+            </span>
           )}
           {copied && <span className={styles.time}>{t("linkCopied")}</span>}
           {relative && <span className={styles.time}>{relative}</span>}
