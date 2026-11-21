@@ -303,6 +303,10 @@
   display: flex;
   align-items: center;
   gap: tokens.$space-1;
+  // Tags that don't fit are cut off here, not pushed into the name below.
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
 
   &:empty {
     display: none;
