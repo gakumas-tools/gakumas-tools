@@ -1,6 +1,7 @@
 import { randomInt } from "node:crypto";
 import { ObjectId } from "mongodb";
 import { MAX_LOADOUTS_PER_USER, isObjectId } from "./apiValidation";
+import { isListableStageId } from "./stageListing";
 
 // A shared run is a public copy of one saved run (a loadout with its
 // simulated stats), reachable by a short id at /s/<id>. It's a copy, so
@@ -150,10 +151,7 @@ export async function setListed(db, userId, id, listed) {
 export const STAGE_RUNS_LIMIT = 20;
 const STAGE_RUNS_MAX = 50;
 
-/** Whether a stage id can have a listing: a game stage's, not a custom one. */
-export function isListableStageId(value) {
-  return Number.isSafeInteger(value) && value > 0;
-}
+export { isListableStageId };
 
 /**
  * The runs listed on a stage's page, highest mean score first, as anyone may
