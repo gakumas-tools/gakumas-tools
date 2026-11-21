@@ -6,6 +6,9 @@ import { MAX_LOADOUTS_PER_USER, isObjectId } from "./apiValidation";
 // simulated stats), reachable by a short id at /s/<id>. It's a copy, so
 // renaming or deleting the saved run leaves the shared one as it was, and
 // only its owner can take it down.
+//
+// A shared run is unlisted (only its link finds it) until its owner lists it
+// on its stage's page; listStageRuns shows the listed ones, best first.
 
 export const SHARED_RUNS = "sharedRuns";
 const ALPHABET =
@@ -85,6 +88,7 @@ export async function shareLoadout(db, userId, loadoutId, makeId = newShareId) {
         ...publicFields(loadout),
         userId,
         sourceId,
+        listed: false,
         createdAt: new Date(),
       });
       return { id };
@@ -115,7 +119,7 @@ export function listSharedRuns(db, userId) {
     .collection(SHARED_RUNS)
     .find(
       { userId },
-      { projection: { _id: 1, sourceId: 1, name: 1, createdAt: 1 } },
+      { projection: { _id: 1, sourceId: 1, name: 1, listed: 1, createdAt: 1 } },
     )
     .sort({ createdAt: -1 })
     .limit(MAX_LOADOUTS_PER_USER)
@@ -129,4 +133,47 @@ export async function unshareRun(db, userId, id) {
     .collection(SHARED_RUNS)
     .deleteOne({ _id: id, userId });
   return deletedCount > 0;
+}
+
+/**
+ * Lists or unlists one of the user's shared runs on its stage's page; only
+ * its owner can. Whether there was one.
+ */
+export async function setListed(db, userId, id, listed) {
+  if (!isShareId(id) || typeof listed != "boolean") return false;
+  const { matchedCount } = await db
+    .collection(SHARED_RUNS)
+    .updateOne({ _id: id, userId }, { $set: { listed } });
+  return matchedCount > 0;
+}
+
+export const STAGE_RUNS_LIMIT = 20;
+const STAGE_RUNS_MAX = 50;
+
+/** Whether a stage id can have a listing: a game stage's, not a custom one. */
+export function isListableStageId(value) {
+  return Number.isSafeInteger(value) && value > 0;
+}
+
+/**
+ * The runs listed on a stage's page, highest mean score first, as anyone may
+ * see them: never their owners. Runs with no scores come last.
+ * Index: { stageId: 1, listed: 1, "stats.mean": -1 }.
+ */
+export async function listStageRuns(db, stageId, limit = STAGE_RUNS_LIMIT) {
+  if (!isListableStageId(stageId)) return [];
+  const count = Math.min(Math.max(1, Math.floor(limit) || 1), STAGE_RUNS_MAX);
+  const projection = { _id: 1, createdAt: 1 };
+  for (const field of PUBLIC_FIELDS) projection[field] = 1;
+  const docs = await db
+    .collection(SHARED_RUNS)
+    .find({ stageId, listed: true }, { projection })
+    .sort({ "stats.mean": -1, createdAt: -1 })
+    .limit(count)
+    .toArray();
+  return docs.map((doc) => ({
+    id: doc._id,
+    ...publicFields(doc),
+    createdAt: doc.createdAt,
+  }));
 }
