@@ -763,6 +763,21 @@ export default class CardManager extends EngineComponent {
     state[S.turnCardsUpgraded]++;
   }
 
+  // スキルカードサポート: raises a card one level (base to +, + to ++).
+  // Returns false when there is no next level, which the game's ログ shows
+  // as 変化なし. Whether it counts toward turnCardsUpgraded hasn't been seen
+  // in the game, so it doesn't.
+  supportUpgrade(state, card) {
+    const orig = state[S.cardMap][card];
+    const skillCard = SkillCards.getById(orig.id);
+    const nextId = skillCard.upgraded
+      ? SkillCards.getPlusPlus(orig.id)?.id
+      : this.isUpgradable(state, card) && orig.id + 1;
+    if (!nextId) return false;
+    state[S.cardMap][card] = { ...orig, id: nextId };
+    return true;
+  }
+
   discardHand(state) {
     while (state[S.handCards].length) {
       state[S.discardedCards].push(state[S.handCards].pop());

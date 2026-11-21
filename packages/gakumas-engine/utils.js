@@ -139,6 +139,7 @@ export function isUniqueCard(card) {
 }
 
 export function getBaseId(entity) {
+  if (entity.upgradeLevel == 2) return entity.fromId - 1;
   if (entity.upgraded) return entity.id - 1;
   return entity.id;
 }
