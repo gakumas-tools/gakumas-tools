@@ -72,3 +72,55 @@ export function isDefaultList(list) {
   }
   return Object.values(list.items).every((arr) => arr.length === 0);
 }
+
+// Compares two lists by rank. Each id's rank in each list (null if absent),
+// and for ids in both, delta = how many tiers higher `theirs` puts it than
+// `mine`, counting only the tiers either list has (in the canonical order,
+// so lists with different tiers still compare, and S4 to SSS is one step even
+// though SSS+ sits between them in the rank icons). agreement = share of common ids given the same rank (null when
+// none are common).
+export function compareLists(mine, theirs) {
+  const rankOf = (list) => {
+    const m = new Map();
+    for (const rank of list?.tiers || []) {
+      for (const id of list.items?.[rank] || []) {
+        if (!m.has(id)) m.set(id, rank);
+      }
+    }
+    return m;
+  };
+  const a = rankOf(mine);
+  const b = rankOf(theirs);
+  const order = sortRanks([
+    ...new Set([...(mine?.tiers || []), ...(theirs?.tiers || [])]),
+  ]);
+  const index = (rank) => order.indexOf(rank);
+  const byId = {};
+  const onlyMine = [];
+  const onlyTheirs = [];
+  let common = 0;
+  let same = 0;
+  for (const [id, rank] of a) {
+    const other = b.has(id) ? b.get(id) : null;
+    const delta = other === null ? null : index(rank) - index(other);
+    byId[id] = { mine: rank, theirs: other, delta };
+    if (other === null) {
+      onlyMine.push(id);
+    } else {
+      common++;
+      if (delta === 0) same++;
+    }
+  }
+  for (const [id, rank] of b) {
+    if (a.has(id)) continue;
+    byId[id] = { mine: null, theirs: rank, delta: null };
+    onlyTheirs.push(id);
+  }
+  return {
+    byId,
+    onlyMine,
+    onlyTheirs,
+    common,
+    agreement: common ? same / common : null,
+  };
+}
