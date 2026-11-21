@@ -29,6 +29,15 @@ test("an antialiased cost digit still reads", async () => {
   assert.deepEqual(await costs("04.webp", [0]), [4]);
 });
 
+test("a dot digit that touches the dot's ring still reads", async () => {
+  const image = await loadImage(
+    new URL("../../../../fixtures/contest_loadout/21.webp", import.meta.url)
+      .pathname,
+  );
+  const { mainBoxes } = detectLoadoutBoxes(image);
+  assert.equal(readBadges(image, mainBoxes[2], CONTEST_LAYOUT).dot, 2);
+});
+
 test("a number with an unrecognized digit is unread", () => {
   const templates = { 1: Array(140).fill(0), 2: Array(140).fill(0.1) };
   const one = { pixels: templates[1] };
