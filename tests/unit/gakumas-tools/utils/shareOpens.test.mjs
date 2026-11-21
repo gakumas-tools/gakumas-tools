@@ -73,3 +73,12 @@ test("shareOpenWrites counts a crawler as an unfurl and adds no opener", () => {
   assert.equal(writes.length, 1);
   assert.deepEqual(writes[0].updateOne.update.$inc, { unfurls: 1 });
 });
+
+test("shareKey counts a shared run by its id alone", () => {
+  const key = shareKey("sharedRun", new URLSearchParams({ id: "aB3xY9" }));
+  assert.match(key, /^[0-9a-f]{24}$/);
+  assert.equal(shareKey("sharedRun", new URLSearchParams("id=aB3xY9&utm_source=x")), key);
+  assert.notEqual(shareKey("sharedRun", new URLSearchParams({ id: "other1" })), key);
+  assert.notEqual(shareKey("simulator", new URLSearchParams({ loadout: "aB3xY9" })), key);
+  assert.equal(shareKey("sharedRun", new URLSearchParams()), null);
+});
