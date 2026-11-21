@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
+  aggregateLists,
   clampList,
   compareLists,
   decodeList,
@@ -95,4 +96,45 @@ test("agreement is null when nothing is common, and empty input is safe", () => 
   assert.equal(r.agreement, null);
   assert.deepEqual(r.onlyMine, [1]);
   assert.deepEqual(compareLists(null, undefined).byId, {});
+});
+
+test("aggregates lists by median rank with a quartile spread", () => {
+  const lists = [
+    { tiers: ["S", "A"], items: { S: [1, 2], A: [3] } },
+    { tiers: ["SS", "A"], items: { SS: [1], A: [2, 3] } },
+    { tiers: ["S", "B"], items: { S: [1, 1], B: [2] } },
+    { tiers: ["S"], items: { S: [1] } },
+    null,
+  ];
+  const result = aggregateLists(lists);
+  assert.equal(result.lists, 4);
+  assert.equal(result.skipped, 1);
+  // 1 is SS, S, S, S: median S, counted once per list.
+  assert.deepEqual(result.byId[1], {
+    n: 4,
+    median: "S",
+    low: "SS",
+    high: "S",
+    counts: { SS: 1, S: 3 },
+  });
+  // 2 is S, A, B: median A, spread S..A.
+  assert.equal(result.byId[2].median, "A");
+  assert.equal(result.byId[2].low, "S");
+  assert.equal(result.byId[2].high, "A");
+  assert.deepEqual(result.list, {
+    tiers: ["S", "A"],
+    items: { S: [1], A: [2, 3] },
+  });
+});
+
+test("leaves out ids fewer than minLists rank, and unknown ranks", () => {
+  const lists = [
+    { tiers: ["S", "Z"], items: { S: [1], Z: [9] } },
+    { tiers: ["A"], items: { A: [1, 2] } },
+  ];
+  const result = aggregateLists(lists, { minLists: 2 });
+  assert.deepEqual(Object.keys(result.byId), ["1"]);
+  assert.equal(result.byId[1].median, "S");
+  assert.equal(result.byId[1].n, 2);
+  assert.equal(result.byId[9], undefined);
 });
