@@ -36,6 +36,24 @@ const FIXTURES = [
   "produce-exam-impression-final-r9b",
   "produce-exam-impression-final-r10",
   "produce-exam-impression-final-r10b",
+  "produce-exam-impression-final-r11",
+  "produce-exam-impression-final-r11b",
+  "produce-exam-impression-final-r12",
+  "produce-exam-impression-final-r13",
+  "produce-exam-impression-final-r13b",
+  "produce-exam-impression-final-r13c",
+  "produce-exam-impression-final-r13d",
+  "produce-exam-impression-final-r14",
+  "produce-exam-impression-final-r14b",
+  "produce-exam-impression-final-r14c",
+  "produce-exam-impression-final-r14d",
+  "produce-exam-impression-final-r15",
+  "produce-exam-impression-final-r15b",
+  "produce-exam-impression-final-r15c",
+  "produce-exam-impression-final-r15d",
+  "produce-exam-impression-final-r16",
+  "produce-exam-impression-final-r16b",
+  "produce-exam-impression-final-r16c",
 ];
 
 // Captures of a produce exam that has a ProduceExams row replay through
@@ -46,6 +64,24 @@ const PRODUCE_EXAM_IDS = {
   "produce-exam-impression-final-r9b": 1,
   "produce-exam-impression-final-r10": 1,
   "produce-exam-impression-final-r10b": 1,
+  "produce-exam-impression-final-r11": 1,
+  "produce-exam-impression-final-r11b": 1,
+  "produce-exam-impression-final-r12": 1,
+  "produce-exam-impression-final-r13": 1,
+  "produce-exam-impression-final-r13b": 1,
+  "produce-exam-impression-final-r13c": 1,
+  "produce-exam-impression-final-r13d": 1,
+  "produce-exam-impression-final-r14": 1,
+  "produce-exam-impression-final-r14b": 1,
+  "produce-exam-impression-final-r14c": 1,
+  "produce-exam-impression-final-r14d": 1,
+  "produce-exam-impression-final-r15": 1,
+  "produce-exam-impression-final-r15b": 1,
+  "produce-exam-impression-final-r15c": 1,
+  "produce-exam-impression-final-r15d": 1,
+  "produce-exam-impression-final-r16": 1,
+  "produce-exam-impression-final-r16b": 1,
+  "produce-exam-impression-final-r16c": 1,
 };
 
 function getStage(capture) {
@@ -156,7 +192,11 @@ function replay(capture, play) {
   let state = engine.startStage(initialState);
   engine.logger.disable();
 
-  for (const [field, value] of Object.entries(capture.initial)) {
+  // afterStageStart: the state the ログ shows once turn 1 has started, when a
+  // start-of-turn P-item (e.g. 星のリトルプリンス) has already changed it.
+  for (const [field, value] of Object.entries(
+    capture.afterStageStart ?? capture.initial,
+  )) {
     assert.equal(state[S[field]], value, `initial ${field}`);
   }
 
