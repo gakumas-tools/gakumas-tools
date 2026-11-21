@@ -1,6 +1,7 @@
 import { randomInt } from "node:crypto";
 import { ObjectId } from "mongodb";
 import { MAX_LOADOUTS_PER_USER, isObjectId } from "./apiValidation";
+import { simulateRunStats } from "./runStats";
 import { isListableStageId } from "./stageListing";
 
 // A shared run is a public copy of one saved run (a loadout with its
@@ -10,6 +11,9 @@ import { isListableStageId } from "./stageListing";
 //
 // A shared run is unlisted (only its link finds it) until its owner lists it
 // on its stage's page; listStageRuns shows the listed ones, best first.
+// Listing simulates the run here and keeps those stats as serverStats; the
+// stage page ranks and shows only those, so a forged stats field can't move
+// a run up.
 
 export const SHARED_RUNS = "sharedRuns";
 const ALPHABET =
@@ -138,14 +142,45 @@ export async function unshareRun(db, userId, id) {
 
 /**
  * Lists or unlists one of the user's shared runs on its stage's page; only
- * its owner can. Whether there was one.
+ * its owner can. Listing simulates it first and stores the result as
+ * serverStats. { ok: true }, or { error, status }.
  */
-export async function setListed(db, userId, id, listed) {
-  if (!isShareId(id) || typeof listed != "boolean") return false;
-  const { matchedCount } = await db
-    .collection(SHARED_RUNS)
-    .updateOne({ _id: id, userId }, { $set: { listed } });
-  return matchedCount > 0;
+export async function setListed(
+  db,
+  userId,
+  id,
+  listed,
+  simulate = simulateRunStats,
+) {
+  if (!isShareId(id) || typeof listed != "boolean") {
+    return { error: "Not found", status: 404 };
+  }
+  const shared = db.collection(SHARED_RUNS);
+  if (!listed) {
+    const { matchedCount } = await shared.updateOne(
+      { _id: id, userId },
+      { $set: { listed: false } },
+    );
+    return matchedCount > 0 ? { ok: true } : { error: "Not found", status: 404 };
+  }
+
+  const doc = await shared.findOne({ _id: id, userId });
+  if (!doc) return { error: "Not found", status: 404 };
+  if (!isListableStageId(doc.stageId)) {
+    return { error: "Only game stages can be listed", status: 400 };
+  }
+  // A shared copy's loadout never changes, so one simulation is enough.
+  let { serverStats } = doc;
+  if (!serverStats) {
+    const simulated = await simulate(doc);
+    if (!simulated) return { error: "Could not simulate", status: 422 };
+    serverStats = { ...simulated.stats, numRuns: simulated.numRuns };
+  }
+  const { matchedCount } = await shared.updateOne(
+    { _id: id, userId },
+    { $set: { listed: true, serverStats } },
+  );
+  return matchedCount > 0 ? { ok: true } : { error: "Not found", status: 404 };
 }
 
 export const STAGE_RUNS_LIMIT = 20;
@@ -154,24 +189,29 @@ const STAGE_RUNS_MAX = 50;
 export { isListableStageId };
 
 /**
- * The runs listed on a stage's page, highest mean score first, as anyone may
- * see them: never their owners. Runs with no scores come last.
- * Index: { stageId: 1, listed: 1, "stats.mean": -1 }.
+ * The runs listed on a stage's page, highest server-simulated mean first, as
+ * anyone may see them: never their owners. Their stats are serverStats, not
+ * what the owner's browser sent.
+ * Index: { stageId: 1, listed: 1, "serverStats.mean": -1 }.
  */
 export async function listStageRuns(db, stageId, limit = STAGE_RUNS_LIMIT) {
   if (!isListableStageId(stageId)) return [];
   const count = Math.min(Math.max(1, Math.floor(limit) || 1), STAGE_RUNS_MAX);
-  const projection = { _id: 1, createdAt: 1 };
+  const projection = { _id: 1, createdAt: 1, serverStats: 1 };
   for (const field of PUBLIC_FIELDS) projection[field] = 1;
   const docs = await db
     .collection(SHARED_RUNS)
-    .find({ stageId, listed: true }, { projection })
-    .sort({ "stats.mean": -1, createdAt: -1 })
+    .find(
+      { stageId, listed: true },
+      { projection },
+    )
+    .sort({ "serverStats.mean": -1, createdAt: -1 })
     .limit(count)
     .toArray();
   return docs.map((doc) => ({
     id: doc._id,
     ...publicFields(doc),
+    stats: doc.serverStats,
     createdAt: doc.createdAt,
   }));
 }

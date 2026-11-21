@@ -83,7 +83,7 @@ export async function DELETE(request) {
 }
 
 // List or unlist one of your shared runs on its stage's page:
-// { id, listed }.
+// { id, listed }. A listed run shows the stats the server simulated.
 export async function PATCH(request) {
   const session = await getServerSession(authOptions);
   if (!session) return new Response("Unauthorized", { status: 401 });
@@ -91,8 +91,8 @@ export async function PATCH(request) {
   if (error) return new Response(error, { status });
 
   const { db } = await connect();
-  if (!(await setListed(db, session.user.id, body.id, body.listed))) {
-    return new Response("Not found", { status: 404 });
-  }
+  // Listing simulates the run first (a few seconds at most).
+  const result = await setListed(db, session.user.id, body.id, body.listed);
+  if (result.error) return new Response(result.error, { status: result.status });
   return new Response(null, { status: 204 });
 }
