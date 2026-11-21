@@ -231,6 +231,28 @@
     "shareTweetText": "学マス {type} ティア表",
     "confirmLeave": "タブを切り替えると現在のティア表は失われます。続けますか？"
   },
+  "CommunityTierList": {
+    "title": "みんなのティア表",
+    "loading": "読み込み中…",
+    "failed": "みんなのティア表を読み込めませんでした。",
+    "tooFew": "これまでに{count}人がティア表を追加しました。{min}人そろうと表示されます。",
+    "fromLists": "{count}人のティア表をまとめたもの",
+    "openInEditor": "エディタで開く",
+    "itemTitle": "{lists}件中{n}件のティア表に入っています",
+    "howToRead": "各アイテムは、最も多くのティア表が置いた段にあります。「SS–A」のような範囲は、真ん中の半分のティア表が置いた位置です。",
+    "howToPublish": "自分のティア表は「共有」から追加できます。追加を選んだティア表だけが数えられ、誰のものかは表示されません。",
+    "publishTitle": "みんなのティア表",
+    "publishHelp": "このティア表をみんなのティア表に追加しますか？まとめに数えられますが、名前は表示されません。",
+    "publishedThis": "このティア表はみんなのティア表に追加済みです。",
+    "publishedOther": "みんなのティア表には、別のティア表を追加しています。",
+    "publish": "みんなのティア表に追加",
+    "replacePublished": "このティア表に置き換える",
+    "unpublish": "自分のティア表を外す",
+    "emptyList": "先にアイテムを配置してください。",
+    "signInToPublish": "ログインすると、みんなのティア表に追加できます。",
+    "signIn": "ログイン",
+    "publishFailed": "みんなのティア表を更新できませんでした。"
+  },
   "PIdolCollection": {
     "collected": "獲得済み",
     "byRarity": "レアリティ別",

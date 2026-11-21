@@ -2,6 +2,7 @@ import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { FaCheck, FaCopy, FaDownload, FaXTwitter } from "react-icons/fa6";
 import Button from "@/components/Button";
+import CommunityPublish from "@/components/CommunityTierList/CommunityPublish";
 import Loader from "@/components/Loader";
 import Modal from "@/components/Modal";
 import c from "@/utils/classNames";
@@ -124,6 +125,7 @@ function TierShareModal({ type, onClose }) {
         </Button>
       </div>
       {error && <p className={styles.error}>{error}</p>}
+      <CommunityPublish type={type} />
     </Modal>
   );
 }
