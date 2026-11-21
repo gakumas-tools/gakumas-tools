@@ -223,6 +223,28 @@
     "shareTweetText": "My Gakumas {type} tier list",
     "confirmLeave": "You'll lose this tier list if you switch tabs. Continue?"
   },
+  "CommunityTierList": {
+    "title": "Community tier list",
+    "loading": "Loading…",
+    "failed": "Couldn't load the community tier list.",
+    "tooFew": "{count, plural, =0 {No players have} one {# player has} other {# players have}} added a list so far. It shows once {min} have.",
+    "fromLists": "Combined from {count, plural, one {# player's list} other {# players' lists}}",
+    "openInEditor": "Open in the editor",
+    "itemTitle": "Ranked in {n} of {lists} lists",
+    "howToRead": "Each item sits in the tier most lists give it. A range like SS–A shows where the middle half of lists put it.",
+    "howToPublish": "Add your own list from Share. Only lists their players chose to add are counted, and no one's list is shown by name.",
+    "publishTitle": "Community tier list",
+    "publishHelp": "Add this list to the community tier list? It counts toward the combined list, never under your name.",
+    "publishedThis": "This list is in the community tier list.",
+    "publishedOther": "Your list in the community tier list is a different one.",
+    "publish": "Add to the community tier list",
+    "replacePublished": "Replace it with this list",
+    "unpublish": "Take my list out",
+    "emptyList": "Place some items first.",
+    "signInToPublish": "Sign in to add your list to the community tier list.",
+    "signIn": "Sign in",
+    "publishFailed": "Couldn't update the community tier list."
+  },
   "PIdolCollection": {
     "collected": "Collected",
     "byRarity": "By rarity",
