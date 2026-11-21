@@ -229,7 +229,12 @@
     "exportFailed": "画像の書き出しに失敗しました。",
     "shareToX": "Xで共有",
     "shareTweetText": "学マス {type} ティア表",
-    "confirmLeave": "タブを切り替えると現在のティア表は失われます。続けますか？"
+    "confirmLeave": "タブを切り替えると現在のティア表は失われます。続けますか？",
+    "compareWithMine": "自分の表と比較",
+    "keepMine": "自分の表に戻す",
+    "useTheirs": "この表を使う",
+    "compareAgreement": "あなたの表と同じランク：{common}件中{same}件（{percent}%）",
+    "compareNoCommon": "あなたの表と共通のアイテムはありません"
   },
   "PIdolCollection": {
     "collected": "獲得済み",

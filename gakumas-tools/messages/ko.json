@@ -221,7 +221,12 @@
     "exportFailed": "이미지 내보내기에 실패했습니다.",
     "shareToX": "X에 공유",
     "shareTweetText": "학원 아이돌마스터 {type} 티어리스트",
-    "confirmLeave": "탭을 전환하면 현재 티어리스트가 사라집니다. 계속하시겠습니까?"
+    "confirmLeave": "탭을 전환하면 현재 티어리스트가 사라집니다. 계속하시겠습니까?",
+    "compareWithMine": "내 티어리스트와 비교",
+    "keepMine": "내 티어리스트로 돌아가기",
+    "useTheirs": "이 티어리스트 사용",
+    "compareAgreement": "내 티어리스트와 같은 랭크: {common}개 중 {same}개 ({percent}%)",
+    "compareNoCommon": "내 티어리스트와 겹치는 항목이 없습니다"
   },
   "PIdolCollection": {
     "collected": "획득",

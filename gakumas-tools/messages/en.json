@@ -221,7 +221,12 @@
     "exportFailed": "Couldn't export image.",
     "shareToX": "Share to X",
     "shareTweetText": "My Gakumas {type} tier list",
-    "confirmLeave": "You'll lose this tier list if you switch tabs. Continue?"
+    "confirmLeave": "You'll lose this tier list if you switch tabs. Continue?",
+    "compareWithMine": "Compare with mine",
+    "keepMine": "Keep mine",
+    "useTheirs": "Use this list",
+    "compareAgreement": "Same rank as your list for {same} of {common} ({percent}%)",
+    "compareNoCommon": "Nothing here is in your list yet"
   },
   "PIdolCollection": {
     "collected": "Collected",
