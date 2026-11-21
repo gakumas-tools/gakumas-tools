@@ -579,7 +579,11 @@
     "shareFailed": "共有に失敗しました",
     "unshareFailed": "共有の停止に失敗しました",
     "copyThisLink": "このリンクをコピーしてください",
-    "confirmDeleteShared": "削除しますか？共有リンクも使えなくなります。"
+    "confirmDeleteShared": "削除しますか？共有リンクも使えなくなります。",
+    "listOnStage": "ステージのページに載せる",
+    "unlistFromStage": "ステージのページから外す",
+    "listed": "掲載中",
+    "listFailed": "掲載の変更に失敗しました"
   },
   "SharedRun": {
     "untitled": "共有された編成",
@@ -597,6 +601,14 @@
     "hint": "シミュレーターで開くと履歴に追加され、比較タブで自分の編成と並べて見られます。",
     "metaDescription": "共有されたシミュレーター編成：平均 {mean}、中央値 {median}。",
     "metaDescriptionNoScores": "共有されたシミュレーターの編成。"
+  },
+  "StageSharedRuns": {
+    "title": "このステージの共有ラン",
+    "loading": "読み込み中…",
+    "empty": "このステージに掲載されたランはまだありません。",
+    "failed": "共有ランを読み込めませんでした。",
+    "untitled": "名前のないラン",
+    "howToList": "自分のランを載せるには、比較タブで保存済みのランを共有し、「ステージのページに載せる」を選んでください。"
   },
   "SimulatorStats": {
     "total": "合計",
