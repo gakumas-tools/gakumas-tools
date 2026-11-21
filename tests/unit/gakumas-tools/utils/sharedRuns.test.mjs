@@ -21,16 +21,11 @@ const { ObjectId } = createRequire(
 )("mongodb");
 
 // Just enough of a MongoDB collection for these queries: equality filters,
-// a unique _id, sorts on (dotted) fields with missing values lowest, and
-// limits.
+// a unique _id, and the projections and sorts the module uses.
 function matches(doc, filter) {
   return Object.entries(filter).every(([key, value]) =>
     value instanceof ObjectId ? value.equals(doc[key]) : doc[key] === value,
   );
-}
-
-function valueAt(doc, path) {
-  return path.split(".").reduce((value, key) => value?.[key], doc);
 }
 
 function fakeDb() {
@@ -42,27 +37,10 @@ function fakeDb() {
         return this.docs.find((doc) => matches(doc, filter)) ?? null;
       },
       find(filter) {
-        let found = this.docs.filter((doc) => matches(doc, filter));
+        const found = this.docs.filter((doc) => matches(doc, filter));
         const cursor = {
-          sort(spec) {
-            const keys = Object.entries(spec);
-            found = [...found].sort((a, b) => {
-              for (const [key, dir] of keys) {
-                const av = valueAt(a, key);
-                const bv = valueAt(b, key);
-                if (av === bv) continue;
-                if (av == null) return -dir;
-                if (bv == null) return dir;
-                return av < bv ? -dir : dir;
-              }
-              return 0;
-            });
-            return cursor;
-          },
-          limit(n) {
-            found = found.slice(0, n);
-            return cursor;
-          },
+          sort: () => cursor,
+          limit: () => cursor,
           toArray: async () => found,
         };
         return cursor;
@@ -79,7 +57,6 @@ function fakeDb() {
       async updateOne(filter, { $set }) {
         const doc = this.docs.find((d) => matches(d, filter));
         if (doc) Object.assign(doc, $set);
-        return { matchedCount: doc ? 1 : 0 };
       },
       async deleteOne(filter) {
         const index = this.docs.findIndex((d) => matches(d, filter));
@@ -192,6 +169,71 @@ test("unknown or malformed ids find nothing", async () => {
   assert.equal(await unshareRun(db, "owner", { $ne: null }), false);
 });
 
+// The listing tests need a collection that also sorts on (dotted) fields,
+// with missing values lowest, limits, and says how many docs an update
+// matched.
+function valueAt(doc, path) {
+  return path.split(".").reduce((value, key) => value?.[key], doc);
+}
+
+function listingDb() {
+  const collections = {};
+  const collection = (name) =>
+    (collections[name] ??= {
+      docs: [],
+      async findOne(filter) {
+        return this.docs.find((doc) => matches(doc, filter)) ?? null;
+      },
+      find(filter) {
+        let found = this.docs.filter((doc) => matches(doc, filter));
+        const cursor = {
+          sort(spec) {
+            const keys = Object.entries(spec);
+            found = [...found].sort((a, b) => {
+              for (const [key, dir] of keys) {
+                const av = valueAt(a, key);
+                const bv = valueAt(b, key);
+                if (av === bv) continue;
+                if (av == null) return -dir;
+                if (bv == null) return dir;
+                return av < bv ? -dir : dir;
+              }
+              return 0;
+            });
+            return cursor;
+          },
+          limit(n) {
+            found = found.slice(0, n);
+            return cursor;
+          },
+          toArray: async () => found,
+        };
+        return cursor;
+      },
+      async countDocuments(filter) {
+        return this.docs.filter((doc) => matches(doc, filter)).length;
+      },
+      async insertOne(doc) {
+        if (this.docs.some((d) => d._id === doc._id)) {
+          throw Object.assign(new Error("duplicate key"), { code: 11000 });
+        }
+        this.docs.push(doc);
+      },
+      async updateOne(filter, { $set }) {
+        const doc = this.docs.find((d) => matches(d, filter));
+        if (doc) Object.assign(doc, $set);
+        return { matchedCount: doc ? 1 : 0 };
+      },
+      async deleteOne(filter) {
+        const index = this.docs.findIndex((d) => matches(d, filter));
+        if (index < 0) return { deletedCount: 0 };
+        this.docs.splice(index, 1);
+        return { deletedCount: 1 };
+      },
+    });
+  return { collection, collections };
+}
+
 // Shares n saved runs of one stage, each with its own mean score.
 async function shareRuns(db, means, { stageId = 52, userId = "owner" } = {}) {
   const ids = [];
@@ -222,7 +264,7 @@ const list = (db, userId, id, listed = true) =>
   setListed(db, userId, id, listed, fakeSimulate);
 
 test("a shared run is unlisted until its owner lists it", async () => {
-  const db = fakeDb();
+  const db = listingDb();
   const [id] = await shareRuns(db, [2000]);
   assert.equal(db.collection("sharedRuns").docs[0].listed, false);
   assert.deepEqual(await listStageRuns(db, 52), []);
@@ -240,7 +282,7 @@ test("a shared run is unlisted until its owner lists it", async () => {
 });
 
 test("listing takes only a real id and a boolean", async () => {
-  const db = fakeDb();
+  const db = listingDb();
   const [id] = await shareRuns(db, [2000]);
   assert.equal((await list(db, "owner", id, "yes")).status, 404);
   assert.equal((await list(db, "owner", { $ne: null })).status, 404);
@@ -249,7 +291,7 @@ test("listing takes only a real id and a boolean", async () => {
 });
 
 test("re-sharing a listed run keeps it listed", async () => {
-  const db = fakeDb();
+  const db = listingDb();
   const [id] = await shareRuns(db, [2000]);
   await list(db, "owner", id);
   const { sourceId } = db.collection("sharedRuns").docs[0];
@@ -258,7 +300,7 @@ test("re-sharing a listed run keeps it listed", async () => {
 });
 
 test("a stage's listing is its own listed runs, best server mean first, without owners", async () => {
-  const db = fakeDb();
+  const db = listingDb();
   const ids = await shareRuns(db, [1500, 2400, 1900]);
   const [other] = await shareRuns(db, [9999], { stageId: 53 });
   for (const id of [...ids, other]) await list(db, "owner", id);
@@ -282,7 +324,7 @@ test("a stage's listing is its own listed runs, best server mean first, without 
 });
 
 test("forged stats don't move a run up: the stage page ranks and shows the server's", async () => {
-  const db = fakeDb();
+  const db = listingDb();
   const [honest, forged] = await shareRuns(db, [2400, 1500]);
   // The browser can send any stats with a saved run.
   db.collection("sharedRuns").docs[1].stats = { mean: 999999, median: 999999 };
@@ -294,7 +336,7 @@ test("forged stats don't move a run up: the stage page ranks and shows the serve
 });
 
 test("a run the server can't simulate isn't listed", async () => {
-  const db = fakeDb();
+  const db = listingDb();
   const [id] = await shareRuns(db, [null]);
   assert.equal((await list(db, "owner", id)).status, 422);
   assert.equal(db.collection("sharedRuns").docs[0].listed, false);
@@ -302,7 +344,7 @@ test("a run the server can't simulate isn't listed", async () => {
 });
 
 test("a listed run is simulated once per engine version, not on every re-list", async () => {
-  const db = fakeDb();
+  const db = listingDb();
   const [id] = await shareRuns(db, [2000]);
   let calls = 0;
   const counting = async (doc) => (calls++, fakeSimulate(doc));
@@ -325,7 +367,7 @@ const fixedEngine = async (doc) => {
 };
 
 test("a new engine version re-simulates a stage's listed runs, a few at a time", async () => {
-  const db = fakeDb();
+  const db = listingDb();
   const ids = await shareRuns(db, [1500, 2400, 1900]);
   for (const id of ids) await setListed(db, "owner", id, true, fakeSimulate, "v1");
   const means = async () => (await listStageRuns(db, 52)).map((r) => r.stats.mean);
@@ -349,7 +391,7 @@ test("a new engine version re-simulates a stage's listed runs, a few at a time",
 });
 
 test("a run the new engine can't simulate keeps its stats and isn't retried", async () => {
-  const db = fakeDb();
+  const db = listingDb();
   const [id] = await shareRuns(db, [2000]);
   await setListed(db, "owner", id, true, fakeSimulate, "v1");
   let calls = 0;
@@ -361,7 +403,7 @@ test("a run the new engine can't simulate keeps its stats and isn't retried", as
 });
 
 test("without a known engine version, stored stats stand", async () => {
-  const db = fakeDb();
+  const db = listingDb();
   const [id] = await shareRuns(db, [2000]);
   await list(db, "owner", id);
   assert.equal(await refreshStageRuns(db, 52, null, { simulate: fixedEngine }), 0);
@@ -369,7 +411,7 @@ test("without a known engine version, stored stats stand", async () => {
 });
 
 test("unlisted and other stages' runs aren't re-simulated", async () => {
-  const db = fakeDb();
+  const db = listingDb();
   const [listed, hidden] = await shareRuns(db, [2000, 2100]);
   const [other] = await shareRuns(db, [2200], { stageId: 53 });
   for (const id of [listed, hidden, other]) {
@@ -386,7 +428,7 @@ test("unlisted and other stages' runs aren't re-simulated", async () => {
 });
 
 test("a stage's listing is capped", async () => {
-  const db = fakeDb();
+  const db = listingDb();
   const means = Array.from({ length: 60 }, (_, i) => 1000 + i);
   for (const id of await shareRuns(db, means)) await list(db, "owner", id);
   assert.equal((await listStageRuns(db, 52)).length, STAGE_RUNS_LIMIT);
@@ -395,7 +437,7 @@ test("a stage's listing is capped", async () => {
 });
 
 test("custom and malformed stages have no listing", async () => {
-  const db = fakeDb();
+  const db = listingDb();
   for (const bad of ["custom", "52", 0, -1, 1.5, null, { $ne: null }]) {
     assert.equal(isListableStageId(bad), false);
     assert.deepEqual(await listStageRuns(db, bad), []);
@@ -406,7 +448,7 @@ test("custom and malformed stages have no listing", async () => {
 });
 
 test("the owner's list says which shared runs are listed", async () => {
-  const db = fakeDb();
+  const db = listingDb();
   const [id] = await shareRuns(db, [2000]);
   await list(db, "owner", id);
   assert.equal((await listSharedRuns(db, "owner"))[0].listed, true);
