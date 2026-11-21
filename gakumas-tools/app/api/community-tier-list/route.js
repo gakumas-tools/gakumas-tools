@@ -32,9 +32,8 @@ export async function GET(request) {
 
   const { db } = await connect();
   const view = await communityTierList(db, type);
-  return Response.json(view, {
-    headers: { "cache-control": "public, max-age=300" },
-  });
+  // Not cached: a player who adds or takes out their list sees it at once.
+  return Response.json(view, { headers: { "cache-control": "no-store" } });
 }
 
 // Publish your list for a type, replacing the last: { type, list } with
