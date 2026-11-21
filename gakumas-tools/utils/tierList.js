@@ -74,9 +74,10 @@ export function isDefaultList(list) {
 }
 
 // Compares two lists by rank. Each id's rank in each list (null if absent),
-// and for ids in both, delta = how many ranks higher `theirs` puts it than
-// `mine` (by the canonical rank order, so lists with different tiers still
-// compare). agreement = share of common ids given the same rank (null when
+// and for ids in both, delta = how many tiers higher `theirs` puts it than
+// `mine`, counting only the tiers either list has (in the canonical order,
+// so lists with different tiers still compare, and S4 to SSS is one step even
+// though SSS+ sits between them in the rank icons). agreement = share of common ids given the same rank (null when
 // none are common).
 export function compareLists(mine, theirs) {
   const rankOf = (list) => {
@@ -90,7 +91,10 @@ export function compareLists(mine, theirs) {
   };
   const a = rankOf(mine);
   const b = rankOf(theirs);
-  const index = (rank) => AVAILABLE_RANKS.indexOf(rank);
+  const order = sortRanks([
+    ...new Set([...(mine?.tiers || []), ...(theirs?.tiers || [])]),
+  ]);
+  const index = (rank) => order.indexOf(rank);
   const byId = {};
   const onlyMine = [];
   const onlyTheirs = [];

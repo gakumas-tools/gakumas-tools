@@ -58,12 +58,23 @@ const theirs = {
 
 test("gives each id its rank in both lists and how far theirs moves it", () => {
   const r = compareLists(mine, theirs);
-  assert.deepEqual(r.byId[1], { mine: "SSS", theirs: "SS", delta: -2 });
-  assert.deepEqual(r.byId[2], { mine: "SS", theirs: "S4", delta: 4 });
+  assert.deepEqual(r.byId[1], { mine: "SSS", theirs: "SS", delta: -1 });
+  assert.deepEqual(r.byId[2], { mine: "SS", theirs: "S4", delta: 2 });
   assert.deepEqual(r.byId[3], { mine: "S", theirs: "S", delta: 0 });
-  assert.deepEqual(r.byId[5], { mine: "A", theirs: "B", delta: -2 });
+  assert.deepEqual(r.byId[5], { mine: "A", theirs: "B", delta: -1 });
   assert.deepEqual(r.byId[4], { mine: "S", theirs: null, delta: null });
   assert.deepEqual(r.byId[6], { mine: null, theirs: "B", delta: null });
+});
+
+test("moving one row in the default tiers is one step", () => {
+  // S4 and SSS are neighbours on the page; SSS+ (between them in the rank
+  // icons) is in neither list, so it isn't counted.
+  const a = { tiers: ["S4", "SSS", "SS"], items: { S4: [1], SSS: [2], SS: [3] } };
+  const b = { tiers: ["S4", "SSS", "SS"], items: { S4: [2], SSS: [3], SS: [1] } };
+  const r = compareLists(a, b);
+  assert.equal(r.byId[2].delta, 1);
+  assert.equal(r.byId[3].delta, 1);
+  assert.equal(r.byId[1].delta, -2);
 });
 
 test("lists ids found in only one list", () => {
