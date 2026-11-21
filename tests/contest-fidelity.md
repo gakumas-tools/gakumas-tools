@@ -21,6 +21,10 @@ training replay in `training-fidelity.md` checks those.
 - `skillCardIds` (optional): the deck, when a once-per-stage card was played
   twice from two copies. Otherwise one copy of each card the play used.
 - `turnTypes`: the turn order the game showed.
+- `plays[].actions[].hand` (optional, not on the first turn): the cards that
+  turn drew, read from 手札情報, before its start effects changed them. The
+  harness puts them on top of the deck before the turn starts, so effects on
+  the drawn hand are checked. Use it with `skillCardIds`.
 - `displayedPercents`: the multiplier the game showed for each turn type.
 - `plays[].actions[]`: each card played, by `cardId` and `name`, or a skipped
   action with `cardId: null`; `expected`,
@@ -350,9 +354,10 @@ Stage 2 (`stageId` 194, the same effect as S55's 191):
 stage's effect fires on the 4th and 8th direct good impression gains (turns 5
 and 9: 15 → 22 and 29 → 36), and each time doubles that turn's tick and the
 next. ダメダメクッキング+ on turn 5 reserves upgradeHand for turn 6's start,
-where the game upgrades the three cards drawn (パステル気分+, 表現の基本+,
-気分転換+). The harness doesn't model drawn hands, so the fixture's deck already
-holds パステル気分+ and the upgrade isn't checked here.
+where the game upgrades the three cards drawn (パステル気分, 表現の基本,
+気分転換 → their + forms). Turn 6 gives that drawn `hand` with the base cards,
+so the replay only finds パステル気分+ to play (on turns 6 and 11) if the
+upgrade happened.
 `contest-rehearsal-s56-tsubame-m31` is 初志貫徹 雨夜燕 3270 (146/354/214,
 体力 31; panel 231/241/249%) with 一筆入魂, ending at 770. 夏夜に咲く思い出+
 gives an extra card use on turn 2 and then adds 4 on the 5th and 10th cards
