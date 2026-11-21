@@ -272,12 +272,12 @@ id,name,rarity,upgraded,plan,mode,sourceType,pIdolId,welfare,effects
 271,N.I.Aスマホリング,SSR,FALSE,free,produce,produce,,FALSE,
 272,N.I.Aトートバッグ,SSR,FALSE,free,produce,produce,,FALSE,
 273,N.I.Aパスケース,SSR,FALSE,free,produce,produce,,FALSE,
-274,N.I.Aバンド（金紫）,SSR,FALSE,sense,stage,produce,,FALSE,
-275,N.I.Aライト（金紫）,SSR,FALSE,sense,stage,produce,,FALSE,
-276,N.I.Aバンド（金白）,SSR,FALSE,logic,stage,produce,,FALSE,
-277,N.I.Aライト（金白）,SSR,FALSE,logic,stage,produce,,FALSE,
-278,N.I.Aバンド（金黒）,SSR,FALSE,anomaly,stage,produce,,FALSE,
-279,N.I.Aライト（金黒）,SSR,FALSE,anomaly,stage,produce,,FALSE,
+274,N.I.Aバンド（金紫）,SSR,FALSE,sense,stage,produce,,FALSE,at:afterStartOfTurn { if:countCards[deck | discarded]>=12 { drawCard; setScoreBuff(0.05); goodConditionTurns+=1 }; limit:5 }
+275,N.I.Aライト（金紫）,SSR,FALSE,sense,stage,produce,,FALSE,at:afterStartOfTurn { if:countCards[deck | discarded]>=12 { drawCard; setScoreBuff(0.05); concentration+=1 }; limit:5 }
+276,N.I.Aバンド（金白）,SSR,FALSE,logic,stage,produce,,FALSE,at:startOfTurn { if:countCards[deck | discarded]>=12 { drawCard; setScoreBuff(0.05); goodImpressionTurns+=1 }; limit:5 }
+277,N.I.Aライト（金白）,SSR,FALSE,logic,stage,produce,,FALSE,at:startOfTurn { if:countCards[deck | discarded]>=12 { drawCard; setScoreBuff(0.05); motivation+=1 }; limit:5 }
+278,N.I.Aバンド（金黒）,SSR,FALSE,anomaly,stage,produce,,FALSE,at:startOfTurn { if:countCards[deck | discarded]>=18 { setScoreBuff(0.25); target:effect(fullPowerCharge) { g.score+=10 } }; limit:1 }
+279,N.I.Aライト（金黒）,SSR,FALSE,anomaly,stage,produce,,FALSE,at:startOfTurn { if:countCards[deck | discarded]>=18 { setScoreBuff(0.25); target:effect(strength) { g.score+=10 } }; limit:1 }
 280,伝説のidol装備,SSR,FALSE,anomaly,stage,pIdol,94,FALSE,at:stanceChanged { if:isDirectEffect & isStrength & genki>=50 { score+=genki*4.4; genki=0; fixedStamina-=2 }; limit:2 }
 281,伝説のidol装備+,SSR,TRUE,anomaly,stage,pIdol,94,FALSE,at:stanceChanged { if:isDirectEffect & isStrength & genki>=50 { score+=genki*5; genki=0 }; limit:2 }
 282,居残りの生徒会室,SSR,FALSE,anomaly,stage,support,,FALSE,at:startOfTurn { if:isDanceTurn & strengthTimes>=3 { setEnthusiasmBonus(10) }; limit:1 }
