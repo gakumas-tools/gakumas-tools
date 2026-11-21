@@ -17,7 +17,11 @@ if (!MONGODB_DB) {
 const INDEXES = {
   memories: { userId: 1 },
   loadouts: { userId: 1, createdAt: -1 },
-  sharedRuns: { userId: 1, sourceId: 1 },
+  sharedRuns: [
+    { userId: 1, sourceId: 1 },
+    { stageId: 1, createdAt: -1 },
+    { createdAt: -1 },
+  ],
 };
 
 /**
@@ -34,8 +38,8 @@ if (!cached) {
 async function ensureIndexes(db) {
   try {
     await Promise.all(
-      Object.entries(INDEXES).map(([name, keys]) =>
-        db.collection(name).createIndex(keys),
+      Object.entries(INDEXES).flatMap(([name, indexes]) =>
+        [indexes].flat().map((keys) => db.collection(name).createIndex(keys)),
       ),
     );
   } catch (error) {

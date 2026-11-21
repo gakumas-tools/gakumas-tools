@@ -57,6 +57,10 @@
     "rehearsal": {
       "title": "排练解析器",
       "description": "从排练截图中解析分数"
+    },
+    "sharedRuns": {
+      "title": "分享的编组",
+      "description": "浏览其他玩家分享的模拟器编组"
     }
   },
   "NavbarMenu": {
@@ -563,6 +567,7 @@
     "renameFailed": "重命名失败",
     "deleteFailed": "删除失败",
     "share": "分享",
+    "confirmShare": "分享此编组？任何人都可以打开，并会显示在“分享的编组”中对应关卡的列表里。",
     "copyLink": "复制链接",
     "unshare": "停止分享",
     "shared": "已分享",
@@ -588,7 +593,19 @@
     "signInPrompt": "保存需要登录。前往 Discord 登录？",
     "hint": "在模拟器中打开会将其加入历史，可在比较标签页中与自己的编组并排查看。",
     "metaDescription": "分享的模拟器编组：平均 {mean}，中位数 {median}。",
-    "metaDescriptionNoScores": "分享的模拟器编组。"
+    "metaDescriptionNoScores": "分享的模拟器编组。",
+    "moreForStage": "此关卡的更多分享编组"
+  },
+  "SharedRunsBrowse": {
+    "title": "分享的编组",
+    "hint": "其他玩家分享的模拟器编组（按时间从新到旧）。选择关卡后会在同一分数轴上排列；打开即可与自己的编组并排运行。",
+    "stage": "关卡",
+    "allStages": "全部关卡",
+    "stageOption": "{name}（{count}）",
+    "median": "中位数 {median}",
+    "empty": "这里还没有分享的编组。从模拟器的已保存编组中分享第一个吧。",
+    "older": "更早的编组",
+    "newest": "回到最新"
   },
   "SimulatorStats": {
     "total": "合计",

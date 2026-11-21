@@ -57,6 +57,10 @@
     "rehearsal": {
       "title": "리허설 스코어 불러오기",
       "description": "리허설 스크린샷으로부터 스코어 불러오기"
+    },
+    "sharedRuns": {
+      "title": "공유된 편성",
+      "description": "다른 플레이어가 공유한 시뮬레이터 편성 보기"
     }
   },
   "NavbarMenu": {
@@ -563,6 +567,7 @@
     "renameFailed": "이름 변경 실패",
     "deleteFailed": "삭제 실패",
     "share": "공유",
+    "confirmShare": "이 편성을 공유할까요? 누구나 열 수 있으며, 공유된 편성 페이지의 해당 스테이지 목록에 표시됩니다.",
     "copyLink": "링크 복사",
     "unshare": "공유 중지",
     "shared": "공유 중",
@@ -588,7 +593,19 @@
     "signInPrompt": "저장하려면 로그인이 필요합니다. Discord로 이동할까요?",
     "hint": "시뮬레이터에서 열면 기록에 추가되어 비교 탭에서 내 편성과 나란히 볼 수 있습니다.",
     "metaDescription": "공유된 시뮬레이터 편성: 평균 {mean}, 중앙값 {median}.",
-    "metaDescriptionNoScores": "공유된 시뮬레이터 편성."
+    "metaDescriptionNoScores": "공유된 시뮬레이터 편성.",
+    "moreForStage": "이 스테이지의 다른 공유 편성"
+  },
+  "SharedRunsBrowse": {
+    "title": "공유된 편성",
+    "hint": "다른 플레이어가 공유한 시뮬레이터 편성(최신순). 스테이지를 고르면 같은 점수 축에 나란히 표시됩니다. 열면 내 편성과 나란히 돌려볼 수 있습니다.",
+    "stage": "스테이지",
+    "allStages": "모든 스테이지",
+    "stageOption": "{name} ({count})",
+    "median": "중앙값 {median}",
+    "empty": "아직 공유된 편성이 없습니다. 시뮬레이터의 저장된 편성에서 첫 번째로 공유해 보세요.",
+    "older": "이전 편성",
+    "newest": "최신으로"
   },
   "SimulatorStats": {
     "total": "합계",

@@ -221,8 +221,23 @@ function CompareTab({ currentRun, onAfterLoad }) {
   }
 
   // Shares the run (or finds its link again) and copies the link. Whether
-  // the link was copied.
-  async function handleShare(run) {
+  // the link was copied. A run not yet shared asks first, since a shared
+  // run is listed for everyone on the Shared Runs page.
+  function handleShare(run) {
+    if (sharedIds[run._id || run.id]) return shareAndCopy(run);
+    return new Promise((resolve) => {
+      setModal(
+        <ConfirmModal
+          message={t("confirmShare")}
+          confirmLabel={t("share")}
+          onConfirm={() => resolve(shareAndCopy(run))}
+          onCancel={() => resolve(false)}
+        />,
+      );
+    });
+  }
+
+  async function shareAndCopy(run) {
     clearRowError(run);
     const link = shareSaved(run._id || run.id).then((id) => sharedRunUrl(id));
     try {

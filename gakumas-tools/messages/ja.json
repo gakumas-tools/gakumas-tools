@@ -65,6 +65,10 @@
     "rehearsal": {
       "title": "リハーサル読み取り",
       "description": "リハーサル画面のスクショからスコアを読み取る"
+    },
+    "sharedRuns": {
+      "title": "みんなの編成",
+      "description": "他のプレイヤーが共有したシミュレーター編成を見る"
     }
   },
   "NavbarMenu": {
@@ -571,6 +575,7 @@
     "renameFailed": "名前変更に失敗",
     "deleteFailed": "削除に失敗",
     "share": "共有",
+    "confirmShare": "この編成を共有しますか？誰でも開けるようになり、「みんなの編成」のステージ一覧に表示されます。",
     "copyLink": "リンクをコピー",
     "unshare": "共有を停止",
     "shared": "共有中",
@@ -596,7 +601,19 @@
     "signInPrompt": "保存するにはサインインが必要です。Discordへ進みますか？",
     "hint": "シミュレーターで開くと履歴に追加され、比較タブで自分の編成と並べて見られます。",
     "metaDescription": "共有されたシミュレーター編成：平均 {mean}、中央値 {median}。",
-    "metaDescriptionNoScores": "共有されたシミュレーターの編成。"
+    "metaDescriptionNoScores": "共有されたシミュレーターの編成。",
+    "moreForStage": "このステージの他の共有編成"
+  },
+  "SharedRunsBrowse": {
+    "title": "みんなの編成",
+    "hint": "他のプレイヤーが共有したシミュレーター編成（新しい順）。ステージを選ぶと同じスコア軸で並びます。開くと自分の編成と並べて試せます。",
+    "stage": "ステージ",
+    "allStages": "すべてのステージ",
+    "stageOption": "{name}（{count}）",
+    "median": "中央値 {median}",
+    "empty": "まだ共有された編成はありません。シミュレーターの保存済み編成から最初の一つを共有しましょう。",
+    "older": "さらに古い編成",
+    "newest": "最新に戻る"
   },
   "SimulatorStats": {
     "total": "合計",

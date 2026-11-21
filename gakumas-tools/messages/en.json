@@ -57,6 +57,10 @@
     "rehearsal": {
       "title": "Rehearsal Parser",
       "description": "Parse scores from rehearsal screenshots"
+    },
+    "sharedRuns": {
+      "title": "Shared Runs",
+      "description": "Browse simulator runs other players shared"
     }
   },
   "NavbarMenu": {
@@ -563,6 +567,7 @@
     "renameFailed": "Rename failed",
     "deleteFailed": "Delete failed",
     "share": "Share",
+    "confirmShare": "Share this run? Anyone can open it, and it is listed on Shared Runs for its stage.",
     "copyLink": "Copy link",
     "unshare": "Stop sharing",
     "shared": "Shared",
@@ -588,7 +593,19 @@
     "signInPrompt": "Saving requires sign-in. Continue to Discord?",
     "hint": "Open in simulator puts this run in your history, so the Compare tab shows it beside your own runs.",
     "metaDescription": "A shared simulator run: mean {mean}, median {median}.",
-    "metaDescriptionNoScores": "A shared simulator loadout."
+    "metaDescriptionNoScores": "A shared simulator loadout.",
+    "moreForStage": "More shared runs for this stage"
+  },
+  "SharedRunsBrowse": {
+    "title": "Shared runs",
+    "hint": "Simulator runs other players shared, newest first. Pick a stage to see its runs on one score axis; open one to run it beside your own.",
+    "stage": "Stage",
+    "allStages": "All stages",
+    "stageOption": "{name} ({count})",
+    "median": "Median {median}",
+    "empty": "No shared runs here yet. Share one of your saved runs from the simulator to be the first.",
+    "older": "Older runs",
+    "newest": "Back to newest"
   },
   "SimulatorStats": {
     "total": "Total",

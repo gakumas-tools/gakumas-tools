@@ -10,7 +10,7 @@ import LoadoutSummary from "@/components/LoadoutHistory/LoadoutSummary";
 import MiniBoxPlot from "@/components/SimulationRuns/MiniBoxPlot";
 import ModalContext from "@/contexts/ModalContext";
 import SimulationRunsContext from "@/contexts/SimulationRunsContext";
-import { useRouter } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 import {
   computeRange,
   computeTicks,
@@ -131,6 +131,17 @@ function SharedRun({ run: shared }) {
         </div>
       )}
       <p className={styles.hint}>{t("hint")}</p>
+      {Number.isInteger(loadout.stageId) && (
+        <Link
+          className={styles.hint}
+          href={{
+            pathname: "/shared",
+            query: { stage: String(loadout.stageId) },
+          }}
+        >
+          {t("moreForStage")}
+        </Link>
+      )}
     </div>
   );
 }
