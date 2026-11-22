@@ -128,7 +128,8 @@ export function compareLists(mine, theirs) {
 // Combines many players' lists into one community view. For each id that at
 // least `minLists` lists rank: n (how many lists rank it), median (the middle
 // rank by the canonical order, the higher of the two middles when n is even),
-// low and high (the ranks at the first and third quartile, so one outlier
+// low and high (the middle half: the same count, a quarter of n rounded down,
+// is left off each end, so with 4 or more lists one outlier on either side
 // doesn't widen the spread), and counts per rank. `list` puts each id in its
 // median's tier, ids in a tier ordered by how many lists rank them, then by
 // id. Lists that can't be read are skipped and counted in `skipped`.
@@ -160,6 +161,7 @@ export function aggregateLists(lists, { minLists = 1 } = {}) {
     if (indices.length < minLists) continue;
     const sorted = [...indices].sort((a, b) => a - b);
     const at = (q) => sorted[Math.floor(q * (sorted.length - 1))];
+    const trim = Math.floor(sorted.length / 4);
     const counts = {};
     for (const i of sorted) {
       counts[AVAILABLE_RANKS[i]] = (counts[AVAILABLE_RANKS[i]] || 0) + 1;
@@ -168,8 +170,8 @@ export function aggregateLists(lists, { minLists = 1 } = {}) {
     byId[id] = {
       n: sorted.length,
       median,
-      low: AVAILABLE_RANKS[at(0.25)],
-      high: AVAILABLE_RANKS[at(0.75)],
+      low: AVAILABLE_RANKS[sorted[trim]],
+      high: AVAILABLE_RANKS[sorted[sorted.length - 1 - trim]],
       counts,
     };
     (items[median] ||= []).push(id);
