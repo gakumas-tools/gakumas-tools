@@ -653,7 +653,15 @@
     "place": "#{rank} of {count} with yours",
     "belowTop": "Below the top {count} listed",
     "howToList": "To list yours, share a saved run in Compare and choose \"Show on the stage's page\".",
-    "seeAll": "See them all"
+    "seeAll": "See them all",
+    "listYours": "List it here",
+    "namePlaceholder": "Name (optional)",
+    "list": "List",
+    "listing": "Listing…",
+    "cancel": "Cancel",
+    "listFailed": "Couldn't list it. Try again.",
+    "signInToList": "Listing a run requires sign-in. Continue to Discord?",
+    "listedNote": "Listed. It's saved in Compare, where you can take it off this page."
   },
   "SimulatorStats": {
     "total": "Total",
