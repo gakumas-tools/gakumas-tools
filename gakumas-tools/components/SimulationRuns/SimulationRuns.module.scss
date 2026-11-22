@@ -328,6 +328,26 @@
   font-weight: tokens.$weight-semibold;
 }
 
+// How many others opened a shared run's link: an eye and the count.
+.opened {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: tokens.$surface-ink-subtle;
+  font-size: tokens.$text-xs;
+  font-weight: tokens.$weight-semibold;
+  font-variant-numeric: tabular-nums;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
 .runName,
 .runNameEditable {
   overflow: hidden;
