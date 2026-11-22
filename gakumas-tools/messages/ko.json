@@ -576,7 +576,11 @@
     "shareFailed": "공유 실패",
     "unshareFailed": "공유 중지 실패",
     "copyThisLink": "이 링크를 복사하세요",
-    "confirmDeleteShared": "삭제할까요? 공유 링크도 더 이상 작동하지 않습니다."
+    "confirmDeleteShared": "삭제할까요? 공유 링크도 더 이상 작동하지 않습니다.",
+    "listOnStage": "스테이지 페이지에 표시",
+    "unlistFromStage": "스테이지 페이지에서 숨기기",
+    "listed": "게시 중",
+    "listFailed": "게시 설정을 바꾸지 못했습니다"
   },
   "SharedRun": {
     "untitled": "공유된 편성",
@@ -594,6 +598,14 @@
     "hint": "시뮬레이터에서 열면 기록에 추가되어 비교 탭에서 내 편성과 나란히 볼 수 있습니다.",
     "metaDescription": "공유된 시뮬레이터 편성: 평균 {mean}, 중앙값 {median}.",
     "metaDescriptionNoScores": "공유된 시뮬레이터 편성."
+  },
+  "StageSharedRuns": {
+    "title": "이 스테이지의 공유된 런",
+    "loading": "불러오는 중…",
+    "empty": "이 스테이지에 게시된 런이 아직 없습니다.",
+    "failed": "공유된 런을 불러오지 못했습니다.",
+    "untitled": "이름 없는 런",
+    "howToList": "내 런을 게시하려면 비교 탭에서 저장된 런을 공유한 뒤 「스테이지 페이지에 표시」를 선택하세요."
   },
   "SimulatorStats": {
     "total": "합계",
