@@ -57,25 +57,6 @@
   }
 }
 
-.emptyAction {
-  display: inline-flex;
-  align-items: center;
-  gap: tokens.$space-2;
-  padding: tokens.$space-2 tokens.$space-4;
-  border-radius: tokens.$radius-pill;
-  background-color: tokens.$brand;
-  color: colors.$white;
-  @include mixins.raised(tokens.$brand-edge, 3px);
-  font-size: tokens.$text-sm;
-  font-weight: tokens.$weight-heavy;
-  text-decoration: none;
-
-  &:hover,
-  &:focus-visible {
-    background-color: tokens.$brand-hover;
-  }
-}
-
 .stagePicker {
   display: flex;
   flex-wrap: wrap;
@@ -84,7 +65,8 @@
   font-size: tokens.$text-sm;
 
   select {
-    max-width: 100%;
+    flex: 1;
+    min-width: 0;
   }
 }
 
@@ -133,23 +115,11 @@
 }
 
 .sorts {
-  display: flex;
-  gap: tokens.$space-2;
+  align-self: flex-start;
 }
 
-.sort {
-  padding: tokens.$space-1 tokens.$space-3;
-  border-radius: tokens.$radius-pill;
-  background: tokens.$surface-muted;
-  color: inherit;
-  font-size: tokens.$text-sm;
-  text-decoration: none;
-
-  &.active {
-    background: tokens.$accent-tint;
-    color: tokens.$accent-ink;
-    font-weight: tokens.$weight-bold;
-  }
+.older {
+  margin-left: auto;
 }
 
 .rank {

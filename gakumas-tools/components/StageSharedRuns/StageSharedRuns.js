@@ -8,6 +8,7 @@ import gkImg from "gakumas-images";
 import Button from "@/components/Button";
 import ConfirmModal from "@/components/ConfirmModal";
 import Image from "@/components/Image";
+import Input from "@/components/Input";
 import ModalContext from "@/contexts/ModalContext";
 import SimulationRunsContext from "@/contexts/SimulationRunsContext";
 import { MAX_NAME_LENGTH } from "@/utils/apiValidation";
@@ -136,25 +137,25 @@ function StageSharedRuns({ stageId, yourRun }) {
         </span>
       </div>
       {!yourListing && (
-        <button
-          type="button"
+        <Button
           className={styles.listYours}
+          style="blue-secondary"
+          size="sm"
           onClick={startListing}
         >
           {t("listYours")}
-        </button>
+        </Button>
       )}
       {yourListing && yourListing.step != "done" && (
         <div className={styles.listForm}>
-          <input
+          <Input
             type="text"
+            className={styles.listName}
             value={yourListing.name}
             placeholder={t("namePlaceholder")}
             maxLength={MAX_NAME_LENGTH}
             disabled={yourListing.step == "busy"}
-            onChange={(e) =>
-              setListing({ ...yourListing, name: e.target.value })
-            }
+            onChange={(name) => setListing({ ...yourListing, name })}
             onKeyDown={(e) => {
               if (e.key == "Enter") submitListing();
             }}
