@@ -1,1 +1,2 @@
 stageId,recommendedEffect,effects
+196,goodImpressionTurns,"at:startOfTurn { if:turnsElapsed==3 { if:goodImpressionTurns>=4 { at:endOfTurn { goodImpressionTurns+=3 } } } } at:startOfTurn { if:turnsElapsed==6 { if:goodImpressionTurns<=18 { poorConditionTurns+=5 } } } at:startOfTurn { if:turnsElapsed==8 { if:goodImpressionTurns>=28 { at:endOfTurn { score+=goodImpressionTurns*1.5 } } } }"

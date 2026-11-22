@@ -4,7 +4,7 @@ import { IdolRoad } from "gakumas-data";
 import { createIdolRoad } from "gakumas-data/data/idolRoad";
 
 // Made-up rows for the resolver's own logic. They are not game data:
-// no Idol Road stage has been captured yet.
+// captured stages replay in tests/idolRoadFidelity.mjs.
 const STAGE_ROWS = [
   {
     stageId: 900,
