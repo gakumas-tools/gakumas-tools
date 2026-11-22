@@ -448,7 +448,17 @@ export default function Simulator() {
 
       {/* Below the result, so a screenshot of the loadout and its score spread still fits one phone screen. */}
       <div className={styles.stageSharedRuns} data-export-hide="true">
-        <StageSharedRuns stageId={stage.id} />
+        <StageSharedRuns
+          stageId={stage.id}
+          yourMean={
+            strategy === "HeuristicStrategy" &&
+            !running &&
+            simulatorData?.input.config === config &&
+            simulatorData?.input.linkConfigs === linkConfigs
+              ? simulatorData.run?.stats?.mean
+              : null
+          }
+        />
       </div>
     </div>
   );

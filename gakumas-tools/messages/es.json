@@ -649,6 +649,9 @@
     "empty": "Nadie ha mostrado aún una simulación para esta etapa.",
     "failed": "No se han podido cargar las simulaciones compartidas.",
     "untitled": "Simulación sin título",
+    "yourRun": "Tu simulación (este resultado)",
+    "place": "Puesto {rank} de {count} con la tuya",
+    "belowTop": "Por debajo de las {count} primeras mostradas",
     "howToList": "Para mostrar la tuya, comparte una simulación guardada en Comparar y elige «Mostrar en la página de la etapa».",
     "seeAll": "Verlas todas"
   },
