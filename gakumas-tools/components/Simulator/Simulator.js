@@ -450,12 +450,12 @@ export default function Simulator() {
       <div className={styles.stageSharedRuns} data-export-hide="true">
         <StageSharedRuns
           stageId={stage.id}
-          yourMean={
+          yourRun={
             strategy === "HeuristicStrategy" &&
             !running &&
             simulatorData?.input.config === config &&
             simulatorData?.input.linkConfigs === linkConfigs
-              ? simulatorData.run?.stats?.mean
+              ? simulatorData.run
               : null
           }
         />

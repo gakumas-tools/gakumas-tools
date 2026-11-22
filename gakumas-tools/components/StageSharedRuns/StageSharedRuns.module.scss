@@ -114,7 +114,6 @@
 }
 
 .yours .row {
-  background: tokens.$accent-tint;
   cursor: default;
 
   &:hover {
@@ -124,4 +123,43 @@
 
 .yours .name {
   color: tokens.$accent-ink;
+}
+
+.listYours {
+  align-self: flex-start;
+  margin: 0 0 tokens.$space-1 calc(1.5em + 32px + 2 * #{tokens.$space-2});
+  padding: 0;
+  border: none;
+  background: none;
+  color: tokens.$link;
+  font-size: tokens.$text-xs;
+  font-weight: tokens.$weight-semibold;
+  cursor: pointer;
+}
+
+.yours {
+  display: flex;
+  flex-direction: column;
+  padding: 0 tokens.$space-2 0 0;
+  border-radius: tokens.$radius-sm;
+  background: tokens.$accent-tint;
+}
+
+.listForm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: tokens.$space-2;
+  padding: tokens.$space-1 0;
+
+  input {
+    flex: 1;
+    min-width: 8em;
+  }
+}
+
+.error {
+  flex-basis: 100%;
+  color: tokens.$danger;
+  font-size: tokens.$text-xs;
 }

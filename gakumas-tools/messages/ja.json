@@ -661,7 +661,15 @@
     "place": "自分を含めて{count}件中 {rank}位",
     "belowTop": "掲載上位{count}件より下",
     "howToList": "自分のランを載せるには、比較タブで保存済みのランを共有し、「ステージのページに載せる」を選んでください。",
-    "seeAll": "すべて見る"
+    "seeAll": "すべて見る",
+    "listYours": "ここに載せる",
+    "namePlaceholder": "名前（任意）",
+    "list": "載せる",
+    "listing": "掲載中…",
+    "cancel": "キャンセル",
+    "listFailed": "載せられませんでした。もう一度お試しください。",
+    "signInToList": "ランを載せるにはサインインが必要です。Discordに進みますか？",
+    "listedNote": "載せました。比較タブに保存されていて、そこからこのページから外せます。"
   },
   "SimulatorStats": {
     "total": "合計",

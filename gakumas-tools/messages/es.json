@@ -653,7 +653,15 @@
     "place": "Puesto {rank} de {count} con la tuya",
     "belowTop": "Por debajo de las {count} primeras mostradas",
     "howToList": "Para mostrar la tuya, comparte una simulación guardada en Comparar y elige «Mostrar en la página de la etapa».",
-    "seeAll": "Verlas todas"
+    "seeAll": "Verlas todas",
+    "listYours": "Mostrarla aquí",
+    "namePlaceholder": "Nombre (opcional)",
+    "list": "Mostrar",
+    "listing": "Mostrando…",
+    "cancel": "Cancelar",
+    "listFailed": "No se ha podido mostrar. Inténtalo de nuevo.",
+    "signInToList": "Para mostrar una simulación hay que iniciar sesión. ¿Continuar a Discord?",
+    "listedNote": "Mostrada. Está guardada en Comparar, donde puedes quitarla de esta página."
   },
   "SimulatorStats": {
     "total": "Total",

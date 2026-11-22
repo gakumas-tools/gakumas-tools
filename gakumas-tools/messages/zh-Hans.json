@@ -653,7 +653,15 @@
     "place": "含你在内 {count} 条中第 {rank}",
     "belowTop": "低于展示的前 {count} 条",
     "howToList": "要展示你的记录，请在比较页分享已保存的记录，并选择“在舞台页面展示”。",
-    "seeAll": "查看全部"
+    "seeAll": "查看全部",
+    "listYours": "在这里展示",
+    "namePlaceholder": "名称（可选）",
+    "list": "展示",
+    "listing": "展示中…",
+    "cancel": "取消",
+    "listFailed": "无法展示，请重试。",
+    "signInToList": "展示记录需要登录。是否前往 Discord？",
+    "listedNote": "已展示。它已保存在比较页，可在那里从本页撤下。"
   },
   "SimulatorStats": {
     "total": "合计",

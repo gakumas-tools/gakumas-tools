@@ -276,6 +276,24 @@ export function SimulationRunsContextProvider({ children }) {
     [sharedIds],
   );
 
+  // Saves a run, shares it and shows it on its stage's page, in one go, for
+  // the stage's panel of listed runs. The shared run's id.
+  const listRun = useCallback(
+    async (run, name) => {
+      const loadoutId = await saveRun(run, name);
+      const id = await shareSaved(loadoutId);
+      const res = await fetch("/api/share", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, listed: true }),
+      });
+      if (!res.ok) throw new Error(`PATCH /api/share failed with ${res.status}`);
+      setListedIds((cur) => ({ ...cur, [id]: true }));
+      return id;
+    },
+    [saveRun, shareSaved],
+  );
+
   // Puts someone else's run (a shared one) at the top of the history, so it
   // can be loaded and compared like the user's own.
   const addToHistory = useCallback((run) => {
@@ -324,6 +342,7 @@ export function SimulationRunsContextProvider({ children }) {
       shareSaved,
       unshareSaved,
       setSavedListed,
+      listRun,
       addToHistory,
       loadRun,
       requestSaved,
@@ -345,6 +364,7 @@ export function SimulationRunsContextProvider({ children }) {
       shareSaved,
       unshareSaved,
       setSavedListed,
+      listRun,
       addToHistory,
       loadRun,
       requestSaved,

@@ -1,10 +1,16 @@
 "use client";
-import { memo, useEffect, useState } from "react";
+import { memo, useContext, useEffect, useState } from "react";
+import { signIn, useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { FaChevronDown } from "react-icons/fa6";
 import { PIdols, SkillCards } from "gakumas-data";
 import gkImg from "gakumas-images";
+import Button from "@/components/Button";
+import ConfirmModal from "@/components/ConfirmModal";
 import Image from "@/components/Image";
+import ModalContext from "@/contexts/ModalContext";
+import SimulationRunsContext from "@/contexts/SimulationRunsContext";
+import { MAX_NAME_LENGTH } from "@/utils/apiValidation";
 import { Link } from "@/i18n/routing";
 import c from "@/utils/classNames";
 import { getIdolName } from "@/utils/simulationRun";
@@ -12,15 +18,24 @@ import { isListableStageId, placeAmongRuns } from "@/utils/stageListing";
 import styles from "./StageSharedRuns.module.scss";
 
 // Runs other players listed for the stage being simulated, best first. Closed
-// until opened, so it costs nothing unless someone looks. yourMean is the mean
-// of the result on screen, if it's for this loadout: it gets a row of its own
-// at the place it would take, so a player sees where they stand.
-function StageSharedRuns({ stageId, yourMean }) {
+// until opened, so it costs nothing unless someone looks. yourRun is the
+// result on screen, if it's for this loadout: it gets a row of its own at the
+// place its mean would take, so a player sees where they stand, and can list
+// it there (save, share and show on the stage's page) in one step.
+function StageSharedRuns({ stageId, yourRun }) {
   const t = useTranslations("StageSharedRuns");
   const tDex = useTranslations("Dex");
   const [open, setOpen] = useState(false);
   const [byStage, setByStage] = useState({});
   const [failed, setFailed] = useState(false);
+  const { status } = useSession();
+  const { setModal } = useContext(ModalContext);
+  const { listRun } = useContext(SimulationRunsContext);
+  // { runId, step: "naming" | "busy" | "done" | "error", name }
+  const [listing, setListing] = useState(null);
+
+  const yourMean = yourRun?.stats?.mean;
+  const yourListing = listing?.runId === yourRun?.id ? listing : null;
 
   const runs = byStage[stageId];
 
@@ -47,12 +62,58 @@ function StageSharedRuns({ stageId, yourMean }) {
 
   if (!isListableStageId(stageId)) return null;
 
-  const place = runs && !failed ? placeAmongRuns(runs, yourMean) : null;
+  function startListing() {
+    if (status !== "authenticated") {
+      setModal(
+        <ConfirmModal
+          message={t("signInToList")}
+          onConfirm={() => signIn("discord")}
+        />,
+      );
+      return;
+    }
+    setListing({ runId: yourRun.id, step: "naming", name: "" });
+  }
+
+  async function submitListing() {
+    if (yourListing?.step == "busy") return;
+    const run = yourRun;
+    const name = yourListing.name.trim() || null;
+    setListing({ ...yourListing, step: "busy" });
+    try {
+      await listRun(run, name);
+      setListing({ runId: run.id, step: "done" });
+      // Fetch again, so the run shows with the stats the server simulated.
+      setByStage(({ [stageId]: _, ...rest }) => rest);
+    } catch (err) {
+      console.error(err);
+      setListing({ ...yourListing, step: "error" });
+    }
+  }
+
+  const yourCard = yourRun?.derived?.signatureCardId
+    ? SkillCards.getById(yourRun.derived.signatureCardId)
+    : null;
+
+  const place =
+    runs && !failed && yourListing?.step != "done"
+      ? placeAmongRuns(runs, yourMean)
+      : null;
   const yourRow = place && (
     <li key="yours" className={styles.yours}>
       <div className={styles.row}>
         <span className={styles.rank} />
-        <span className={styles.placeholder} />
+        {yourCard ? (
+          <Image
+            src={gkImg(yourCard).icon}
+            width={32}
+            height={32}
+            alt={yourCard.name}
+            draggable={false}
+          />
+        ) : (
+          <span className={styles.placeholder} />
+        )}
         <span className={styles.text}>
           <span className={styles.name}>{t("yourRun")}</span>
           <span className={styles.meta}>
@@ -65,6 +126,52 @@ function StageSharedRuns({ stageId, yourMean }) {
           {Math.round(yourMean).toLocaleString()}
         </span>
       </div>
+      {!yourListing && (
+        <button
+          type="button"
+          className={styles.listYours}
+          onClick={startListing}
+        >
+          {t("listYours")}
+        </button>
+      )}
+      {yourListing && yourListing.step != "done" && (
+        <div className={styles.listForm}>
+          <input
+            type="text"
+            value={yourListing.name}
+            placeholder={t("namePlaceholder")}
+            maxLength={MAX_NAME_LENGTH}
+            disabled={yourListing.step == "busy"}
+            onChange={(e) =>
+              setListing({ ...yourListing, name: e.target.value })
+            }
+            onKeyDown={(e) => {
+              if (e.key == "Enter") submitListing();
+            }}
+            autoFocus
+          />
+          <Button
+            style="blue"
+            size="sm"
+            disabled={yourListing.step == "busy"}
+            onClick={submitListing}
+          >
+            {yourListing.step == "busy" ? t("listing") : t("list")}
+          </Button>
+          <Button
+            style="secondary"
+            size="sm"
+            disabled={yourListing.step == "busy"}
+            onClick={() => setListing(null)}
+          >
+            {t("cancel")}
+          </Button>
+          {yourListing.step == "error" && (
+            <span className={styles.error}>{t("listFailed")}</span>
+          )}
+        </div>
+      )}
     </li>
   );
 
@@ -155,7 +262,11 @@ function StageSharedRuns({ stageId, yourMean }) {
               {t("seeAll")}
             </Link>
           )}
-          <div className={styles.hint}>{t("howToList")}</div>
+          {yourListing?.step == "done" ? (
+            <div className={styles.hint}>{t("listedNote")}</div>
+          ) : (
+            <div className={styles.hint}>{t("howToList")}</div>
+          )}
         </div>
       )}
     </section>
