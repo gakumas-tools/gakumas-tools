@@ -221,7 +221,12 @@
     "exportFailed": "导出图片失败。",
     "shareToX": "分享到 X",
     "shareTweetText": "学马斯 {type} 梯队表",
-    "confirmLeave": "切换标签将丢失当前的梯队表。继续？"
+    "confirmLeave": "切换标签将丢失当前的梯队表。继续？",
+    "compareWithMine": "与我的梯队表比较",
+    "keepMine": "保留我的梯队表",
+    "useTheirs": "使用此梯队表",
+    "compareAgreement": "与你的梯队表排名相同：{common} 项中 {same} 项（{percent}%）",
+    "compareNoCommon": "与你的梯队表没有共同项目"
   },
   "PIdolCollection": {
     "collected": "已获得",
