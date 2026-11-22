@@ -109,22 +109,46 @@ test("aggregates lists by median rank with a quartile spread", () => {
   const result = aggregateLists(lists);
   assert.equal(result.lists, 4);
   assert.equal(result.skipped, 1);
-  // 1 is SS, S, S, S: median S, counted once per list.
+  // 1 is SS, S, S, S: median S, counted once per list; the one SS is left
+  // out of the middle half.
   assert.deepEqual(result.byId[1], {
     n: 4,
     median: "S",
-    low: "SS",
+    low: "S",
     high: "S",
     counts: { SS: 1, S: 3 },
   });
-  // 2 is S, A, B: median A, spread S..A.
+  // 2 is S, A, B: median A; with 3 lists nothing is trimmed, spread S..B.
   assert.equal(result.byId[2].median, "A");
   assert.equal(result.byId[2].low, "S");
-  assert.equal(result.byId[2].high, "A");
+  assert.equal(result.byId[2].high, "B");
   assert.deepEqual(result.list, {
     tiers: ["S", "A"],
     items: { S: [1], A: [2, 3] },
   });
+});
+
+test("one outlier widens the spread the same on either side", () => {
+  const list = (rank) => ({ tiers: [rank], items: { [rank]: [1] } });
+  const higher = aggregateLists(["SSS", "SS", "SS", "SS"].map(list)).byId[1];
+  const lower = aggregateLists(["SS", "SS", "SS", "S"].map(list)).byId[1];
+  assert.deepEqual([higher.low, higher.high], ["SS", "SS"]);
+  assert.deepEqual([lower.low, lower.high], ["SS", "SS"]);
+  // With 3 lists the spread is the whole range, both ways alike.
+  const three = (ranks) => aggregateLists(ranks.map(list)).byId[1];
+  assert.deepEqual(
+    [three(["SSS", "SS", "SS"]).low, three(["SSS", "SS", "SS"]).high],
+    ["SSS", "SS"]
+  );
+  assert.deepEqual(
+    [three(["SS", "SS", "S"]).low, three(["SS", "SS", "S"]).high],
+    ["SS", "S"]
+  );
+  // 8 lists: two left off each end.
+  const eight = aggregateLists(
+    ["SSS", "SSS", "SS", "SS", "SS", "S", "A", "A"].map(list)
+  ).byId[1];
+  assert.deepEqual([eight.low, eight.high], ["SS", "S"]);
 });
 
 test("leaves out ids fewer than minLists rank, and unknown ranks", () => {
