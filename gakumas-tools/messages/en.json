@@ -557,7 +557,9 @@
     "optimizeFailed": "Can't optimize",
     "optimizeNeedsSimulation": "Simulate the current loadout first",
     "staleResults": "These results are from an earlier loadout",
-    "rehearsal": "Rehearsal"
+    "rehearsal": "Rehearsal",
+    "shareRun": "Share result",
+    "signInToShare": "Sharing a run requires sign-in. Continue to Discord?"
   },
   "CompareTab": {
     "saved": "Saved",
@@ -641,9 +643,10 @@
       "top": "Top score"
     },
     "scores": "Average {mean} · Median {median}",
-    "empty": "No listed runs here yet. To list yours, share a saved run in the simulator's Compare tab and choose \"Show on the stage's page\".",
+    "empty": "No listed runs here yet. Simulate a loadout, then tap Share result to put yours here.",
     "older": "Older runs",
-    "newest": "Back to newest"
+    "newest": "Back to newest",
+    "emptyAction": "Share yours"
   },
   "StageSharedRuns": {
     "title": "Shared runs for this stage",
@@ -654,7 +657,7 @@
     "yourRun": "Your run (this result)",
     "place": "#{rank} of {count} with yours",
     "belowTop": "Below the top {count} listed",
-    "howToList": "To list yours, share a saved run in Compare and choose \"Show on the stage's page\".",
+    "howToList": "To list yours, tap Share result after simulating.",
     "seeAll": "See them all",
     "listYours": "List it here",
     "namePlaceholder": "Name (optional)",
@@ -920,5 +923,23 @@
     "back": "All {category}",
     "open": "Open page",
     "customizations": "Customizations"
+  },
+  "ShareRunModal": {
+    "title": "Share this run",
+    "hint": "Makes a link to this loadout and its scores that anyone can open, and keeps it in Compare.",
+    "namePlaceholder": "Name (optional)",
+    "listOnStage": "Show it on this stage's shared runs",
+    "share": "Share",
+    "sharing": "Sharing…",
+    "cancel": "Cancel",
+    "failed": "Couldn't share it. Try again.",
+    "sharedTitle": "Shared",
+    "listedTitle": "Shared and listed",
+    "sharedNote": "Anyone with the link can open it. You can take it down in Compare.",
+    "listedNote": "It's on this stage's shared runs too. You can take it off in Compare.",
+    "copyLink": "Copy link",
+    "copied": "Copied",
+    "copyThisLink": "Copy this link:",
+    "seeOthers": "See the stage's runs"
   }
 }

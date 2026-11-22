@@ -557,7 +557,9 @@
     "optimizeFailed": "No se puede optimizar",
     "optimizeNeedsSimulation": "Simula primero la formación actual",
     "staleResults": "Estos resultados son de una formación anterior",
-    "rehearsal": "Ensayo"
+    "rehearsal": "Ensayo",
+    "shareRun": "Compartir resultado",
+    "signInToShare": "Para compartir una simulación hay que iniciar sesión. ¿Continuar a Discord?"
   },
   "CompareTab": {
     "saved": "Guardadas",
@@ -641,9 +643,10 @@
       "top": "Mejor puntuación"
     },
     "scores": "Media {mean} · Mediana {median}",
-    "empty": "Aún no hay simulaciones mostradas aquí. Para mostrar la tuya, comparte una simulación guardada en la pestaña Comparar del simulador y elige «Mostrar en la página de la etapa».",
+    "empty": "Aún no hay simulaciones mostradas aquí. Simula una configuración y toca Compartir resultado para mostrar la tuya.",
     "older": "Más antiguas",
-    "newest": "Volver a las más recientes"
+    "newest": "Volver a las más recientes",
+    "emptyAction": "Compartir la tuya"
   },
   "StageSharedRuns": {
     "title": "Simulaciones compartidas de esta etapa",
@@ -654,7 +657,7 @@
     "yourRun": "Tu simulación (este resultado)",
     "place": "Puesto {rank} de {count} con la tuya",
     "belowTop": "Por debajo de las {count} primeras mostradas",
-    "howToList": "Para mostrar la tuya, comparte una simulación guardada en Comparar y elige «Mostrar en la página de la etapa».",
+    "howToList": "Para mostrar la tuya, toca Compartir resultado después de simular.",
     "seeAll": "Verlas todas",
     "listYours": "Mostrarla aquí",
     "namePlaceholder": "Nombre (opcional)",
@@ -920,5 +923,23 @@
     "back": "Volver a {category}",
     "open": "Abrir página",
     "customizations": "Personalizaciones"
+  },
+  "ShareRunModal": {
+    "title": "Compartir esta simulación",
+    "hint": "Crea un enlace a esta configuración y sus puntuaciones que cualquiera puede abrir, y la guarda en Comparar.",
+    "namePlaceholder": "Nombre (opcional)",
+    "listOnStage": "Mostrarla en las simulaciones compartidas de esta etapa",
+    "share": "Compartir",
+    "sharing": "Compartiendo…",
+    "cancel": "Cancelar",
+    "failed": "No se ha podido compartir. Inténtalo de nuevo.",
+    "sharedTitle": "Compartida",
+    "listedTitle": "Compartida y mostrada",
+    "sharedNote": "Cualquiera con el enlace puede abrirla. Puedes retirarla en Comparar.",
+    "listedNote": "También aparece en las simulaciones compartidas de esta etapa. Puedes quitarla en Comparar.",
+    "copyLink": "Copiar enlace",
+    "copied": "Copiado",
+    "copyThisLink": "Copia este enlace:",
+    "seeOthers": "Ver las simulaciones de la etapa"
   }
 }
