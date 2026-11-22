@@ -626,7 +626,9 @@
     "hint": "在模拟器中打开会将其加入历史，可在比较标签页中与自己的编组并排查看。",
     "metaDescription": "分享的模拟器编组：平均 {mean}，中位数 {median}。",
     "metaDescriptionNoScores": "分享的模拟器编组。",
-    "moreForStage": "本舞台的更多分享记录"
+    "moreForStage": "本舞台的更多分享记录",
+    "openedBy": "{count}人打开过",
+    "openedByMore": "{count}人以上打开过"
   },
   "SharedRunsBrowse": {
     "title": "大家的记录",

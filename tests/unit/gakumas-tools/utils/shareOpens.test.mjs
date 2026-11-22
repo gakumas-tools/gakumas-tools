@@ -5,6 +5,8 @@ import {
   isCrawler,
   shareKey,
   shareOpenWrites,
+  sharedRunKey,
+  withOpeners,
 } from "../../../../gakumas-tools/utils/shareOpens.js";
 
 const params = (query) => new URLSearchParams(query);
@@ -81,4 +83,61 @@ test("shareKey counts a shared run by its id alone", () => {
   assert.notEqual(shareKey("sharedRun", new URLSearchParams({ id: "other1" })), key);
   assert.notEqual(shareKey("simulator", new URLSearchParams({ loadout: "aB3xY9" })), key);
   assert.equal(shareKey("sharedRun", new URLSearchParams()), null);
+});
+
+// A db with just enough of shareOpens for withOpeners: find by _id $in.
+function opensDb(docs, { fail = false } = {}) {
+  return {
+    collection(name) {
+      assert.equal(name, "shareOpens");
+      return {
+        find(filter) {
+          if (fail) throw new Error("down");
+          const ids = new Set(filter._id.$in);
+          return { toArray: async () => docs.filter((doc) => ids.has(doc._id)) };
+        },
+      };
+    },
+  };
+}
+
+test("sharedRunKey is the key /s/<id> opens are counted under", () => {
+  assert.equal(sharedRunKey("AbC12345"), shareKey("sharedRun", params("id=AbC12345")));
+  assert.notEqual(sharedRunKey("AbC12345"), sharedRunKey("AbC12346"));
+});
+
+test("withOpeners counts each run's distinct openers, 0 for a run no one opened", async () => {
+  const db = opensDb([
+    { _id: sharedRunKey("AAAAAAAA"), opens: 9, ipHashes: ["a", "b", "c"] },
+    { _id: sharedRunKey("BBBBBBBB"), opens: 2, unfurls: 4 },
+    { _id: sharedRunKey("ZZZZZZZZ"), opens: 1, ipHashes: ["z"] },
+  ]);
+  const runs = await withOpeners(db, [
+    { id: "AAAAAAAA", name: "a" },
+    { id: "BBBBBBBB" },
+    { id: "CCCCCCCC" },
+  ]);
+  assert.deepEqual(
+    runs.map(({ id, openedBy, openedByMore }) => [id, openedBy, openedByMore]),
+    [
+      ["AAAAAAAA", 3, false],
+      ["BBBBBBBB", 0, false],
+      ["CCCCCCCC", 0, false],
+    ],
+  );
+  assert.equal(runs[0].name, "a");
+});
+
+test("withOpeners says 'or more' once the kept openers are full", async () => {
+  const full = Array.from({ length: MAX_IP_HASHES }, (_, i) => `ip${i}`);
+  const db = opensDb([{ _id: sharedRunKey("AAAAAAAA"), ipHashes: full }]);
+  const [run] = await withOpeners(db, [{ id: "AAAAAAAA" }]);
+  assert.equal(run.openedBy, MAX_IP_HASHES);
+  assert.equal(run.openedByMore, true);
+});
+
+test("withOpeners leaves the runs as they were if the counts can't be read", async () => {
+  const runs = [{ id: "AAAAAAAA" }];
+  assert.deepEqual(await withOpeners(opensDb([], { fail: true }), runs), runs);
+  assert.deepEqual(await withOpeners(opensDb([]), []), []);
 });

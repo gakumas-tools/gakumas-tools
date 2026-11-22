@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/utils/auth";
 import { readJsonBody } from "@/utils/apiValidation";
 import { connect } from "@/utils/mongodb";
+import { withOpeners } from "@/utils/shareOpens";
 import {
   isListableStageId,
   listSharedRuns,
@@ -54,15 +55,17 @@ export async function GET(request) {
       return new Response("Invalid stage", { status: 400 });
     }
     const { db } = await connect();
-    const runs = await listStageRuns(db, stageId);
+    const runs = await withOpeners(db, await listStageRuns(db, stageId));
     refreshInBackground(db, stageId);
     return Response.json(
-      runs.map(({ id, name, stats, derived, createdAt }) => ({
+      runs.map(({ id, name, stats, derived, createdAt, openedBy, openedByMore }) => ({
         id,
         name,
         stats,
         derived,
         createdAt,
+        openedBy,
+        openedByMore,
       })),
       // Not cached: a player who lists or hides a run sees it at once.
       { headers: { "cache-control": "no-store" } },

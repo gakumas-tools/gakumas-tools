@@ -626,7 +626,9 @@
     "hint": "시뮬레이터에서 열면 기록에 추가되어 비교 탭에서 내 편성과 나란히 볼 수 있습니다.",
     "metaDescription": "공유된 시뮬레이터 편성: 평균 {mean}, 중앙값 {median}.",
     "metaDescriptionNoScores": "공유된 시뮬레이터 편성.",
-    "moreForStage": "이 스테이지의 다른 공유된 런"
+    "moreForStage": "이 스테이지의 다른 공유된 런",
+    "openedBy": "{count}명이 열어 봤어요",
+    "openedByMore": "{count}명 이상이 열어 봤어요"
   },
   "SharedRunsBrowse": {
     "title": "모두의 런",

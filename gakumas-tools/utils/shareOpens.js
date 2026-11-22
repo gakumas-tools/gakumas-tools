@@ -78,3 +78,39 @@ export function shareOpenWrites({ key, kind, ipHash, crawler, now }) {
   }
   return writes;
 }
+
+export const SHARE_OPENS = "shareOpens";
+
+/** The key a shared run's /s/<id> link is counted under. */
+export function sharedRunKey(id) {
+  return shareKey("sharedRun", new URLSearchParams({ id }));
+}
+
+/**
+ * The runs, each with openedBy: how many people (by pseudonym, not crawlers)
+ * have opened its /s/<id> link. Only MAX_IP_HASHES are kept, so at that many
+ * openedByMore is true: it's at least that. The owner's own opens aren't
+ * counted (the page skips them), so it's how many others used it. If the
+ * counts can't be read, the runs come back as they were.
+ */
+export async function withOpeners(db, runs) {
+  if (!runs.length) return runs;
+  const keys = runs.map((run) => sharedRunKey(run.id));
+  let docs;
+  try {
+    docs = await db
+      .collection(SHARE_OPENS)
+      .find({ _id: { $in: keys } }, { projection: { ipHashes: 1 } })
+      .toArray();
+  } catch (error) {
+    console.warn("shareOpens:", error.message);
+    return runs;
+  }
+  const counts = new Map(
+    docs.map((doc) => [doc._id, Math.min(doc.ipHashes?.length ?? 0, MAX_IP_HASHES)]),
+  );
+  return runs.map((run, i) => {
+    const openedBy = counts.get(keys[i]) ?? 0;
+    return { ...run, openedBy, openedByMore: openedBy >= MAX_IP_HASHES };
+  });
+}

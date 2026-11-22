@@ -42,7 +42,16 @@ function SharedRunsBrowse({ stages, stageId, sort, runs: listed, next, paged }) 
   const tStage = useTranslations("StageSummary");
   const router = useRouter();
 
-  const runs = useMemo(() => listed.map(normalizeSavedRun), [listed]);
+  // normalizeSavedRun keeps a saved run's fields; how many opened it rides along.
+  const runs = useMemo(
+    () =>
+      listed.map((run) => ({
+        ...normalizeSavedRun(run),
+        openedBy: run.openedBy ?? 0,
+        openedByMore: !!run.openedByMore,
+      })),
+    [listed],
+  );
   // One axis for one stage; across stages the scores aren't comparable, so
   // each run gets its own.
   const stageAxis = useMemo(() => {
@@ -117,6 +126,13 @@ function SharedRunsBrowse({ stages, stageId, sort, runs: listed, next, paged }) 
                 {stageId == null && (
                   <span className={styles.stage}>
                     {stageName(run.loadout.stageId)}
+                  </span>
+                )}
+                {run.openedBy > 0 && (
+                  <span className={styles.opened}>
+                    {tRun(run.openedByMore ? "openedByMore" : "openedBy", {
+                      count: run.openedBy,
+                    })}
                   </span>
                 )}
               </Link>

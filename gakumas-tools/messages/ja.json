@@ -634,7 +634,9 @@
     "hint": "シミュレーターで開くと履歴に追加され、比較タブで自分の編成と並べて見られます。",
     "metaDescription": "共有されたシミュレーター編成：平均 {mean}、中央値 {median}。",
     "metaDescriptionNoScores": "共有されたシミュレーターの編成。",
-    "moreForStage": "このステージの他の共有ラン"
+    "moreForStage": "このステージの他の共有ラン",
+    "openedBy": "{count}人が開きました",
+    "openedByMore": "{count}人以上が開きました"
   },
   "SharedRunsBrowse": {
     "title": "みんなのラン",

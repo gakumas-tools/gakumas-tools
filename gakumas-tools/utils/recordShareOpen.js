@@ -2,9 +2,13 @@ import { headers } from "next/headers";
 import { clientIp } from "@/utils/clientIp";
 import { connect } from "@/utils/mongodb";
 import { pseudonym } from "@/utils/pseudonym";
-import { isCrawler, shareKey, shareOpenWrites } from "@/utils/shareOpens";
+import {
+  SHARE_OPENS,
+  isCrawler,
+  shareKey,
+  shareOpenWrites,
+} from "@/utils/shareOpens";
 
-const COLLECTION = "shareOpens";
 const LIMIT = 60;
 const WINDOW_MS = 60 * 60 * 1000;
 const MAX_TRACKED = 10_000;
@@ -39,7 +43,7 @@ export async function recordShareOpen(kind, searchParams) {
       now: new Date(),
     });
     connect()
-      .then(({ db }) => db.collection(COLLECTION).bulkWrite(writes, { ordered: true }))
+      .then(({ db }) => db.collection(SHARE_OPENS).bulkWrite(writes, { ordered: true }))
       .catch((error) => console.warn("shareOpens:", error.message));
   } catch (error) {
     console.warn("shareOpens:", error.message);
