@@ -221,7 +221,34 @@
     "exportFailed": "No se ha podido exportar la imagen.",
     "shareToX": "Compartir en X",
     "shareTweetText": "Mi tier list de Gakumas: {type}",
-    "confirmLeave": "Perderás esta tier list si cambias de pestaña. ¿Quieres continuar?"
+    "confirmLeave": "Perderás esta tier list si cambias de pestaña. ¿Quieres continuar?",
+    "compareWithMine": "Comparar con la mía",
+    "keepMine": "Quedarme con la mía",
+    "useTheirs": "Usar esta lista",
+    "compareAgreement": "Mismo nivel que en tu lista en {same} de {common} ({percent} %)",
+    "compareNoCommon": "Aún no hay nada de esto en tu lista"
+  },
+  "CommunityTierList": {
+    "title": "Tier list de la comunidad",
+    "loading": "Cargando…",
+    "failed": "No se ha podido cargar la tier list de la comunidad.",
+    "tooFew": "{count, plural, =0 {Ningún jugador ha añadido} one {# jugador ha añadido} other {# jugadores han añadido}} una lista por ahora. Se mostrará cuando lo hayan hecho {min}.",
+    "fromLists": "Combinada a partir de {count, plural, one {la lista de # jugador} other {las listas de # jugadores}}",
+    "openInEditor": "Abrir en el editor",
+    "itemTitle": "Clasificado en {n} de {lists} listas",
+    "howToRead": "Cada elemento está en el nivel central de las listas que lo clasifican. Un rango como SS–A indica dónde lo pone la mitad central de las listas.",
+    "howToPublish": "Añade tu propia lista desde Compartir. Solo cuentan las listas que sus jugadores han decidido añadir, y ninguna se muestra con su nombre.",
+    "publishTitle": "Tier list de la comunidad",
+    "publishHelp": "¿Añadir esta lista a la tier list de la comunidad? Cuenta para la lista combinada, nunca con tu nombre.",
+    "publishedThis": "Esta lista está en la tier list de la comunidad.",
+    "publishedOther": "Tu lista en la tier list de la comunidad es otra.",
+    "publish": "Añadir a la tier list de la comunidad",
+    "replacePublished": "Sustituirla por esta lista",
+    "unpublish": "Quitar mi lista",
+    "emptyList": "Coloca algunos elementos primero.",
+    "signInToPublish": "Inicia sesión para añadir tu lista a la tier list de la comunidad.",
+    "signIn": "Iniciar sesión",
+    "publishFailed": "No se ha podido actualizar la tier list de la comunidad."
   },
   "PIdolCollection": {
     "collected": "Conseguidos",
@@ -571,7 +598,11 @@
     "shareFailed": "No se pudo compartir",
     "unshareFailed": "No se pudo dejar de compartir",
     "copyThisLink": "Copia este enlace",
-    "confirmDeleteShared": "¿Eliminar esta simulación? Su enlace compartido también dejará de funcionar."
+    "confirmDeleteShared": "¿Eliminar esta simulación? Su enlace compartido también dejará de funcionar.",
+    "listOnStage": "Mostrar en la página de la etapa",
+    "unlistFromStage": "Ocultar de la página de la etapa",
+    "listed": "Visible",
+    "listFailed": "No se ha podido cambiar dónde se muestra"
   },
   "SharedRun": {
     "untitled": "Simulación compartida",
@@ -589,6 +620,14 @@
     "hint": "«Abrir en el simulador» añade esta simulación a tu historial, para que la pestaña Comparar la muestre junto a las tuyas.",
     "metaDescription": "Una simulación compartida: media {mean}, mediana {median}.",
     "metaDescriptionNoScores": "Una formación del simulador compartida."
+  },
+  "StageSharedRuns": {
+    "title": "Simulaciones compartidas de esta etapa",
+    "loading": "Cargando…",
+    "empty": "Nadie ha mostrado aún una simulación para esta etapa.",
+    "failed": "No se han podido cargar las simulaciones compartidas.",
+    "untitled": "Simulación sin título",
+    "howToList": "Para mostrar la tuya, comparte una simulación guardada en Comparar y elige «Mostrar en la página de la etapa»."
   },
   "SimulatorStats": {
     "total": "Total",
