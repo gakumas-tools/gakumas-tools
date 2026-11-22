@@ -57,6 +57,7 @@ const FIXTURES = [
   "produce-exam-impression-final-r16d",
   "produce-exam-impression-final-r18d",
   "produce-exam-impression-final-r19d",
+  "produce-exam-impression-final-r20d",
 ];
 
 // Captures of a produce exam that has a ProduceExams row replay through
@@ -88,6 +89,7 @@ const PRODUCE_EXAM_IDS = {
   "produce-exam-impression-final-r16d": 1,
   "produce-exam-impression-final-r18d": 1,
   "produce-exam-impression-final-r19d": 1,
+  "produce-exam-impression-final-r20d": 1,
 };
 
 function getStage(capture) {
