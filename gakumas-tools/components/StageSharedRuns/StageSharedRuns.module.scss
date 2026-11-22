@@ -104,3 +104,11 @@
   font-weight: tokens.$weight-bold;
   font-variant-numeric: tabular-nums;
 }
+
+.seeAll {
+  align-self: flex-end;
+  color: tokens.$link;
+  font-size: tokens.$text-sm;
+  font-weight: tokens.$weight-semibold;
+  text-decoration: none;
+}

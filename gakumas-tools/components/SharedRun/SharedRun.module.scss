@@ -83,3 +83,14 @@
 .hint {
   margin: 0;
 }
+
+.stageLink {
+  color: tokens.$link;
+  font-size: tokens.$text-sm;
+  font-weight: tokens.$weight-semibold;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

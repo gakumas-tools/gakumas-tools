@@ -112,6 +112,17 @@ function StageSharedRuns({ stageId }) {
       {open && (
         <div className={styles.body}>
           {body}
+          {runs?.length > 0 && (
+            <Link
+              href={{
+                pathname: "/shared",
+                query: { stage: String(stageId), sort: "top" },
+              }}
+              className={styles.seeAll}
+            >
+              {t("seeAll")}
+            </Link>
+          )}
           <div className={styles.hint}>{t("howToList")}</div>
         </div>
       )}

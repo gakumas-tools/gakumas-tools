@@ -57,6 +57,10 @@
     "rehearsal": {
       "title": "Lector de ensayos",
       "description": "Extrae las puntuaciones de capturas de pantalla de ensayos"
+    },
+    "sharedRuns": {
+      "title": "Simulaciones compartidas",
+      "description": "Explora las simulaciones que otros jugadores muestran en sus etapas"
     }
   },
   "NavbarMenu": {
@@ -621,7 +625,23 @@
     "signInPrompt": "Para guardar hay que iniciar sesión. ¿Continuar a Discord?",
     "hint": "«Abrir en el simulador» añade esta simulación a tu historial, para que la pestaña Comparar la muestre junto a las tuyas.",
     "metaDescription": "Una simulación compartida: media {mean}, mediana {median}.",
-    "metaDescriptionNoScores": "Una formación del simulador compartida."
+    "metaDescriptionNoScores": "Una formación del simulador compartida.",
+    "moreForStage": "Más simulaciones compartidas de esta etapa"
+  },
+  "SharedRunsBrowse": {
+    "title": "Simulaciones compartidas",
+    "hint": "Simulaciones que los jugadores muestran en sus etapas, de la más reciente a la más antigua. Elige una etapa para ver sus simulaciones en un mismo eje de puntuación; abre una para ejecutarla junto a las tuyas. Las puntuaciones son la propia simulación del sitio de cada una.",
+    "stage": "Etapa",
+    "allStages": "Todas las etapas",
+    "stageOption": "{name} ({count})",
+    "sort": {
+      "new": "Más recientes",
+      "top": "Mejor puntuación"
+    },
+    "scores": "Media {mean} · Mediana {median}",
+    "empty": "Aún no hay simulaciones mostradas aquí. Para mostrar la tuya, comparte una simulación guardada en la pestaña Comparar del simulador y elige «Mostrar en la página de la etapa».",
+    "older": "Más antiguas",
+    "newest": "Volver a las más recientes"
   },
   "StageSharedRuns": {
     "title": "Simulaciones compartidas de esta etapa",
@@ -629,7 +649,8 @@
     "empty": "Nadie ha mostrado aún una simulación para esta etapa.",
     "failed": "No se han podido cargar las simulaciones compartidas.",
     "untitled": "Simulación sin título",
-    "howToList": "Para mostrar la tuya, comparte una simulación guardada en Comparar y elige «Mostrar en la página de la etapa»."
+    "howToList": "Para mostrar la tuya, comparte una simulación guardada en Comparar y elige «Mostrar en la página de la etapa».",
+    "seeAll": "Verlas todas"
   },
   "SimulatorStats": {
     "total": "Total",
