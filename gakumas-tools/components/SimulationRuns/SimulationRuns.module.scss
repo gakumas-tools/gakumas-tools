@@ -548,8 +548,15 @@
   display: none;
 
   @media (max-width: 640px) {
+    // Anchored right and as wide as its icons, so with many actions the
+    // panel covers the row's name instead of icons spilling over it.
     position: absolute;
-    inset: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: max-content;
+    min-width: 100%;
+    padding-left: 8px;
     display: flex;
     gap: 2px;
     align-items: center;
