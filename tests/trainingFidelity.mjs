@@ -114,7 +114,9 @@ function getTypeMultipliers(capture) {
 function createEngine(capture, play) {
   const cardIds = capture.drawCardIds ?? [
     ...play.actions.flatMap((action) =>
-      action.skip ? [] : (action.handCardIds ?? [action.cardId]),
+      action.skip || action.fromHand
+        ? []
+        : (action.handCardIds ?? [action.cardId]),
     ),
     // Cards the game drew but that were never played (nextTurnDraw).
     ...(capture.extraCardIds ?? []),
@@ -148,6 +150,15 @@ function findCopy(state, cardId, hand) {
 
 function supplyHand(state, action, heldCard) {
   if (action.useReturnedHeldCard) return [heldCard];
+  // fromHand: the copy the engine already has in hand (drawn via
+  // nextTurnDraw and raised there), not a fresh one.
+  if (action.fromHand) {
+    const card = state[S.handCards].find(
+      (c) => state[S.cardMap][c].id == action.cardId,
+    );
+    assert.ok(card !== undefined, `no card ${action.cardId} in hand`);
+    return [card];
+  }
 
   const hand = [];
   for (const cardId of action.handCardIds ?? [action.cardId]) {
@@ -276,9 +287,15 @@ function replay(capture, play) {
     // top of the deck so start-of-turn effects (発動予約) act on it.
     if (action.nextTurnDraw) {
       const drawn = [];
-      for (const cardId of action.nextTurnDraw) {
+      for (const entry of action.nextTurnDraw) {
+        const cardId = entry.cardId ?? entry;
         const copy = findCopy(state, cardId, [...drawn, card]);
         assert.ok(copy >= 0, `turn ${turn}: no copy of card ${cardId} to draw`);
+        // { cardId, supportUpgrades }: スキルカードサポート raised it as it
+        // was drawn (the badge on the card in hand).
+        for (let n = 0; n < (entry.supportUpgrades ?? 0); n++) {
+          engine.cardManager.supportUpgrade(state, copy);
+        }
         drawn.push(copy);
       }
       for (const pile of [S.deckCards, S.discardedCards]) {
