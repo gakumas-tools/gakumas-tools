@@ -14,6 +14,7 @@ const FIXTURES = [
   "idol-road-saki-s2",
   "idol-road-saki-s3",
   "idol-road-saki-s4",
+  "idol-road-saki-s5",
 ];
 
 function createEngine(capture) {
@@ -25,9 +26,14 @@ function createEngine(capture) {
   assert.equal(stage.type, "idolRoad");
   assert.equal(stage.plan, pIdol.plan);
 
-  // The stage's turn counts are the ones the game dealt.
+  // The stage's turn counts are the ones the game dealt. Turns added during
+  // the stage (ターン追加) come after them and take the last turn's type.
   const counts = { vocal: 0, dance: 0, visual: 0 };
-  for (const type of capture.turnTypes) counts[type]++;
+  const turnCount = Object.values(stage.turnCounts).reduce((a, b) => a + b);
+  for (const type of capture.turnTypes.slice(0, turnCount)) counts[type]++;
+  for (const type of capture.turnTypes.slice(turnCount)) {
+    assert.equal(type, capture.turnTypes[turnCount - 1], "added turn type");
+  }
   assert.deepEqual(stage.turnCounts, counts, "turn counts");
 
   const typeMultipliers = {};
