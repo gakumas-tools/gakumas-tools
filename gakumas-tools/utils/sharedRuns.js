@@ -110,12 +110,18 @@ export async function shareLoadout(db, userId, loadoutId, makeId = newShareId) {
   return { error: "Could not make an id", status: 503 };
 }
 
-/** A shared run as anyone may see it, or null. */
+/**
+ * A shared run as anyone may see it, or null. A run that has been listed
+ * shows the stats the server simulated for it, as its stage's page does,
+ * not the ones its owner's browser sent.
+ */
 export async function getSharedRun(db, id) {
   if (!isShareId(id)) return null;
   const doc = await db.collection(SHARED_RUNS).findOne({ _id: id });
   if (!doc) return null;
-  return { id: doc._id, ...publicFields(doc), createdAt: doc.createdAt };
+  const run = { id: doc._id, ...publicFields(doc), createdAt: doc.createdAt };
+  if (doc.serverStats) run.stats = withoutVersion(doc.serverStats);
+  return run;
 }
 
 /** The user's shared runs, newest first: which saved run each copies. */

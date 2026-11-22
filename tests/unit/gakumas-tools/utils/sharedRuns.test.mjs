@@ -341,6 +341,20 @@ test("forged stats don't move a run up: the stage page ranks and shows the serve
   assert.equal(runs[1].stats.mean, 1500);
 });
 
+test("a listed run's own page shows the server's stats too, not forged ones", async () => {
+  const db = listingDb();
+  const [forged, unlisted] = await shareRuns(db, [1500, 2400]);
+  db.collection("sharedRuns").docs[0].stats = { mean: 999999, median: 999999 };
+  await list(db, "owner", forged);
+
+  const run = await getSharedRun(db, forged);
+  assert.equal(run.stats.mean, 1500);
+  assert.equal("version" in run.stats, false);
+  // Never listed, so there are only the owner's stats to show.
+  const own = db.collection("sharedRuns").docs[1].stats;
+  assert.deepEqual((await getSharedRun(db, unlisted)).stats, own);
+});
+
 test("a run the server can't simulate isn't listed", async () => {
   const db = listingDb();
   const [id] = await shareRuns(db, [null]);
