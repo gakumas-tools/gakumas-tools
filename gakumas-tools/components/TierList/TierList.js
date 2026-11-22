@@ -38,6 +38,7 @@ import {
 import EntityPool, { POOL_ID } from "./EntityPool";
 import TierListPickerModal from "./TierListPickerModal";
 import TierRow from "./TierRow";
+import CommunityTierList from "@/components/CommunityTierList";
 import TierShareModal from "./TierShareModal";
 import { AVAILABLE_RANKS, sortRanks } from "./ranks";
 import styles from "./TierList.module.scss";
@@ -595,6 +596,8 @@ function TierList({ type }) {
         </div>
 
         <EntityPool type={type} list={list} />
+
+        <CommunityTierList type={type} />
 
         {pickerTier != null && list.tiers.includes(pickerTier) && (
           <TierListPickerModal

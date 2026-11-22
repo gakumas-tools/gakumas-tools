@@ -18,6 +18,7 @@ const INDEXES = {
   memories: { userId: 1 },
   loadouts: { userId: 1, createdAt: -1 },
   sharedRuns: { userId: 1, sourceId: 1 },
+  communityTierLists: { userId: 1, type: 1 },
 };
 
 /**

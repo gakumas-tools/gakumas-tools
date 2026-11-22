@@ -228,6 +228,28 @@
     "compareAgreement": "与你的梯队表排名相同：{common} 项中 {same} 项（{percent}%）",
     "compareNoCommon": "与你的梯队表没有共同项目"
   },
+  "CommunityTierList": {
+    "title": "社区梯队表",
+    "loading": "加载中…",
+    "failed": "无法加载社区梯队表。",
+    "tooFew": "目前有{count}位玩家添加了梯队表。满{min}位后显示。",
+    "fromLists": "汇总自{count}位玩家的梯队表",
+    "openInEditor": "在编辑器中打开",
+    "itemTitle": "{lists}份梯队表中有{n}份包含",
+    "howToRead": "每个项目位于最多梯队表给出的层级。SS–A 这样的范围表示中间一半梯队表给出的位置。",
+    "howToPublish": "可在“分享”中添加自己的梯队表。只统计玩家选择添加的梯队表，且不显示是谁的。",
+    "publishTitle": "社区梯队表",
+    "publishHelp": "将此梯队表添加到社区梯队表？它会计入汇总，但不会显示你的名字。",
+    "publishedThis": "此梯队表已添加到社区梯队表。",
+    "publishedOther": "你添加到社区梯队表的是另一份梯队表。",
+    "publish": "添加到社区梯队表",
+    "replacePublished": "替换为此梯队表",
+    "unpublish": "移除我的梯队表",
+    "emptyList": "请先放置项目。",
+    "signInToPublish": "登录后可将梯队表添加到社区梯队表。",
+    "signIn": "登录",
+    "publishFailed": "无法更新社区梯队表。"
+  },
   "PIdolCollection": {
     "collected": "已获得",
     "byRarity": "按稀有度",
