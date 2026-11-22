@@ -1,6 +1,7 @@
 "use client";
 import { memo, useMemo } from "react";
 import { useTranslations } from "next-intl";
+import { FaShareNodes } from "react-icons/fa6";
 import { getStage } from "gakumas-loadout";
 import LoadoutSummary from "@/components/LoadoutHistory/LoadoutSummary";
 import MiniBoxPlot from "@/components/SimulationRuns/MiniBoxPlot";
@@ -160,7 +161,13 @@ function SharedRunsBrowse({ stages, stageId, sort, runs: listed, next, paged }) 
           ))}
         </ol>
       ) : (
-        <p className={styles.empty}>{t("empty")}</p>
+        <div className={styles.empty}>
+          <p>{t("empty")}</p>
+          <Link href="/simulator" className={styles.emptyAction}>
+            <FaShareNodes />
+            {t("emptyAction")}
+          </Link>
+        </div>
       )}
 
       <div className={styles.pages}>

@@ -1,4 +1,5 @@
 @use "../../styles/mixins";
+@use "../../styles/colors";
 @use "../../styles/tokens";
 
 .browse {
@@ -40,9 +41,39 @@
 .opened,
 .noScores,
 .empty {
-  margin: 0;
-  color: tokens.$surface-ink-muted;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: tokens.$space-3;
+  padding: tokens.$space-5 tokens.$space-3;
+  border-radius: tokens.$radius-md;
+  background: tokens.$surface-muted;
+  text-align: center;
+
+  p {
+    margin: 0;
+    color: tokens.$surface-ink-muted;
+    font-size: tokens.$text-sm;
+  }
+}
+
+.emptyAction {
+  display: inline-flex;
+  align-items: center;
+  gap: tokens.$space-2;
+  padding: tokens.$space-2 tokens.$space-4;
+  border-radius: tokens.$radius-pill;
+  background-color: tokens.$brand;
+  color: colors.$white;
+  @include mixins.raised(tokens.$brand-edge, 3px);
   font-size: tokens.$text-sm;
+  font-weight: tokens.$weight-heavy;
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    background-color: tokens.$brand-hover;
+  }
 }
 
 .stagePicker {

@@ -557,7 +557,9 @@
     "optimizeFailed": "최적화 불가",
     "optimizeNeedsSimulation": "현재 편성으로 시뮬레이션한 후 최적화하세요",
     "staleResults": "변경 전 편성의 결과입니다",
-    "rehearsal": "리허설"
+    "rehearsal": "리허설",
+    "shareRun": "결과 공유",
+    "signInToShare": "런을 공유하려면 로그인이 필요합니다. Discord로 이동할까요?"
   },
   "CompareTab": {
     "saved": "저장됨",
@@ -641,9 +643,10 @@
       "top": "점수순"
     },
     "scores": "평균 {mean} · 중앙값 {median}",
-    "empty": "아직 게시된 런이 없습니다. 내 런을 게시하려면 시뮬레이터의 비교 탭에서 저장된 런을 공유한 뒤 「스테이지 페이지에 표시」를 선택하세요.",
+    "empty": "아직 게시된 런이 없습니다. 시뮬레이터에서 편성을 시뮬레이트한 뒤, 「결과 공유」로 게시할 수 있습니다.",
     "older": "이전 런",
-    "newest": "최신으로"
+    "newest": "최신으로",
+    "emptyAction": "내 런 공유"
   },
   "StageSharedRuns": {
     "title": "이 스테이지의 공유된 런",
@@ -654,7 +657,7 @@
     "yourRun": "내 런 (이 결과)",
     "place": "내 런 포함 {count}개 중 {rank}위",
     "belowTop": "게시된 상위 {count}개보다 아래",
-    "howToList": "내 런을 게시하려면 비교 탭에서 저장된 런을 공유한 뒤 「스테이지 페이지에 표시」를 선택하세요.",
+    "howToList": "내 런을 게시하려면 시뮬레이트한 뒤 「결과 공유」를 누르세요.",
     "seeAll": "모두 보기",
     "listYours": "여기에 게시",
     "namePlaceholder": "이름 (선택)",
@@ -920,5 +923,23 @@
     "back": "{category} 목록",
     "open": "페이지 열기",
     "customizations": "커스터마이즈"
+  },
+  "ShareRunModal": {
+    "title": "이 런 공유",
+    "hint": "이 편성과 점수를 누구나 열 수 있는 링크로 만들고, 비교 탭에 저장합니다.",
+    "namePlaceholder": "이름 (선택)",
+    "listOnStage": "이 스테이지의 「모두의 런」에 게시",
+    "share": "공유",
+    "sharing": "공유 중…",
+    "cancel": "취소",
+    "failed": "공유하지 못했습니다. 다시 시도해 주세요.",
+    "sharedTitle": "공유했습니다",
+    "listedTitle": "공유하고 게시했습니다",
+    "sharedNote": "링크가 있는 사람은 누구나 열 수 있습니다. 비교 탭에서 내릴 수 있습니다.",
+    "listedNote": "이 스테이지의 「모두의 런」에도 게시되었습니다. 비교 탭에서 내릴 수 있습니다.",
+    "copyLink": "링크 복사",
+    "copied": "복사했습니다",
+    "copyThisLink": "이 링크를 복사하세요:",
+    "seeOthers": "이 스테이지의 런 보기"
   }
 }

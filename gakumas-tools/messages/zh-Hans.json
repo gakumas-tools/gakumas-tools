@@ -557,7 +557,9 @@
     "optimizeFailed": "无法优化",
     "optimizeNeedsSimulation": "请先模拟当前编成",
     "staleResults": "这些结果来自修改前的编成",
-    "rehearsal": "排练"
+    "rehearsal": "排练",
+    "shareRun": "分享结果",
+    "signInToShare": "分享记录需要登录。是否前往 Discord？"
   },
   "CompareTab": {
     "saved": "已保存",
@@ -641,9 +643,10 @@
       "top": "最高分"
     },
     "scores": "平均 {mean} · 中位数 {median}",
-    "empty": "这里还没有展示的记录。要展示你的记录，请在模拟器的比较页分享已保存的记录，并选择“在舞台页面展示”。",
+    "empty": "这里还没有展示的记录。在模拟器中模拟编成后，点“分享结果”即可展示。",
     "older": "更早的记录",
-    "newest": "回到最新"
+    "newest": "回到最新",
+    "emptyAction": "分享你的记录"
   },
   "StageSharedRuns": {
     "title": "本舞台的分享记录",
@@ -654,7 +657,7 @@
     "yourRun": "你的记录（本次结果）",
     "place": "含你在内 {count} 条中第 {rank}",
     "belowTop": "低于展示的前 {count} 条",
-    "howToList": "要展示你的记录，请在比较页分享已保存的记录，并选择“在舞台页面展示”。",
+    "howToList": "要展示你的记录，请在模拟后点“分享结果”。",
     "seeAll": "查看全部",
     "listYours": "在这里展示",
     "namePlaceholder": "名称（可选）",
@@ -920,5 +923,23 @@
     "back": "全部{category}",
     "open": "打开页面",
     "customizations": "自定义"
+  },
+  "ShareRunModal": {
+    "title": "分享这条记录",
+    "hint": "将此编成及其分数生成任何人都能打开的链接，并保存到比较页。",
+    "namePlaceholder": "名称（可选）",
+    "listOnStage": "展示在此舞台的“大家的记录”中",
+    "share": "分享",
+    "sharing": "分享中…",
+    "cancel": "取消",
+    "failed": "无法分享，请重试。",
+    "sharedTitle": "已分享",
+    "listedTitle": "已分享并展示",
+    "sharedNote": "任何拥有链接的人都能打开。可在比较页撤下。",
+    "listedNote": "它也已展示在此舞台的“大家的记录”中。可在比较页撤下。",
+    "copyLink": "复制链接",
+    "copied": "已复制",
+    "copyThisLink": "请复制此链接：",
+    "seeOthers": "查看此舞台的记录"
   }
 }
