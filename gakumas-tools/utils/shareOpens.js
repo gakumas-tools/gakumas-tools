@@ -14,9 +14,15 @@ const CONTENT_PARAMS = {
     "loadout",
   ],
   tierList: ["type", "d"],
+  // /s/<id>: a saved run shared as a public copy behind a short id.
+  sharedRun: ["id"],
 };
 // At least one of these must be there for the link to carry anything shared.
-const REQUIRED_PARAMS = { simulator: ["cards", "loadout"], tierList: ["d"] };
+const REQUIRED_PARAMS = {
+  simulator: ["cards", "loadout"],
+  tierList: ["d"],
+  sharedRun: ["id"],
+};
 
 export const MAX_IP_HASHES = 20;
 
