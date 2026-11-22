@@ -1,7 +1,8 @@
 "use client";
 import { memo, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { FaChevronDown } from "react-icons/fa6";
+import { FaChevronDown, FaPlus } from "react-icons/fa6";
+import Button from "@/components/Button";
 import EntityIcon from "@/components/EntityIcon";
 import Image from "@/components/Image";
 import c from "@/utils/classNames";
@@ -11,13 +12,18 @@ import styles from "./CommunityTierList.module.scss";
 // The tier list players published for this type, combined: each item in the
 // tier most lists give it, with the spread when lists disagree. Closed until
 // opened, so it costs nothing unless someone looks.
-function CommunityTierList({ type }) {
+function CommunityTierList({ type, onAddYours, refresh }) {
   const t = useTranslations("CommunityTierList");
   const [open, setOpen] = useState(false);
   const [byType, setByType] = useState({});
   const [failed, setFailed] = useState(false);
 
   const view = byType[type];
+
+  // The player may have just added or taken out their list: load it again.
+  useEffect(() => {
+    if (refresh) setByType({});
+  }, [refresh]);
 
   useEffect(() => {
     if (!open || view) return;
@@ -121,6 +127,13 @@ function CommunityTierList({ type }) {
         <div className={styles.body}>
           {body}
           <div className={styles.hint}>{t("howToPublish")}</div>
+          {onAddYours && (
+            <div className={styles.addYours}>
+              <Button style="primary" size="sm" onClick={onAddYours}>
+                <FaPlus /> {t("addYours")}
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </section>
