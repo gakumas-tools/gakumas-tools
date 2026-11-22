@@ -186,7 +186,7 @@ export async function setListed(
   return matchedCount > 0 ? { ok: true } : { error: "Not found", status: 404 };
 }
 
-const STAGE_RUNS_MAX = 50;
+export const STAGE_RUNS_MAX = 50;
 
 // Stats are current if the engine that made them is the one running now.
 // With no known version (a local build) any stats count as current.
@@ -272,4 +272,100 @@ export async function listStageRuns(db, stageId, limit = STAGE_RUNS_LIMIT) {
     stats: withoutVersion(doc.serverStats),
     createdAt: doc.createdAt,
   }));
+}
+
+// The /shared page: every listed run, one stage at a time or all of them.
+// Only runs their owners listed are here; an unlisted share stays reachable
+// by its link alone.
+
+export const BROWSE_PAGE_SIZE = 20;
+const BROWSE_STAGES_MAX = 200;
+
+/** A stage id from a query string: a game stage's, or null. */
+export function parseStageId(value) {
+  if (typeof value != "string" || !/^[1-9]\d{0,8}$/.test(value)) return null;
+  return Number(value);
+}
+
+/**
+ * A paging cursor from a query string, "<createdAt ISO>~<share id>": where
+ * the page before this one ended. Null if it isn't one.
+ */
+export function parseCursor(value) {
+  if (typeof value != "string" || value.length > 60) return null;
+  const [iso, id, ...rest] = value.split("~");
+  if (rest.length || !isShareId(id)) return null;
+  const createdAt = new Date(iso);
+  if (Number.isNaN(createdAt.getTime())) return null;
+  return { createdAt, id };
+}
+
+export function formatCursor(run) {
+  return `${new Date(run.createdAt).toISOString()}~${run.id}`;
+}
+
+/**
+ * Listed runs, newest first, for one stage or all of them, as anyone may see
+ * them: never their owners, and with the server's stats, not the owner's.
+ * { runs, next }: next is the cursor for the page after this one, or null.
+ * Indexes: { listed: 1, createdAt: -1, _id: -1 } and
+ * { listed: 1, stageId: 1, createdAt: -1, _id: -1 }.
+ */
+export async function browseListedRuns(
+  db,
+  { stageId = null, after = null } = {},
+) {
+  const filter = { listed: true };
+  if (stageId != null) {
+    if (!isListableStageId(stageId)) return { runs: [], next: null };
+    filter.stageId = stageId;
+  }
+  if (after) {
+    filter.$or = [
+      { createdAt: { $lt: after.createdAt } },
+      { createdAt: after.createdAt, _id: { $lt: after.id } },
+    ];
+  }
+  const projection = { _id: 1, createdAt: 1, serverStats: 1 };
+  for (const field of PUBLIC_FIELDS) projection[field] = 1;
+  const docs = await db
+    .collection(SHARED_RUNS)
+    .find(filter, { projection })
+    .sort({ createdAt: -1, _id: -1 })
+    .limit(BROWSE_PAGE_SIZE + 1)
+    .toArray();
+  const runs = docs.slice(0, BROWSE_PAGE_SIZE).map((doc) => ({
+    id: doc._id,
+    ...publicFields(doc),
+    stats: withoutVersion(doc.serverStats) ?? null,
+    createdAt: doc.createdAt ?? null,
+  }));
+  const more = docs.length > BROWSE_PAGE_SIZE;
+  return { runs, next: more ? formatCursor(runs.at(-1)) : null };
+}
+
+/**
+ * The game stages that have listed runs: [{ stageId, count }], the stage with
+ * the latest listed run first. Custom stages have no listing, so they're not
+ * here.
+ */
+export async function listedRunStages(db) {
+  const groups = await db
+    .collection(SHARED_RUNS)
+    .aggregate([
+      { $match: { listed: true, stageId: { $type: "number", $gt: 0 } } },
+      {
+        $group: {
+          _id: "$stageId",
+          count: { $sum: 1 },
+          latest: { $max: "$createdAt" },
+        },
+      },
+      { $sort: { latest: -1, _id: -1 } },
+      { $limit: BROWSE_STAGES_MAX },
+    ])
+    .toArray();
+  return groups
+    .filter(({ _id }) => isListableStageId(_id))
+    .map(({ _id, count }) => ({ stageId: _id, count }));
 }
