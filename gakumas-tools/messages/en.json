@@ -626,7 +626,9 @@
     "hint": "Open in simulator puts this run in your history, so the Compare tab shows it beside your own runs.",
     "metaDescription": "A shared simulator run: mean {mean}, median {median}.",
     "metaDescriptionNoScores": "A shared simulator loadout.",
-    "moreForStage": "More shared runs for this stage"
+    "moreForStage": "More shared runs for this stage",
+    "openedBy": "{count, plural, one {Opened by # player} other {Opened by # players}}",
+    "openedByMore": "Opened by {count}+ players"
   },
   "SharedRunsBrowse": {
     "title": "Shared runs",

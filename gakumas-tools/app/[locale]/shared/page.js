@@ -2,6 +2,7 @@ import { setRequestLocale } from "next-intl/server";
 import SharedRunsBrowse from "@/components/SharedRunsBrowse";
 import { generateMetadataForTool } from "@/utils/metadata";
 import { connect } from "@/utils/mongodb";
+import { withOpeners } from "@/utils/shareOpens";
 import {
   STAGE_RUNS_MAX,
   browseListedRuns,
@@ -30,7 +31,7 @@ export default async function SharedRunsPage({ params, searchParams }) {
   const after = top ? null : parseCursor(query.after);
 
   const { db } = await connect();
-  const [stages, { runs, next }] = await Promise.all([
+  const [stages, { runs: found, next }] = await Promise.all([
     listedRunStages(db),
     top
       ? listStageRuns(db, stageId, STAGE_RUNS_MAX).then((runs) => ({
@@ -39,6 +40,7 @@ export default async function SharedRunsPage({ params, searchParams }) {
         }))
       : browseListedRuns(db, { stageId, after }),
   ]);
+  const runs = await withOpeners(db, found);
 
   return (
     <SharedRunsBrowse

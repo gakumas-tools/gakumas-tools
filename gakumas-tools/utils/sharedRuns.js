@@ -124,6 +124,15 @@ export async function getSharedRun(db, id) {
   return run;
 }
 
+/** Whether the user is the one who shared run `id`. */
+export async function ownsSharedRun(db, id, userId) {
+  if (!userId || !isShareId(id)) return false;
+  const doc = await db
+    .collection(SHARED_RUNS)
+    .findOne({ _id: id, userId }, { projection: { _id: 1 } });
+  return !!doc;
+}
+
 /** The user's shared runs, newest first: which saved run each copies. */
 export function listSharedRuns(db, userId) {
   return db

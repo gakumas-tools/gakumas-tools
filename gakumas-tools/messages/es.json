@@ -626,7 +626,9 @@
     "hint": "«Abrir en el simulador» añade esta simulación a tu historial, para que la pestaña Comparar la muestre junto a las tuyas.",
     "metaDescription": "Una simulación compartida: media {mean}, mediana {median}.",
     "metaDescriptionNoScores": "Una formación del simulador compartida.",
-    "moreForStage": "Más simulaciones compartidas de esta etapa"
+    "moreForStage": "Más simulaciones compartidas de esta etapa",
+    "openedBy": "{count, plural, one {Abierta por # jugador} other {Abierta por # jugadores}}",
+    "openedByMore": "Abierta por {count} o más jugadores"
   },
   "SharedRunsBrowse": {
     "title": "Simulaciones compartidas",

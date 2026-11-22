@@ -22,9 +22,18 @@ import styles from "./StageSharedRuns.module.scss";
 // result on screen, if it's for this loadout: it gets a row of its own at the
 // place its mean would take, so a player sees where they stand, and can list
 // it there (save, share and show on the stage's page) in one step.
+// "Opened by N players", or nothing if no one else has opened it yet.
+function openedByText(tRun, run) {
+  if (!(run.openedBy > 0)) return null;
+  return run.openedByMore
+    ? tRun("openedByMore", { count: run.openedBy })
+    : tRun("openedBy", { count: run.openedBy });
+}
+
 function StageSharedRuns({ stageId, yourRun }) {
   const t = useTranslations("StageSharedRuns");
   const tDex = useTranslations("Dex");
+  const tRun = useTranslations("SharedRun");
   const [open, setOpen] = useState(false);
   const [byStage, setByStage] = useState({});
   const [failed, setFailed] = useState(false);
@@ -219,7 +228,11 @@ function StageSharedRuns({ stageId, yourRun }) {
                     {run.name || t("untitled")}
                   </span>
                   <span className={styles.meta}>
-                    {[idol, plan && plan != "free" && tDex(`plans.${plan}`)]
+                    {[
+                      idol,
+                      plan && plan != "free" && tDex(`plans.${plan}`),
+                      openedByText(tRun, run),
+                    ]
                       .filter(Boolean)
                       .join(" · ")}
                   </span>

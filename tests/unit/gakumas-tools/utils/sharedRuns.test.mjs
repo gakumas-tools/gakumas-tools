@@ -13,6 +13,7 @@ import {
   listStageRuns,
   listedRunStages,
   newShareId,
+  ownsSharedRun,
   parseCursor,
   parseStageId,
   refreshStageRuns,
@@ -646,4 +647,14 @@ test("the stage picker counts listed runs on game stages, latest first", async (
   assert.deepEqual(calls.aggregate[0], {
     $match: { listed: true, stageId: { $type: "number", $gt: 0 } },
   });
+});
+
+test("ownsSharedRun is true only for the user who shared the run", async () => {
+  const db = fakeDb();
+  db.collection("sharedRuns").docs.push({ _id: "AAAAAAAA", userId: "me" });
+  assert.equal(await ownsSharedRun(db, "AAAAAAAA", "me"), true);
+  assert.equal(await ownsSharedRun(db, "AAAAAAAA", "other"), false);
+  assert.equal(await ownsSharedRun(db, "BBBBBBBB", "me"), false);
+  assert.equal(await ownsSharedRun(db, "AAAAAAAA", null), false);
+  assert.equal(await ownsSharedRun(db, "not an id", "me"), false);
 });
