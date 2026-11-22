@@ -55,6 +55,7 @@ const FIXTURES = [
   "produce-exam-impression-final-r16b",
   "produce-exam-impression-final-r16c",
   "produce-exam-impression-final-r16d",
+  "produce-exam-impression-final-r18d",
 ];
 
 // Captures of a produce exam that has a ProduceExams row replay through
@@ -84,6 +85,7 @@ const PRODUCE_EXAM_IDS = {
   "produce-exam-impression-final-r16b": 1,
   "produce-exam-impression-final-r16c": 1,
   "produce-exam-impression-final-r16d": 1,
+  "produce-exam-impression-final-r18d": 1,
 };
 
 function getStage(capture) {
@@ -114,7 +116,9 @@ function getTypeMultipliers(capture) {
 function createEngine(capture, play) {
   const cardIds = capture.drawCardIds ?? [
     ...play.actions.flatMap((action) =>
-      action.skip || action.fromHand
+      // earlierCopy: the copy an earlier action supplied, raised since, so
+      // it adds none (one-copy cards like 200%スマイル keep only one).
+      action.skip || action.fromHand || action.earlierCopy
         ? []
         : (action.handCardIds ?? [action.cardId]),
     ),
