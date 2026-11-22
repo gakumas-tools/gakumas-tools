@@ -431,7 +431,9 @@
     "failed": "La importación ha fallado. Revisa las capturas y vuelve a intentarlo.",
     "unreadable": "No se han podido leer: {files}",
     "selectScreenshots": "Seleccionar capturas",
-    "dropHint": "Toca para seleccionar o suelta aquí las capturas"
+    "dropHint": "Toca para seleccionar o suelta aquí las capturas",
+    "covered": "La barra de menú tapaba algunas cartas, así que se han dejado vacías. Elígelas tú:",
+    "coveredSlots": "{name}: carta {slots}"
   },
   "Simulator": {
     "supportBonus": "% de bonificación de apoyo",
