@@ -2,13 +2,19 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createRequire } from "node:module";
 import {
+  BROWSE_PAGE_SIZE,
   STAGE_RUNS_LIMIT,
+  browseListedRuns,
+  formatCursor,
   getSharedRun,
   isListableStageId,
   isShareId,
   listSharedRuns,
   listStageRuns,
+  listedRunStages,
   newShareId,
+  parseCursor,
+  parseStageId,
   refreshStageRuns,
   setListed,
   shareLoadout,
@@ -452,4 +458,178 @@ test("the owner's list says which shared runs are listed", async () => {
   const [id] = await shareRuns(db, [2000]);
   await list(db, "owner", id);
   assert.equal((await listSharedRuns(db, "owner"))[0].listed, true);
+});
+
+// The /shared page. A collection fake for its queries: equality, $lt, $or,
+// an inclusion projection, sort by createdAt then _id (both descending), a
+// limit, and the one aggregate pipeline the module runs.
+function fakeBrowse(docs) {
+  const calls = {};
+  const test = (value, cond) => {
+    if (cond && typeof cond == "object" && !(cond instanceof Date)) {
+      if ("$lt" in cond) return value < cond.$lt;
+    }
+    return cond instanceof Date ? +value === +cond : value === cond;
+  };
+  const matches = (doc, filter) =>
+    Object.entries(filter).every(([key, cond]) =>
+      key == "$or"
+        ? cond.some((f) => matches(doc, f))
+        : test(doc[key], cond),
+    );
+  const collection = {
+    find(filter, options) {
+      calls.find = { filter, options };
+      let found = docs.filter((doc) => matches(doc, filter));
+      const cursor = {
+        sort(spec) {
+          calls.sort = spec;
+          found = [...found].sort(
+            (a, b) => b.createdAt - a.createdAt || (a._id < b._id ? 1 : -1),
+          );
+          return cursor;
+        },
+        limit(n) {
+          found = found.slice(0, n);
+          return cursor;
+        },
+        toArray: async () =>
+          found.map((doc) =>
+            Object.fromEntries(
+              Object.entries(doc).filter(
+                ([key]) => options.projection[key] === 1,
+              ),
+            ),
+          ),
+      };
+      return cursor;
+    },
+    aggregate(pipeline) {
+      calls.aggregate = pipeline;
+      const groups = new Map();
+      for (const doc of docs) {
+        if (doc.listed !== true) continue;
+        if (typeof doc.stageId != "number" || !(doc.stageId > 0)) continue;
+        const group = groups.get(doc.stageId) ?? {
+          _id: doc.stageId,
+          count: 0,
+          latest: new Date(0),
+        };
+        group.count++;
+        if (doc.createdAt > group.latest) group.latest = doc.createdAt;
+        groups.set(doc.stageId, group);
+      }
+      const sorted = [...groups.values()].sort((a, b) => b.latest - a.latest);
+      return { toArray: async () => sorted };
+    },
+  };
+  return { db: { collection: () => collection }, calls };
+}
+
+const T0 = Date.UTC(2026, 10, 1);
+function listedDoc(i, stageId, { listed = true, at = i } = {}) {
+  return {
+    _id: `run${String(i).padStart(5, "0")}`,
+    name: `Run ${i}`,
+    stageId,
+    userId: "secret-owner",
+    sourceId: "secret-source",
+    pItemIds: [1],
+    skillCardIdGroups: [[2]],
+    stats: { mean: 999999 },
+    serverStats: { mean: 1000 + i, median: 1000 + i, version: "abc" },
+    listed,
+    createdAt: new Date(T0 + at * 60_000),
+  };
+}
+
+test("parseStageId takes a game stage's id only", () => {
+  assert.equal(parseStageId("52"), 52);
+  for (const bad of ["0", "-3", "custom", "5e2", "052", "", undefined]) {
+    assert.equal(parseStageId(bad), null, String(bad));
+  }
+  assert.equal(parseStageId(["52"]), null);
+});
+
+test("a paging cursor round-trips and rejects anything else", () => {
+  const run = { id: "Ab3dEf7h", createdAt: new Date(T0) };
+  const cursor = parseCursor(formatCursor(run));
+  assert.equal(cursor.id, "Ab3dEf7h");
+  assert.equal(+cursor.createdAt, T0);
+  for (const bad of ["yesterday", "", "2026-11-01T00:00:00Z", "x~Ab3dEf7h", "2026-11-01T00:00:00Z~bad", undefined]) {
+    assert.equal(parseCursor(bad), null, String(bad));
+  }
+});
+
+test("/shared shows only listed runs, without owners, with the server's stats", async () => {
+  const { db, calls } = fakeBrowse([
+    listedDoc(1, 52),
+    listedDoc(2, 52, { listed: false }),
+  ]);
+  const { runs, next } = await browseListedRuns(db);
+  assert.equal(calls.find.filter.listed, true);
+  assert.equal(calls.find.options.projection.userId, undefined);
+  assert.equal(calls.find.options.projection.sourceId, undefined);
+  assert.deepEqual(runs.map((run) => run.id), ["run00001"]);
+  assert.equal("userId" in runs[0], false);
+  assert.equal("sourceId" in runs[0], false);
+  assert.deepEqual(runs[0].stats, { mean: 1001, median: 1001 });
+  assert.equal(next, null);
+});
+
+test("/shared for one stage is that stage's listed runs, newest first", async () => {
+  const { db, calls } = fakeBrowse([
+    listedDoc(1, 52),
+    listedDoc(2, 53),
+    listedDoc(3, 52),
+  ]);
+  const { runs } = await browseListedRuns(db, { stageId: 52 });
+  assert.deepEqual(calls.sort, { createdAt: -1, _id: -1 });
+  assert.deepEqual(runs.map((run) => run.id), ["run00003", "run00001"]);
+});
+
+test("/shared has nothing for a custom or malformed stage", async () => {
+  const { db } = fakeBrowse([listedDoc(1, 52)]);
+  for (const stageId of [0, -1, 1.5, "52"]) {
+    assert.deepEqual(await browseListedRuns(db, { stageId }), {
+      runs: [],
+      next: null,
+    });
+  }
+});
+
+test("pages carry on from the last run, even through runs listed in the same instant", async () => {
+  // Every run made at the same moment: only the id tells them apart.
+  const docs = Array.from({ length: BROWSE_PAGE_SIZE + 5 }, (_, i) =>
+    listedDoc(i, 52, { at: 0 }),
+  );
+  const { db } = fakeBrowse(docs);
+  const first = await browseListedRuns(db, { stageId: 52 });
+  assert.equal(first.runs.length, BROWSE_PAGE_SIZE);
+  const second = await browseListedRuns(db, {
+    stageId: 52,
+    after: parseCursor(first.next),
+  });
+  assert.equal(second.runs.length, 5);
+  assert.equal(second.next, null);
+  const seen = new Set([...first.runs, ...second.runs].map((run) => run.id));
+  assert.equal(seen.size, docs.length);
+});
+
+test("the stage picker counts listed runs on game stages, latest first", async () => {
+  const { db, calls } = fakeBrowse([
+    listedDoc(1, 52),
+    listedDoc(2, 53),
+    listedDoc(3, 52),
+    listedDoc(4, 54, { listed: false }),
+    listedDoc(5, null),
+  ]);
+  assert.deepEqual(calls.aggregate, undefined);
+  assert.deepEqual(await listedRunStages(db), [
+    { stageId: 52, count: 2 },
+    { stageId: 53, count: 1 },
+  ]);
+  assert.deepEqual(calls.aggregate[0], {
+    $match: { listed: true, stageId: { $type: "number", $gt: 0 } },
+  });
 });
