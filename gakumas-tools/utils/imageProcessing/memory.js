@@ -106,7 +106,11 @@ export async function getMemoryFromFile(
     undefined,
     true,
   );
-  const covered = reads.some((id) => id == COVERED_ENTITY_ID);
+  // 1-based slots, so the importer can tell the player which cards to pick.
+  const coveredSlots = reads
+    .map((id, i) => (id == COVERED_ENTITY_ID ? i + 1 : null))
+    .filter(Boolean);
+  const covered = coveredSlots.length > 0;
   const skillCards = reads.map((id) => (id == COVERED_ENTITY_ID ? 0 : id));
 
   const customizations = skillCards.map((id, i) =>
@@ -151,6 +155,7 @@ export async function getMemoryFromFile(
     pItemIds: pItems,
     skillCardIds: skillCards,
     customizations,
+    coveredSlots,
   };
 }
 

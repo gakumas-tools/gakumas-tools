@@ -431,7 +431,9 @@
     "failed": "导入失败，请检查截图后重试。",
     "unreadable": "无法读取的截图：{files}",
     "selectScreenshots": "选择截图",
-    "dropHint": "点击选择，或将截图拖放到此处"
+    "dropHint": "点击选择，或将截图拖放到此处",
+    "covered": "被菜单栏遮住的技能卡留空了，请手动选择：",
+    "coveredSlots": "{name}：第{slots}张"
   },
   "Simulator": {
     "supportBonus": "支援加成 %",

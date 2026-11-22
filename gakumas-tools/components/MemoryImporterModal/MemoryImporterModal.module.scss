@@ -66,3 +66,17 @@
 .barShown {
   opacity: 1;
 }
+
+.covered {
+  color: tokens.$warning-ink;
+  font-size: tokens.$text-sm;
+
+  p {
+    margin: 0;
+  }
+
+  ul {
+    margin: 4px 0 0;
+    padding-left: tokens.$space-4;
+  }
+}
