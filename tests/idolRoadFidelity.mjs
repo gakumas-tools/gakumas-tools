@@ -9,7 +9,12 @@ import { hasIngameFixtures, loadIngameFixture } from "./ingameFixtures.mjs";
 // IdolRoad (its idol's criteria and turn counts, its おすすめ効果's 応援/
 // トラブル). The game's turn order and the hands it dealt are supplied, so
 // only the stage data and the engine decide the numbers.
-const FIXTURES = ["idol-road-saki-s1", "idol-road-saki-s2", "idol-road-saki-s3"];
+const FIXTURES = [
+  "idol-road-saki-s1",
+  "idol-road-saki-s2",
+  "idol-road-saki-s3",
+  "idol-road-saki-s4",
+];
 
 function createEngine(capture) {
   const pIdol = PIdols.getById(capture.pIdolId);
@@ -79,10 +84,20 @@ function replay(capture, play) {
     if (action.skip) {
       state = engine.endTurn(state);
     } else {
-      assert.equal(SkillCards.getById(action.cardId).name, action.name);
-      const card = hand.find((c) => state[S.cardMap][c].id == action.cardId);
-      assert.ok(engine.isCardUsable(state, card), `turn ${turn}: usable`);
-      state = engine.useCard(state, card);
+      // A turn with スキルカード使用数追加 plays more than one card from the
+      // hand it was dealt.
+      const plays = action.plays || [action];
+      for (const [j, { cardId, name }] of plays.entries()) {
+        assert.equal(SkillCards.getById(cardId).name, name);
+        const card = state[S.handCards].find(
+          (c) => state[S.cardMap][c].id == cardId,
+        );
+        assert.ok(engine.isCardUsable(state, card), `turn ${turn}: usable`);
+        state = engine.useCard(state, card);
+        if (j < plays.length - 1) {
+          assert.equal(state[S.turnsElapsed], turn - 1, `turn ${turn}: extra play`);
+        }
+      }
     }
     assert.equal(state[S.turnsElapsed], turn);
     for (const [field, value] of Object.entries(action.expected)) {
