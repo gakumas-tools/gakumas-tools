@@ -540,9 +540,26 @@
     "title": "共有",
     "more": "その他…",
     "x": "Xで共有",
+    "xResult": "結果をXで共有",
     "saveImage": "画像として保存",
     "exporting": "保存中…",
-    "exportFailed": "保存できませんでした。再試行"
+    "exportFailed": "保存できませんでした。再試行",
+    "loadoutHelp": "このリンクを開くと、シミュレーターでこの編成が開きます。",
+    "copy": "コピー",
+    "copied": "コピーしました",
+    "copyThisLink": "このリンクをコピーしてください:",
+    "resultTitle": "この結果を共有",
+    "resultHelp": "この編成とスコアを誰でも開けるリンクにして、比較タブに保存します。",
+    "signInToShareResult": "結果のリンクを作ってステージの「みんなのラン」に載せるには、ログインが必要です。",
+    "signIn": "Discordでログイン",
+    "namePlaceholder": "名前（任意）",
+    "listOnStage": "このステージの「みんなのラン」に載せる",
+    "makeLink": "結果のリンクを作る",
+    "making": "作成中…",
+    "failed": "共有できませんでした。もう一度お試しください。",
+    "sharedNote": "リンクを知っている人なら誰でも開けます。比較タブから取り下げられます。",
+    "listedNote": "このステージの「みんなのラン」にも載りました。比較タブから外せます。",
+    "seeOthers": "このステージのランを見る"
   },
   "ConfirmModal": {
     "cancel": "キャンセル",
@@ -567,8 +584,7 @@
     "optimizeNeedsSimulation": "現在の編成でシミュレーションしてから最適化してください",
     "staleResults": "この結果は変更前の編成のものです",
     "rehearsal": "リハーサル",
-    "shareRun": "結果を共有",
-    "signInToShare": "ランを共有するにはサインインが必要です。Discordに進みますか？"
+    "shareRun": "共有"
   },
   "CompareTab": {
     "saved": "保存済み",
@@ -652,7 +668,7 @@
       "top": "スコア順"
     },
     "scores": "平均 {mean}・中央値 {median}",
-    "empty": "ここに載せられたランはまだありません。シミュレーターで編成をシミュレートし、「結果を共有」から載せられます。",
+    "empty": "ここに載せられたランはまだありません。シミュレーターで編成をシミュレートし、「共有」から載せられます。",
     "older": "さらに古いラン",
     "newest": "最新に戻る",
     "emptyAction": "自分のランを共有"
@@ -666,7 +682,7 @@
     "yourRun": "あなたのラン（この結果）",
     "place": "自分を含めて{count}件中 {rank}位",
     "belowTop": "掲載上位{count}件より下",
-    "howToList": "自分のランを載せるには、シミュレート後に「結果を共有」をタップしてください。",
+    "howToList": "自分のランを載せるには、シミュレート後に「共有」をタップしてください。",
     "seeAll": "すべて見る",
     "listYours": "ここに載せる",
     "namePlaceholder": "名前（任意）",
@@ -932,23 +948,5 @@
     "back": "{category}一覧",
     "open": "ページを開く",
     "customizations": "カスタマイズ"
-  },
-  "ShareRunModal": {
-    "title": "このランを共有",
-    "hint": "この編成とスコアを誰でも開けるリンクにして、比較タブに保存します。",
-    "namePlaceholder": "名前（任意）",
-    "listOnStage": "このステージの「みんなのラン」に載せる",
-    "share": "共有",
-    "sharing": "共有中…",
-    "cancel": "キャンセル",
-    "failed": "共有できませんでした。もう一度お試しください。",
-    "sharedTitle": "共有しました",
-    "listedTitle": "共有して載せました",
-    "sharedNote": "リンクを知っている人なら誰でも開けます。比較タブから取り下げられます。",
-    "listedNote": "このステージの「みんなのラン」にも載りました。比較タブから外せます。",
-    "copyLink": "リンクをコピー",
-    "copied": "コピーしました",
-    "copyThisLink": "このリンクをコピーしてください:",
-    "seeOthers": "このステージのランを見る"
   }
 }
