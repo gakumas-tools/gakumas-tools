@@ -92,6 +92,7 @@ function TierList({ type }) {
 
   const [pickerTier, setPickerTier] = useState(null);
   const [shareOpen, setShareOpen] = useState(false);
+  const [sharesClosed, setSharesClosed] = useState(0);
   const [activeId, setActiveId] = useState(null);
   const [leaving, setLeaving] = useState([]);
   const leavingRef = useRef(leaving);
@@ -597,7 +598,11 @@ function TierList({ type }) {
 
         <EntityPool type={type} list={list} />
 
-        <CommunityTierList type={type} />
+        <CommunityTierList
+          type={type}
+          onAddYours={() => setShareOpen(true)}
+          refresh={sharesClosed}
+        />
 
         {pickerTier != null && list.tiers.includes(pickerTier) && (
           <TierListPickerModal
@@ -612,7 +617,10 @@ function TierList({ type }) {
         {shareOpen && (
           <TierShareModal
             type={type}
-            onClose={() => setShareOpen(false)}
+            onClose={() => {
+              setShareOpen(false);
+              setSharesClosed((n) => n + 1);
+            }}
           />
         )}
       </div>

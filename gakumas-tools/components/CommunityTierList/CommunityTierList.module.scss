@@ -134,3 +134,9 @@
   color: tokens.$danger;
   font-size: tokens.$text-sm;
 }
+
+.addYours {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
