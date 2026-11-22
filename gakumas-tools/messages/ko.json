@@ -57,6 +57,10 @@
     "rehearsal": {
       "title": "리허설 스코어 불러오기",
       "description": "리허설 스크린샷으로부터 스코어 불러오기"
+    },
+    "sharedRuns": {
+      "title": "모두의 런",
+      "description": "다른 플레이어가 스테이지에 게시한 시뮬레이터 런 보기"
     }
   },
   "NavbarMenu": {
@@ -621,7 +625,23 @@
     "signInPrompt": "저장하려면 로그인이 필요합니다. Discord로 이동할까요?",
     "hint": "시뮬레이터에서 열면 기록에 추가되어 비교 탭에서 내 편성과 나란히 볼 수 있습니다.",
     "metaDescription": "공유된 시뮬레이터 편성: 평균 {mean}, 중앙값 {median}.",
-    "metaDescriptionNoScores": "공유된 시뮬레이터 편성."
+    "metaDescriptionNoScores": "공유된 시뮬레이터 편성.",
+    "moreForStage": "이 스테이지의 다른 공유된 런"
+  },
+  "SharedRunsBrowse": {
+    "title": "모두의 런",
+    "hint": "플레이어가 스테이지 페이지에 게시한 시뮬레이터 런(최신순). 스테이지를 고르면 같은 점수 축에 나란히 표시됩니다. 열면 내 런과 나란히 돌려볼 수 있습니다. 점수는 사이트가 각 런을 직접 시뮬레이션한 결과입니다.",
+    "stage": "스테이지",
+    "allStages": "모든 스테이지",
+    "stageOption": "{name} ({count})",
+    "sort": {
+      "new": "최신순",
+      "top": "점수순"
+    },
+    "scores": "평균 {mean} · 중앙값 {median}",
+    "empty": "아직 게시된 런이 없습니다. 내 런을 게시하려면 시뮬레이터의 비교 탭에서 저장된 런을 공유한 뒤 「스테이지 페이지에 표시」를 선택하세요.",
+    "older": "이전 런",
+    "newest": "최신으로"
   },
   "StageSharedRuns": {
     "title": "이 스테이지의 공유된 런",
@@ -629,7 +649,8 @@
     "empty": "이 스테이지에 게시된 런이 아직 없습니다.",
     "failed": "공유된 런을 불러오지 못했습니다.",
     "untitled": "이름 없는 런",
-    "howToList": "내 런을 게시하려면 비교 탭에서 저장된 런을 공유한 뒤 「스테이지 페이지에 표시」를 선택하세요."
+    "howToList": "내 런을 게시하려면 비교 탭에서 저장된 런을 공유한 뒤 「스테이지 페이지에 표시」를 선택하세요.",
+    "seeAll": "모두 보기"
   },
   "SimulatorStats": {
     "total": "합계",

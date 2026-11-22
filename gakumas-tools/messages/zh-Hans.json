@@ -57,6 +57,10 @@
     "rehearsal": {
       "title": "排练解析器",
       "description": "从排练截图中解析分数"
+    },
+    "sharedRuns": {
+      "title": "大家的记录",
+      "description": "浏览其他玩家在舞台页面展示的模拟器记录"
     }
   },
   "NavbarMenu": {
@@ -621,7 +625,23 @@
     "signInPrompt": "保存需要登录。前往 Discord 登录？",
     "hint": "在模拟器中打开会将其加入历史，可在比较标签页中与自己的编组并排查看。",
     "metaDescription": "分享的模拟器编组：平均 {mean}，中位数 {median}。",
-    "metaDescriptionNoScores": "分享的模拟器编组。"
+    "metaDescriptionNoScores": "分享的模拟器编组。",
+    "moreForStage": "本舞台的更多分享记录"
+  },
+  "SharedRunsBrowse": {
+    "title": "大家的记录",
+    "hint": "玩家在舞台页面展示的模拟器记录（从新到旧）。选择舞台后会在同一分数轴上排列；打开即可与自己的记录并排运行。分数是本站对每条记录的模拟结果。",
+    "stage": "舞台",
+    "allStages": "全部舞台",
+    "stageOption": "{name}（{count}）",
+    "sort": {
+      "new": "最新",
+      "top": "最高分"
+    },
+    "scores": "平均 {mean} · 中位数 {median}",
+    "empty": "这里还没有展示的记录。要展示你的记录，请在模拟器的比较页分享已保存的记录，并选择“在舞台页面展示”。",
+    "older": "更早的记录",
+    "newest": "回到最新"
   },
   "StageSharedRuns": {
     "title": "本舞台的分享记录",
@@ -629,7 +649,8 @@
     "empty": "还没有人在本舞台展示记录。",
     "failed": "无法加载分享记录。",
     "untitled": "未命名记录",
-    "howToList": "要展示你的记录，请在比较页分享已保存的记录，并选择“在舞台页面展示”。"
+    "howToList": "要展示你的记录，请在比较页分享已保存的记录，并选择“在舞台页面展示”。",
+    "seeAll": "查看全部"
   },
   "SimulatorStats": {
     "total": "合计",
