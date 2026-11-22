@@ -40,6 +40,7 @@ function CompareTab({ currentRun, onAfterLoad }) {
     renameSaved,
     sharedIds,
     listedIds,
+    openers,
     shareSaved,
     unshareSaved,
     setSavedListed,
@@ -427,6 +428,11 @@ function CompareTab({ currentRun, onAfterLoad }) {
               onShare={subTab === "saved" ? handleShare : undefined}
               onUnshare={subTab === "saved" ? handleUnshare : undefined}
               listed={!!listedIds[sharedIds[run._id || run.id]]}
+              opened={
+                subTab === "saved"
+                  ? openers[sharedIds[run._id || run.id]]
+                  : undefined
+              }
               onToggleListed={
                 subTab === "saved" &&
                 isListableStageId(run.loadout?.stageId)

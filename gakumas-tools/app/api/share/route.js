@@ -76,16 +76,19 @@ export async function GET(request) {
   if (!session) return new Response("Unauthorized", { status: 401 });
 
   const { db } = await connect();
-  const runs = await listSharedRuns(db, session.user.id);
-  return Response.json(
-    runs.map(({ _id, sourceId, name, listed, createdAt }) => ({
-      id: _id,
-      loadoutId: sourceId,
-      name,
-      listed: !!listed,
-      createdAt,
-    })),
+  const runs = await withOpeners(
+    db,
+    (await listSharedRuns(db, session.user.id)).map(
+      ({ _id, sourceId, name, listed, createdAt }) => ({
+        id: _id,
+        loadoutId: sourceId,
+        name,
+        listed: !!listed,
+        createdAt,
+      }),
+    ),
   );
+  return Response.json(runs);
 }
 
 // Take one of your shared runs down: { id }.

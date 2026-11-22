@@ -40,6 +40,8 @@ export function SimulationRunsContextProvider({ children }) {
   const [sharedIds, setSharedIds] = useState({});
   // Shared run id → true, for those listed on their stage's page.
   const [listedIds, setListedIds] = useState({});
+  // Shared run id → { count, more }: how many others have opened its link.
+  const [openers, setOpeners] = useState({});
   const savedRunsRef = useRef(savedRuns);
   savedRunsRef.current = savedRuns;
   const didInitRef = useRef(false);
@@ -82,6 +84,16 @@ export function SimulationRunsContextProvider({ children }) {
       setListedIds(
         Object.fromEntries(
           list.filter(({ listed }) => listed).map(({ id }) => [id, true]),
+        ),
+      );
+      setOpeners(
+        Object.fromEntries(
+          list
+            .filter(({ openedBy }) => openedBy > 0)
+            .map(({ id, openedBy, openedByMore }) => [
+              id,
+              { count: openedBy, more: !!openedByMore },
+            ]),
         ),
       );
     } catch (err) {
@@ -339,6 +351,7 @@ export function SimulationRunsContextProvider({ children }) {
       renameSaved,
       sharedIds,
       listedIds,
+      openers,
       shareSaved,
       unshareSaved,
       setSavedListed,
@@ -361,6 +374,7 @@ export function SimulationRunsContextProvider({ children }) {
       renameSaved,
       sharedIds,
       listedIds,
+      openers,
       shareSaved,
       unshareSaved,
       setSavedListed,

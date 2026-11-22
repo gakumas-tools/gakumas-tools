@@ -45,11 +45,13 @@ function CompareRow({
   onShare,
   onUnshare,
   listed,
+  opened,
   onToggleListed,
   error,
 }) {
   const t = useTranslations("CompareTab");
   const tStage = useTranslations("StageSummary");
+  const tRun = useTranslations("SharedRun");
   const locale = useLocale();
 
   const { loadout, derived, stats, name, createdAt } = run;
@@ -279,6 +281,22 @@ function CompareRow({
           {shareId && (
             <span className={styles.tag}>
               {listed ? t("listed") : t("shared")}
+            </span>
+          )}
+          {shareId && opened?.count > 0 && (
+            <span
+              className={styles.opened}
+              title={tRun(opened.more ? "openedByMore" : "openedBy", {
+                count: opened.count,
+              })}
+            >
+              <FaEye aria-hidden="true" />
+              {opened.more ? `${opened.count}+` : opened.count}
+              <span className={styles.srOnly}>
+                {tRun(opened.more ? "openedByMore" : "openedBy", {
+                  count: opened.count,
+                })}
+              </span>
             </span>
           )}
           {copied && <span className={styles.time}>{t("linkCopied")}</span>}
