@@ -411,10 +411,6 @@ export default function Simulator() {
             {t("lastUpdated")}: 2026-11-20
           </a>
         </div>
-
-        <div data-export-hide="true">
-          <StageSharedRuns stageId={stage.id} />
-        </div>
       </div>
 
       {strategy === "ManualStrategy" && simulatorData && (
@@ -449,6 +445,11 @@ export default function Simulator() {
         ) : (
           <div className={styles.resultPlaceholder} />
         ))}
+
+      {/* Below the result, so a screenshot of the loadout and its score spread still fits one phone screen. */}
+      <div className={styles.stageSharedRuns} data-export-hide="true">
+        <StageSharedRuns stageId={stage.id} />
+      </div>
     </div>
   );
 }
