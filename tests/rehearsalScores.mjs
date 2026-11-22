@@ -13,12 +13,13 @@
  *   pnpm test:rehearsal           # compare; non-zero exit on mismatch
  *   pnpm test:rehearsal --update  # rewrite the fixture with current outputs
  *
- * Tesseract auto-downloads its English language model on first run; the
- * harness directs that download into tests/.tesseract-cache/ (gitignored)
- * rather than the repo root.
+ * Tesseract's English model comes from the @tesseract.js-data/eng
+ * devDependency (4.0.0_best_int, the model the site loads for
+ * createWorker("eng", 1)), so the harness runs with no network.
  */
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import { createRequire } from "node:module";
 import { dirname, resolve, join } from "node:path";
 import sharp from "sharp";
 import { createWorker } from "tesseract.js";
@@ -27,7 +28,10 @@ import { extractScores } from "../gakumas-tools/utils/imageProcessing/rehearsal.
 const HARNESS_DIR = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(HARNESS_DIR, "..");
 const FIXTURE_PATH = join(HARNESS_DIR, "rehearsalScores.jsonl");
-const TESSERACT_CACHE = join(HARNESS_DIR, ".tesseract-cache");
+const TESSDATA = join(
+  dirname(createRequire(import.meta.url).resolve("@tesseract.js-data/eng/package.json")),
+  "4.0.0_best_int"
+);
 
 // Mirrors getScoresFromFile (rehearsal.js): white threshold and OCR upscaling
 const WHITE_THRESHOLD = 190;
@@ -39,8 +43,10 @@ const UPDATE = args.includes("--update");
 let _ocrWorker;
 async function getOcrWorker() {
   if (!_ocrWorker) {
-    mkdirSync(TESSERACT_CACHE, { recursive: true });
-    _ocrWorker = await createWorker("eng", 1, { cachePath: TESSERACT_CACHE });
+    _ocrWorker = await createWorker("eng", 1, {
+      langPath: TESSDATA,
+      cacheMethod: "none",
+    });
   }
   return _ocrWorker;
 }
