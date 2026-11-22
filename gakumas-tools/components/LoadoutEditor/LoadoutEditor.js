@@ -139,6 +139,7 @@ function LoadoutEditor({ config, idolId }) {
               swapPItemIds={swapPItemIds}
               indications={pItemIndications}
               size="medium"
+              produceExam={!!stage.produceExamId}
             />
           </div>
           <span className={styles.stageTag}>
