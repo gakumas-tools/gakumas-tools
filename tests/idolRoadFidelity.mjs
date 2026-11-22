@@ -9,7 +9,7 @@ import { hasIngameFixtures, loadIngameFixture } from "./ingameFixtures.mjs";
 // IdolRoad (its idol's criteria and turn counts, its おすすめ効果's 応援/
 // トラブル). The game's turn order and the hands it dealt are supplied, so
 // only the stage data and the engine decide the numbers.
-const FIXTURES = ["idol-road-saki-s1"];
+const FIXTURES = ["idol-road-saki-s1", "idol-road-saki-s2"];
 
 function createEngine(capture) {
   const pIdol = PIdols.getById(capture.pIdolId);
