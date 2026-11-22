@@ -2,7 +2,7 @@ import { randomInt } from "node:crypto";
 import { ObjectId } from "mongodb";
 import { MAX_LOADOUTS_PER_USER, isObjectId } from "./apiValidation";
 import { simulateRunStats } from "./runStats";
-import { isListableStageId } from "./stageListing";
+import { STAGE_RUNS_LIMIT, isListableStageId } from "./stageListing";
 
 // A shared run is a public copy of one saved run (a loadout with its
 // simulated stats), reachable by a short id at /s/<id>. It's a copy, so
@@ -242,7 +242,7 @@ export async function refreshStageRuns(
   return stale.length;
 }
 
-export const STAGE_RUNS_LIMIT = 20;
+export { STAGE_RUNS_LIMIT };
 
 export { isListableStageId };
 

@@ -112,3 +112,16 @@
   font-weight: tokens.$weight-semibold;
   text-decoration: none;
 }
+
+.yours .row {
+  background: tokens.$accent-tint;
+  cursor: default;
+
+  &:hover {
+    background: tokens.$accent-tint;
+  }
+}
+
+.yours .name {
+  color: tokens.$accent-ink;
+}

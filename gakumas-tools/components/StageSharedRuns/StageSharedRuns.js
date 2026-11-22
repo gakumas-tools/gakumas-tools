@@ -8,12 +8,14 @@ import Image from "@/components/Image";
 import { Link } from "@/i18n/routing";
 import c from "@/utils/classNames";
 import { getIdolName } from "@/utils/simulationRun";
-import { isListableStageId } from "@/utils/stageListing";
+import { isListableStageId, placeAmongRuns } from "@/utils/stageListing";
 import styles from "./StageSharedRuns.module.scss";
 
 // Runs other players listed for the stage being simulated, best first. Closed
-// until opened, so it costs nothing unless someone looks.
-function StageSharedRuns({ stageId }) {
+// until opened, so it costs nothing unless someone looks. yourMean is the mean
+// of the result on screen, if it's for this loadout: it gets a row of its own
+// at the place it would take, so a player sees where they stand.
+function StageSharedRuns({ stageId, yourMean }) {
   const t = useTranslations("StageSharedRuns");
   const tDex = useTranslations("Dex");
   const [open, setOpen] = useState(false);
@@ -45,14 +47,42 @@ function StageSharedRuns({ stageId }) {
 
   if (!isListableStageId(stageId)) return null;
 
+  const place = runs && !failed ? placeAmongRuns(runs, yourMean) : null;
+  const yourRow = place && (
+    <li key="yours" className={styles.yours}>
+      <div className={styles.row}>
+        <span className={styles.rank} />
+        <span className={styles.placeholder} />
+        <span className={styles.text}>
+          <span className={styles.name}>{t("yourRun")}</span>
+          <span className={styles.meta}>
+            {place.below
+              ? t("belowTop", { count: runs.length })
+              : t("place", { rank: place.rank, count: runs.length + 1 })}
+          </span>
+        </span>
+        <span className={styles.score}>
+          {Math.round(yourMean).toLocaleString()}
+        </span>
+      </div>
+    </li>
+  );
+
   let body;
   if (failed) body = <div className={styles.note}>{t("failed")}</div>;
   else if (!runs) body = <div className={styles.note}>{t("loading")}</div>;
-  else if (!runs.length) body = <div className={styles.note}>{t("empty")}</div>;
+  else if (!runs.length) {
+    body = (
+      <>
+        <div className={styles.note}>{t("empty")}</div>
+        {yourRow && <ol className={styles.list}>{yourRow}</ol>}
+      </>
+    );
+  }
   else {
     body = (
       <ol className={styles.list}>
-        {runs.map((run, i) => {
+        {runs.flatMap((run, i) => {
           const card = run.derived?.signatureCardId
             ? SkillCards.getById(run.derived.signatureCardId)
             : null;
@@ -62,7 +92,7 @@ function StageSharedRuns({ stageId }) {
           const plan = pIdol?.plan || card?.plan;
           const idol = getIdolName(run.derived?.idolId);
           const mean = run.stats?.mean;
-          return (
+          const row = (
             <li key={run.id}>
               <Link href={`/s/${run.id}`} className={styles.row}>
                 <span className={styles.rank}>{i + 1}</span>
@@ -93,7 +123,9 @@ function StageSharedRuns({ stageId }) {
               </Link>
             </li>
           );
+          return i === place?.index ? [yourRow, row] : [row];
         })}
+        {place?.index === runs.length && yourRow}
       </ol>
     );
   }

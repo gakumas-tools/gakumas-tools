@@ -649,6 +649,9 @@
     "empty": "No one has listed a run for this stage yet.",
     "failed": "Couldn't load shared runs.",
     "untitled": "Untitled run",
+    "yourRun": "Your run (this result)",
+    "place": "#{rank} of {count} with yours",
+    "belowTop": "Below the top {count} listed",
     "howToList": "To list yours, share a saved run in Compare and choose \"Show on the stage's page\".",
     "seeAll": "See them all"
   },
