@@ -185,7 +185,8 @@
       "p-items": "P-items",
       "p-drinks": "P-drinks",
       "p-idols": "P-idols",
-      "support-cards": "Support cards"
+      "support-cards": "Support cards",
+      "stages": "Stages"
     },
     "categories": {
       "reference": {
@@ -943,5 +944,20 @@
     "copied": "Copied",
     "copyThisLink": "Copy this link:",
     "seeOthers": "See the stage's runs"
+  },
+  "StagePage": {
+    "turnsTotal": "{n} turns",
+    "preview": "Preview",
+    "idolRoadNote": "Each idol's road has its own turns and criteria. These are the ones the simulator uses when no P-idol is chosen.",
+    "vocal": "Vo",
+    "dance": "Da",
+    "visual": "Vi",
+    "total": "Total",
+    "criteria": "Criteria",
+    "turns": "Turns",
+    "firstTurn": "First turn",
+    "openSimulator": "Open in simulator",
+    "sharedRuns": "Shared runs for this stage",
+    "metaDescription": "{name} ({type}): criteria Vo {vocal}% Da {dance}% Vi {visual}%, {turns} turns. Open it in the simulator or compare players' shared runs."
   }
 }
