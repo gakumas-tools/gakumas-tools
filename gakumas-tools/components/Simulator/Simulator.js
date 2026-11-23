@@ -18,9 +18,11 @@ import {
   StageEngine,
   StagePlayer,
 } from "gakumas-engine";
+import { IdolRoad } from "gakumas-data";
 import Alert from "@/components/Alert";
 import Button from "@/components/Button";
 import ButtonGroup from "@/components/ButtonGroup";
+import IdolRoadPercentCalculator from "@/components/IdolRoadPercentCalculator";
 import Input from "@/components/Input";
 import KofiAd from "@/components/KofiAd";
 import LoadoutEditor from "@/components/LoadoutEditor";
@@ -62,6 +64,7 @@ export default function Simulator() {
     simulatorUrl,
     setSupportBonus,
     setEnterPercents,
+    setParams,
     loadouts,
     setLoadout,
     currentLoadoutIndex,
@@ -90,6 +93,13 @@ export default function Simulator() {
     const stageConfig = new StageConfig(stage);
     return new IdolStageConfig(idolConfig, stageConfig, enterPercents);
   }, [loadout, stage, enterPercents]);
+
+  // The stage's score curve for this P-idol, if the data has one: then the
+  // score bonus % can be worked out from the parameters.
+  const scoreCurve = useMemo(
+    () => IdolRoad.resolveStage(stage, config.idol.pIdolId)?.scoreCurve,
+    [stage, config],
+  );
 
   const manualInputCallback = useCallback((decision, signal) => {
     return new Promise((resolve, reject) => {
@@ -276,7 +286,19 @@ export default function Simulator() {
         {stage.preview && <Alert>{t("previewNote")}</Alert>}
         <StageSelect />
         {stage.type !== "contest" ? (
-          <Alert>{t("enterPercents")}</Alert>
+          <>
+            {!scoreCurve && (
+              <Alert>{t("enterPercents")}</Alert>
+            )}
+            {scoreCurve && (
+              <IdolRoadPercentCalculator
+                scoreCurve={scoreCurve}
+                onApply={(percents) =>
+                  setParams([...percents, loadout.params[3]])
+                }
+              />
+            )}
+          </>
         ) : (
           <div className={styles.percentRow}>
             <ButtonGroup

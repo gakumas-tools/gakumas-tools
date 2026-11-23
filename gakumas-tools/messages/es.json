@@ -961,5 +961,10 @@
     "metaDescription": "{name} ({type}): criterios Vo {vocal}% Da {dance}% Vi {visual}%, {turns} turnos. Ábrela en el simulador o compara las partidas compartidas de otros jugadores.",
     "topRuns": "Mejores partidas compartidas",
     "noRuns": "Nadie ha compartido aún una partida de esta etapa. Ábrela en el simulador y comparte la tuya."
+  },
+  "IdolRoadPercentCalculator": {
+    "label": "Calcular el % de bonificación de puntuación a partir de los parámetros",
+    "apply": "Aplicar %",
+    "outOfRange": "Fuera de rango"
   }
 }

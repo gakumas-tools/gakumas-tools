@@ -1,0 +1,11 @@
+@use "../../styles/tokens";
+
+.calculator {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$space-2;
+}
+
+.label {
+  font-weight: bold;
+}

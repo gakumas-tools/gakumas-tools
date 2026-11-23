@@ -969,5 +969,10 @@
     "metaDescription": "{name}（{type}）：審査基準 Vo {vocal}% Da {dance}% Vi {visual}%、{turns}ターン。シミュレーターで開いたり、みんなの共有ランと比べたりできます。",
     "topRuns": "上位の共有ラン",
     "noRuns": "このステージの共有ランはまだありません。シミュレーターで開いて、あなたのランを共有してみましょう。"
+  },
+  "IdolRoadPercentCalculator": {
+    "label": "パラメータからスコアボーナス%を計算",
+    "apply": "%に反映",
+    "outOfRange": "範囲外"
   }
 }
