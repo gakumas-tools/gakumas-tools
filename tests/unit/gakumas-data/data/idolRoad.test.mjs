@@ -98,7 +98,7 @@ test("stage texts come grouped by recommended effect, in turn order", () => {
 });
 
 test("every stage text row is a known Idol Road stage, turn and kind", () => {
-  for (const id of [196, 197, 198, 199, 200, 201, 202, 203]) {
+  for (const id of [196, 197, 198, 199, 200, 201, 202, 203, 204]) {
     const branches = IdolRoad.getStageTexts(id);
     assert.ok(branches.length > 0, `stage ${id} has texts`);
     for (const { recommendedEffect, lines } of branches) {
