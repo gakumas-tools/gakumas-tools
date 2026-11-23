@@ -118,8 +118,8 @@ export function calculateTypeMultipliers(
 // Idol Road stages turn params into their score bonus % with a curve per
 // stage: permil read off a piecewise-linear line per type, then the whole
 // bonus shrinks by 10% plus 15% of the shortfall for each param below the
-// stage's threshold. Checked against 135 in-game readings (Idol Road stages
-// 1–5, 27 memories each). Returns whole percents, or null when a param is
+// stage's threshold. Checked against 162 in-game readings (Idol Road stages
+// 1–6, 27 memories each). Returns whole percents, or null when a param is
 // outside the curve's readings, so the caller asks for the % instead.
 const TYPES = ["vocal", "dance", "visual"];
 

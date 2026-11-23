@@ -41,7 +41,7 @@ test("season 55 bonus shrinks for each param below 900 × its criterion", () => 
 });
 
 // Idol Road stage score bonus %, read from the in-game formation panel for
-// 27 花海咲季 memories as Main on each of stages 1–5 (2026-11-23). Each row:
+// 27 花海咲季 memories as Main on each of stages 1–6 (2026-11-23). Each row:
 // stageId, the memory's Vo/Da/Vi, the three % the stage showed.
 const IDOL_ROAD_READINGS = readFileSync(
   new URL("../../fixtures/idolRoadPercents.tsv", import.meta.url),
@@ -55,7 +55,7 @@ const IDOL_ROAD_READINGS = readFileSync(
 const SAKI_P_IDOL_ID = 41; // 初声
 
 test("Idol Road stage % come from the stage's curve and params", () => {
-  assert.equal(IDOL_ROAD_READINGS.length, 135);
+  assert.equal(IDOL_ROAD_READINGS.length, 162);
   for (const [stageId, vocal, dance, visual, ...shown] of IDOL_ROAD_READINGS) {
     const stage = IdolRoad.resolveStage(Stages.getById(stageId), SAKI_P_IDOL_ID);
     const percents = calculateIdolRoadPercents({ vocal, dance, visual }, stage.scoreCurve);
