@@ -1,0 +1,75 @@
+@use "../../styles/mixins";
+@use "../../styles/tokens";
+
+.runs {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$space-2;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.run {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$space-2;
+  padding: tokens.$space-4;
+  @include mixins.card;
+
+  @media (max-width: 480px) {
+    padding: tokens.$space-3;
+  }
+}
+
+.stage,
+.opened {
+  color: tokens.$surface-ink-muted;
+  font-size: tokens.$text-sm;
+}
+
+.noScores {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: tokens.$space-3;
+  padding: tokens.$space-5 tokens.$space-3;
+  border-radius: tokens.$radius-md;
+  background: tokens.$surface-muted;
+  text-align: center;
+}
+
+.runLink {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: tokens.$space-2;
+  color: inherit;
+  text-decoration: none;
+
+  &:hover .name {
+    text-decoration: underline;
+  }
+}
+
+.name {
+  font-weight: tokens.$weight-bold;
+  overflow-wrap: anywhere;
+}
+
+.stats {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$space-1;
+}
+
+.median {
+  font-size: tokens.$text-sm;
+  font-variant-numeric: tabular-nums;
+}
+
+.rank {
+  font-weight: tokens.$weight-bold;
+  font-variant-numeric: tabular-nums;
+  color: tokens.$surface-ink-muted;
+}

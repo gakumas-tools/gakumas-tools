@@ -958,6 +958,8 @@
     "firstTurn": "첫 턴",
     "openSimulator": "시뮬레이터에서 열기",
     "sharedRuns": "이 스테이지의 공유 런",
-    "metaDescription": "{name} ({type}): 심사 기준 Vo {vocal}% Da {dance}% Vi {visual}%, {turns}턴. 시뮬레이터에서 열거나 다른 플레이어의 공유 런과 비교하세요."
+    "metaDescription": "{name} ({type}): 심사 기준 Vo {vocal}% Da {dance}% Vi {visual}%, {turns}턴. 시뮬레이터에서 열거나 다른 플레이어의 공유 런과 비교하세요.",
+    "topRuns": "상위 공유 런",
+    "noRuns": "이 스테이지에 공유된 런이 아직 없습니다. 시뮬레이터에서 열고 당신의 런을 공유해 보세요."
   }
 }

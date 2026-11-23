@@ -17,8 +17,7 @@
   }
 }
 
-.header,
-.run {
+.header {
   display: flex;
   flex-direction: column;
   gap: tokens.$space-2;
@@ -37,9 +36,6 @@
 }
 
 .hint,
-.stage,
-.opened,
-.noScores,
 .empty {
   display: flex;
   flex-direction: column;
@@ -88,43 +84,10 @@
   }
 }
 
-.runs {
-  display: flex;
-  flex-direction: column;
-  gap: tokens.$space-2;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
 
-.runLink {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: tokens.$space-2;
-  color: inherit;
-  text-decoration: none;
 
-  &:hover .name {
-    text-decoration: underline;
-  }
-}
 
-.name {
-  font-weight: tokens.$weight-bold;
-  overflow-wrap: anywhere;
-}
 
-.stats {
-  display: flex;
-  flex-direction: column;
-  gap: tokens.$space-1;
-}
-
-.median {
-  font-size: tokens.$text-sm;
-  font-variant-numeric: tabular-nums;
-}
 
 .pages {
   display: flex;
@@ -152,8 +115,3 @@
   }
 }
 
-.rank {
-  font-weight: tokens.$weight-bold;
-  font-variant-numeric: tabular-nums;
-  color: tokens.$surface-ink-muted;
-}
