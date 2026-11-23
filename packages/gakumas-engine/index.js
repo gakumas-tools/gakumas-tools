@@ -8,4 +8,8 @@ export {
   getBaseId,
   isUniqueCard,
 } from "./utils";
-export { calculateTypeMultipliers, getParamCap } from "./typeMultipliers";
+export {
+  calculateIdolRoadPercents,
+  calculateTypeMultipliers,
+  getParamCap,
+} from "./typeMultipliers";

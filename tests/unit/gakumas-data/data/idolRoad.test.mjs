@@ -74,3 +74,28 @@ test("the shipped Idol Road tables have no rows yet", () => {
   assert.equal(resolved.criteria, stage.criteria);
   assert.equal(resolved.effects, stage.effects);
 });
+
+test("an Idol Road stage takes its idol's score curve", () => {
+  const withCurve = createIdolRoad(STAGE_ROWS, EFFECT_ROWS, [
+    {
+      stageId: 900,
+      idolId: 2,
+      thresholds: "10,20,30",
+      parameters: "0,100,200",
+      vocal: "1,500,900",
+      dance: "1,600,1000",
+      visual: "1,700,1100",
+    },
+  ]);
+  const resolved = withCurve.resolveStage(stage, 2);
+  assert.deepEqual(resolved.scoreCurve, {
+    thresholds: { vocal: 10, dance: 20, visual: 30 },
+    parameters: [0, 100, 200],
+    vocal: [1, 500, 900],
+    dance: [1, 600, 1000],
+    visual: [1, 700, 1100],
+  });
+  // the idol row's criteria still apply alongside the curve
+  assert.deepEqual(resolved.criteria, { vocal: 0.5, dance: 0.3, visual: 0.2 });
+  assert.equal(idolRoad.resolveStage(stage, 2).scoreCurve, undefined);
+});

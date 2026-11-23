@@ -114,3 +114,45 @@ export function calculateTypeMultipliers(
 
   return multipliers;
 }
+
+// Idol Road stages turn params into their score bonus % with a curve per
+// stage: permil read off a piecewise-linear line per type, then the whole
+// bonus shrinks by 10% plus 15% of the shortfall for each param below the
+// stage's threshold. Checked against 135 in-game readings (Idol Road stages
+// 1–5, 27 memories each). Returns whole percents, or null when a param is
+// outside the curve's readings, so the caller asks for the % instead.
+const TYPES = ["vocal", "dance", "visual"];
+
+function curvePermil(parameters, values, param) {
+  if (!(param >= parameters[0]) || param > parameters[parameters.length - 1]) {
+    return null;
+  }
+  for (let i = 1; i < parameters.length; i++) {
+    if (param <= parameters[i]) {
+      const [x0, x1] = [parameters[i - 1], parameters[i]];
+      const [y0, y1] = [values[i - 1], values[i]];
+      return Math.ceil(y0 + ((y1 - y0) * (param - x0)) / (x1 - x0));
+    }
+  }
+  return null;
+}
+
+export function calculateIdolRoadPercents(params, scoreCurve) {
+  if (!scoreCurve) return null;
+  const { thresholds, parameters } = scoreCurve;
+  let penalty = 0;
+  for (const key of TYPES) {
+    const param = params[key];
+    if (param < thresholds[key]) {
+      penalty += 100 + Math.floor(150 * (1 - param / thresholds[key]));
+    }
+  }
+  const percents = {};
+  for (const key of TYPES) {
+    const permil = curvePermil(parameters, scoreCurve[key], params[key]);
+    if (permil == null) return null;
+    percents[key] =
+      100 + Math.ceil(Math.floor((permil * (1000 - penalty)) / 1000) / 10);
+  }
+  return percents;
+}

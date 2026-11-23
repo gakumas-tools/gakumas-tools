@@ -37,6 +37,7 @@ const P_ITEMS = readCsv("p_items.csv");
 const STAGES = readCsv("stages.csv");
 const P_DRINKS = readCsv("p_drinks.csv");
 const IDOL_ROAD_EFFECTS = readCsv("idol_road_effects.csv");
+const IDOL_ROAD_SCORE_CURVES = readCsv("idol_road_score_curves.csv");
 
 let totalErrors = 0;
 
@@ -171,6 +172,30 @@ validateUpgradedNames("skillCard", SKILL_CARDS);
   }
 }
 validateUpgradedNames("pItem", P_ITEMS);
+
+// --- Idol Road score curves: an Idol Road stage, three thresholds, and
+// the same number of points on every line, parameters increasing ---
+{
+  const idolRoadStageIds = new Set(
+    STAGES.filter((s) => s.type === "idolRoad").map((s) => String(s.id)),
+  );
+  const list = (v) => String(v).split(",").map(Number);
+  for (const row of IDOL_ROAD_SCORE_CURVES) {
+    const id = `${row.stageId}:${row.idolId}`;
+    const errors = [];
+    if (!idolRoadStageIds.has(String(row.stageId))) errors.push(`stageId #${row.stageId} is not an Idol Road stage.`);
+    const thresholds = list(row.thresholds);
+    if (thresholds.length !== 3 || thresholds.some((x) => !Number.isInteger(x) || x <= 0)) errors.push("thresholds should be three positive integers.");
+    const parameters = list(row.parameters);
+    if (parameters.some((x, i) => !Number.isInteger(x) || (i && x <= parameters[i - 1]))) errors.push("parameters should be increasing integers.");
+    for (const key of ["vocal", "dance", "visual"]) {
+      const values = list(row[key]);
+      if (values.length !== parameters.length) errors.push(`${key} has ${values.length} points, parameters has ${parameters.length}.`);
+      if (values.some((x) => !Number.isInteger(x))) errors.push(`${key} should be integers.`);
+    }
+    if (errors.length) report("idolRoadScoreCurve", id, "row", row.stageId, errors);
+  }
+}
 
 if (totalErrors > 0) {
   console.error(`\nFound ${totalErrors} validation error(s).`);

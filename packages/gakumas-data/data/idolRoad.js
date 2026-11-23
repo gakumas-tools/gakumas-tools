@@ -1,12 +1,15 @@
 import IDOL_ROAD_STAGES from "../csv/idol_road_stages.csv";
 import IDOL_ROAD_EFFECTS from "../csv/idol_road_effects.csv";
+import IDOL_ROAD_SCORE_CURVES from "../csv/idol_road_score_curves.csv";
 import { deserializeEffectSequence } from "../utils/effects";
 import PIdols from "./pIdols";
 
 // Idol Road (アイドルへの道) stages change with the P-idol who enters them.
 // idol_road_stages.csv holds the criteria, turn counts and first-turn
 // weights per stage and idol; idol_road_effects.csv holds the 応援効果
-// per stage and recommended effect. The stage's plan is the P-idol's.
+// per stage and recommended effect; idol_road_score_curves.csv holds the
+// curve each stage turns params into its score bonus % with, per idol.
+// The stage's plan is the P-idol's.
 // A stage or idol with no row keeps the values on its stages.csv row.
 
 function parseTriple(value, parse) {
@@ -16,7 +19,13 @@ function parseTriple(value, parse) {
   return { vocal, dance, visual };
 }
 
-export function createIdolRoad(stageRows, effectRows) {
+function parseList(value) {
+  return String(value)
+    .split(",")
+    .map((p) => parseInt(p, 10));
+}
+
+export function createIdolRoad(stageRows, effectRows, curveRows = []) {
   const byIdol = Object.create(null);
   for (const row of stageRows) {
     byIdol[`${row.stageId}:${row.idolId}`] = {
@@ -24,6 +33,19 @@ export function createIdolRoad(stageRows, effectRows) {
       turnCounts: parseTriple(row.turnCounts, (p) => parseInt(p, 10)),
       firstTurns: parseTriple(row.firstTurns, parseFloat),
     };
+  }
+
+  for (const row of curveRows) {
+    const key = `${row.stageId}:${row.idolId}`;
+    const [vocal, dance, visual] = parseList(row.thresholds);
+    const scoreCurve = {
+      thresholds: { vocal, dance, visual },
+      parameters: parseList(row.parameters),
+      vocal: parseList(row.vocal),
+      dance: parseList(row.dance),
+      visual: parseList(row.visual),
+    };
+    byIdol[key] = { ...byIdol[key], scoreCurve };
   }
 
   const byEffect = Object.create(null);
@@ -63,6 +85,10 @@ export function createIdolRoad(stageRows, effectRows) {
   };
 }
 
-const IdolRoad = createIdolRoad(IDOL_ROAD_STAGES, IDOL_ROAD_EFFECTS);
+const IdolRoad = createIdolRoad(
+  IDOL_ROAD_STAGES,
+  IDOL_ROAD_EFFECTS,
+  IDOL_ROAD_SCORE_CURVES,
+);
 
 export default IdolRoad;
