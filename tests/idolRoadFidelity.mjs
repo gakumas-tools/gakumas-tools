@@ -16,6 +16,7 @@ const FIXTURES = [
   "idol-road-saki-s4",
   "idol-road-saki-s5",
   "idol-road-saki-s6",
+  "idol-road-saki-s7",
 ];
 
 function createEngine(capture) {
@@ -88,23 +89,23 @@ function replay(capture, play) {
   for (const [i, action] of play.actions.entries()) {
     const turn = i + 1;
     const hand = supplyHand(state, action.handCardIds);
+    // A turn with スキルカード使用数追加 plays more than one card from the
+    // hand it was dealt. One that skips plays its cards first, if any, then
+    // ends the turn with a play left (スキルカード未使用).
+    const plays = action.plays || (action.skip ? [] : [action]);
+    for (const [j, { cardId, name }] of plays.entries()) {
+      assert.equal(SkillCards.getById(cardId).name, name);
+      const card = state[S.handCards].find(
+        (c) => state[S.cardMap][c].id == cardId,
+      );
+      assert.ok(engine.isCardUsable(state, card), `turn ${turn}: usable`);
+      state = engine.useCard(state, card);
+      if (j < plays.length - 1 || action.skip) {
+        assert.equal(state[S.turnsElapsed], turn - 1, `turn ${turn}: extra play`);
+      }
+    }
     if (action.skip) {
       state = engine.endTurn(state);
-    } else {
-      // A turn with スキルカード使用数追加 plays more than one card from the
-      // hand it was dealt.
-      const plays = action.plays || [action];
-      for (const [j, { cardId, name }] of plays.entries()) {
-        assert.equal(SkillCards.getById(cardId).name, name);
-        const card = state[S.handCards].find(
-          (c) => state[S.cardMap][c].id == cardId,
-        );
-        assert.ok(engine.isCardUsable(state, card), `turn ${turn}: usable`);
-        state = engine.useCard(state, card);
-        if (j < plays.length - 1) {
-          assert.equal(state[S.turnsElapsed], turn - 1, `turn ${turn}: extra play`);
-        }
-      }
     }
     assert.equal(state[S.turnsElapsed], turn);
     for (const [field, value] of Object.entries(action.expected)) {
