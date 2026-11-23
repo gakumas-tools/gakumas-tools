@@ -193,7 +193,8 @@
       "p-items": "Pアイテム",
       "p-drinks": "Pドリンク",
       "p-idols": "Pアイドル",
-      "support-cards": "サポートカード"
+      "support-cards": "サポートカード",
+      "stages": "ステージ"
     },
     "categories": {
       "reference": {
@@ -951,5 +952,20 @@
     "copied": "コピーしました",
     "copyThisLink": "このリンクをコピーしてください:",
     "seeOthers": "このステージのランを見る"
+  },
+  "StagePage": {
+    "turnsTotal": "{n}ターン",
+    "preview": "プレビュー",
+    "idolRoadNote": "アイドルへの道のターン数と審査基準はアイドルごとに異なります。ここに載せているのは、Pアイドルを選んでいないときにシミュレーターが使う値です。",
+    "vocal": "Vo",
+    "dance": "Da",
+    "visual": "Vi",
+    "total": "合計",
+    "criteria": "審査基準",
+    "turns": "ターン数",
+    "firstTurn": "1ターン目",
+    "openSimulator": "シミュレーターで開く",
+    "sharedRuns": "このステージの共有ラン",
+    "metaDescription": "{name}（{type}）：審査基準 Vo {vocal}% Da {dance}% Vi {visual}%、{turns}ターン。シミュレーターで開いたり、みんなの共有ランと比べたりできます。"
   }
 }

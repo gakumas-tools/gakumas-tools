@@ -185,7 +185,8 @@
       "p-items": "P 道具",
       "p-drinks": "P 饮料",
       "p-idols": "P 偶像",
-      "support-cards": "支援卡"
+      "support-cards": "支援卡",
+      "stages": "舞台"
     },
     "categories": {
       "reference": {
@@ -943,5 +944,20 @@
     "copied": "已复制",
     "copyThisLink": "请复制此链接：",
     "seeOthers": "查看此舞台的记录"
+  },
+  "StagePage": {
+    "turnsTotal": "{n} 回合",
+    "preview": "预览",
+    "idolRoadNote": "偶像之路的回合数和审查基准因偶像而异。这里是未选择P偶像时模拟器使用的数值。",
+    "vocal": "Vo",
+    "dance": "Da",
+    "visual": "Vi",
+    "total": "合计",
+    "criteria": "审查基准",
+    "turns": "回合数",
+    "firstTurn": "第一回合",
+    "openSimulator": "在模拟器中打开",
+    "sharedRuns": "该舞台的共享记录",
+    "metaDescription": "{name}（{type}）：审查基准 Vo {vocal}% Da {dance}% Vi {visual}%，{turns} 回合。可在模拟器中打开，或与其他玩家的共享记录比较。"
   }
 }

@@ -42,6 +42,15 @@ export function formatStageName(stage, t) {
   return stageName;
 }
 
+// The stage's name as plain text (titles, meta tags): a link contest without
+// its icon.
+export function formatStageNameText(stage, t) {
+  if (stage.type == "linkContest") {
+    return formatStageName({ ...stage, type: "contest" }, t);
+  }
+  return formatStageName(stage, t);
+}
+
 export function formatStageShortName(stage, t) {
   let stageName = "";
   if (stage.id == "custom") {

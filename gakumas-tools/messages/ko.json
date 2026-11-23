@@ -185,7 +185,8 @@
       "p-items": "P아이템",
       "p-drinks": "P드링크",
       "p-idols": "P아이돌",
-      "support-cards": "서포트 카드"
+      "support-cards": "서포트 카드",
+      "stages": "스테이지"
     },
     "categories": {
       "reference": {
@@ -943,5 +944,20 @@
     "copied": "복사했습니다",
     "copyThisLink": "이 링크를 복사하세요:",
     "seeOthers": "이 스테이지의 런 보기"
+  },
+  "StagePage": {
+    "turnsTotal": "{n}턴",
+    "preview": "프리뷰",
+    "idolRoadNote": "아이돌의 길의 턴 수와 심사 기준은 아이돌마다 다릅니다. 여기 있는 값은 P아이돌을 고르지 않았을 때 시뮬레이터가 쓰는 값입니다.",
+    "vocal": "Vo",
+    "dance": "Da",
+    "visual": "Vi",
+    "total": "합계",
+    "criteria": "심사 기준",
+    "turns": "턴 수",
+    "firstTurn": "첫 턴",
+    "openSimulator": "시뮬레이터에서 열기",
+    "sharedRuns": "이 스테이지의 공유 런",
+    "metaDescription": "{name} ({type}): 심사 기준 Vo {vocal}% Da {dance}% Vi {visual}%, {turns}턴. 시뮬레이터에서 열거나 다른 플레이어의 공유 런과 비교하세요."
   }
 }

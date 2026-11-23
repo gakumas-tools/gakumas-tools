@@ -1,6 +1,7 @@
 import { routing } from "@/i18n/routing";
 import { alternateLanguages, localePath } from "@/utils/localeUrls";
 import { referencePaths } from "@/utils/referenceEntities";
+import { stagePaths } from "@/utils/stageReference";
 
 const PATHS = [
   "/",
@@ -13,6 +14,7 @@ const PATHS = [
   "/dex/reference/skill-cards",
   "/dex/reference/p-items",
   "/dex/reference/p-drinks",
+  "/dex/reference/stages",
   "/dex/tier-list/skill-cards",
   "/dex/tier-list/p-items",
   "/dex/tier-list/p-drinks",
@@ -25,7 +27,7 @@ const PATHS = [
 ];
 
 export default function sitemap() {
-  return [...PATHS, ...referencePaths()].flatMap((path) =>
+  return [...PATHS, ...referencePaths(), ...stagePaths()].flatMap((path) =>
     routing.locales.map((locale) => ({
       url: localePath(locale, path, { absolute: true }),
       priority: path === "/" ? 1.0 : 0.7,
