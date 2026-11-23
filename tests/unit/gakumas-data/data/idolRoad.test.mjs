@@ -33,12 +33,26 @@ const stage = {
 };
 
 // Pattern A is idols 1 and 2, pattern B idol 3; stage 902 is shared.
+// Rows come in any order: 902 is STAGE 2, after 900 and 901 (STAGE 1).
 const PATTERN_ROWS = [
-  { pattern: "A", idolIds: "1,2", stageIds: "900,902" },
-  { pattern: "B", idolIds: 3, stageIds: "901,902" },
+  { pattern: "A", idolIds: "1,2" },
+  { pattern: "B", idolIds: 3 },
 ];
+const PATTERN_STAGE_ROWS = [
+  { stageId: 902, pattern: "A" },
+  { stageId: 900, pattern: "A" },
+  { stageId: 901, pattern: "B" },
+  { stageId: 902, pattern: "B" },
+];
+const STAGE_NUMBERS = { 900: 1, 901: 1, 902: 2 };
 
-const idolRoad = createIdolRoad(STAGE_ROWS, EFFECT_ROWS, PATTERN_ROWS);
+const idolRoad = createIdolRoad(
+  STAGE_ROWS,
+  EFFECT_ROWS,
+  PATTERN_ROWS,
+  PATTERN_STAGE_ROWS,
+  (id) => STAGE_NUMBERS[id],
+);
 
 test("an Idol Road stage takes the P-idol's idol row, plan and 応援効果", () => {
   // P-idol 2 is idol 2, sense, recommended effect concentration.

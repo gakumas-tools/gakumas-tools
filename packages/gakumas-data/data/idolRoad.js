@@ -1,16 +1,20 @@
 import IDOL_ROAD_PATTERNS from "../csv/idol_road_patterns.csv";
+import IDOL_ROAD_PATTERN_STAGES from "../csv/idol_road_pattern_stages.csv";
 import IDOL_ROAD_STAGES from "../csv/idol_road_stages.csv";
 import IDOL_ROAD_EFFECTS from "../csv/idol_road_effects.csv";
 import { deserializeEffectSequence } from "../utils/effects";
 import PIdols from "./pIdols";
+import Stages from "./stages";
 
 // Idol Road (アイドルへの道) stages change with the P-idol who enters them.
 // Each idol's road follows one stage list (pattern A or B). A pattern's
 // STAGE n is its own stages.csv row: pattern B's STAGE 6 has other turns
 // and other 応援/トラブル than pattern A's. The later stages every road
 // shares are one row, listed in each pattern.
-// - idol_road_patterns.csv: per pattern, its idols and its stage ids in
-//   order. An idol in no pattern isn't known yet.
+// - idol_road_patterns.csv: per pattern, its idols. An idol in no
+//   pattern isn't known yet.
+// - idol_road_pattern_stages.csv: per stage, a pattern it's on; a shared
+//   stage has a row for each. A new stage only adds rows.
 // - idol_road_stages.csv: per stage and idol, the criteria, turn counts
 //   and first-turn weights.
 // - idol_road_effects.csv: per stage and recommended effect, the 応援/
@@ -33,14 +37,30 @@ function parseIds(value) {
     .map((p) => parseInt(p, 10));
 }
 
-export function createIdolRoad(stageRows, effectRows, patternRows = []) {
+// Where a stage is on its road: its STAGE number.
+const stageNumber = (stageId) => Stages.getById(stageId)?.stage;
+
+export function createIdolRoad(
+  stageRows,
+  effectRows,
+  patternRows = [],
+  patternStageRows = [],
+  stageNumberOf = stageNumber,
+) {
   const patternByIdol = Object.create(null);
-  const stageIdsByPattern = Object.create(null);
   for (const row of patternRows) {
-    stageIdsByPattern[row.pattern] = parseIds(row.stageIds);
     for (const idolId of parseIds(row.idolIds)) {
       patternByIdol[idolId] = row.pattern;
     }
+  }
+  // Each pattern's stages in STAGE order, whatever order their rows came in.
+  const stageIdsByPattern = Object.create(null);
+  for (const row of patternStageRows) {
+    (stageIdsByPattern[row.pattern] ??= []).push(parseInt(row.stageId, 10));
+  }
+  const at = (id) => Number(stageNumberOf(id) ?? Infinity);
+  for (const ids of Object.values(stageIdsByPattern)) {
+    ids.sort((a, b) => at(a) - at(b));
   }
 
   const byIdol = Object.create(null);
@@ -108,6 +128,7 @@ const IdolRoad = createIdolRoad(
   IDOL_ROAD_STAGES,
   IDOL_ROAD_EFFECTS,
   IDOL_ROAD_PATTERNS,
+  IDOL_ROAD_PATTERN_STAGES,
 );
 
 export default IdolRoad;
