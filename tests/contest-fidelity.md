@@ -21,6 +21,10 @@ training replay in `training-fidelity.md` checks those.
 - `skillCardIds` (optional): the deck, when a once-per-stage card was played
   twice from two copies. Otherwise one copy of each card the play used.
 - `turnTypes`: the turn order the game showed.
+- `plays[].actions[].hand` (optional, not on the first turn): the cards that
+  turn drew, read from 手札情報, before its start effects changed them. The
+  harness puts them on top of the deck before the turn starts, so effects on
+  the drawn hand are checked. Use it with `skillCardIds`.
 - `displayedPercents`: the multiplier the game showed for each turn type.
 - `plays[].actions[]`: each card played, by `cardId` and `name`, or a skipped
   action with `cardId: null`; `expected`,
@@ -338,3 +342,54 @@ memory, 5415, alone (281/780/338, 体力 30; panel 327/459/450%) with
 1 isn't counted down that turn (大声援 takes it 3 → 6 on turn 2). Its `-2`
 fixture is a second play, ending at 850, and its `-3` fixture a third, ending
 at 827 with ワンモアステップ's three hits on turn 7 (172 → 448).
+
+## Contest S56 rehearsals
+
+All from free contest rehearsals on 2026-11-21 (ver 3.6.0), each a single
+memory alone.
+
+Stage 2 (`stageId` 194, the same effect as S55's 191):
+`contest-rehearsal-s56-kotone-m08` is 学園生活 藤田ことね 5832 (302/729/564,
+体力 27; panel 453/479/614%) with ちびども手作りメダル, ending at 2,519. The
+stage's effect fires on the 4th and 8th direct good impression gains (turns 5
+and 9: 15 → 22 and 29 → 36), and each time doubles that turn's tick and the
+next. ダメダメクッキング+ on turn 5 reserves upgradeHand for turn 6's start,
+where the game upgrades the three cards drawn (パステル気分, 表現の基本,
+気分転換 → their + forms). Turn 6 gives that drawn `hand` with the base cards,
+so the replay only finds パステル気分+ to play (on turns 6 and 11) if the
+upgrade happened.
+`contest-rehearsal-s56-tsubame-m31` is 初志貫徹 雨夜燕 3270 (146/354/214,
+体力 31; panel 231/241/249%) with 一筆入魂, ending at 770. 夏夜に咲く思い出+
+gives an extra card use on turn 2 and then adds 4 on the 5th and 10th cards
+after it (turns 6 and 11, +10 each). On turn 6 一筆入魂 gives プライド and やる気
+4 → 8. Pride raises 紫電一閃's end-of-turn score and the good impression tick by
+min(好印象, やる気) × 2% for turns 6–8, and turn 12's 気分転換 scores 45 元気
+with no bonus (568 → 672).
+`contest-rehearsal-s56-kotone-m15` is 学園生活 藤田ことね 5364 (237/589/560,
+体力 27; panel 370/398/596%) with ちびども手作りメダル and 迷子のお呼び出し.
+迷子のお呼び出し adds 本番前夜+ to hand after the stage starts, and turn 1 plays
+it (好印象 0 → 5, やる気 0 → 4). Its `skillCardIds` leave 本番前夜+ out, so the
+replay can only use the copy the item made; with the default deck the harness
+would take a deck copy and drop the made one. The stage's effect fires on turns
+4 and 8, ending at 2,174. `contest-rehearsal-s56-misuzu-m14` is 初陣 秦谷美鈴
+5364 (839/296/303, 体力 27; panel 1118/261/387%) with 初陣の証・美鈴. The item
+sets 元気増加無効 to 2 at the start of turn 1, so 初めての息 gives no 元気
+(0 → 0), and adds やる気 8 at the start of turn 4 (6 → 14). Two 表現の基本 (once
+per stage) are in its `skillCardIds`, ending at 420.
+
+Stage 3 (`stageId` 195): 初星フラッグ（青）, the stage's own item, adds 全力値 5
+and grows the card (+25 score, +1 hit) when a card that sets 強気 is used, twice
+a stage. The game logs 「X」を成長 on the play that triggers it but scores that
+play without the growth; only later uses carry it. The 全力値 comes first: it
+is logged before the stance change. `contest-rehearsal-s56-misuzu-m01` is
+ゆっくり、一歩ずつ 秦谷美鈴 8187 (923/485/837, 体力 36; panel 1344/393/982%)
+with そよ風に揺れる髪飾り, ending at 40,180. Turn 2's 総合芸術 scores 861 =
+(7 + 15 + 10 熱意) × 2 (強気) × 1 hit, with no +25 and no extra hit, and turn
+4's はげしく scores 2,082 = (15 + 25 + 3 + 10) × 2 × 2 hits, carrying only the
+turn-2 growth. Its `-2` fixture is a second play (総合芸術 on turn 3,
+スターライト on turn 5 with 2 hits), ending at 25,674.
+`contest-rehearsal-s56-tsubame-m19` is 学園生活 雨夜燕 5301 (435/661/249,
+体力 31; panel 613/447/329%) with はばたくブローチ and ひとりだちシューズ: turn
+1's はげしく scores 184 = 15 × 2 × 1 hit while the log lists 「はげしく」を成長,
+ending at 3,274. 嬉しい誤算 was only played at 全力値 5 → 7, so its high-全力値
+branch isn't checked here.
