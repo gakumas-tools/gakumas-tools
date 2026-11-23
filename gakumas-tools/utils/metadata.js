@@ -1,6 +1,8 @@
 import { getMessages, getTranslations } from "next-intl/server";
 import { Descriptions } from "gakumas-data";
 import { SITE_URL, alternateLanguages, localePath } from "@/utils/localeUrls";
+import { stagePath, stageTurns } from "@/utils/stageReference";
+import { formatStageNameText } from "@/utils/stages";
 
 const SITE_NAME = "Gakumas Tools";
 
@@ -45,6 +47,34 @@ export async function generateMetadataForReference(entity, slug, locale) {
     locale,
     path: `/dex/reference/${slug}/${entity.id}`,
     title: `${entity.name} | ${category} - ${t_meta("title")}`,
+    description,
+    ogDescription: description,
+    twitterCard: "summary_large_image",
+  });
+}
+
+// A stage's reference page: its kind, criteria and turns in the description.
+export async function generateMetadataForStage(stage, locale) {
+  const t_meta = await getTranslations({ locale, namespace: "metadata" });
+  const t_dex = await getTranslations({ locale, namespace: "Dex" });
+  const t_stage = await getTranslations({ locale, namespace: "StageSummary" });
+  const t_type = await getTranslations({ locale, namespace: "StageSelectModal" });
+  const t = await getTranslations({ locale, namespace: "StagePage" });
+  const name = formatStageNameText(stage, t_stage);
+  const pct = (k) => Math.round((Number(stage.criteria?.[k]) || 0) * 100);
+  const turns = stageTurns(stage);
+  const description = t("metaDescription", {
+    name,
+    type: t_type(stage.type),
+    vocal: pct("vocal"),
+    dance: pct("dance"),
+    visual: pct("visual"),
+    turns: turns.total,
+  });
+  return buildMetadata({
+    locale,
+    path: stagePath(stage.id),
+    title: `${name} | ${t_dex("tabs.stages")} - ${t_meta("title")}`,
     description,
     ogDescription: description,
     twitterCard: "summary_large_image",

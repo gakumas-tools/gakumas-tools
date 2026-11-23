@@ -199,3 +199,4 @@ id,name,type,preview,season,stage,round,plan,criteria,turnCounts,firstTurns,effe
 198,STAGE 3,idolRoad,FALSE,,3,,logic,"0.27,0.32,0.41","6,6,8","0,0,1",,
 199,STAGE 4,idolRoad,FALSE,,4,,logic,"0.27,0.32,0.41","4,4,6","0,0,1",,
 200,STAGE 5,idolRoad,FALSE,,5,,logic,"0.27,0.32,0.41","3,3,4","0,0,1",,
+201,STAGE 6,idolRoad,FALSE,,6,,logic,"0.27,0.32,0.41","3,4,5","0,0,1",,

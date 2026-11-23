@@ -185,7 +185,8 @@
       "p-items": "Objetos P",
       "p-drinks": "Bebidas P",
       "p-idols": "Ídolos P",
-      "support-cards": "Cartas de apoyo"
+      "support-cards": "Cartas de apoyo",
+      "stages": "Etapas"
     },
     "categories": {
       "reference": {
@@ -472,6 +473,7 @@
   "StageSummary": {
     "contestStageName": "Temporada {season} - Etapa {stage}",
     "eventStageName": "{name} - Etapa {stage} - Ronda {round}",
+    "idolRoadStageName": "Idol Road {name}",
     "custom": "Personalizada",
     "activeSeason": "Temporada actual"
   },
@@ -942,5 +944,22 @@
     "copied": "Copiado",
     "copyThisLink": "Copia este enlace:",
     "seeOthers": "Ver las simulaciones de la etapa"
+  },
+  "StagePage": {
+    "turnsTotal": "{n} turnos",
+    "preview": "Vista previa",
+    "idolRoadNote": "Cada ídolo tiene su propio camino, con sus turnos y criterios. Estos son los que usa el simulador cuando no se elige un P-ídolo.",
+    "vocal": "Vo",
+    "dance": "Da",
+    "visual": "Vi",
+    "total": "Total",
+    "criteria": "Criterios",
+    "turns": "Turnos",
+    "firstTurn": "Primer turno",
+    "openSimulator": "Abrir en el simulador",
+    "sharedRuns": "Partidas compartidas de esta etapa",
+    "metaDescription": "{name} ({type}): criterios Vo {vocal}% Da {dance}% Vi {visual}%, {turns} turnos. Ábrela en el simulador o compara las partidas compartidas de otros jugadores.",
+    "topRuns": "Mejores partidas compartidas",
+    "noRuns": "Nadie ha compartido aún una partida de esta etapa. Ábrela en el simulador y comparte la tuya."
   }
 }
