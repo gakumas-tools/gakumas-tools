@@ -26,6 +26,7 @@ const FIXTURES = [
   "idol-road-saki-s8",
   "idol-road-saki-s8-clear",
   "idol-road-saki-s9",
+  "idol-road-saki-s10",
 ];
 
 function createEngine(capture) {
