@@ -200,7 +200,7 @@ id,name,type,preview,season,stage,round,plan,criteria,turnCounts,firstTurns,effe
 199,STAGE 4,idolRoad,FALSE,,4,,logic,"0.27,0.32,0.41","4,4,6","0,0,1",,
 200,STAGE 5,idolRoad,FALSE,,5,,logic,"0.27,0.32,0.41","3,3,4","0,0,1",,
 201,STAGE 6,idolRoad,FALSE,,6,,logic,"0.27,0.32,0.41","3,4,5","0,0,1",,
-202,STAGE 7,idolRoad,TRUE,,7,,logic,"0.27,0.32,0.41","2,3,3","0.33,0.33,0.34",,
+202,STAGE 7,idolRoad,FALSE,,7,,logic,"0.27,0.32,0.41","2,3,3","0,0,1",,
 203,STAGE 8,idolRoad,TRUE,,8,,logic,"0.27,0.32,0.41","4,4,6","0.33,0.33,0.34",,
 204,STAGE 9,idolRoad,TRUE,,9,,logic,"0.27,0.32,0.41","4,5,7","0.33,0.33,0.34",,
 205,STAGE 13,idolRoad,TRUE,,13,,logic,"0.27,0.32,0.41","5,6,7","0.33,0.33,0.34",,
