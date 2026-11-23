@@ -176,8 +176,8 @@ validateUpgradedNames("skillCard", SKILL_CARDS);
 validateUpgradedNames("pItem", P_ITEMS);
 
 // --- Idol Road: each pattern lists its idols and its stages in STAGE
-// order; every Idol Road stage is on some pattern, an idol is on at most
-// one, and an idol's rows name stages on its own road ---
+// order (gaps allowed); every Idol Road stage is on some pattern, an idol
+// is on at most one, and an idol's rows name stages on its own road ---
 {
   const ids = (v) => String(v ?? "").split(",").map((p) => p.trim()).filter(Boolean);
   const roadStages = new Map(STAGES.filter((s) => s.type === "idolRoad").map((s) => [String(s.id), s]));
@@ -190,10 +190,13 @@ validateUpgradedNames("pItem", P_ITEMS);
     if (stagesOfPattern.has(row.pattern)) errors.push(`Pattern ${row.pattern} has more than one row.`);
     const stageIds = ids(row.stageIds);
     stagesOfPattern.set(row.pattern, new Set(stageIds));
-    stageIds.forEach((id, i) => {
+    // In STAGE order; a stage not written yet leaves a gap.
+    let lastStage = 0;
+    stageIds.forEach((id) => {
       const stage = roadStages.get(id);
       if (!stage) errors.push(`Stage #${id} is not an idolRoad stages.csv row.`);
-      else if (Number(stage.stage) !== i + 1) errors.push(`Stage #${id} is STAGE ${stage.stage}, listed as STAGE ${i + 1}.`);
+      else if (Number(stage.stage) <= lastStage) errors.push(`Stage #${id} (STAGE ${stage.stage}) is listed after STAGE ${lastStage}.`);
+      else lastStage = Number(stage.stage);
       listed.add(id);
     });
     for (const id of ids(row.idolIds)) {
