@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { IdolRoad, PIdols } from "gakumas-data";
+import { IdolRoad, PIdols, Stages } from "gakumas-data";
 import { createIdolRoad } from "gakumas-data/data/idolRoad";
 
 // Made-up rows for the resolver's own logic. They are not game data:
@@ -113,4 +113,21 @@ test("the shipped tables have no rows for a made-up stage", () => {
   assert.equal(resolved.plan, "sense");
   assert.equal(resolved.criteria, stage.criteria);
   assert.equal(resolved.effects, stage.effects);
+});
+
+test("咲季's stages written ahead of play are on pattern A and marked unplayed", () => {
+  // STAGE 7, 8, 9, 13 and 14 come from the stage's 応援/トラブル text and
+  // the road's turn counts, not from a play: they show as "STAGE n*".
+  const ids = IdolRoad.getStageIds(1);
+  const ahead = ids.map((id) => Stages.getById(id)).filter((s) => s.preview);
+  assert.deepEqual(
+    ahead.map((s) => s.stage),
+    [7, 8, 9, 13, 14],
+  );
+  for (const s of ahead) {
+    const resolved = IdolRoad.resolveStage(s, 41);
+    assert.ok(resolved.effects.length > 0, `${s.name} has its 応援/トラブル`);
+    const turns = Object.values(resolved.turnCounts).reduce((a, b) => a + b);
+    assert.equal(turns, { 7: 8, 8: 14, 9: 16, 13: 18, 14: 18 }[s.stage]);
+  }
 });
