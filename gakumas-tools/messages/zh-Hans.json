@@ -472,6 +472,7 @@
   "StageSummary": {
     "contestStageName": "第 {season} 赛季 - 第 {stage} 舞台",
     "eventStageName": "{name} - 第 {stage} 舞台 - {round} 回合",
+    "idolRoadStageName": "Idol Road {name}",
     "custom": "自定义",
     "activeSeason": "当前赛季"
   },

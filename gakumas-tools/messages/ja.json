@@ -480,6 +480,7 @@
   "StageSummary": {
     "contestStageName": "シーズン{season} ステージ{stage}",
     "eventStageName": "{name} ステージ{stage} {round}周目",
+    "idolRoadStageName": "アイドルへの道 {name}",
     "custom": "カスタム",
     "activeSeason": "開催中のシーズン"
   },

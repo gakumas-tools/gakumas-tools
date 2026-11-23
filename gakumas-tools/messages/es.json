@@ -472,6 +472,7 @@
   "StageSummary": {
     "contestStageName": "Temporada {season} - Etapa {stage}",
     "eventStageName": "{name} - Etapa {stage} - Ronda {round}",
+    "idolRoadStageName": "Idol Road {name}",
     "custom": "Personalizada",
     "activeSeason": "Temporada actual"
   },
