@@ -960,6 +960,12 @@
     "sharedRuns": "Partidas compartidas de esta etapa",
     "metaDescription": "{name} ({type}): criterios Vo {vocal}% Da {dance}% Vi {visual}%, {turns} turnos. Ábrela en el simulador o compara las partidas compartidas de otros jugadores.",
     "topRuns": "Mejores partidas compartidas",
-    "noRuns": "Nadie ha compartido aún una partida de esta etapa. Ábrela en el simulador y comparte la tuya."
+    "noRuns": "Nadie ha compartido aún una partida de esta etapa. Ábrela en el simulador y comparte la tuya.",
+    "stageTexts": "Efectos de apoyo y problemas",
+    "stageTextsNote": "Los efectos de cada efecto recomendado, tal como los escribe el juego.",
+    "recommendedEffect": "Efecto recomendado: {effect}",
+    "turnN": "Turno {n}",
+    "support": "Apoyo",
+    "trouble": "Problema"
   }
 }
