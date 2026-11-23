@@ -13,6 +13,7 @@ const FIXTURES = [
   "idol-road-saki-s1",
   "idol-road-saki-fmw-s1",
   "idol-road-saki-fmw-s4",
+  "idol-road-saki-fmw-s5",
   "idol-road-saki-s2",
   "idol-road-saki-s3",
   "idol-road-saki-s4",
