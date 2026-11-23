@@ -55,7 +55,7 @@ const IDOL_ROAD_READINGS = readFileSync(
 const SAKI_P_IDOL_ID = 41; // 初声
 
 test("Idol Road stage % come from the stage's curve and params", () => {
-  assert.equal(IDOL_ROAD_READINGS.length, 162);
+  assert.equal(IDOL_ROAD_READINGS.length, 164);
   for (const [stageId, vocal, dance, visual, ...shown] of IDOL_ROAD_READINGS) {
     const stage = IdolRoad.resolveStage(Stages.getById(stageId), SAKI_P_IDOL_ID);
     const percents = calculateIdolRoadPercents({ vocal, dance, visual }, stage.scoreCurve);
