@@ -1,6 +1,8 @@
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Stages } from "gakumas-data";
+import { IdolRoad, Stages } from "gakumas-data";
+import { IdolConfig } from "gakumas-engine";
+import Alert from "@/components/Alert";
 import ButtonGroup from "@/components/ButtonGroup";
 import Modal from "@/components/Modal";
 import StageCustomizer from "@/components/StageCustomizer";
@@ -34,7 +36,7 @@ export default function StageSelectModal() {
     { value: "custom", label: t("custom") },
   ];
 
-  const { selectStage, stage } = useContext(LoadoutContext);
+  const { loadout, selectStage, stage } = useContext(LoadoutContext);
   const { closeModal } = useContext(ModalContext);
   const [stageType, setStageType] = useState(
     stage?.id == "custom" ? "custom" : stage?.type || "contest",
@@ -45,7 +47,17 @@ export default function StageSelectModal() {
     closeModal();
   }
 
-  const stages = stagesByType[stageType] || [];
+  // An Idol Road lists only the stages of the loadout P-idol's road. With
+  // no P-idol, or one whose road isn't known yet, every stage is listed.
+  const roadStageIds = useMemo(
+    () => IdolRoad.getStageIds(new IdolConfig(loadout).pIdolId),
+    [loadout],
+  );
+
+  let stages = stagesByType[stageType] || [];
+  if (stageType == "idolRoad" && roadStageIds) {
+    stages = stages.filter((s) => roadStageIds.includes(s.id));
+  }
 
   return (
     <Modal>
@@ -64,6 +76,9 @@ export default function StageSelectModal() {
         </div>
       ) : (
         <div className={styles.stageList}>
+          {stageType == "idolRoad" && !stages.length && (
+            <Alert>{t("idolRoadNone")}</Alert>
+          )}
           {stages.map((option, i) => (
             <button
               key={option.id}
