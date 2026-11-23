@@ -28,6 +28,7 @@ All notable changes to the contest simulator will be documented in this file.
 - Add akogare wo daite ippozutsu kanae portrait
 - Add preview of unbalance tsubame
 - Add preview of unbalance mao
+- Fix Maigo no Oyobidashi welfare status
 
 ## 2026-11-19
 
