@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { G, S } from "gakumas-engine";
+import { SkillCards } from "gakumas-data";
+import { G, S, getBaseId } from "gakumas-engine";
 import { createEngine, parseActions } from "../helpers.mjs";
 
 const TODOITE_PLUS = 153;
@@ -165,4 +166,35 @@ test("copySelectedToBottomOfDeckUpto may copy nothing", () => {
     parseActions("copySelectedToBottomOfDeckUpto[hand](1)"),
   );
   assert.deepEqual(pilesOf(state), before);
+});
+
+test("スキルカードサポート raises base to +, + to ++, and stops where the game shows no change", () => {
+  // 手拍子 44 → 手拍子+ 45 → 手拍子++; ふれあい+ 123 has no ++ (変化なし in the game's ログ).
+  const engine = createEngine({ skillCardIds: [44, 123] });
+  const state = engine.getInitialState(true);
+  const clap = state[S.cardMap].findIndex((c) => c.id === 44);
+  const touch = state[S.cardMap].findIndex((c) => c.id === 123);
+  const name = (card) => SkillCards.getById(state[S.cardMap][card].id).name;
+
+  assert.equal(engine.cardManager.supportUpgrade(state, clap), true);
+  assert.equal(name(clap), "手拍子+");
+  assert.equal(engine.cardManager.supportUpgrade(state, clap), true);
+  assert.equal(name(clap), "手拍子++");
+  assert.equal(state[S.cardMap][clap].baseId, 44);
+  assert.equal(engine.cardManager.supportUpgrade(state, clap), false);
+  assert.equal(engine.cardManager.supportUpgrade(state, touch), false);
+  assert.equal(name(touch), "ふれあい+");
+});
+
+test("++ cards are found by id but never listed", () => {
+  const plusPlus = SkillCards.getPlusPlus(45);
+  assert.equal(plusPlus.name, "手拍子++");
+  assert.equal(SkillCards.getById(plusPlus.id), plusPlus);
+  assert.equal(getBaseId(plusPlus), 44);
+  assert.ok(!SkillCards.getAll().some((c) => c.upgradeLevel == 2));
+  assert.ok(
+    !SkillCards.getFiltered({ sourceTypes: ["produce"] }).some(
+      (c) => c.upgradeLevel == 2,
+    ),
+  );
 });

@@ -32,6 +32,7 @@ const readCsv = (name) =>
 
 const CUSTOMIZATIONS = readCsv("customizations.csv");
 const SKILL_CARDS = readCsv("skill_cards.csv");
+const PLUS_PLUS_CARDS = readCsv("skill_cards_plus_plus.csv");
 const P_ITEMS = readCsv("p_items.csv");
 const STAGES = readCsv("stages.csv");
 const P_DRINKS = readCsv("p_drinks.csv");
@@ -107,7 +108,7 @@ function lintLevelForm(src) {
 // --- Skill cards ---
 // `actions`: immediate actions played when the card is used.
 // `effects`: triggered effects (at:phase) registered when the card enters play.
-for (const card of SKILL_CARDS) {
+for (const card of [...SKILL_CARDS, ...PLUS_PLUS_CARDS]) {
   validateEffectField("skillCard", card.id, "conditions", card.conditions);
   validateEffectField("skillCard", card.id, "cost", card.cost);
   validateEffectField("skillCard", card.id, "actions", card.actions);
@@ -154,6 +155,21 @@ function validateUpgradedNames(entity, records) {
   }
 }
 validateUpgradedNames("skillCard", SKILL_CARDS);
+
+// --- ++ rows: each comes from an upgraded + row and is named after it with
+// one more "+"; ids must not collide with skill_cards.csv ---
+{
+  const byId = new Map(SKILL_CARDS.map((r) => [String(r.id), r]));
+  for (const record of PLUS_PLUS_CARDS) {
+    const from = byId.get(String(record.fromId));
+    const errors = [];
+    if (byId.has(String(record.id))) errors.push(`Id #${record.id} is already a skill_cards.csv row.`);
+    if (!from) errors.push(`fromId #${record.fromId} is not a skill_cards.csv row.`);
+    else if (String(from.upgraded).toUpperCase() !== "TRUE") errors.push(`fromId #${record.fromId} is not an upgraded (+) row.`);
+    else if (record.name !== `${from.name}+`) errors.push(`Name should be ${JSON.stringify(`${from.name}+`)} (from #${from.id}).`);
+    if (errors.length) report("skillCard", record.id, "name", record.name, errors);
+  }
+}
 validateUpgradedNames("pItem", P_ITEMS);
 
 if (totalErrors > 0) {

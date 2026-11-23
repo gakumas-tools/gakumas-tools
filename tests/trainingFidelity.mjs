@@ -28,6 +28,7 @@ const FIXTURES = [
   "produce-exam-good-condition",
   "produce-exam-impression-final",
   "produce-exam-impression-final-r9",
+  "produce-exam-impression-final-r9b",
 ];
 
 function getTypeMultipliers(capture) {
@@ -43,7 +44,9 @@ function getTypeMultipliers(capture) {
 function createEngine(capture, play) {
   const cardIds =
     capture.drawCardIds ??
-    play.actions.flatMap((action) => action.handCardIds ?? [action.cardId]);
+    play.actions.flatMap((action) =>
+      action.skip ? [] : (action.handCardIds ?? [action.cardId]),
+    );
   const idol = new IdolConfig({
     params: [0, 0, 0, capture.initial.stamina],
     pItemIds: capture.pItemIds ?? [],
@@ -132,6 +135,14 @@ function replay(capture, play) {
   let heldCard;
   for (const [i, action] of play.actions.entries()) {
     const turn = i + 1;
+    if (action.skip) {
+      state = engine.endTurn(state);
+      assert.equal(state[S.turnsElapsed], action.turnsElapsed ?? turn);
+      for (const [field, value] of Object.entries(action.expected)) {
+        assert.equal(state[S[field]], value, `turn ${turn} ${field} (skip)`);
+      }
+      continue;
+    }
     assert.equal(SkillCards.getById(action.cardId).name, action.name);
 
     let hand;
@@ -158,6 +169,11 @@ function replay(capture, play) {
       );
     }
 
+    // スキルカードサポート, as many levels as the card showed badges.
+    for (let n = 0; n < (action.supportUpgrades ?? 0); n++) {
+      engine.cardManager.supportUpgrade(state, card);
+    }
+
     let holds = 0;
     engine.strategy = holdAsCaptured(action.hold, (held) => {
       holds++;
@@ -167,6 +183,13 @@ function replay(capture, play) {
       const pDrink = PDrinks.getById(drink.id);
       assert.equal(pDrink.name, drink.name);
       engine.effectManager.triggerEffects(state, pDrink.actions);
+    }
+    if (action.playedName) {
+      assert.equal(
+        SkillCards.getById(state[S.cardMap][card].id).name,
+        action.playedName,
+        `turn ${turn}: played as`,
+      );
     }
     assert.ok(engine.isCardUsable(state, card), `turn ${turn}: usable`);
     state = engine.useCard(state, card);

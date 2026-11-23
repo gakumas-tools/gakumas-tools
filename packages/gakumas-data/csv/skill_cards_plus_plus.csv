@@ -1,0 +1,6 @@
+id,name,availableCustomizations,rarity,type,plan,unlockPlv,upgraded,unique,sourceType,pIdolId,forceInitialHand,conditions,cost,actions,limit,effects,fromId
+10002,アピールの基本++,,N,active,free,1,TRUE,FALSE,default,,FALSE,,cost-=2,score+=14,,,2
+10014,表現の基本++,,N,mental,free,1,TRUE,FALSE,default,,FALSE,,cost-=0,genki+=8,1,,14
+10043,もう少しだけ++,,R,active,logic,1,TRUE,FALSE,produce,,FALSE,,cost-=5,score+=19; motivation+=4,,,43
+10045,手拍子++,,R,active,logic,13,TRUE,FALSE,produce,,FALSE,,cost-=4,score+=goodImpressionTurns*2,1,,45
+10089,ラブリーウインク++,,SR,active,logic,1,TRUE,FALSE,produce,,FALSE,,cost-=4,goodImpressionTurns+=5; score+=goodImpressionTurns*0.9,,,89
