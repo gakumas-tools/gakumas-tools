@@ -63,7 +63,11 @@ function createEngine(capture) {
 }
 
 // The hand the game dealt, by card id: a copy that is not removed or held.
-function supplyHand(state, cardIds) {
+// The engine must have dealt as many cards as the game did (応援 draws,
+// 手札減少); the ones it dealt that the game didn't go back to the deck.
+function supplyHand(state, cardIds, turn) {
+  const dealt = state[S.handCards];
+  assert.equal(dealt.length, cardIds.length, `turn ${turn}: cards dealt`);
   const hand = [];
   for (const cardId of cardIds) {
     const card = state[S.cardMap].findIndex(
@@ -79,6 +83,7 @@ function supplyHand(state, cardIds) {
   for (const pile of [S.handCards, S.deckCards, S.discardedCards]) {
     state[pile] = state[pile].filter((c) => !hand.includes(c));
   }
+  state[S.deckCards].push(...dealt.filter((c) => !hand.includes(c)));
   state[S.handCards] = hand;
   return hand;
 }
@@ -93,7 +98,7 @@ function replay(capture, play) {
 
   for (const [i, action] of play.actions.entries()) {
     const turn = i + 1;
-    const hand = supplyHand(state, action.handCardIds);
+    const hand = supplyHand(state, action.handCardIds, turn);
     // A turn with スキルカード使用数追加 plays more than one card from the
     // hand it was dealt. One that skips plays its cards first, if any, then
     // ends the turn with a play left (スキルカード未使用).
