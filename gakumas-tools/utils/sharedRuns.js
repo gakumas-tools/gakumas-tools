@@ -1,7 +1,7 @@
 import { randomInt } from "node:crypto";
 import { ObjectId } from "mongodb";
 import { MAX_LOADOUTS_PER_USER, isObjectId } from "./apiValidation";
-import { simulateRunStats } from "./runStats";
+import { runPIdolId, simulateRunStats } from "./runStats";
 import { STAGE_RUNS_LIMIT, isListableStageId } from "./stageListing";
 
 // A shared run is a public copy of one saved run (a loadout with its
@@ -14,6 +14,11 @@ import { STAGE_RUNS_LIMIT, isListableStageId } from "./stageListing";
 // Listing simulates the run here and keeps those stats as serverStats; the
 // stage page ranks and shows only those, so a forged stats field can't move
 // a run up.
+//
+// The game ranks each Idol Road stage per P-idol (one board per stage for
+// each P-idol card used as Main), and the stage itself differs per idol, so
+// a listed run keeps pIdolId, the P-idol the server read from its loadout,
+// and a stage's listing can be narrowed to one P-idol.
 
 export const SHARED_RUNS = "sharedRuns";
 const ALPHABET =
@@ -196,7 +201,7 @@ export async function setListed(
   }
   const { matchedCount } = await shared.updateOne(
     { _id: id, userId },
-    { $set: { listed: true, serverStats } },
+    { $set: { listed: true, serverStats, pIdolId: runPIdolId(doc) } },
   );
   return matchedCount > 0 ? { ok: true } : { error: "Not found", status: 404 };
 }
@@ -234,6 +239,14 @@ export async function refreshStageRuns(
     .sort({ "serverStats.mean": -1, createdAt: -1 })
     .limit(STAGE_RUNS_MAX)
     .toArray();
+  // Runs listed before pIdolId was kept get it here, without simulating.
+  for (const doc of docs) {
+    if (doc.pIdolId !== undefined) continue;
+    await shared.updateOne(
+      { _id: doc._id, listed: true },
+      { $set: { pIdolId: runPIdolId(doc) } },
+    );
+  }
   const stale = docs
     .filter(
       (doc) =>
@@ -264,20 +277,29 @@ function withoutVersion(serverStats) {
 /**
  * The runs listed on a stage's page, highest server-simulated mean first, as
  * anyone may see them: never their owners. Their stats are serverStats, not
- * what the owner's browser sent.
- * Index: { stageId: 1, listed: 1, "serverStats.mean": -1 }.
+ * what the owner's browser sent. With pIdolId, only that P-idol's runs, as
+ * the game ranks an Idol Road stage.
+ * Index: { stageId: 1, listed: 1, "serverStats.mean": -1 }, and with pIdolId
+ * { stageId: 1, listed: 1, pIdolId: 1, "serverStats.mean": -1 }.
  */
-export async function listStageRuns(db, stageId, limit = STAGE_RUNS_LIMIT) {
+export async function listStageRuns(
+  db,
+  stageId,
+  limit = STAGE_RUNS_LIMIT,
+  pIdolId = null,
+) {
   if (!isListableStageId(stageId)) return [];
+  const filter = { stageId, listed: true };
+  if (pIdolId != null) {
+    if (!(Number.isSafeInteger(pIdolId) && pIdolId > 0)) return [];
+    filter.pIdolId = pIdolId;
+  }
   const count = Math.min(Math.max(1, Math.floor(limit) || 1), STAGE_RUNS_MAX);
   const projection = { _id: 1, createdAt: 1, serverStats: 1 };
   for (const field of PUBLIC_FIELDS) projection[field] = 1;
   const docs = await db
     .collection(SHARED_RUNS)
-    .find(
-      { stageId, listed: true },
-      { projection },
-    )
+    .find(filter, { projection })
     .sort({ "serverStats.mean": -1, createdAt: -1 })
     .limit(count)
     .toArray();

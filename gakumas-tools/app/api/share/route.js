@@ -44,7 +44,8 @@ export async function POST(request) {
   return Response.json({ id: result.id });
 }
 
-// ?stage=<id>: the runs listed on that stage's page, for anyone.
+// ?stage=<id>: the runs listed on that stage's page, for anyone. With
+// &pIdol=<id>, only that P-idol's (an Idol Road stage is ranked per P-idol).
 // Otherwise your shared runs, so the saved-runs list can show which are
 // shared and which are listed.
 export async function GET(request) {
@@ -54,8 +55,19 @@ export async function GET(request) {
     if (!isListableStageId(stageId)) {
       return new Response("Invalid stage", { status: 400 });
     }
+    const pIdolParam = new URL(request.url).searchParams.get("pIdol");
+    let pIdolId = null;
+    if (pIdolParam !== null) {
+      pIdolId = /^\d{1,9}$/.test(pIdolParam) ? Number(pIdolParam) : NaN;
+      if (!(pIdolId > 0)) {
+        return new Response("Invalid P-idol", { status: 400 });
+      }
+    }
     const { db } = await connect();
-    const runs = await withOpeners(db, await listStageRuns(db, stageId));
+    const runs = await withOpeners(
+      db,
+      await listStageRuns(db, stageId, undefined, pIdolId),
+    );
     refreshInBackground(db, stageId);
     return Response.json(
       runs.map(({ id, name, stats, derived, createdAt, openedBy, openedByMore }) => ({

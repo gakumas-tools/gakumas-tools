@@ -21,6 +21,8 @@ const INDEXES = {
     { userId: 1, sourceId: 1 },
     // The stage page (listStageRuns) and the /shared page (browseListedRuns).
     { stageId: 1, listed: 1, "serverStats.mean": -1 },
+    // An Idol Road stage's listing for one P-idol (listStageRuns).
+    { stageId: 1, listed: 1, pIdolId: 1, "serverStats.mean": -1 },
     { listed: 1, createdAt: -1, _id: -1 },
     { listed: 1, stageId: 1, createdAt: -1, _id: -1 },
   ],

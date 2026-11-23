@@ -26,6 +26,19 @@ function stageConfigFor(doc) {
   return stage ? { stage, stageConfig: new StageConfig(stage) } : null;
 }
 
+/**
+ * The P-idol a shared run is for, as the server reads it from the loadout
+ * (its P-idol card, else its P-idol's P-item): the one an Idol Road stage is
+ * resolved for when the run is simulated here. Null if there is none.
+ */
+export function runPIdolId(doc) {
+  try {
+    return new IdolConfig(doc).pIdolId || null;
+  } catch {
+    return null;
+  }
+}
+
 function idolStageConfig(loadout, stageConfig, enterPercents) {
   return new IdolStageConfig(
     new IdolConfig(loadout),
