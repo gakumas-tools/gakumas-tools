@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { IdolRoad } from "gakumas-data";
+import { IdolRoad, PIdols } from "gakumas-data";
 import { createIdolRoad } from "gakumas-data/data/idolRoad";
 
 // Made-up rows for the resolver's own logic. They are not game data:
@@ -32,7 +32,13 @@ const stage = {
   effects: [{ phase: "endOfTurn", actions: [] }],
 };
 
-const idolRoad = createIdolRoad(STAGE_ROWS, EFFECT_ROWS);
+// Pattern A is idols 1 and 2, pattern B idol 3; stage 902 is shared.
+const PATTERN_ROWS = [
+  { pattern: "A", idolIds: "1,2", stageIds: "900,902" },
+  { pattern: "B", idolIds: 3, stageIds: "901,902" },
+];
+
+const idolRoad = createIdolRoad(STAGE_ROWS, EFFECT_ROWS, PATTERN_ROWS);
 
 test("an Idol Road stage takes the P-idol's idol row, plan and 応援効果", () => {
   // P-idol 2 is idol 2, sense, recommended effect concentration.
@@ -60,6 +66,22 @@ test("an idol or recommended effect with no row keeps the stage's values", () =>
   assert.equal(resolved.effects, stage.effects);
 });
 
+test("each P-idol's road lists its own pattern's stages", () => {
+  // P-idol 2 is idol 2 (pattern A); a P-idol of idol 3 is on pattern B.
+  const pIdolB = PIdols.getAll().find((p) => p.idolId == 3);
+  assert.equal(idolRoad.getPattern(2), "A");
+  assert.deepEqual(idolRoad.getStageIds(2), [900, 902]);
+  assert.equal(idolRoad.getPattern(pIdolB.id), "B");
+  assert.deepEqual(idolRoad.getStageIds(pIdolB.id), [901, 902]);
+});
+
+test("an idol on no pattern, or an unknown P-idol, has no road list", () => {
+  const pIdol = PIdols.getAll().find((p) => p.idolId == 12);
+  assert.equal(idolRoad.getPattern(pIdol.id), null);
+  assert.equal(idolRoad.getStageIds(pIdol.id), null);
+  assert.equal(idolRoad.getStageIds(999999), null);
+});
+
 test("other stage types and unknown P-idols come back unchanged", () => {
   const contest = { ...stage, type: "contest" };
   assert.equal(idolRoad.resolveStage(contest, 2), contest);
@@ -67,7 +89,25 @@ test("other stage types and unknown P-idols come back unchanged", () => {
   assert.equal(idolRoad.resolveStage(stage, undefined), stage);
 });
 
-test("the shipped Idol Road tables have no rows yet", () => {
+test("the shipped tables put each idol on the road the game gives it", () => {
+  // Pattern A: 咲季 手毬 千奈 清夏 莉波. Pattern B: ことね 麻央 リーリヤ 広
+  // 佑芽 星南. 美鈴 and 燕 aren't known yet.
+  const byIdol = (idolId) =>
+    IdolRoad.getPattern(PIdols.getAll().find((p) => p.idolId == idolId).id);
+  assert.deepEqual([1, 2, 6, 7, 9].map(byIdol), ["A", "A", "A", "A", "A"]);
+  assert.deepEqual(
+    [3, 4, 5, 8, 10, 11].map(byIdol),
+    ["B", "B", "B", "B", "B", "B"],
+  );
+  assert.deepEqual([12, 13].map(byIdol), [null, null]);
+  // 咲季's STAGE 1-5 are pattern A's first five.
+  assert.deepEqual(
+    IdolRoad.getStageIds(1).slice(0, 5),
+    [196, 197, 198, 199, 200],
+  );
+});
+
+test("the shipped tables have no rows for a made-up stage", () => {
   // Rows wait for in-game captures; until then resolution only sets the plan.
   const resolved = IdolRoad.resolveStage(stage, 2);
   assert.equal(resolved.plan, "sense");
