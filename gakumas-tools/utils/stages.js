@@ -23,8 +23,9 @@ export function formatStageName(stage, t) {
       round: stage.round,
     });
   } else if (stage.type == "idolRoad") {
-    // The name as the game shows it, from stages.csv.
-    stageName = stage.name;
+    // The name as the game shows it, from stages.csv, after the road's
+    // name so it reads as an Idol Road stage wherever it's listed.
+    stageName = t("idolRoadStageName", { name: stage.name });
   }
   if (stage.preview) {
     stageName += "*";
