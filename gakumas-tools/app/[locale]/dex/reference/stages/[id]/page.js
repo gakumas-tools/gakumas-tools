@@ -3,14 +3,37 @@ import { notFound } from "next/navigation";
 import { FaChevronLeft } from "react-icons/fa6";
 import Button from "@/components/Button";
 import Image from "@/components/Image";
+import SharedRunsList from "@/components/SharedRunsList";
 import { Link } from "@/i18n/routing";
 import { generateMetadataForStage } from "@/utils/metadata";
+import { connect } from "@/utils/mongodb";
+import { withOpeners } from "@/utils/shareOpens";
+import { listStageRuns } from "@/utils/sharedRuns";
 import { getReferenceStage, stageTurns } from "@/utils/stageReference";
 import { formatStageName } from "@/utils/stages";
 import CriteriaBar from "../CriteriaBar";
 import styles from "../page.module.scss";
 
 const PARAMS = ["vocal", "dance", "visual"];
+// How many of the stage's best shared runs its page shows.
+const TOP_RUNS = 3;
+
+// The stage's best listed runs, as /shared?stage=<id>&sort=top ranks them.
+// The page still renders without them if the database can't be reached.
+async function topRuns(stageId) {
+  try {
+    const { db } = await connect();
+    const runs = await withOpeners(db, await listStageRuns(db, stageId, TOP_RUNS));
+    return runs.map((run) => ({
+      ...run,
+      createdAt: run.createdAt?.toISOString?.() ?? null,
+    }));
+  } catch (e) {
+    console.error(e);
+    return [];
+  }
+}
+
 const percent = (v) => `${Math.round((Number(v) || 0) * 1000) / 10}%`;
 
 export async function generateMetadata({ params }) {
@@ -34,6 +57,7 @@ export default async function StagePage({ params }) {
   const tPage = await getTranslations({ locale, namespace: "EntityPage" });
   const { counts, total } = stageTurns(stage);
   const idolRoad = stage.type == "idolRoad";
+  const runs = await topRuns(Number(stage.id));
 
   return (
     <article className={styles.page}>
@@ -109,6 +133,15 @@ export default async function StagePage({ params }) {
           {t("sharedRuns")}
         </Button>
       </div>
+
+      <section className={styles.section}>
+        <h2>{t("topRuns")}</h2>
+        {runs.length ? (
+          <SharedRunsList runs={runs} stageId={Number(stage.id)} ranked />
+        ) : (
+          <p className={styles.note}>{t("noRuns")}</p>
+        )}
+      </section>
     </article>
   );
 }
