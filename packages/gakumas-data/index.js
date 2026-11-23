@@ -14,7 +14,11 @@ export {
   deserializeEffectSequence,
   deserializePatchSequence,
 } from "./utils/effects";
-export { HIDDEN_CARD_IDS, HIDDEN_ITEM_IDS } from "./utils/hidden";
+export {
+  HIDDEN_CARD_IDS,
+  HIDDEN_ITEM_IDS,
+  HIDDEN_P_IDOL_IDS,
+} from "./utils/hidden";
 export { parseEffects, parsePatches } from "./utils/parser";
 export {
   calculateMemoryStamina,
