@@ -51,6 +51,12 @@ button.stageSelect {
   overflow-y: auto;
 }
 
+.none {
+  margin: 0;
+  padding: 8px 6px;
+  color: tokens.$surface-ink-muted;
+}
+
 .customizer {
   overflow-y: auto;
 }
