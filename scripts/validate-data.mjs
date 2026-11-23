@@ -37,6 +37,9 @@ const P_ITEMS = readCsv("p_items.csv");
 const STAGES = readCsv("stages.csv");
 const P_DRINKS = readCsv("p_drinks.csv");
 const IDOL_ROAD_EFFECTS = readCsv("idol_road_effects.csv");
+const IDOL_ROAD_STAGES = readCsv("idol_road_stages.csv");
+const IDOL_ROAD_PATTERNS = readCsv("idol_road_patterns.csv");
+const IDOLS = readCsv("idols.csv");
 
 let totalErrors = 0;
 
@@ -171,6 +174,49 @@ validateUpgradedNames("skillCard", SKILL_CARDS);
   }
 }
 validateUpgradedNames("pItem", P_ITEMS);
+
+// --- Idol Road: each pattern lists its idols and its stages in STAGE
+// order; every Idol Road stage is on some pattern, an idol is on at most
+// one, and an idol's rows name stages on its own road ---
+{
+  const ids = (v) => String(v ?? "").split(",").map((p) => p.trim()).filter(Boolean);
+  const roadStages = new Map(STAGES.filter((s) => s.type === "idolRoad").map((s) => [String(s.id), s]));
+  const idolIds = new Set(IDOLS.map((i) => String(i.id)));
+  const listed = new Set();
+  const patternOfIdol = new Map();
+  const stagesOfPattern = new Map();
+  for (const row of IDOL_ROAD_PATTERNS) {
+    const errors = [];
+    if (stagesOfPattern.has(row.pattern)) errors.push(`Pattern ${row.pattern} has more than one row.`);
+    const stageIds = ids(row.stageIds);
+    stagesOfPattern.set(row.pattern, new Set(stageIds));
+    stageIds.forEach((id, i) => {
+      const stage = roadStages.get(id);
+      if (!stage) errors.push(`Stage #${id} is not an idolRoad stages.csv row.`);
+      else if (Number(stage.stage) !== i + 1) errors.push(`Stage #${id} is STAGE ${stage.stage}, listed as STAGE ${i + 1}.`);
+      listed.add(id);
+    });
+    for (const id of ids(row.idolIds)) {
+      if (!idolIds.has(id)) errors.push(`Idol #${id} is not an idols.csv row.`);
+      if (patternOfIdol.has(id)) errors.push(`Idol #${id} is also on pattern ${patternOfIdol.get(id)}.`);
+      patternOfIdol.set(id, row.pattern);
+    }
+    report("idolRoadPattern", row.pattern, "stageIds", row.stageIds, errors);
+  }
+  for (const id of roadStages.keys()) {
+    if (!listed.has(id)) report("stage", id, "type", "idolRoad", ["Idol Road stage is on no pattern in idol_road_patterns.csv."]);
+  }
+  for (const row of IDOL_ROAD_STAGES) {
+    const pattern = patternOfIdol.get(String(row.idolId));
+    const errors = [];
+    if (!roadStages.has(String(row.stageId))) errors.push(`Stage #${row.stageId} is not an idolRoad stages.csv row.`);
+    else if (pattern && !stagesOfPattern.get(pattern).has(String(row.stageId))) errors.push(`Stage #${row.stageId} is not on idol #${row.idolId}'s road (pattern ${pattern}).`);
+    report("idolRoadStage", `${row.stageId}:${row.idolId}`, "stageId", row.stageId, errors);
+  }
+  for (const row of IDOL_ROAD_EFFECTS) {
+    if (!roadStages.has(String(row.stageId))) report("idolRoadEffect", `${row.stageId}:${row.recommendedEffect}`, "stageId", row.stageId, [`Stage #${row.stageId} is not an idolRoad stages.csv row.`]);
+  }
+}
 
 if (totalErrors > 0) {
   console.error(`\nFound ${totalErrors} validation error(s).`);
