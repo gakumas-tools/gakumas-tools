@@ -27,6 +27,7 @@ import LoadoutEditor from "@/components/LoadoutEditor";
 import LoadoutSummary from "@/components/LoadoutHistory/LoadoutSummary";
 import SimulatorResult from "@/components/SimulatorResult";
 import StageSelect from "@/components/StageSelect";
+import StageSharedRuns from "@/components/StageSharedRuns";
 import StrategyPicker from "@/components/StrategyPicker";
 import LoadoutContext from "@/contexts/LoadoutContext";
 import SimulationRunsContext from "@/contexts/SimulationRunsContext";
@@ -407,7 +408,7 @@ export default function Simulator() {
             href="https://github.com/gakumas-tools/gakumas-tools/blob/master/gakumas-tools/simulator/CHANGELOG.md"
             target="_blank"
           >
-            {t("lastUpdated")}: 2026-11-16
+            {t("lastUpdated")}: 2026-11-20
           </a>
         </div>
       </div>
@@ -444,6 +445,21 @@ export default function Simulator() {
         ) : (
           <div className={styles.resultPlaceholder} />
         ))}
+
+      {/* Below the result, so a screenshot of the loadout and its score spread still fits one phone screen. */}
+      <div className={styles.stageSharedRuns} data-export-hide="true">
+        <StageSharedRuns
+          stageId={stage.id}
+          yourRun={
+            strategy === "HeuristicStrategy" &&
+            !running &&
+            simulatorData?.input.config === config &&
+            simulatorData?.input.linkConfigs === linkConfigs
+              ? simulatorData.run
+              : null
+          }
+        />
+      </div>
     </div>
   );
 }

@@ -1,0 +1,946 @@
+{
+  "metadata": {
+    "title": "Gakumas Tools",
+    "description": "Gakumas Tools es una colección de herramientas útiles para los productores de Hatsuboshi Gakuen. Calcula la puntuación necesaria en el examen final para cada rango de producción, consulta información de objetos P y cartas de habilidad, organiza tus memorias, planifica y simula formaciones de concurso, y mucho más. ¡Sé el mejor productor y haz que tus ídolos brillen!"
+  },
+  "Error": {
+    "notFound": "404: página no encontrada",
+    "generic": "Algo ha salido mal",
+    "retry": "Volver a intentarlo",
+    "home": "Inicio"
+  },
+  "tools": {
+    "home": {
+      "title": "Inicio",
+      "description": "Resumen de las herramientas disponibles"
+    },
+    "produceRankCalculator": {
+      "title": "Calculadora de rango de producción",
+      "description": "Calcula la puntuación del examen final necesaria para alcanzar cada rango de producción"
+    },
+    "niaCalculator": {
+      "title": "Calculadora de N.I.A",
+      "description": "Calcula la bonificación de audición y el rango de producción en N.I.A"
+    },
+    "hifCalculator": {
+      "title": "Calculadora de H.I.F",
+      "description": "Calcula el rango de producción en H.I.F"
+    },
+    "lessonCalculator": {
+      "title": "Calculadora de lecciones",
+      "description": "Calcula los parámetros obtenidos en las lecciones"
+    },
+    "dex": {
+      "title": "Índice P",
+      "description": "Filtra y consulta información de objetos P y cartas de habilidad"
+    },
+    "pIdolCollection": {
+      "title": "Colección de ídolos P",
+      "description": "Registra qué ídolos P has conseguido, con el progreso desglosado por rareza, plan e ídolo"
+    },
+    "tierList": {
+      "title": "Tier lists",
+      "description": "Crea tier lists de cartas de habilidad, objetos P, bebidas P o ídolos P"
+    },
+    "memoryCalculator": {
+      "title": "Calculadora de memorias",
+      "description": "Calcula la probabilidad de obtener las combinaciones de cartas de habilidad que quieres en tus memorias"
+    },
+    "memories": {
+      "title": "Memorias",
+      "description": "Crea o importa memorias y búscalas por objetos P y cartas de habilidad"
+    },
+    "simulator": {
+      "title": "Simulador de concursos",
+      "description": "Crea y simula formaciones de concurso y calcula el coste de memoria"
+    },
+    "rehearsal": {
+      "title": "Lector de ensayos",
+      "description": "Extrae las puntuaciones de capturas de pantalla de ensayos"
+    },
+    "sharedRuns": {
+      "title": "Simulaciones compartidas",
+      "description": "Explora las simulaciones que otros jugadores muestran en sus etapas"
+    }
+  },
+  "NavbarMenu": {
+    "menu": "Menú",
+    "signInWithDiscord": "Iniciar sesión con Discord",
+    "home": "Inicio",
+    "gakumasContestWiki": "Wiki de concursos de Gakumas",
+    "sendFeedback": "Enviar comentarios",
+    "signOut": "Cerrar sesión"
+  },
+  "ToolHeader": {
+    "pin": "Fijar junto a otras herramientas",
+    "unpin": "Dejar de fijar",
+    "pinned": "Fijada: se abre junto a otras herramientas"
+  },
+  "Welcome": {
+    "title": "Gakumas Tools",
+    "introduction": "Herramientas para jugar a Gakuen Idolmaster. Calcula la puntuación necesaria en el examen final para cada rango de producción, consulta información de objetos P y cartas de habilidad, importa y busca memorias, simula formaciones de concurso ¡y mucho más!",
+    "disclaimer": "Este es un sitio no oficial hecho por fans. No está afiliado a los creadores de Gakuen Idolmaster ni cuenta con su respaldo."
+  },
+  "Calculator": {
+    "scenarios": {
+      "hajime": "Hajime",
+      "nia": "N.I.A",
+      "hif": "H.I.F"
+    },
+    "calculator": "Calculadora",
+    "calculators": {
+      "produce-rank": "Rango de producción",
+      "lesson": "Lecciones"
+    },
+    "difficulty": "Dificultad",
+    "difficulties": {
+      "regular": "Regular",
+      "pro": "Pro",
+      "master": "Master",
+      "legend": "Legend"
+    },
+    "places": {
+      "1": "1.º",
+      "2": "2.º",
+      "3": "3.º",
+      "4": "Otro"
+    },
+    "parameterLimit": "Límite de parámetros",
+    "midtermScore": "Puntuación del examen parcial",
+    "finalExamPlacement": "Puesto en el examen final",
+    "parameter": "Parámetro",
+    "parameters": "Parámetros",
+    "targetScores": "Puntuaciones objetivo",
+    "produceRank": "Rango de producción",
+    "targetScore": "Puntuación objetivo",
+    "score": "Puntuación",
+    "niaNote": "※El cálculo se actualizará a medida que sepamos más sobre los parámetros y los votos que da la bonificación de audición.",
+    "affectionAtStartOfProduce": "Afecto al inicio de la producción",
+    "stage": "Etapa",
+    "runN": "Vuelta {num}",
+    "runN+": "Vuelta {num}+",
+    "idol": "Ídolo",
+    "evaluationCriteria": "Criterios de evaluación",
+    "paramsPreAudition": "Parámetros (antes de la audición)",
+    "challengePItemsParamBonusPct": "% de bonificación de parámetros de objetos P de desafío",
+    "paramBonusPct": "% de bonificación de parámetros",
+    "votesPreAudition": "Votos (antes de la audición)",
+    "recommendedScores": "Puntuaciones recomendadas",
+    "paramHighGrowthScores": "El crecimiento de parámetros se ralentiza por encima de estas puntuaciones",
+    "paramMaximizingScores": "El crecimiento de parámetros se detiene por encima de estas puntuaciones",
+    "voteCount": "Número de votos",
+    "scores": "Puntuaciones",
+    "gainedParams": "Parámetros obtenidos",
+    "challengeParams": "Parámetros de objetos P de desafío",
+    "bonusParams": "Parámetros de bonificación",
+    "paramsPostAudition": "Parámetros (después de la audición)",
+    "gainedVotes": "Votos obtenidos",
+    "votesPostAudition": "Votos (después de la audición)",
+    "total": "Total",
+    "preRound2": "Antes de la ronda 2",
+    "star": "Estrellato",
+    "examScore": "Puntuación del examen",
+    "hifScoreModes": {
+      "total": "Total",
+      "split": "Por rondas"
+    },
+    "hifTotalScore": "Puntuación total",
+    "hifRound1Score": "Puntuación de la ronda 1",
+    "hifRound2Score": "Puntuación de la ronda 2",
+    "hifDerivedRound1": "Ronda 1 = {value}",
+    "hifDerivedTotal": "Total = {value}",
+    "hifRound2StarGain": "Estrellato obtenido: +{value}",
+    "hifScoreBonusNote": "Introduce las puntuaciones tal como aparecen en la pantalla de clasificación (la ronda 1 incluye la bonificación de ×1,2 por quedar primero). La calculadora lo compensa automáticamente.",
+    "hifTargetRound2Scores": "Puntuaciones objetivo de la ronda 2",
+    "toNextRank": "{points} para {rank}"
+  },
+  "LessonCalculator": {
+    "difficulties": {
+      "regular": "Regular",
+      "pro": "Pro",
+      "master": "Master"
+    },
+    "difficulty": "Dificultad",
+    "lessonBonus": "% de bonificación de lección",
+    "limitIncrease": "Aumento del límite",
+    "lessons": "Lecciones",
+    "week": "Semana",
+    "type": "Tipo",
+    "normal": "N",
+    "sp": "SP",
+    "oikomi": "Oikomi",
+    "score": "Puntuación"
+  },
+  "Dex": {
+    "maxTimes": "Máx. {n}",
+    "unlockPlv": "Desbloqueo: PLv {n}",
+    "plans": {
+      "sense": "Sense",
+      "logic": "Logic",
+      "anomaly": "Anomaly",
+      "free": "Libre"
+    },
+    "tabs": {
+      "skill-cards": "Cartas de habilidad",
+      "p-items": "Objetos P",
+      "p-drinks": "Bebidas P",
+      "p-idols": "Ídolos P",
+      "support-cards": "Cartas de apoyo"
+    },
+    "categories": {
+      "reference": {
+        "title": "Referencia",
+        "description": "Filtra y consulta cartas de habilidad, objetos P y bebidas P"
+      },
+      "collection": {
+        "title": "Colección",
+        "description": "Registra qué ídolos P has conseguido"
+      },
+      "tierlist": {
+        "title": "Tier lists",
+        "description": "Clasifica cartas de habilidad, objetos P, bebidas P o ídolos P por niveles"
+      }
+    }
+  },
+  "TierList": {
+    "addItem": "Añadir elemento",
+    "removeItem": "Suelta aquí para quitar",
+    "filterAll": "Todos",
+    "filterBase": "Base",
+    "filterUpgraded": "Mejorados",
+    "poolEmpty": "Ya has colocado todos los elementos",
+    "swipeHint": "← desliza para desplazarte →",
+    "clearAll": "Borrar todo",
+    "confirmClear": "¿Borrar esta tier list?",
+    "addRankTier": "Añadir {rank}",
+    "removeRankTier": "Quitar {rank}",
+    "confirmRemoveTier": "¿Quitar el nivel {rank} y {count, plural, one {su # elemento} other {sus # elementos}}?",
+    "share": "Compartir",
+    "shareHelp": "Cualquiera con este enlace puede importar una copia de esta tier list.",
+    "copy": "Copiar",
+    "copied": "¡Copiado!",
+    "copyFailed": "No se ha podido copiar al portapapeles.",
+    "downloadImage": "Descargar como imagen",
+    "preparingImage": "Preparando imagen…",
+    "exportFailed": "No se ha podido exportar la imagen.",
+    "shareToX": "Compartir en X",
+    "shareTweetText": "Mi tier list de Gakumas: {type}",
+    "confirmLeave": "Perderás esta tier list si cambias de pestaña. ¿Quieres continuar?",
+    "compareWithMine": "Comparar con la mía",
+    "keepMine": "Quedarme con la mía",
+    "useTheirs": "Usar esta lista",
+    "compareAgreement": "Mismo nivel que en tu lista en {same} de {common} ({percent} %)",
+    "compareNoCommon": "Aún no hay nada de esto en tu lista"
+  },
+  "CommunityTierList": {
+    "title": "Tier list de la comunidad",
+    "loading": "Cargando…",
+    "failed": "No se ha podido cargar la tier list de la comunidad.",
+    "tooFew": "{count, plural, =0 {Ningún jugador ha añadido} one {# jugador ha añadido} other {# jugadores han añadido}} una lista por ahora. Se mostrará cuando lo hayan hecho {min}.",
+    "fromLists": "Combinada a partir de {count, plural, one {la lista de # jugador} other {las listas de # jugadores}}",
+    "openInEditor": "Abrir en el editor",
+    "itemTitle": "Clasificado en {n} de {lists} listas",
+    "howToRead": "Cada elemento está en el nivel central de las listas que lo clasifican. Un rango como SS–A indica dónde lo pone la mitad central de las listas.",
+    "howToPublish": "Solo cuentan las listas que sus jugadores han decidido añadir, y ninguna se muestra con su nombre.",
+    "addYours": "Añadir tu lista",
+    "publishTitle": "Tier list de la comunidad",
+    "publishHelp": "¿Añadir esta lista a la tier list de la comunidad? Cuenta para la lista combinada, nunca con tu nombre.",
+    "publishedThis": "Esta lista está en la tier list de la comunidad.",
+    "publishedOther": "Tu lista en la tier list de la comunidad es otra.",
+    "publish": "Añadir a la tier list de la comunidad",
+    "replacePublished": "Sustituirla por esta lista",
+    "unpublish": "Quitar mi lista",
+    "emptyList": "Coloca algunos elementos primero.",
+    "signInToPublish": "Inicia sesión para añadir tu lista a la tier list de la comunidad.",
+    "signIn": "Iniciar sesión",
+    "publishFailed": "No se ha podido actualizar la tier list de la comunidad."
+  },
+  "PIdolCollection": {
+    "collected": "Conseguidos",
+    "byRarity": "Por rareza",
+    "byPlan": "Por plan",
+    "byIdol": "Por ídolo",
+    "markAll": "Marcar todos",
+    "clearAll": "Desmarcar",
+    "share": "Compartir",
+    "emptyResults": "Ningún ídolo P coincide con el filtro actual",
+    "plans": {
+      "sense": "Sense",
+      "logic": "Logic",
+      "anomaly": "Anomaly"
+    },
+    "shareText": "学マス Registro de colección de ídolos P\nHe conseguido {have}/{total} ({percent} %) de {scope}. ¿Cuántos tienes tú?",
+    "shareScope": {
+      "all": "los ídolos P {rarity} {plan} de {idol}",
+      "rarity_plan": "los ídolos P {rarity} {plan}",
+      "rarity_idol": "los ídolos P {rarity} de {idol}",
+      "plan_idol": "los ídolos P {plan} de {idol}",
+      "rarity": "los ídolos P {rarity}",
+      "plan": "los ídolos P {plan}",
+      "idol": "los ídolos P de {idol}",
+      "none": "los ídolos P"
+    }
+  },
+  "EntityBank": {
+    "filter": "Filtrar",
+    "noMatches": "Nada coincide con estos filtros."
+  },
+  "EntityIcon": {
+    "emptySlot": "Hueco vacío",
+    "high": "A",
+    "low": "B",
+    "planMismatch": "El plan no coincide",
+    "pIdolMismatch": "El ídolo P no coincide",
+    "idolMismatch": "El ídolo no coincide"
+  },
+  "EntityCustomizer": {
+    "customization": "Personalización"
+  },
+  "CustomizationModal": {
+    "apply": "Aplicar"
+  },
+  "MemoryCalculator": {
+    "note": "Nota: las probabilidades mostradas son estimaciones basadas en una distribución uniforme. Se desconoce el algoritmo real de selección de cartas de habilidad.",
+    "target": "Cartas de habilidad objetivo",
+    "acquired": "Cartas de habilidad obtenidas",
+    "acquiredInfo": "Incluye las versiones sin mejorar y mejoradas de cada carta",
+    "produceRank": "Rango de producción",
+    "costRange": "Rango de coste",
+    "cost": "Coste",
+    "success": "Éxito",
+    "failure": "Fracaso",
+    "clear": "Borrar",
+    "confirm": "¿Seguro que quieres borrar estas cartas de habilidad?"
+  },
+  "MemoryAttemptPlanner": {
+    "title": "Planificar intentos repetidos",
+    "show": "Mostrar",
+    "hide": "Ocultar",
+    "assumption": "Estimación para intentos independientes con las mismas cartas obtenidas y el mismo rango. Usa la probabilidad de éxito estimada de arriba; las probabilidades reales pueden variar.",
+    "attempts": "Número de intentos",
+    "atLeastOne": "Probabilidad de al menos un éxito:",
+    "targetChance": "Probabilidad objetivo",
+    "attemptsNeeded": "{count, plural, one {# intento necesario} other {# intentos necesarios}}",
+    "beyondLimit": "No se alcanza la probabilidad objetivo en {limit, number} intentos."
+  },
+  "TargetSkillCards": {
+    "acquired": "Obtenida"
+  },
+  "DraftPick": {
+    "label": "Elección de carta",
+    "info": "Elige hasta 3 cartas candidatas para comparar la probabilidad de éxito si se añaden a las obtenidas",
+    "show": "Mostrar",
+    "hide": "Ocultar",
+    "clear": "Borrar",
+    "commit": "Elegir",
+    "import": "Importar"
+  },
+  "DraftPickImporterModal": {
+    "title": "Importar elección de carta desde captura",
+    "instructions": "Sube una captura de la pantalla de elección de cartas de habilidad del juego. Las 3 cartas que aparecen se detectarán y cargarán automáticamente.",
+    "processing": "Procesando captura...",
+    "error": "No se ha podido importar"
+  },
+  "MemorySummaryActionButtons": {
+    "edit": "Editar"
+  },
+  "MemoryEditorModal": {
+    "name": "Nombre",
+    "contestPower": "Poder de concurso",
+    "cost": "Coste",
+    "parameters": "Parámetros",
+    "pItems": "Objetos P",
+    "skillCards": "Cartas de habilidad",
+    "customizations": "Personalizaciones",
+    "confirmDiscard": "¿Descartar los cambios sin guardar?",
+    "discard": "Descartar",
+    "keepEditing": "Seguir editando"
+  },
+  "ParametersInput": {
+    "stamina": "Resistencia"
+  },
+  "StaminaCalculator": {
+    "title": "Calculadora de resistencia",
+    "open": "Calcular resistencia",
+    "openShort": "Calcular",
+    "selectPIdol": "Primero añade a la formación una carta o un objeto de ídolo P",
+    "defaultsHelp": "Los valores predeterminados corresponden a una configuración típica al máximo. Cambia solo lo que sea diferente.",
+    "memory": "Memoria {number}",
+    "contribution": "Aporte del {percent} %: {stamina}",
+    "missingPIdol": "Añade la carta de ídolo P de esta memoria para poder calcular su resistencia.",
+    "trainingRank": "Nivel de entrenamiento",
+    "awakeningRank": "Nivel de despertar",
+    "affectionLevel": "Nivel de afecto",
+    "trueEndAchievements": "True End conseguidos",
+    "trueEndHelp": "Son bonificaciones permanentes del ídolo. Selecciona todos los True End que hayas completado; los datos no disponibles están desactivados.",
+    "senseiCards": "Cartas de apoyo de Asari Sensei",
+    "senseiCard": "Carta {number}",
+    "notUsed": "Sin usar (+0)",
+    "senseiLevelRange": "Nv. {min}–{max} (+{stamina})",
+    "senseiHelp": "Cada carta cuenta una sola vez. Solo se muestran los rangos de nivel en los que cambia la resistencia.",
+    "total": "Resistencia calculada",
+    "showBreakdown": "Mostrar desglose",
+    "apply": "Insertar {stamina} de resistencia",
+    "unavailable": "Aún no se han confirmado los datos de resistencia de este ídolo P.",
+    "scenarios": {
+      "hajime": "Hajime",
+      "nia": "N.I.A",
+      "hif": "H.I.F"
+    },
+    "breakdown": {
+      "base": "Base",
+      "training": "Entrenamiento",
+      "awakening": "Despertar",
+      "affection": "Afecto",
+      "trueEnd": "True End",
+      "sensei": "Cartas de Sensei"
+    }
+  },
+  "MemorySave": {
+    "save": "Guardar",
+    "saveAsNew": "Guardar como nueva",
+    "signInToSave": "Inicia sesión con Discord para guardar",
+    "saveFailed": "Error al guardar",
+    "saving": "Guardando…",
+    "saved": "Guardado"
+  },
+  "MemoriesNudge": {
+    "create": "Crear una memoria",
+    "import": "Importar memorias desde capturas",
+    "noMatches": "Ninguna memoria coincide con estos filtros.",
+    "signInHint": "Inicia sesión con Discord para conservar tus memorias y usarlas en el simulador. También puedes crear una sin iniciar sesión.",
+    "signIn": "Iniciar sesión",
+    "empty": "Aún no tienes memorias. Impórtalas desde capturas para empezar."
+  },
+  "MemoriesHeader": {
+    "confirmDelete": "¿Eliminar {num, plural, one {# memoria} other {# memorias}}?",
+    "selected": "{num, plural, one {# memoria seleccionada} other {# memorias seleccionadas}}",
+    "search": "Buscar",
+    "create": "Crear memoria",
+    "import": "Importar desde capturas",
+    "cancel": "Cancelar",
+    "delete": "Eliminar"
+  },
+  "Memories": {
+    "loadError": "No se han podido cargar las memorias",
+    "uploadError": "No se han podido guardar las memorias",
+    "deleteError": "No se han podido eliminar las memorias",
+    "retry": "Reintentar"
+  },
+  "MemoryImporterModal": {
+    "importMemories": "Importar memorias desde capturas",
+    "instructions": "<p>Los parámetros, los objetos P y los iconos de las cartas de habilidad deben verse en cada captura.</p><p>La importación puede tardar desde unos segundos hasta varios minutos, según el número de memorias importadas y el procesador y la memoria de tu dispositivo. El navegador puede bloquearse si intentas importar demasiadas memorias a la vez.</p><p>Es posible que algunas memorias no se lean correctamente y haya que corregirlas después de importarlas. En esos casos, se marcarán con \"(FIXME)\" en el nombre.</p>",
+    "progress": "Progreso: {progress}/{total}",
+    "preparing": "Preparando el lector… (la primera vez se descargan unos pocos MB)",
+    "saving": "Guardando…",
+    "failed": "La importación ha fallado. Revisa las capturas y vuelve a intentarlo.",
+    "unreadable": "No se han podido leer: {files}",
+    "selectScreenshots": "Seleccionar capturas",
+    "dropHint": "Toca para seleccionar o suelta aquí las capturas",
+    "covered": "La barra de menú tapaba algunas cartas, así que se han dejado vacías. Elígelas tú:",
+    "coveredSlots": "{name}: carta {slots}"
+  },
+  "Simulator": {
+    "supportBonus": "% de bonificación de apoyo",
+    "multiplierNote": "※ El multiplicador de puntuación no es preciso con parámetros superiores a 2400.",
+    "previewNote": "※ La vista previa de la etapa se basa solo en los objetos P y los criterios anunciados. Aún no se conocen los tipos de turno.",
+    "enterPercents": "Como se desconoce cómo se calcula el multiplicador de puntuación, introduce directamente los multiplicadores (%).",
+    "linkContestNote": "Es posible que los concursos Link no se simulen con precisión. Aún no se ha implementado la eliminación de objetos P y cartas de habilidad duplicados entre ídolos. Quita los duplicados y añade las cartas predeterminadas manualmente en el editor de formación.",
+    "custom": "Personalizada",
+    "simulate": "Simular",
+    "numRuns": "Número de simulaciones",
+    "provideData": "Aportar datos",
+    "lastUpdated": "Última actualización",
+    "start": "Iniciar",
+    "restart": "Reiniciar",
+    "simulationFailed": "La simulación se ha detenido por un error. Vuelve a intentarlo o cambia la formación."
+  },
+  "StrategyPicker": {
+    "auto": "Automática",
+    "manual": "Manual"
+  },
+  "StageSelect": {
+    "placeholder": "Seleccionar etapa"
+  },
+  "StageSelectModal": {
+    "contest": "Concurso",
+    "linkContest": "Concurso Link",
+    "event": "Evento",
+    "idolRoad": "Idol Road",
+    "custom": "Personalizada"
+  },
+  "StageSummary": {
+    "contestStageName": "Temporada {season} - Etapa {stage}",
+    "eventStageName": "{name} - Etapa {stage} - Ronda {round}",
+    "custom": "Personalizada",
+    "activeSeason": "Temporada actual"
+  },
+  "StageCustomizer": {
+    "type": "Tipo",
+    "contest": "Concurso",
+    "linkContest": "Concurso Link",
+    "event": "Evento",
+    "turnCounts": "Número de turnos",
+    "firstTurn": "Probabilidad del primer turno",
+    "criteria": "Criterios",
+    "effects": "Efectos",
+    "effectFormat": "Formato de efectos",
+    "apply": "Aplicar",
+    "linkTurnCounts": "Turnos por fase Link",
+    "linkPhase": "Fase {phase}",
+    "invalidTurnCounts": "Añade al menos 1 turno",
+    "invalidFirstTurns": "Indica la probabilidad del primer turno solo en los tipos que tengan turnos",
+    "invalidLinkTurnCounts": "Las fases Link deben sumar el número de turnos"
+  },
+  "LoadoutSkillCardGroup": {
+    "cost": "Coste",
+    "memoryCalculator": "Calculadora de memorias",
+    "memories": "Memorias",
+    "importMemory": "Importar memoria desde captura",
+    "addRow": "Añadir fila",
+    "moveUp": "Subir",
+    "moveDown": "Bajar",
+    "removeRow": "Quitar fila"
+  },
+  "SimulatorSubTools": {
+    "costRanges": "Rangos de coste",
+    "defaultCards": "Cartas predeterminadas"
+  },
+  "CostRanges": {
+    "rank": "Rango",
+    "min": "Mín.",
+    "max": "Máx."
+  },
+  "SimulatorButtons": {
+    "confirm": "¿Seguro que quieres borrar la formación?",
+    "clear": "Borrar",
+    "share": "Compartir",
+    "openLoadouts": "Formaciones",
+    "import": "Importar",
+    "copyFailed": "No se ha podido copiar la URL"
+  },
+  "SimulatorLoadoutImporterModal": {
+    "title": "Importar formación desde captura",
+    "instructions": "Sube una captura de la pantalla de formación de concurso del juego. Se cargarán los parámetros, los objetos P y las cartas de habilidad, y la etapa y la bonificación de apoyo se deducirán de los multiplicadores por tipo.",
+    "processing": "Procesando captura...",
+    "error": "No se ha podido importar",
+    "matchingStages": "Etapas coincidentes",
+    "pickStage": "Se ha seleccionado la mejor coincidencia. Elige otra si no es correcta.",
+    "noStage": "Ninguna etapa coincide con los multiplicadores por tipo de la captura, así que no se han cambiado la etapa ni la bonificación de apoyo."
+  },
+  "ShareModal": {
+    "title": "Compartir",
+    "more": "Más…",
+    "x": "Compartir en X",
+    "saveImage": "Guardar como imagen",
+    "exporting": "Guardando…",
+    "exportFailed": "No se ha podido guardar. Vuelve a intentarlo"
+  },
+  "ConfirmModal": {
+    "cancel": "Cancelar",
+    "ok": "Aceptar"
+  },
+  "Modal": {
+    "close": "Cerrar"
+  },
+  "SimulatorResult": {
+    "min": "Mín.",
+    "average": "Media",
+    "median": "Mediana",
+    "max": "Máx.",
+    "logs": "Registros",
+    "stats": "Estadísticas",
+    "compare": "Comparar",
+    "downloadScores": "Puntuaciones",
+    "optimizeParams": "Optimizar parámetros",
+    "optimizeGain": "Media +{gain}",
+    "optimizeAlready": "Ya es óptimo",
+    "optimizeFailed": "No se puede optimizar",
+    "optimizeNeedsSimulation": "Simula primero la formación actual",
+    "staleResults": "Estos resultados son de una formación anterior",
+    "rehearsal": "Ensayo",
+    "shareRun": "Compartir resultado",
+    "signInToShare": "Para compartir una simulación hay que iniciar sesión. ¿Continuar a Discord?"
+  },
+  "CompareTab": {
+    "saved": "Guardadas",
+    "history": "Historial",
+    "current": "Actual",
+    "noScores": "Sin puntuaciones",
+    "mean": "Media",
+    "median": "Mediana",
+    "load": "Cargar",
+    "save": "Guardar",
+    "edit": "Renombrar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "confirmDelete": "¿Eliminar esta simulación?",
+    "signInPrompt": "Para guardar hay que iniciar sesión. ¿Continuar a Discord?",
+    "signInToView": "Inicia sesión para ver tus formaciones guardadas.",
+    "savePrompt": "Nombre",
+    "emptyHistory": "Haz una simulación para verla aquí.",
+    "emptySaved": "Aún no hay formaciones guardadas.",
+    "loading": "Cargando…",
+    "fifoHint": "{count} / {max}: guarda para conservar las simulaciones antiguas",
+    "fifoAtLimit": "Límite de {max}: se sustituyen las simulaciones más antiguas. Guarda para conservarlas.",
+    "hiddenByFilters": "{count} ocultas por los filtros",
+    "allHiddenByFilters": "Todas ({count}) ocultas por los filtros",
+    "clearFilters": "Quitar filtros",
+    "showDetails": "Mostrar detalles",
+    "hideDetails": "Ocultar detalles",
+    "season": "Temporada",
+    "allSeasons": "Todas las temporadas",
+    "allIdols": "Todos los ídolos",
+    "allStages": "Todas las etapas",
+    "actions": "Acciones",
+    "loadFailed": "No se han podido cargar tus formaciones guardadas.",
+    "retry": "Reintentar",
+    "saveFailed": "Error al guardar",
+    "renameFailed": "Error al renombrar",
+    "deleteFailed": "Error al eliminar",
+    "share": "Compartir",
+    "copyLink": "Copiar enlace",
+    "unshare": "Dejar de compartir",
+    "shared": "Compartida",
+    "linkCopied": "Enlace copiado",
+    "confirmUnshare": "¿Dejar de compartir esta simulación? Su enlace dejará de funcionar.",
+    "shareFailed": "No se pudo compartir",
+    "unshareFailed": "No se pudo dejar de compartir",
+    "copyThisLink": "Copia este enlace",
+    "confirmDeleteShared": "¿Eliminar esta simulación? Su enlace compartido también dejará de funcionar.",
+    "listOnStage": "Mostrar en la página de la etapa",
+    "unlistFromStage": "Ocultar de la página de la etapa",
+    "listed": "Visible",
+    "listFailed": "No se ha podido cambiar dónde se muestra"
+  },
+  "SharedRun": {
+    "untitled": "Simulación compartida",
+    "mean": "Media",
+    "median": "Mediana",
+    "min": "Mín.",
+    "max": "Máx.",
+    "stddev": "Desv. típica",
+    "noScores": "Sin puntuaciones",
+    "openInSimulator": "Abrir en el simulador",
+    "saveToMyRuns": "Guardar en mis simulaciones",
+    "saved": "Guardada",
+    "saveFailed": "No se pudo guardar",
+    "signInPrompt": "Para guardar hay que iniciar sesión. ¿Continuar a Discord?",
+    "hint": "«Abrir en el simulador» añade esta simulación a tu historial, para que la pestaña Comparar la muestre junto a las tuyas.",
+    "metaDescription": "Una simulación compartida: media {mean}, mediana {median}.",
+    "metaDescriptionNoScores": "Una formación del simulador compartida.",
+    "moreForStage": "Más simulaciones compartidas de esta etapa",
+    "openedBy": "{count, plural, one {Abierta por # jugador} other {Abierta por # jugadores}}",
+    "openedByMore": "Abierta por {count} o más jugadores"
+  },
+  "SharedRunsBrowse": {
+    "title": "Simulaciones compartidas",
+    "hint": "Simulaciones que los jugadores muestran en sus etapas, de la más reciente a la más antigua. Elige una etapa para ver sus simulaciones en un mismo eje de puntuación; abre una para ejecutarla junto a las tuyas. Las puntuaciones son la propia simulación del sitio de cada una.",
+    "stage": "Etapa",
+    "allStages": "Todas las etapas",
+    "stageOption": "{name} ({count})",
+    "sort": {
+      "new": "Más recientes",
+      "top": "Mejor puntuación"
+    },
+    "scores": "Media {mean} · Mediana {median}",
+    "empty": "Aún no hay simulaciones mostradas aquí. Simula una configuración y toca Compartir resultado para mostrar la tuya.",
+    "older": "Más antiguas",
+    "newest": "Volver a las más recientes",
+    "emptyAction": "Compartir la tuya"
+  },
+  "StageSharedRuns": {
+    "title": "Simulaciones compartidas de esta etapa",
+    "loading": "Cargando…",
+    "empty": "Nadie ha mostrado aún una simulación para esta etapa.",
+    "failed": "No se han podido cargar las simulaciones compartidas.",
+    "untitled": "Simulación sin título",
+    "yourRun": "Tu simulación (este resultado)",
+    "place": "Puesto {rank} de {count} con la tuya",
+    "belowTop": "Por debajo de las {count} primeras mostradas",
+    "howToList": "Para mostrar la tuya, toca Compartir resultado después de simular.",
+    "seeAll": "Verlas todas",
+    "listYours": "Mostrarla aquí",
+    "namePlaceholder": "Nombre (opcional)",
+    "list": "Mostrar",
+    "listing": "Mostrando…",
+    "cancel": "Cancelar",
+    "listFailed": "No se ha podido mostrar. Inténtalo de nuevo.",
+    "signInToList": "Para mostrar una simulación hay que iniciar sesión. ¿Continuar a Discord?",
+    "listedNote": "Mostrada. Está guardada en Comparar, donde puedes quitarla de esta página."
+  },
+  "SimulatorStats": {
+    "total": "Total",
+    "turn": "Turno {turn}",
+    "card": "Carta / objeto",
+    "uses": "Usos",
+    "usePct": "% de uso",
+    "score": "Puntuación"
+  },
+  "SimulatorResultGraphs": {
+    "score": "Puntuación"
+  },
+  "stage": {
+    "turnsRemaining": "Turnos restantes",
+    "cardUsesRemaining": "Usos de cartas restantes",
+    "stamina": "Resistencia",
+    "genki": "Genki",
+    "score": "Puntuación",
+    "goodConditionTurns": "Buen estado",
+    "perfectConditionTurns": "Estado perfecto",
+    "concentration": "Concentración",
+    "goodImpressionTurns": "Buena impresión",
+    "motivation": "Motivación",
+    "prideTurns": "Orgullo",
+    "cumulativeFullPowerCharge": "Carga de máxima potencia acumulada",
+    "strengthTimes": "Posturas de fuerza",
+    "preservationTimes": "Posturas de conservación",
+    "fullPowerTimes": "Posturas de máxima potencia",
+    "stanceChangedTimes": "Cambios de postura",
+    "stance": "Postura",
+    "none": "Ninguna",
+    "preservation": "Conservación 1",
+    "preservation2": "Conservación 2",
+    "leisure": "Calma",
+    "strength": "Fuerza 1",
+    "strength2": "Fuerza 2",
+    "fullPower": "Máxima potencia",
+    "fullPowerCharge": "Carga de máxima potencia",
+    "lockStanceTurns": "Turnos de postura fija",
+    "enthusiasm": "Entusiasmo",
+    "enthusiasmExtensionTurns": "Prolongación de entusiasmo",
+    "enthusiasmBonus": "Entusiasmo adicional",
+    "halfCostTurns": "Turnos de coste a la mitad",
+    "doubleCostTurns": "Turnos de coste doble",
+    "doubleBuffCostTurns": "Turnos de coste doble de mejoras",
+    "costReduction": "Reducción de coste",
+    "costIncrease": "Aumento de coste",
+    "doubleCardEffectCards": "Repetición de efectos de carta",
+    "nullifyGenkiTurns": "Turnos de genki anulado",
+    "nullifyDebuff": "Anulación de penalizaciones",
+    "poorConditionTurns": "Mal estado",
+    "nullifyCostCards": "Cartas sin coste",
+    "nullifyCostActiveCards": "Cartas activas sin coste",
+    "noActiveTurns": "Sin cartas activas",
+    "noMentalTurns": "Sin cartas mentales",
+    "noGoodConditionTurnsTurns": "Sin cartas con efecto de buen estado",
+    "noConcentrationTurns": "Sin cartas con efecto de concentración",
+    "noGoodImpressionTurnsTurns": "Sin cartas con efecto de buena impresión",
+    "noMotivationTurns": "Sin cartas con efecto de motivación",
+    "noStrengthTurns": "Sin cartas con efecto de fuerza",
+    "noFullPowerChargeTurns": "Sin cartas con efecto de máxima potencia",
+    "noCardUseTurns": "Sin uso de cartas",
+    "uneaseTurns": "Inquietud",
+    "metamorphosis": "Metamorfosis",
+    "metamorphosisPreparation": "Metamorfosis (preparación)",
+    "metamorphosisPerformance": "Metamorfosis (actuación)",
+    "scoreBuff": "Mejora de puntuación",
+    "scoreDebuff": "Penalización de puntuación",
+    "goodImpressionTurnsBuff": "Mejora de buena impresión",
+    "goodImpressionTurnsEffectBuff": "Potenciación de buena impresión",
+    "goodImpressionTurnsTimesBuff": "Activación extra de buena impresión",
+    "motivationBuff": "Mejora de motivación",
+    "motivationAdditionBuff": "Bonificación de motivación",
+    "goodConditionTurnsBuff": "Mejora de turnos de buen estado",
+    "goodConditionTurnsAdditionBuff": "Bonificación de turnos de buen estado",
+    "concentrationBuff": "Mejora de concentración",
+    "concentrationAdditionBuff": "Bonificación de concentración",
+    "concentrationEffectBuff": "Potenciación de concentración",
+    "enthusiasmBuff": "Mejora de entusiasmo",
+    "fullPowerChargeBuff": "Mejora de carga de máxima potencia",
+    "fullPowerEffectBuff": "Potenciación de máxima potencia",
+    "strengthEffectBuff": "Potenciación de fuerza",
+    "handDecrease": "Reducción de mano",
+    "turn": "Turno",
+    "cardDrawn": "Carta robada",
+    "upgradedHand": "Mejoradas todas las cartas de la mano",
+    "exchangedHand": "Cambiadas todas las cartas de la mano",
+    "setEffect": "Efecto aplicado",
+    "addedCardToHand": "Carta añadida a la mano",
+    "addedCardToTopOfDeck": "Carta añadida a la parte superior del mazo",
+    "addedCardToBottomOfDeck": "Carta añadida al fondo del mazo",
+    "addedCardToDiscarded": "Carta añadida a la pila de descartes",
+    "addedCardToDeckAtRandom": "Carta añadida en una posición aleatoria del mazo",
+    "upgradedCard": "Carta mejorada",
+    "cardGrowth": "Crecimiento de carta",
+    "heldCard": "Carta reservada",
+    "discardedCard": "Carta descartada",
+    "movedCardToHand": "Carta movida a la mano",
+    "movedCardToTopOfDeck": "Carta movida a la parte superior del mazo",
+    "movedCardToBottomOfDeck": "Carta movida al fondo del mazo",
+    "movedCardToDeckAtRandom": "Carta movida a una posición aleatoria del mazo",
+    "removedCard": "Carta eliminada",
+    "effect": "Efecto",
+    "stageEffect": "Efecto de etapa",
+    "skillCard": "Carta de habilidad",
+    "pItem": "Objeto P",
+    "numTurns": "{num} {num, plural, =1 {turno} other {turnos}}",
+    "hand": "Mano",
+    "turnN": "Turno {n}",
+    "average": "Media",
+    "unplayable": "No jugable",
+    "linkPhaseChange": "Cambio de ídolo",
+    "skip": "Omitir",
+    "selectCardsToHold": "Selecciona {num} {num, plural, =1 {carta} other {cartas}} para reservar",
+    "selectCardsToMoveToHand": "Selecciona {num} {num, plural, =1 {carta} other {cartas}} para mover a la mano",
+    "selectCardsToMoveToTopOfDeck": "Selecciona {num} {num, plural, =1 {carta} other {cartas}} para mover a la parte superior del mazo",
+    "confirm": "Confirmar"
+  },
+  "BoxPlot": {
+    "max": "Máx.",
+    "q3": "Q3",
+    "mean": "Media",
+    "median": "Mediana",
+    "q1": "Q1",
+    "min": "Mín."
+  },
+  "Rehearsal": {
+    "addScreenshots": "Añade capturas de la pantalla de resultados del ensayo para extraer sus puntuaciones.",
+    "accuracyNotGuaranteed": "No se garantiza la precisión. Se recomienda verificar los resultados a mano comparándolos con tus capturas.",
+    "dropFiles": "Toca para seleccionar o suelta aquí capturas, grabaciones o archivos CSV",
+    "stage": "Etapa {n}",
+    "score": "Puntuación",
+    "progress": "Progreso: {progress}/{total}",
+    "analyzingVideo": "Analizando vídeo...",
+    "scanningVideo": "Analizando fotograma {analyzed}/{total} · {found} resultado(s) encontrado(s) hasta ahora",
+    "videoComplete": "¡Completado! Se han encontrado {count} resultados de ensayo.",
+    "videoError": "Error al procesar el vídeo: {message}",
+    "imageError": "No se han podido leer {count} captura(s) y se han omitido.",
+    "needsChecking": "{count} fila(s) por revisar",
+    "confirmRow": "Confirma que los valores de esta fila son correctos",
+    "selectFiles": "Seleccionar archivos",
+    "addRow": "Añadir fila",
+    "clear": "Borrar",
+    "confirmClear": "¿Borrar todas las filas?"
+  },
+  "RehearsalComparison": {
+    "addResults": "Añadir resultados de ensayo",
+    "pickCell": "Toca la puntuación de este ídolo",
+    "flaggedExcluded": "{count} resultado(s) no se han podido verificar y se han excluido",
+    "simulator": "Simulador",
+    "rehearsal": "Ensayo",
+    "simulatorAverage": "Media del simulador",
+    "rehearsalAverage": "Media del ensayo",
+    "difference": "Diferencia",
+    "share": "Compartir de forma anónima para ayudar a mejorar el simulador",
+    "shared": "Compartido. ¡Gracias!",
+    "undo": "Deshacer",
+    "shareFailed": "No se ha podido compartir. Toca para volver a intentarlo"
+  },
+  "KofiAd": {
+    "prompt": "Apoya este proyecto"
+  },
+  "CalculatorGuide": {
+    "howToTitle": "Cómo se usa",
+    "ranksTitle": "Valoración necesaria por rango de producción",
+    "rankHeader": "Rango",
+    "ratingHeader": "Valoración necesaria",
+    "formulaTitle": "Cómo se calcula la valoración de producción",
+    "faqTitle": "Preguntas frecuentes",
+    "produceRankCalculator": {
+      "h1": "Calculadora de rango de producción de Gakumas (Hajime / Legend)",
+      "intro": "Calculadora del rango de producción (valoración) del escenario Hajime de Gakuen Idolmaster. Calcula tu valoración y tu rango de producción a partir de los parámetros y la puntuación del examen final, y consulta la puntuación del examen final necesaria para cada rango objetivo, como S o A+.",
+      "howToBody": "Selecciona la dificultad (Regular, Pro, Master o Legend) y tu puesto en el examen final, e introduce tus parámetros Vo/Da/Vi al inicio del examen para ver la puntuación del examen final necesaria para cada rango. En Legend, introduce también la puntuación del examen parcial. Introduce la puntuación real del examen final para ver la valoración y el rango de producción resultantes.",
+      "formulaBody": "La valoración de producción es la suma de la valoración por puesto, la valoración por parámetros y la valoración por puntuación del examen. La valoración por puesto es de 1.700 para el 1.º, 900 para el 2.º y 500 para el 3.º. La valoración por parámetros es tu total de Vo/Da/Vi (incluida la bonificación por puesto: +30/+20/+10, o +160/+80/+40 en Legend) multiplicado por 2,3 (2,1 en Legend). La puntuación del examen se convierte en valoración con tasas decrecientes: 0,3 por punto hasta 5.000, luego 0,15 hasta 10.000, 0,08 hasta 20.000, 0,04 hasta 30.000, 0,02 hasta 40.000 y 0,01 a partir de ahí. En Legend, la puntuación del examen parcial también cuenta, y el examen final usa una conversión distinta que alcanza su tope con una puntuación de 2.000.000.",
+      "faq": [
+        {
+          "q": "¿Qué es la valoración de producción?",
+          "a": "Es la puntuación de evaluación global que se calcula al final de una producción. Depende de tus parámetros, tu puesto en el examen final y las puntuaciones de los exámenes, y tu rango de producción (de F a S5) se asigna según el total."
+        },
+        {
+          "q": "¿Qué valoración hace falta para el rango S?",
+          "a": "S requiere 13.000; S+, 14.500; SS, 16.000; SSS+, 23.000; S4, 26.000, y S5, 35.000. La puntuación de examen necesaria depende de tus parámetros y tu puesto: usa la calculadora para comprobarlo."
+        },
+        {
+          "q": "¿Qué cambia en la dificultad Legend?",
+          "a": "El límite de parámetros sube a 3.000, el multiplicador de parámetros es 2,1 y la bonificación de parámetros por quedar primero es de +160. La puntuación del examen parcial también cuenta para la valoración."
+        }
+      ]
+    },
+    "niaCalculator": {
+      "h1": "Calculadora de rango de producción de N.I.A de Gakumas",
+      "intro": "Calculadora de valoración (rango de producción) del escenario N.I.A de Gakuen Idolmaster. Calcula los parámetros y los votos de fans obtenidos con tus puntuaciones de audición, y consulta tu valoración junto con las puntuaciones recomendadas para cada rango objetivo.",
+      "howToBody": "Elige tu ídolo y el % de bonificación de parámetros, e introduce tus parámetros y votos de fans antes de la audición. Introduce tus puntuaciones de audición de Vo/Da/Vi para ver los parámetros obtenidos, los votos de fans tras la audición y tu valoración de producción. En FINALE y QUARTET también se muestran las puntuaciones recomendadas para cada rango objetivo.",
+      "formulaBody": "La valoración se calcula como tu total de Vo/Da/Vi tras la audición multiplicado por 2,3, más una valoración por votos de fans. La valoración por votos usa un valor base y una tasa de conversión que dependen de tu rango de votos (de A a SSS); por ejemplo, SSS da una base de 5.200 más 0,03 por voto. Los parámetros obtenidos con las puntuaciones de audición tienen rendimientos decrecientes, así que usa las puntuaciones recomendadas para repartir la puntuación de forma eficiente.",
+      "faq": [
+        {
+          "q": "¿Cómo se determina la valoración en N.I.A?",
+          "a": "Es la suma de tu total de parámetros tras la audición multiplicado por 2,3 y la valoración que da tu número de votos de fans."
+        },
+        {
+          "q": "¿Qué es la bonificación de audición?",
+          "a": "Son los parámetros que se obtienen según tus puntuaciones de audición de Vo/Da/Vi. Cuanto más altas sean, más parámetros obtienes, pero la ganancia disminuye a partir de ciertos umbrales."
+        },
+        {
+          "q": "¿Qué dificultades y etapas se admiten?",
+          "a": "Pro (MeloBang!, GALAXY, QUARTET, FINALE) y Master (QUARTET, FINALE)."
+        }
+      ]
+    },
+    "hifCalculator": {
+      "h1": "Calculadora de rango de producción de H.I.F de Gakumas",
+      "intro": "Calculadora de valoración (rango de producción) del escenario H.I.F de Gakuen Idolmaster. Calcula tu valoración a partir de los parámetros, el estrellato y las puntuaciones de los exámenes (ronda 1 / ronda 2), y consulta la puntuación de la ronda 2 necesaria para cada rango objetivo.",
+      "howToBody": "Introduce tus parámetros Vo/Da/Vi y tu estrellato antes de la ronda 2, y después introduce las puntuaciones de los exámenes, ya sea como total o por rondas. Tu valoración, tu rango de producción y la puntuación de la ronda 2 necesaria para cada rango objetivo se muestran automáticamente.",
+      "formulaBody": "La valoración se calcula como total de parámetros × 2 + estrellato × 7,5 + valoración por puntuación de la ronda 1 + valoración por puntuación de la ronda 2 − 2.000. Introduce la puntuación de la ronda 1 tal como aparece en la pantalla de clasificación (con la bonificación de ×1,2 por quedar primero); se divide entre 1,2 antes de la conversión. Las valoraciones por puntuación crecen a un ritmo decreciente, hasta 5.500 en la ronda 1 y 7.400 en la ronda 2. La puntuación de la ronda 2 también otorga estrellato (hasta 225 con el aumento de ×1,5), que cuenta para la valoración por estrellato.",
+      "faq": [
+        {
+          "q": "¿Cuál es la fórmula de valoración de H.I.F?",
+          "a": "Total de parámetros × 2 + estrellato × 7,5 + valoraciones por puntuación de las rondas 1 y 2 − 2.000."
+        },
+        {
+          "q": "¿Cómo se tiene en cuenta la bonificación por quedar primero en la ronda 1?",
+          "a": "Terminar la ronda 1 en primera posición multiplica tu puntuación por 1,2. Introduce la puntuación exactamente como aparece en la pantalla de clasificación (con la bonificación incluida): la calculadora la divide entre 1,2 automáticamente al calcular tu valoración."
+        },
+        {
+          "q": "¿Qué valoración hace falta para S4+?",
+          "a": "S4+ requiere 30.000. S4 requiere 26.000; SSS+, 23.000, y S5, 35.000. Usa la calculadora para ver la puntuación de la ronda 2 que necesitas."
+        }
+      ]
+    },
+    "memoryCalculator": {
+      "h1": "Calculadora de probabilidad de cartas de habilidad en memorias de Gakumas",
+      "intro": "Estima la probabilidad de conseguir la combinación de cartas de habilidad que quieres en una memoria. Compara cartas objetivo, alternativas aceptables, cartas excluidas, cartas obtenidas y rango de producción antes de planificar tu próximo intento.",
+      "howToBody": "Elige las cartas que quieres en Cartas de habilidad objetivo. Añade alternativas aceptables con OR o usa NOT para excluir cartas. Introduce las cartas obtenidas, incluidas sus versiones sin mejorar y mejoradas, y selecciona el rango de producción. Revisa las combinaciones de éxito y de fracaso. Elección de carta te permite comparar cartas candidatas antes de añadir una a la lista de obtenidas.",
+      "formulaTitle": "Qué significa la estimación",
+      "formulaBody": "La calculadora enumera las combinaciones que permite su modelo de coste de memoria para el rango seleccionado y suma las probabilidades de los resultados que cumplen tus objetivos. Su modelo de distribución uniforme es una estimación: se desconoce el algoritmo real de selección de cartas de habilidad, así que la probabilidad mostrada no es una tasa verificada del juego ni una garantía.",
+      "faq": [
+        {
+          "q": "¿Cómo cambian OR y NOT un objetivo?",
+          "a": "OR acepta cualquier carta de ese hueco objetivo. Todos los huecos positivos deben cumplirse, cada uno con una carta diferente. NOT excluye las memorias que contengan cualquier carta del hueco negado, incluidas sus alternativas."
+        },
+        {
+          "q": "¿Por qué el éxito puede mostrar un 100 %?",
+          "a": "Todos los resultados del modelo actual cumplen los objetivos seleccionados. Si no hay ningún objetivo ni exclusión seleccionados, todos los resultados modelados cuentan como éxito. Comprueba que has introducido los objetivos, las cartas obtenidas y el rango que querías; aquí, un 100 % no demuestra las probabilidades reales del sorteo del juego."
+        },
+        {
+          "q": "¿Son estas las probabilidades oficiales del juego?",
+          "a": "No. Son estimaciones que suponen que todas las memorias son igual de probables, como indica la nota de la parte superior de la calculadora, así que los resultados reales pueden variar."
+        }
+      ]
+    }
+  },
+  "EntityPage": {
+    "metaDescription": "{name} en la referencia de {category}",
+    "back": "Volver a {category}",
+    "open": "Abrir página",
+    "customizations": "Personalizaciones"
+  },
+  "ShareRunModal": {
+    "title": "Compartir esta simulación",
+    "hint": "Crea un enlace a esta configuración y sus puntuaciones que cualquiera puede abrir, y la guarda en Comparar.",
+    "namePlaceholder": "Nombre (opcional)",
+    "listOnStage": "Mostrarla en las simulaciones compartidas de esta etapa",
+    "share": "Compartir",
+    "sharing": "Compartiendo…",
+    "cancel": "Cancelar",
+    "failed": "No se ha podido compartir. Inténtalo de nuevo.",
+    "sharedTitle": "Compartida",
+    "listedTitle": "Compartida y mostrada",
+    "sharedNote": "Cualquiera con el enlace puede abrirla. Puedes retirarla en Comparar.",
+    "listedNote": "También aparece en las simulaciones compartidas de esta etapa. Puedes quitarla en Comparar.",
+    "copyLink": "Copiar enlace",
+    "copied": "Copiado",
+    "copyThisLink": "Copia este enlace:",
+    "seeOthers": "Ver las simulaciones de la etapa"
+  }
+}

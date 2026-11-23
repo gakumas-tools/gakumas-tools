@@ -402,3 +402,45 @@
     }
   }
 }
+
+.compareBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: tokens.$space-2;
+}
+
+.compareText {
+  margin-right: auto;
+  color: tokens.$surface-ink-muted;
+  font-size: tokens.$text-sm;
+}
+
+.headerActive {
+  background-color: tokens.$accent-tint;
+  color: tokens.$accent-ink;
+}
+
+.delta {
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  z-index: tokens.$z-raised;
+  padding: 0 4px;
+  border-radius: tokens.$radius-pill;
+  font-size: tokens.$text-2xs;
+  font-weight: tokens.$weight-heavy;
+  line-height: 16px;
+  pointer-events: none;
+}
+
+.deltaUp {
+  background-color: tokens.$success-tint;
+  color: tokens.$success-ink;
+}
+
+.deltaDown {
+  background-color: tokens.$danger-tint;
+  color: tokens.$danger;
+}

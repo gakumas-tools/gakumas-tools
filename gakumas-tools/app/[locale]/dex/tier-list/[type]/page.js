@@ -4,6 +4,7 @@ import TierList from "@/components/TierList";
 import { routing } from "@/i18n/routing";
 import { EntityTypes } from "@/utils/entities";
 import { generateMetadataForTool } from "@/utils/metadata";
+import { recordShareOpen } from "@/utils/recordShareOpen";
 
 const TYPE_BY_SLUG = {
   "skill-cards": EntityTypes.SKILL_CARD,
@@ -31,6 +32,7 @@ export async function generateMetadata({ params, searchParams }) {
   if (entityType) {
     const query = new URLSearchParams(await searchParams);
     query.set("type", entityType);
+    await recordShareOpen("tierList", query);
     metadata.openGraph.images = [`/api/tier-list-preview?${query.toString()}`];
   }
 

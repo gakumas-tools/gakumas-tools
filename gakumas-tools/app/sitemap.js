@@ -21,6 +21,7 @@ const PATHS = [
   "/memories",
   "/simulator",
   "/rehearsal",
+  "/shared",
 ];
 
 export default function sitemap() {

@@ -15,11 +15,11 @@ export const CONTEST_LAYOUT = {
   digit: [0.08, 0.24],
   scoreDigit: [0.13, 0.28],
   dot: { x: [0.36, 0.7], y: [0.66, 1.06], diameter: [0.17, 0.3] },
-  score: { x: [0.03, 0.4], y: [0.03, 0.3] },
+  score: { x: [0.03, 0.4], y: [0, 0.3] },
   genki: { x: [0.62, 1.02], y: [-0.03, 0.32] },
   cost: { x: [0.62, 1], y: [0.66, 1.08] },
   plainCost: { x: [0.68, 1], y: [0.77, 1] },
-  icon: { x: 0.17, half: 0.16, bottom: [0.72, 0.95] },
+  icon: { x: 0.17, half: 0.17, bottom: [0.72, 0.95] },
 };
 
 export const MEMORY_LAYOUT = {
@@ -66,6 +66,12 @@ function isCostWhite(r, g, b) {
 
 function isBright(r, g, b) {
   return 0.299 * r + 0.587 * g + 0.114 * b >= 165;
+}
+
+// A dot digit blurred into the dot's white ring only comes apart at a
+// higher threshold (contest 21.webp #2).
+function isBrighter(r, g, b) {
+  return 0.299 * r + 0.587 * g + 0.114 * b >= 185;
 }
 
 function isDark(r, g, b) {
@@ -185,6 +191,10 @@ export function badgeGlyphs(imageData, box, layout) {
       minAspect: 0.2,
     });
   const dot = findDot(imageData, box, layout);
+  const dotGlyphs = (region) => {
+    const glyphs = white(region, true, isBright);
+    return glyphs.length ? glyphs : white(region, true, isBrighter);
+  };
   const shield = findBadge(imageData, box, layout.genki, isShieldBlue);
   let genki = shield && white(shield);
   // Two digits leave less blue background visible.
@@ -207,7 +217,7 @@ export function badgeGlyphs(imageData, box, layout) {
       true,
     );
   return {
-    dot: dot && white(dot, true, isBright),
+    dot: dot && dotGlyphs(dot),
     score: adjacentRun(
       componentGlyphs(imageData, area(box, layout.score, imageData), isDark, {
         height: layout.scoreDigit.map((d) => d * box.height),

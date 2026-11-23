@@ -57,6 +57,10 @@
     "rehearsal": {
       "title": "리허설 스코어 불러오기",
       "description": "리허설 스크린샷으로부터 스코어 불러오기"
+    },
+    "sharedRuns": {
+      "title": "모두의 런",
+      "description": "다른 플레이어가 스테이지에 게시한 시뮬레이터 런 보기"
     }
   },
   "NavbarMenu": {
@@ -221,7 +225,35 @@
     "exportFailed": "이미지 내보내기에 실패했습니다.",
     "shareToX": "X에 공유",
     "shareTweetText": "학원 아이돌마스터 {type} 티어리스트",
-    "confirmLeave": "탭을 전환하면 현재 티어리스트가 사라집니다. 계속하시겠습니까?"
+    "confirmLeave": "탭을 전환하면 현재 티어리스트가 사라집니다. 계속하시겠습니까?",
+    "compareWithMine": "내 티어리스트와 비교",
+    "keepMine": "내 티어리스트로 돌아가기",
+    "useTheirs": "이 티어리스트 사용",
+    "compareAgreement": "내 티어리스트와 같은 랭크: {common}개 중 {same}개 ({percent}%)",
+    "compareNoCommon": "내 티어리스트와 겹치는 항목이 없습니다"
+  },
+  "CommunityTierList": {
+    "title": "커뮤니티 티어리스트",
+    "loading": "불러오는 중…",
+    "failed": "커뮤니티 티어리스트를 불러오지 못했습니다.",
+    "tooFew": "지금까지 {count}명이 티어리스트를 추가했습니다. {min}명이 모이면 표시됩니다.",
+    "fromLists": "{count}명의 티어리스트를 합친 결과",
+    "openInEditor": "편집기에서 열기",
+    "itemTitle": "티어리스트 {lists}개 중 {n}개에 포함",
+    "howToRead": "각 항목은 그것을 놓은 티어리스트들의 가운데 단에 있습니다. SS–A 같은 범위는 가운데 절반의 티어리스트가 놓은 위치입니다.",
+    "howToPublish": "추가를 선택한 티어리스트만 집계되며, 누구의 티어리스트인지는 표시되지 않습니다.",
+    "addYours": "내 티어리스트 추가",
+    "publishTitle": "커뮤니티 티어리스트",
+    "publishHelp": "이 티어리스트를 커뮤니티 티어리스트에 추가할까요? 합계에 반영되지만 이름은 표시되지 않습니다.",
+    "publishedThis": "이 티어리스트는 커뮤니티 티어리스트에 추가되어 있습니다.",
+    "publishedOther": "커뮤니티 티어리스트에는 다른 티어리스트가 추가되어 있습니다.",
+    "publish": "커뮤니티 티어리스트에 추가",
+    "replacePublished": "이 티어리스트로 바꾸기",
+    "unpublish": "내 티어리스트 빼기",
+    "emptyList": "먼저 항목을 배치하세요.",
+    "signInToPublish": "로그인하면 커뮤니티 티어리스트에 추가할 수 있습니다.",
+    "signIn": "로그인",
+    "publishFailed": "커뮤니티 티어리스트를 업데이트하지 못했습니다."
   },
   "PIdolCollection": {
     "collected": "획득",
@@ -404,7 +436,9 @@
     "failed": "가져오기에 실패했습니다. 스크린샷을 확인하고 다시 시도해 주세요.",
     "unreadable": "읽지 못한 스크린샷: {files}",
     "selectScreenshots": "스크린샷 선택",
-    "dropHint": "탭하여 선택하거나 스크린샷을 여기에 드롭하세요"
+    "dropHint": "탭하여 선택하거나 스크린샷을 여기에 드롭하세요",
+    "covered": "메뉴 바에 가려진 스킬 카드는 비워 두었습니다. 직접 선택해 주세요:",
+    "coveredSlots": "{name}: {slots}번째 카드"
   },
   "Simulator": {
     "supportBonus": "서포트 보너스 %",
@@ -524,7 +558,9 @@
     "optimizeFailed": "최적화 불가",
     "optimizeNeedsSimulation": "현재 편성으로 시뮬레이션한 후 최적화하세요",
     "staleResults": "변경 전 편성의 결과입니다",
-    "rehearsal": "리허설"
+    "rehearsal": "리허설",
+    "shareRun": "결과 공유",
+    "signInToShare": "런을 공유하려면 로그인이 필요합니다. Discord로 이동할까요?"
   },
   "CompareTab": {
     "saved": "저장됨",
@@ -561,7 +597,77 @@
     "retry": "다시 시도",
     "saveFailed": "저장 실패",
     "renameFailed": "이름 변경 실패",
-    "deleteFailed": "삭제 실패"
+    "deleteFailed": "삭제 실패",
+    "share": "공유",
+    "copyLink": "링크 복사",
+    "unshare": "공유 중지",
+    "shared": "공유 중",
+    "linkCopied": "링크를 복사했습니다",
+    "confirmUnshare": "이 편성의 공유를 중지할까요? 링크가 더 이상 작동하지 않습니다.",
+    "shareFailed": "공유 실패",
+    "unshareFailed": "공유 중지 실패",
+    "copyThisLink": "이 링크를 복사하세요",
+    "confirmDeleteShared": "삭제할까요? 공유 링크도 더 이상 작동하지 않습니다.",
+    "listOnStage": "스테이지 페이지에 표시",
+    "unlistFromStage": "스테이지 페이지에서 숨기기",
+    "listed": "게시 중",
+    "listFailed": "게시 설정을 바꾸지 못했습니다"
+  },
+  "SharedRun": {
+    "untitled": "공유된 편성",
+    "mean": "평균",
+    "median": "중앙값",
+    "min": "최소",
+    "max": "최대",
+    "stddev": "표준편차",
+    "noScores": "점수 없음",
+    "openInSimulator": "시뮬레이터에서 열기",
+    "saveToMyRuns": "저장된 편성에 추가",
+    "saved": "저장됨",
+    "saveFailed": "저장 실패",
+    "signInPrompt": "저장하려면 로그인이 필요합니다. Discord로 이동할까요?",
+    "hint": "시뮬레이터에서 열면 기록에 추가되어 비교 탭에서 내 편성과 나란히 볼 수 있습니다.",
+    "metaDescription": "공유된 시뮬레이터 편성: 평균 {mean}, 중앙값 {median}.",
+    "metaDescriptionNoScores": "공유된 시뮬레이터 편성.",
+    "moreForStage": "이 스테이지의 다른 공유된 런",
+    "openedBy": "{count}명이 열어 봤어요",
+    "openedByMore": "{count}명 이상이 열어 봤어요"
+  },
+  "SharedRunsBrowse": {
+    "title": "모두의 런",
+    "hint": "플레이어가 스테이지 페이지에 게시한 시뮬레이터 런(최신순). 스테이지를 고르면 같은 점수 축에 나란히 표시됩니다. 열면 내 런과 나란히 돌려볼 수 있습니다. 점수는 사이트가 각 런을 직접 시뮬레이션한 결과입니다.",
+    "stage": "스테이지",
+    "allStages": "모든 스테이지",
+    "stageOption": "{name} ({count})",
+    "sort": {
+      "new": "최신순",
+      "top": "점수순"
+    },
+    "scores": "평균 {mean} · 중앙값 {median}",
+    "empty": "아직 게시된 런이 없습니다. 시뮬레이터에서 편성을 시뮬레이트한 뒤, 「결과 공유」로 게시할 수 있습니다.",
+    "older": "이전 런",
+    "newest": "최신으로",
+    "emptyAction": "내 런 공유"
+  },
+  "StageSharedRuns": {
+    "title": "이 스테이지의 공유된 런",
+    "loading": "불러오는 중…",
+    "empty": "이 스테이지에 게시된 런이 아직 없습니다.",
+    "failed": "공유된 런을 불러오지 못했습니다.",
+    "untitled": "이름 없는 런",
+    "yourRun": "내 런 (이 결과)",
+    "place": "내 런 포함 {count}개 중 {rank}위",
+    "belowTop": "게시된 상위 {count}개보다 아래",
+    "howToList": "내 런을 게시하려면 시뮬레이트한 뒤 「결과 공유」를 누르세요.",
+    "seeAll": "모두 보기",
+    "listYours": "여기에 게시",
+    "namePlaceholder": "이름 (선택)",
+    "list": "게시",
+    "listing": "게시 중…",
+    "cancel": "취소",
+    "listFailed": "게시하지 못했습니다. 다시 시도해 주세요.",
+    "signInToList": "런을 게시하려면 로그인이 필요합니다. Discord로 이동할까요?",
+    "listedNote": "게시했습니다. 비교 탭에 저장되어 있으며, 거기서 이 페이지에서 내릴 수 있습니다."
   },
   "SimulatorStats": {
     "total": "합계",
@@ -818,5 +924,23 @@
     "back": "{category} 목록",
     "open": "페이지 열기",
     "customizations": "커스터마이즈"
+  },
+  "ShareRunModal": {
+    "title": "이 런 공유",
+    "hint": "이 편성과 점수를 누구나 열 수 있는 링크로 만들고, 비교 탭에 저장합니다.",
+    "namePlaceholder": "이름 (선택)",
+    "listOnStage": "이 스테이지의 「모두의 런」에 게시",
+    "share": "공유",
+    "sharing": "공유 중…",
+    "cancel": "취소",
+    "failed": "공유하지 못했습니다. 다시 시도해 주세요.",
+    "sharedTitle": "공유했습니다",
+    "listedTitle": "공유하고 게시했습니다",
+    "sharedNote": "링크가 있는 사람은 누구나 열 수 있습니다. 비교 탭에서 내릴 수 있습니다.",
+    "listedNote": "이 스테이지의 「모두의 런」에도 게시되었습니다. 비교 탭에서 내릴 수 있습니다.",
+    "copyLink": "링크 복사",
+    "copied": "복사했습니다",
+    "copyThisLink": "이 링크를 복사하세요:",
+    "seeOthers": "이 스테이지의 런 보기"
   }
 }
