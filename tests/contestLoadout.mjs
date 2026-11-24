@@ -62,9 +62,7 @@ const DIGITS_PATH = join(
 );
 const MIN_ICON_READ_ACCURACY = 0.75;
 // Each checked against its screenshot.
-const KNOWN = new Set([
-  "customization: tests/fixtures/contest_loadout/26.webp #8 inferred badges 1,,,0,cardUses shown 1,,,1",
-]);
+const KNOWN = new Set([]);
 
 const args = process.argv.slice(2);
 const VISUALIZE = args.includes("--visualize");
