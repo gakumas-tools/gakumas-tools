@@ -24,9 +24,12 @@
  * heart) or "other" (a plain number); power is the total shown over the
  * memory's art.
  *
- * tests/fixtures/memory/account holds the account's 32 memories (ステージ tab,
- * phone 1080x2424, 2026-11-17, WebP q90). Card names are printed under each
- * card; every label was checked against its screen.
+ * tests/fixtures/memory/account holds the account's 55 memories (ステージ tab,
+ * phone 1080x2424, WebP q90): m01–m32 from 2026-11-17, m33–m55 from
+ * 2026-11-24. Card names are printed under each card; every label was checked
+ * against its screen (m33–m55 from a line-by-line transcription of each
+ * screen, with each card's cost from its data, which matches all 160 costs
+ * labelled by eye on m01–m32).
  *
  * Usage:
  *   pnpm test:memory              # compare; non-zero exit on a new or fixed miss
