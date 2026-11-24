@@ -122,6 +122,7 @@ const FIXTURES = [
   "contest-rehearsal-s56-misuzu-m01",
   "contest-rehearsal-s56-misuzu-m01-2",
   "contest-rehearsal-s56-tsubame-m19",
+  "contest-rehearsal-s56-saki-7932",
 ];
 
 function getTypeMultipliers(capture) {
