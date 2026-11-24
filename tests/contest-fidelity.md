@@ -404,3 +404,24 @@ simulator's own play reaches. 好調 never reaches 8, so the stage's effect
 doesn't fire. Only score and 集中 are checked: the harness reads state after
 the next turn starts, so 元気 (リトルプリンス on visual turns) and 好調 read past
 the log's values on a turn's last card.
+`contest-rehearsal-s56-temari-5319-5613` is 一匹狼 月村手毬 5319 as Main with
+5613 as Sub (894/363/405, 体力 36; panel 1042/319/649%), with 私の「初」の楽譜,
+from the same formation on 2026-11-24. One card a turn; 眼力 is played twice,
+so the deck holds two copies. It ends at 2,728. Score and 集中 are checked, as
+above.
+
+Stage 2 (`stageId` 194), same day: `contest-rehearsal-s56-saki-7935-6552` is
+初声 花海咲季 7935 with 6552 (826/517/1215, 体力 40; panel 1219/412/1325%) and
+初声の証・咲季, one card a turn, ending at 4,797.
+`contest-rehearsal-s56-misuzu-5334-5364` is 初陣 秦谷美鈴 5334 with 5364
+(1155/254/303, 体力 32; panel 1450/238/387%) and 初陣の証・美鈴, one card a turn,
+ending at 1,772. Both check score only, after each turn's 好印象 tick.
+
+Stage 3 (`stageId` 195), same day: `contest-rehearsal-s56-misuzu-8187-6372`
+is ゆっくり、一歩ずつ 秦谷美鈴 8187 with 6372 (1101/561/924, 体力 41; panel
+1546/438/1069%) and そよ風に揺れる髪飾り, ending at 31,281. It plays up to
+three cards a turn (全力 on turn 5), スパート from 保留 on turn 5, and ハッピー♪
+twice, so the deck holds two copies of it and of スターライト.
+`contest-rehearsal-s56-tsubame-5301` is a second play of 5301 alone (as
+`contest-rehearsal-s56-tsubame-m19`), ending at 2,903, with 積み重ね moved to
+保留 on turn 10 and played from it on turn 11. Both check score only.
