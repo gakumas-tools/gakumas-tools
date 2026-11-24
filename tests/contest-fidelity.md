@@ -345,8 +345,8 @@ at 827 with ワンモアステップ's three hits on turn 7 (172 → 448).
 
 ## Contest S56 rehearsals
 
-All from free contest rehearsals on 2026-11-21 (ver 3.6.0), each a single
-memory alone.
+All from free contest rehearsals (ver 3.6.0), each a single memory alone on
+2026-11-21 unless the entry says otherwise.
 
 Stage 2 (`stageId` 194, the same effect as S55's 191):
 `contest-rehearsal-s56-kotone-m08` is 学園生活 藤田ことね 5832 (302/729/564,
@@ -393,3 +393,14 @@ turn-2 growth. Its `-2` fixture is a second play (総合芸術 on turn 3,
 1's はげしく scores 184 = 15 × 2 × 1 hit while the log lists 「はげしく」を成長,
 ending at 3,274. 嬉しい誤算 was only played at 全力値 5 → 7, so its high-全力値
 branch isn't checked here.
+
+Stage 1 (`stageId` 193): `contest-rehearsal-s56-saki-7932` is Fighting My Way
+花海咲季 7932 as Main with 5289 as Sub, from the account's formation on
+2026-11-24 (760/791/802, 体力 47; panel 902/577/1186%), with 共に戦うタオル and
+星のリトルプリンス. One card a turn apart from turn 1, where the towel's extra use
+after ファンサ lets 大声援 follow. The game spends three visual turns on 集中-only
+cards (眼力, バランス感覚 twice), so it ends at 1,807, far under what the
+simulator's own play reaches. 好調 never reaches 8, so the stage's effect
+doesn't fire. Only score and 集中 are checked: the harness reads state after
+the next turn starts, so 元気 (リトルプリンス on visual turns) and 好調 read past
+the log's values on a turn's last card.
