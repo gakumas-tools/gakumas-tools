@@ -476,6 +476,7 @@
     "linkContest": "リンクコンテスト",
     "event": "イベント",
     "idolRoad": "アイドルへの道",
+    "idolRoadNone": "このアイドルの道のステージはまだありません。",
     "custom": "カスタム"
   },
   "StageSummary": {

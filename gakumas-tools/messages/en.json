@@ -468,6 +468,7 @@
     "linkContest": "Link Contest",
     "event": "Event",
     "idolRoad": "Idol Road",
+    "idolRoadNone": "No stages on this idol's road yet.",
     "custom": "Custom"
   },
   "StageSummary": {

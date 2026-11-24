@@ -468,6 +468,7 @@
     "linkContest": "링크 콘테스트",
     "event": "이벤트",
     "idolRoad": "Idol Road",
+    "idolRoadNone": "이 아이돌의 길 스테이지는 아직 없습니다.",
     "custom": "커스텀"
   },
   "StageSummary": {

@@ -468,6 +468,7 @@
     "linkContest": "Link Contest",
     "event": "活动",
     "idolRoad": "Idol Road",
+    "idolRoadNone": "这位偶像之路还没有关卡。",
     "custom": "自定义"
   },
   "StageSummary": {
