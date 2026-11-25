@@ -1,7 +1,9 @@
 "use client";
 import { useCallback, useContext, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Stages } from "gakumas-data";
+import { IdolRoad, Stages } from "gakumas-data";
+import { IdolConfig } from "gakumas-engine";
+import IdolRoadDataNotice from "@/components/IdolRoadDataNotice";
 import Modal from "@/components/Modal";
 import ScreenshotImporterModal from "@/components/ScreenshotImporterModal";
 import importerStyles from "@/components/ScreenshotImporterModal/ScreenshotImporterModal.module.scss";
@@ -23,6 +25,7 @@ function SimulatorLoadoutImporterModal({ stageId, onImport }) {
   const { closeModal } = useContext(ModalContext);
   const [candidates, setCandidates] = useState(null);
   const [idolRoadStage, setIdolRoadStage] = useState(null);
+  const [pIdolId, setPIdolId] = useState(null);
 
   const importFn = useCallback(
     (files) => getSimulatorLoadoutFromFiles(files, stageId),
@@ -33,6 +36,8 @@ function SimulatorLoadoutImporterModal({ stageId, onImport }) {
     ({ stageCandidates, idolRoadStage, ...imported }) => {
       onImport(imported);
       setIdolRoadStage(idolRoadStage ?? null);
+      // The P-idol as the engine reads it from the loadout.
+      setPIdolId(new IdolConfig(imported).pIdolId);
       setCandidates(stageCandidates);
     },
     [onImport],
@@ -48,6 +53,10 @@ function SimulatorLoadoutImporterModal({ stageId, onImport }) {
       />
     );
   }
+
+  const missingStage = candidates
+    .map(({ stageId }) => Stages.getById(stageId))
+    .find((s) => IdolRoad.getMissingData(s, pIdolId));
 
   const pick = ({ stageId, supportBonus }) => {
     selectStage(stageId, {});
@@ -66,6 +75,8 @@ function SimulatorLoadoutImporterModal({ stageId, onImport }) {
             ? t("noIdolRoadStage", { stage: idolRoadStage })
             : t("noStage")}
       </p>
+      {/* The candidates are one P-idol's, so one notice covers them. */}
+      <IdolRoadDataNotice stage={missingStage} pIdolId={pIdolId} />
       <div className={stageStyles.stageList}>
         {candidates.map((candidate, i) => (
           <button

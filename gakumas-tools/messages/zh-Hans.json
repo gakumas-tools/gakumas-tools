@@ -445,6 +445,7 @@
     "supportBonus": "支援加成 %",
     "multiplierNote": "※ 分数倍数对超过2400的属性不准确。",
     "previewNote": "※ 竞技场预览仅基于已公布的 P 道具和评审标准，回合类型尚未确定。",
+    "idolRoadMissingData": "{missing, select, idolRow {模拟器还没有该关卡中这位偶像的审查基准和回合数，分数可能与游戏不同。} other {模拟器还没有该关卡推荐效果「{effect, select, goodConditionTurns {好调} concentration {集中} goodImpressionTurns {好印象} motivation {干劲} strength {强气} fullPower {全力} other {该P偶像}}」的应援效果（応援効果），分数会低于游戏。}}",
     "enterPercents": "由于分数倍数的计算方式未知，请直接输入倍数（%）。",
     "linkContestNote": "Link Contest 的行为模拟可能不准确。尚未实现不同偶像间 P 道具和技能卡的去重。请在配置编辑器中手动去重并添加基本卡组。",
     "custom": "自定义",

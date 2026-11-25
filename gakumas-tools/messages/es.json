@@ -445,6 +445,7 @@
     "supportBonus": "% de bonificación de apoyo",
     "multiplierNote": "※ El multiplicador de puntuación no es preciso con parámetros superiores a 2400.",
     "previewNote": "※ La vista previa de la etapa se basa solo en los objetos P y los criterios anunciados. Aún no se conocen los tipos de turno.",
+    "idolRoadMissingData": "{missing, select, idolRow {El simulador aún no tiene los criterios ni los turnos de esta etapa para esta idol, así que la puntuación puede diferir del juego.} other {El simulador aún no tiene los efectos de apoyo (応援効果) de esta etapa para P-idols de {effect, select, goodConditionTurns {Buen estado} concentration {Concentración} goodImpressionTurns {Buena impresión} motivation {Motivación} strength {Fuerza} fullPower {Máxima potencia} other {este tipo}}, así que la puntuación será más baja que en el juego.}}",
     "enterPercents": "Como se desconoce cómo se calcula el multiplicador de puntuación, introduce directamente los multiplicadores (%).",
     "linkContestNote": "Es posible que los concursos Link no se simulen con precisión. Aún no se ha implementado la eliminación de objetos P y cartas de habilidad duplicados entre ídolos. Quita los duplicados y añade las cartas predeterminadas manualmente en el editor de formación.",
     "custom": "Personalizada",
