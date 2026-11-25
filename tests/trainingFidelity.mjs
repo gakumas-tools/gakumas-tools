@@ -67,6 +67,7 @@ function createEngine(capture, play) {
     stage: {
       type: "capturedTraining",
       turnCount: capture.turnTypes.length,
+      passScore: capture.passScore,
       effects: (capture.stageEffects ?? []).flatMap((e) =>
         deserializeEffectSequence(e.effect),
       ),
