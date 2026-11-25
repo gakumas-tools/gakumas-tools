@@ -434,52 +434,55 @@ export default function Simulator() {
         </div>
       </div>
 
-      {strategy === "ManualStrategy" && simulatorData && (
-        <ManualPlay
-          logs={simulatorData.logs}
-          pendingDecision={pendingDecision}
-          onDecision={handleDecision}
-          idolId={simulatorData.input.idolId}
-        />
+      {!simulatorData && !simError && (
+        <div className={styles.resultPlaceholder} />
       )}
 
-      {strategy === "HeuristicStrategy" && simulatorData && (
-        <SimulatorResult
-          pending={running}
-          data={simulatorData}
-          config={config}
-          stale={
-            simulatorData.input.config !== config ||
-            simulatorData.input.linkConfigs !== linkConfigs
-          }
-          enterPercents={simulatorData.input.enterPercents}
-          idolId={simulatorData.input.idolId}
-          plan={simulatorData.input.plan}
-        />
-      )}
+      <div className={styles.resultColumn}>
+        {strategy === "ManualStrategy" && simulatorData && (
+          <ManualPlay
+            logs={simulatorData.logs}
+            pendingDecision={pendingDecision}
+            onDecision={handleDecision}
+            idolId={simulatorData.input.idolId}
+          />
+        )}
 
-      {!simulatorData &&
-        (simError ? (
+        {strategy === "HeuristicStrategy" && simulatorData && (
+          <SimulatorResult
+            pending={running}
+            data={simulatorData}
+            config={config}
+            stale={
+              simulatorData.input.config !== config ||
+              simulatorData.input.linkConfigs !== linkConfigs
+            }
+            enterPercents={simulatorData.input.enterPercents}
+            idolId={simulatorData.input.idolId}
+            plan={simulatorData.input.plan}
+          />
+        )}
+
+        {!simulatorData && simError && (
           <Alert variant="danger" className={styles.resultError}>
             {simError}
           </Alert>
-        ) : (
-          <div className={styles.resultPlaceholder} />
-        ))}
+        )}
 
-      {/* Below the result, so a screenshot of the loadout and its score spread still fits one phone screen. */}
-      <div className={styles.stageSharedRuns} data-export-hide="true">
-        <StageSharedRuns
-          stageId={stage.id}
-          yourRun={
-            strategy === "HeuristicStrategy" &&
-            !running &&
-            simulatorData?.input.config === config &&
-            simulatorData?.input.linkConfigs === linkConfigs
-              ? simulatorData.run
-              : null
-          }
-        />
+        {/* Under the result, in its column, so it never takes a column of its own. */}
+        <div className={styles.stageSharedRuns} data-export-hide="true">
+          <StageSharedRuns
+            stageId={stage.id}
+            yourRun={
+              strategy === "HeuristicStrategy" &&
+              !running &&
+              simulatorData?.input.config === config &&
+              simulatorData?.input.linkConfigs === linkConfigs
+                ? simulatorData.run
+                : null
+            }
+          />
+        </div>
       </div>
     </div>
   );
