@@ -978,6 +978,7 @@
     "sharedRuns": "该舞台的共享记录",
     "metaDescription": "{name}（{type}）：审查基准 Vo {vocal}% Da {dance}% Vi {visual}%，{turns} 回合。可在模拟器中打开，或与其他玩家的共享记录比较。",
     "topRuns": "排名靠前的共享记录",
-    "noRuns": "该舞台还没有共享记录。在模拟器中打开它，分享你的记录吧。"
+    "noRuns": "该舞台还没有共享记录。在模拟器中打开它，分享你的记录吧。",
+    "rehearsalGap": "过去{days}天内{sources}名玩家共享了{count}次排练。模拟器平均分与游戏的差距（中位数）：{gap}"
   }
 }
