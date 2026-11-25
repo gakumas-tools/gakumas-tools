@@ -25,6 +25,8 @@ const INDEXES = {
     { listed: 1, stageId: 1, createdAt: -1, _id: -1 },
   ],
   communityTierLists: { userId: 1, type: 1 },
+  // The stage page (stageRehearsalGap).
+  rehearsalComparisons: { "loadout.stageId": 1, updatedAt: -1 },
 };
 
 /**

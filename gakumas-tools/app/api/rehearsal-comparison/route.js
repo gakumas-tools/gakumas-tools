@@ -51,6 +51,9 @@ export async function PUT(request) {
         commit: process.env.RENDER_GIT_COMMIT || null,
         updatedAt: now,
       },
+      // A comparison shared again may have another loadout or scores: the
+      // server simulates it again for the stage page.
+      $unset: { serverSim: "", serverSimTried: "" },
       $setOnInsert: { createdAt: now },
     },
     { upsert: true },
