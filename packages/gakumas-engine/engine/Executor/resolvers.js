@@ -310,6 +310,9 @@ export function resolveStamina(state, stamina) {
     stamina *= 0.5;
   } else if (state[S.stance] == "preservation2") {
     stamina *= 0.25;
+  } else if (state[S.stance] == "leisure") {
+    // のんびり: 消費体力を100％減少
+    stamina *= 0;
   }
 
   // Multiplicative cost buffs

@@ -11,11 +11,12 @@
     "build:effect-icons": "node --loader ./scripts/extensionless-loader.mjs ./tests/memoryBoxes.mjs --icons",
     "generate": "pnpm --filter gakumas-images generate && python -m scripts.generate",
     "regenerate": "rm -rf gk-img/docs/*s && pnpm generate",
-    "test": "node --loader ./scripts/extensionless-loader.mjs --test 'tests/unit/**/*.test.mjs' ./tests/trainingFidelity.mjs ./tests/contestFidelity.mjs",
+    "test": "node --loader ./scripts/extensionless-loader.mjs --test 'tests/unit/**/*.test.mjs' ./tests/trainingFidelity.mjs ./tests/contestFidelity.mjs ./tests/idolRoadFidelity.mjs",
     "test:regression": "node --loader ./scripts/extensionless-loader.mjs ./tests/run.mjs",
     "test:draft": "node --loader ./scripts/extensionless-loader.mjs ./tests/draftPickBoxes.mjs",
     "test:memory": "node --loader ./scripts/extensionless-loader.mjs ./tests/memoryBoxes.mjs",
     "test:contest-loadout": "node --loader ./scripts/extensionless-loader.mjs ./tests/contestLoadout.mjs",
+    "test:idol-road-loadout": "node --loader ./scripts/extensionless-loader.mjs ./tests/idolRoadLoadout.mjs",
     "test:rehearsal": "node --loader ./scripts/extensionless-loader.mjs ./tests/rehearsalScores.mjs",
     "regression:add": "node --loader ./scripts/extensionless-loader.mjs ./tests/add.mjs",
     "regression:bootstrap": "node --loader ./scripts/extensionless-loader.mjs ./tests/generate-suite.mjs",
@@ -38,6 +39,7 @@
     "gakumas-loadout": "workspace:*"
   },
   "devDependencies": {
+    "@tesseract.js-data/eng": "1.0.0",
     "onnxruntime-node": "1.24",
     "sharp": "^0.35.5",
     "tesseract.js": "^7.0.0"

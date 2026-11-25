@@ -30,6 +30,7 @@ import c from "@/utils/classNames";
 import NavigationGuardContext from "@/contexts/NavigationGuardContext";
 import {
   EMPTY_LIST,
+  compareLists,
   decodeList,
   encodeList,
   isDefaultList,
@@ -37,6 +38,7 @@ import {
 import EntityPool, { POOL_ID } from "./EntityPool";
 import TierListPickerModal from "./TierListPickerModal";
 import TierRow from "./TierRow";
+import CommunityTierList from "@/components/CommunityTierList";
 import TierShareModal from "./TierShareModal";
 import { AVAILABLE_RANKS, sortRanks } from "./ranks";
 import styles from "./TierList.module.scss";
@@ -44,6 +46,28 @@ import styles from "./TierList.module.scss";
 function findContainer(list, pickedById, id) {
   if (list.tiers.includes(id)) return id;
   return pickedById[id] ?? POOL_ID;
+}
+
+const storageKey = (type) => `tierList:${type}`;
+
+function readSaved(type) {
+  try {
+    return decodeList(window.localStorage.getItem(storageKey(type)));
+  } catch {
+    return null;
+  }
+}
+
+function writeSaved(type, list) {
+  try {
+    if (isDefaultList(list)) {
+      window.localStorage.removeItem(storageKey(type));
+    } else {
+      window.localStorage.setItem(storageKey(type), encodeList(list));
+    }
+  } catch {
+    // Storage can be full or blocked; the list still lives in the URL.
+  }
 }
 
 function TierList({ type }) {
@@ -68,13 +92,53 @@ function TierList({ type }) {
 
   const [pickerTier, setPickerTier] = useState(null);
   const [shareOpen, setShareOpen] = useState(false);
+  const [sharesClosed, setSharesClosed] = useState(0);
   const [activeId, setActiveId] = useState(null);
   const [leaving, setLeaving] = useState([]);
   const leavingRef = useRef(leaving);
   leavingRef.current = leaving;
   const [ready, setReady] = useState(false);
+  // The player's own saved list while they look at someone else's link, until
+  // they keep theirs or take the shared one.
+  const [mine, setMine] = useState(null);
+  const [comparing, setComparing] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => setReady(true), []);
+
+  useEffect(() => {
+    const saved = readSaved(type);
+    if (saved && !isDefaultList(saved)) {
+      if (!searchParams?.get("d")) {
+        setList(saved);
+      } else if (encodeList(saved) !== encodeList(initialList)) {
+        setMine(saved);
+      }
+    }
+    setLoaded(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [type]);
+
+  useEffect(() => {
+    if (loaded && mine == null) writeSaved(type, list);
+  }, [type, list, mine, loaded]);
+
+  const comparison = useMemo(
+    () => (mine ? compareLists(mine, list) : null),
+    [mine, list],
+  );
+  const deltas = comparing && comparison ? comparison.byId : null;
+
+  const keepMine = useCallback(() => {
+    setList(mine);
+    setMine(null);
+    setComparing(false);
+  }, [mine]);
+
+  const useTheirs = useCallback(() => {
+    setMine(null);
+    setComparing(false);
+  }, []);
 
   // Defer URL sync until a drag finishes — hover-driven mid-drag list mutations
   // would otherwise rewrite the URL on every frame.
@@ -459,6 +523,42 @@ function TierList({ type }) {
           </button>
         </div>
 
+        {mine && (
+          <div className={styles.compareBar}>
+            <span className={styles.compareText}>
+              {comparison.agreement == null
+                ? t("compareNoCommon")
+                : t("compareAgreement", {
+                    same: Math.round(comparison.agreement * comparison.common),
+                    common: comparison.common,
+                    percent: Math.round(comparison.agreement * 100),
+                  })}
+            </span>
+            <button
+              type="button"
+              className={c(styles.headerButton, comparing && styles.headerActive)}
+              aria-pressed={comparing}
+              onClick={() => setComparing((v) => !v)}
+            >
+              {t("compareWithMine")}
+            </button>
+            <button
+              type="button"
+              className={styles.headerButton}
+              onClick={keepMine}
+            >
+              {t("keepMine")}
+            </button>
+            <button
+              type="button"
+              className={styles.headerButton}
+              onClick={useTheirs}
+            >
+              {t("useTheirs")}
+            </button>
+          </div>
+        )}
+
         <div className={styles.tiers}>
           <div className={styles.tierRows}>
             {list.tiers.map((tierKey) => {
@@ -479,6 +579,7 @@ function TierList({ type }) {
                   type={type}
                   tierKey={tierKey}
                   ids={list.items[tierKey] || []}
+                  deltas={deltas}
                   canDelete={canDeleteTier}
                   addAbove={aboveRank}
                   addBelow={belowRank}
@@ -497,6 +598,12 @@ function TierList({ type }) {
 
         <EntityPool type={type} list={list} />
 
+        <CommunityTierList
+          type={type}
+          onAddYours={() => setShareOpen(true)}
+          refresh={sharesClosed}
+        />
+
         {pickerTier != null && list.tiers.includes(pickerTier) && (
           <TierListPickerModal
             type={type}
@@ -510,7 +617,10 @@ function TierList({ type }) {
         {shareOpen && (
           <TierShareModal
             type={type}
-            onClose={() => setShareOpen(false)}
+            onClose={() => {
+              setShareOpen(false);
+              setSharesClosed((n) => n + 1);
+            }}
           />
         )}
       </div>
