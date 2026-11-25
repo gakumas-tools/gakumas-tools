@@ -69,6 +69,19 @@
     font-size: tokens.$text-sm;
     font-weight: tokens.$weight-heavy;
   }
+
+  // Three across where there's room; on a phone, Share takes its own row.
+  @media (min-width: 560px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.share {
+  grid-column: 1 / -1;
+
+  @media (min-width: 560px) {
+    grid-column: auto;
+  }
 }
 
 .optimize {

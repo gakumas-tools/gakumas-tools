@@ -13,18 +13,19 @@
 
 .slots {
   display: flex;
-  gap: 4px;
+  gap: tokens.$space-2;
 }
 
 .slot {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
+  width: 92px;
 }
 
-.turn {
-  font-size: 12px;
+.icon {
+  width: 48px;
 }
 
 .note {
