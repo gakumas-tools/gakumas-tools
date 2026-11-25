@@ -56,6 +56,7 @@ const FIXTURES = [
   "idol-road-misuzu-s1-strength",
   "idol-road-misuzu-s1-motivation",
   "idol-road-misuzu-s1-fullpower",
+  "idol-road-misuzu-s1-fullpower-full",
 ];
 
 function createEngine(capture) {
