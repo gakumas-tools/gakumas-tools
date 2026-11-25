@@ -445,6 +445,7 @@
     "supportBonus": "Support bonus %",
     "multiplierNote": "※ Score multiplier is inaccurate for parameters above 2400.",
     "previewNote": "※ Stage preview is based only on the announced p-items and criteria. Turn types are not yet known.",
+    "idolRoadMissingData": "{missing, select, idolRow {The simulator doesn't have this stage's criteria and turns for this idol yet, so scores may differ from the game.} other {The simulator doesn't have this stage's support effects (応援効果) for {effect, select, goodConditionTurns {Good condition} concentration {Concentration} goodImpressionTurns {Good impression} motivation {Motivation} strength {Strength} fullPower {Full power} other {these}} P-idols yet, so scores will be lower than in game.}}",
     "enterPercents": "Since the score multiplier calculation is unknown, please enter the multipliers (%) directly.",
     "linkContestNote": "Link contest behavior may not be accurately simulated. Deduplication of p-items and skill cards across idols is not yet implemented. Please deduplicate and add default cards manually in the loadout editor.",
     "custom": "Custom",

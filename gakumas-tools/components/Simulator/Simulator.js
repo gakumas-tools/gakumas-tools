@@ -21,6 +21,7 @@ import {
 import Alert from "@/components/Alert";
 import Button from "@/components/Button";
 import ButtonGroup from "@/components/ButtonGroup";
+import IdolRoadDataNotice from "@/components/IdolRoadDataNotice";
 import Input from "@/components/Input";
 import KofiAd from "@/components/KofiAd";
 import LoadoutEditor from "@/components/LoadoutEditor";
@@ -275,6 +276,7 @@ export default function Simulator() {
       <div className={styles.configurator}>
         {stage.preview && <Alert>{t("previewNote")}</Alert>}
         <StageSelect />
+        <IdolRoadDataNotice stage={stage} pIdolId={config.idol.pIdolId} />
         {stage.type !== "contest" ? (
           <Alert>{t("enterPercents")}</Alert>
         ) : (

@@ -453,6 +453,7 @@
     "supportBonus": "サポートボーナス%",
     "multiplierNote": "※スコアボーナスは、2400を超えるパラメータに対して不正確です。",
     "previewNote": "※ステージプレビューは、発表されたPアイテムと審査基準のみに基づいています。ターンタイプはまだ不明です。",
+    "idolRoadMissingData": "{missing, select, idolRow {このステージのこのアイドルの審査基準とターン数はまだシミュレーターにないため、スコアがゲームと異なることがあります。} other {このステージのおすすめ効果「{effect, select, goodConditionTurns {好調} concentration {集中} goodImpressionTurns {好印象} motivation {やる気} strength {強気} fullPower {全力} other {このPアイドル}}」の応援効果はまだシミュレーターにないため、スコアはゲームより低くなります。}}",
     "enterPercents": "計算式が解明されていないため、スコアボーナスの%を入力してください。",
     "linkContestNote": "リンクコンテストの挙動は正確に再現されない場合があります。アイドル間でのPアイテムやスキルカードの重複排除はまだ実装されていません。手動で重複排除を行って、基本カードを入れてください。",
     "custom": "カスタム",
