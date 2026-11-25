@@ -5,6 +5,7 @@ import {
   FaFilm,
   FaPercent,
   FaTrophy,
+  FaUsers,
 } from "react-icons/fa6";
 
 export const TOOLS = {
@@ -36,6 +37,11 @@ export const TOOLS = {
   rehearsal: {
     icon: <FaChartSimple />,
     path: "/rehearsal",
+    pinnable: true,
+  },
+  sharedRuns: {
+    icon: <FaUsers />,
+    path: "/shared",
     pinnable: true,
   },
 };

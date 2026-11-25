@@ -12,7 +12,7 @@ const LEGACY_REDIRECTS = [
   ["/calculator/hajime", "/calculator/hajime/produce-rank"],
 ];
 
-const LOCALE_PREFIXES = ["", "/en", "/zh-Hans", "/ko"];
+const LOCALE_PREFIXES = ["", "/en", "/zh-Hans", "/ko", "/es"];
 
 const gkImgBaseUrl = process.env.NEXT_PUBLIC_GK_IMG_BASE_URL;
 const gkImgHostname = gkImgBaseUrl && new URL(gkImgBaseUrl).hostname;
