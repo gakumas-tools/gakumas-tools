@@ -9,6 +9,8 @@ import {
 export function createEngine({
   params = [100, 100, 100, 30],
   pItemIds = [],
+  pDrinkIds = [],
+  pDrinkTurns = [],
   skillCardIds = [19],
   stageId = 1,
 } = {}) {
@@ -16,6 +18,8 @@ export function createEngine({
     params,
     supportBonus: 0,
     pItemIds,
+    pDrinkIds,
+    pDrinkTurns,
     skillCardIdGroups: [skillCardIds],
     customizationGroups: [[]],
   });

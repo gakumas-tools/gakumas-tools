@@ -185,7 +185,8 @@
       "p-items": "P 道具",
       "p-drinks": "P 饮料",
       "p-idols": "P 偶像",
-      "support-cards": "支援卡"
+      "support-cards": "支援卡",
+      "stages": "舞台"
     },
     "categories": {
       "reference": {
@@ -444,6 +445,7 @@
     "supportBonus": "支援加成 %",
     "multiplierNote": "※ 分数倍数对超过2400的属性不准确。",
     "previewNote": "※ 竞技场预览仅基于已公布的 P 道具和评审标准，回合类型尚未确定。",
+    "idolRoadMissingData": "{missing, select, idolRow {模拟器还没有该关卡中这位偶像的审查基准和回合数，分数可能与游戏不同。} other {模拟器还没有该关卡推荐效果「{effect, select, goodConditionTurns {好调} concentration {集中} goodImpressionTurns {好印象} motivation {干劲} strength {强气} fullPower {全力} other {该P偶像}}」的应援效果（応援効果），分数会低于游戏。}}",
     "enterPercents": "由于分数倍数的计算方式未知，请直接输入倍数（%）。",
     "linkContestNote": "Link Contest 的行为模拟可能不准确。尚未实现不同偶像间 P 道具和技能卡的去重。请在配置编辑器中手动去重并添加基本卡组。",
     "custom": "自定义",
@@ -467,13 +469,31 @@
     "linkContest": "Link Contest",
     "event": "活动",
     "idolRoad": "Idol Road",
+    "produceExam": "培育考试",
     "custom": "自定义"
   },
   "StageSummary": {
     "contestStageName": "第 {season} 赛季 - 第 {stage} 舞台",
     "eventStageName": "{name} - 第 {stage} 舞台 - {round} 回合",
+    "idolRoadStageName": "Idol Road {name}",
     "custom": "自定义",
     "activeSeason": "当前赛季"
+  },
+  "TurnOrder": {
+    "label": "回合顺序（按游戏内显示）",
+    "turnLabel": "第{turn}回合：{type}",
+    "vocal": "声乐",
+    "dance": "舞蹈",
+    "visual": "形象",
+    "vocalShort": "Vo",
+    "danceShort": "Da",
+    "visualShort": "Vi"
+  },
+  "StagePDrinks": {
+    "label": "P 饮料",
+    "turn": "第{turn}回合",
+    "turnLabel": "饮用 P 饮料 {slot} 的回合",
+    "note": "在所选回合开始时、打出第一张卡之前饮用。游戏中可以随时饮用。"
   },
   "StageCustomizer": {
     "type": "类型",
@@ -521,20 +541,38 @@
   },
   "SimulatorLoadoutImporterModal": {
     "title": "从截图导入编组",
-    "instructions": "请上传游戏内比赛编组画面的截图。将读取属性值、P道具和技能卡，并根据类型倍率推算关卡和支援加成。",
+    "instructions": "请上传游戏内比赛编组画面的截图。将读取属性值、P道具和技能卡，并根据类型倍率推算关卡和支援加成。也支持 Idol Road 的「スコア獲得編成確認」画面：请上传其顶部截图；卡组有3行时，再一并选择一张滚动到底部的截图。",
     "processing": "正在处理截图...",
     "error": "导入失败",
     "matchingStages": "匹配的关卡",
     "pickStage": "已选中最匹配的关卡，如有误请重新选择。",
-    "noStage": "没有关卡与截图中的类型倍率一致，因此关卡和支援加成保持不变。"
+    "noStage": "没有关卡与截图中的类型倍率一致，因此关卡和支援加成保持不变。",
+    "noIdolRoadStage": "该偶像的偶像之路 STAGE{stage} 尚未加入模拟器，因此关卡保持不变。读取的参数是画面上的百分比数值，仅适用于偶像之路关卡。"
   },
   "ShareModal": {
     "title": "分享",
     "more": "更多…",
     "x": "分享到 X",
+    "xResult": "将结果分享到 X",
     "saveImage": "保存为图片",
     "exporting": "保存中…",
-    "exportFailed": "保存失败，请重试"
+    "exportFailed": "保存失败，请重试",
+    "loadoutHelp": "打开此链接即可在模拟器中打开此编成。",
+    "copy": "复制",
+    "copied": "已复制",
+    "copyThisLink": "请复制此链接：",
+    "resultTitle": "分享此结果",
+    "resultHelp": "将此编成及其分数生成任何人都能打开的链接，并保存到比较页。",
+    "signInToShareResult": "要生成结果链接并展示在舞台的“大家的记录”中，需要登录。",
+    "signIn": "使用 Discord 登录",
+    "namePlaceholder": "名称（可选）",
+    "listOnStage": "展示在此舞台的“大家的记录”中",
+    "makeLink": "生成结果链接",
+    "making": "生成中…",
+    "failed": "无法分享，请重试。",
+    "sharedNote": "任何拥有链接的人都能打开。可在比较页撤下。",
+    "listedNote": "它也已展示在此舞台的“大家的记录”中。可在比较页撤下。",
+    "seeOthers": "查看此舞台的记录"
   },
   "ConfirmModal": {
     "cancel": "取消",
@@ -559,8 +597,7 @@
     "optimizeNeedsSimulation": "请先模拟当前编成",
     "staleResults": "这些结果来自修改前的编成",
     "rehearsal": "排练",
-    "shareRun": "分享结果",
-    "signInToShare": "分享记录需要登录。是否前往 Discord？"
+    "shareRun": "分享"
   },
   "CompareTab": {
     "saved": "已保存",
@@ -644,7 +681,7 @@
       "top": "最高分"
     },
     "scores": "平均 {mean} · 中位数 {median}",
-    "empty": "这里还没有展示的记录。在模拟器中模拟编成后，点“分享结果”即可展示。",
+    "empty": "这里还没有展示的记录。在模拟器中模拟编成后，点“分享”即可展示。",
     "older": "更早的记录",
     "newest": "回到最新",
     "emptyAction": "分享你的记录"
@@ -658,7 +695,7 @@
     "yourRun": "你的记录（本次结果）",
     "place": "含你在内 {count} 条中第 {rank}",
     "belowTop": "低于展示的前 {count} 条",
-    "howToList": "要展示你的记录，请在模拟后点“分享结果”。",
+    "howToList": "要展示你的记录，请在模拟后点“分享”。",
     "seeAll": "查看全部",
     "listYours": "在这里展示",
     "namePlaceholder": "名称（可选）",
@@ -774,6 +811,7 @@
     "stageEffect": "舞台效果",
     "skillCard": "技能卡",
     "pItem": "P 道具",
+    "pDrink": "P 饮料",
     "numTurns": "第 {num} 回合",
     "hand": "持有技能卡",
     "turnN": "回合 {n}",
@@ -925,22 +963,21 @@
     "open": "打开页面",
     "customizations": "自定义"
   },
-  "ShareRunModal": {
-    "title": "分享这条记录",
-    "hint": "将此编成及其分数生成任何人都能打开的链接，并保存到比较页。",
-    "namePlaceholder": "名称（可选）",
-    "listOnStage": "展示在此舞台的“大家的记录”中",
-    "share": "分享",
-    "sharing": "分享中…",
-    "cancel": "取消",
-    "failed": "无法分享，请重试。",
-    "sharedTitle": "已分享",
-    "listedTitle": "已分享并展示",
-    "sharedNote": "任何拥有链接的人都能打开。可在比较页撤下。",
-    "listedNote": "它也已展示在此舞台的“大家的记录”中。可在比较页撤下。",
-    "copyLink": "复制链接",
-    "copied": "已复制",
-    "copyThisLink": "请复制此链接：",
-    "seeOthers": "查看此舞台的记录"
+  "StagePage": {
+    "turnsTotal": "{n} 回合",
+    "preview": "预览",
+    "idolRoadNote": "偶像之路的回合数和审查基准因偶像而异。这里是未选择P偶像时模拟器使用的数值。",
+    "vocal": "Vo",
+    "dance": "Da",
+    "visual": "Vi",
+    "total": "合计",
+    "criteria": "审查基准",
+    "turns": "回合数",
+    "firstTurn": "第一回合",
+    "openSimulator": "在模拟器中打开",
+    "sharedRuns": "该舞台的共享记录",
+    "metaDescription": "{name}（{type}）：审查基准 Vo {vocal}% Da {dance}% Vi {visual}%，{turns} 回合。可在模拟器中打开，或与其他玩家的共享记录比较。",
+    "topRuns": "排名靠前的共享记录",
+    "noRuns": "该舞台还没有共享记录。在模拟器中打开它，分享你的记录吧。"
   }
 }

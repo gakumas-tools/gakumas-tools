@@ -759,8 +759,41 @@ export default class CardManager extends EngineComponent {
     // shared-by-reference with parent states via cloneValue's shallow
     // clone.
     const orig = state[S.cardMap][card];
-    state[S.cardMap][card] = { ...orig, id: orig.id + 1 };
+    state[S.cardMap][card] = { ...orig, id: orig.id + 1, upgradedInStage: true };
     state[S.turnCardsUpgraded]++;
+  }
+
+  // レッスン中強化 of a whole hand (フレッシュビネガー, 発動予約) also raises a
+  // + card to ++, but only a copy whose + came from スキルカードサポート in
+  // this stage (the support badge) and that no レッスン中強化 has raised yet.
+  // Seen in the game: run #18 F02–F04 (アピールの基本+, 手拍子+, 可愛い仕草+,
+  // each with the badge, to ++), run #16 F04 (発動予約: 200%スマイル to ++,
+  // the deck's 手拍子+ stays +), run #18 初めての未来+ and run #11
+  // 紅葉ランニング+ (deck +) stay +, and run #10 F02's second ビネガー leaves
+  // the cards the first one raised.
+  upgradeToPlusPlus(state, card) {
+    const orig = state[S.cardMap][card];
+    if (!orig.supportUpgraded || orig.upgradedInStage) return false;
+    const plusPlus = SkillCards.getPlusPlus(orig.id);
+    if (!plusPlus) return false;
+    state[S.cardMap][card] = { ...orig, id: plusPlus.id, upgradedInStage: true };
+    state[S.turnCardsUpgraded]++;
+    return true;
+  }
+
+  // スキルカードサポート: raises a card one level (base to +, + to ++).
+  // Returns false when there is no next level here: a ++ card, or a + card
+  // whose ++ hasn't been read from the game yet. Whether it counts toward
+  // turnCardsUpgraded hasn't been seen in the game, so it doesn't.
+  supportUpgrade(state, card) {
+    const orig = state[S.cardMap][card];
+    const skillCard = SkillCards.getById(orig.id);
+    const nextId = skillCard.upgraded
+      ? SkillCards.getPlusPlus(orig.id)?.id
+      : this.isUpgradable(state, card) && orig.id + 1;
+    if (!nextId) return false;
+    state[S.cardMap][card] = { ...orig, id: nextId, supportUpgraded: true };
+    return true;
   }
 
   discardHand(state) {
@@ -773,6 +806,8 @@ export default class CardManager extends EngineComponent {
     for (let i = 0; i < state[S.handCards].length; i++) {
       if (this.isUpgradable(state, state[S.handCards][i])) {
         this.upgrade(state, state[S.handCards][i]);
+      } else {
+        this.upgradeToPlusPlus(state, state[S.handCards][i]);
       }
     }
     this.logger.log(state, "upgradeHand");
