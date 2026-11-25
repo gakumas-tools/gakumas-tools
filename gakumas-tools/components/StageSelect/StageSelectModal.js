@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Stages } from "gakumas-data";
+import { ProduceExams, Stages } from "gakumas-data";
+import { getProduceExamStage } from "gakumas-loadout";
 import ButtonGroup from "@/components/ButtonGroup";
 import Modal from "@/components/Modal";
 import StageCustomizer from "@/components/StageCustomizer";
@@ -19,6 +20,10 @@ const stagesByType = allStages.reduce((acc, stage) => {
   acc[stage.type].push(stage);
   return acc;
 }, {});
+// Produce exams live outside Stages; list them under their own tab.
+stagesByType.produceExam = ProduceExams.getAll().map((exam) =>
+  getProduceExamStage(exam.id),
+);
 
 export default function StageSelectModal() {
   const t = useTranslations("StageSelectModal");
@@ -31,6 +36,7 @@ export default function StageSelectModal() {
     ...(stagesByType.idolRoad
       ? [{ value: "idolRoad", label: t("idolRoad") }]
       : []),
+    { value: "produceExam", label: t("produceExam") },
     { value: "custom", label: t("custom") },
   ];
 

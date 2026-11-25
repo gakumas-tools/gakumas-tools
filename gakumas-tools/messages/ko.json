@@ -469,6 +469,7 @@
     "linkContest": "링크 콘테스트",
     "event": "이벤트",
     "idolRoad": "Idol Road",
+    "produceExam": "프로듀스 시험",
     "custom": "커스텀"
   },
   "StageSummary": {
@@ -477,6 +478,16 @@
     "idolRoadStageName": "Idol Road {name}",
     "custom": "커스텀",
     "activeSeason": "현재 시즌"
+  },
+  "TurnOrder": {
+    "label": "턴 순서 (게임 화면 그대로)",
+    "turnLabel": "{turn}턴: {type}",
+    "vocal": "보컬",
+    "dance": "댄스",
+    "visual": "비주얼",
+    "vocalShort": "Vo",
+    "danceShort": "Da",
+    "visualShort": "Vi"
   },
   "StageCustomizer": {
     "type": "타입",

@@ -5,9 +5,30 @@ import {
   serializeCustomizations,
 } from "./customizations";
 import { deserializeIds, serializeIds } from "./ids";
-import { getDefaultParams, getStage, knownStageId } from "./stages";
+import {
+  getDefaultParams,
+  getStage,
+  knownStageId,
+  produceExamIdOf,
+  TURN_TYPES,
+} from "./stages";
 
 const SIMULATOR_BASE_URL = "https://gktools.ris.moe/simulator";
+
+// Turn order of a produce exam in the URL: "vo-da-vi-...".
+const TURN_TYPE_CODES = { vocal: "vo", dance: "da", visual: "vi" };
+
+export function serializeTurnTypes(turnTypes) {
+  return turnTypes.map((type) => TURN_TYPE_CODES[type]).join("-");
+}
+
+export function deserializeTurnTypes(value) {
+  if (!value) return null;
+  const types = value
+    .split("-")
+    .map((code) => TURN_TYPES.find((type) => TURN_TYPE_CODES[type] == code));
+  return types.every(Boolean) ? types : null;
+}
 
 const DEFAULTS = {
   stageId: Stages.findLast((s) => s.type == "contest" && !s.preview).id,
@@ -26,8 +47,10 @@ function knownSkillCardId(id) {
 }
 
 export function getSimulatorUrl(loadout, loadouts) {
-  const stage = Stages.getById(loadout.stageId);
-  if (!stage) return null;
+  if (loadout.stageId == "custom" || !knownStageId(loadout.stageId)) {
+    return null;
+  }
+  const stage = getStage(loadout.stageId, loadout.customStage);
   if (stage.type === "linkContest") {
     const searchParams = loadoutsToSearchParams(loadouts);
     return `${SIMULATOR_BASE_URL}/?${searchParams.toString()}`;
@@ -59,10 +82,17 @@ export function loadoutFromSearchParams(searchParams) {
   skillCardIdGroups = skillCardIdGroups || DEFAULTS.skillCardIdGroups;
   customizationGroups = customizationGroups || DEFAULTS.customizationGroups;
 
-  stageId = knownStageId(parseInt(stageId, 10));
+  const isProduceExam = !!produceExamIdOf(stageId);
+  stageId = knownStageId(isProduceExam ? stageId : parseInt(stageId, 10));
+  const turnTypes = isProduceExam
+    ? deserializeTurnTypes(searchParams.get("turns"))
+    : null;
+  const customStage = turnTypes ? { turnTypes } : {};
   supportBonus = parseFloat(supportBonus);
   if (isNaN(supportBonus)) supportBonus = null;
-  params = params ? deserializeIds(params) : getDefaultParams(getStage(stageId));
+  params = params
+    ? deserializeIds(params)
+    : getDefaultParams(getStage(stageId, customStage));
   pItemIds = deserializeIds(pItemIds).map(knownPItemId);
   skillCardIdGroups = skillCardIdGroups
     .split("_")
@@ -82,6 +112,7 @@ export function loadoutFromSearchParams(searchParams) {
 
   return {
     stageId,
+    customStage,
     enterPercents,
     supportBonus,
     params,
@@ -95,6 +126,7 @@ export function loadoutFromSearchParams(searchParams) {
 export function loadoutToSearchParams(loadout) {
   const {
     stageId,
+    customStage,
     enterPercents,
     supportBonus,
     params,
@@ -104,6 +136,10 @@ export function loadoutToSearchParams(loadout) {
   } = loadout;
   const searchParams = new URLSearchParams();
   searchParams.set("stage", stageId);
+  if (produceExamIdOf(stageId)) {
+    const { turnTypes } = getStage(stageId, customStage);
+    searchParams.set("turns", serializeTurnTypes(turnTypes));
+  }
   if (enterPercents) searchParams.set("enter_percents", "1");
   if (supportBonus != null) {
     searchParams.set("support_bonus", supportBonus);
