@@ -48,13 +48,20 @@ function leadingConstant(rhs) {
   return null;
 }
 
+// Each line's first constant gain: a line that gains twice (手書きのメッセージ
+// gains 9 twice) shows one gain on its badge.
 function constantGains(lines, field) {
   return lines
     .filter((line) => !line.phase && !line.conditions?.length)
-    .flatMap((line) => line.actions || [])
-    .filter((a) => a.type === "assignment" && a.lhs === field && a.op === "+=")
-    .map((a) => leadingConstant(a.rhs))
-    .filter((value) => value !== null);
+    .map((line) =>
+      (line.actions || [])
+        .filter(
+          (a) => a.type === "assignment" && a.lhs === field && a.op === "+=",
+        )
+        .map((a) => leadingConstant(a.rhs))
+        .find((value) => value !== null),
+    )
+    .filter((value) => value !== undefined);
 }
 
 const ICONS = {

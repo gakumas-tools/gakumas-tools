@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
+  COVERED_ENTITY_ID,
   decodeEntityIds,
   firstPItemFilter,
   samePlanFilter,
@@ -15,6 +16,16 @@ test("each crop decodes to the best class its filter allows", () => {
   assert.deepEqual(
     decodeEntityIds(logits, CLASSES, (id, i) => i == 1 || id != 1),
     [246, 313],
+  );
+});
+
+test("the covered class is a read only for readers that keep it", () => {
+  const classes = ["-1", "0", "246"];
+  const logits = [0.9, 0.1, 0.5, 0.2, 0.1, 0.8];
+  assert.deepEqual(decodeEntityIds(logits, classes), [246, 246]);
+  assert.deepEqual(
+    decodeEntityIds(logits, classes, undefined, true),
+    [COVERED_ENTITY_ID, 246],
   );
 });
 

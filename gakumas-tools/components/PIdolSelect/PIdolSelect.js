@@ -1,6 +1,6 @@
 import { memo, useContext, useEffect, useMemo, useState } from "react";
 import { FaChevronDown } from "react-icons/fa6";
-import { PIdols } from "gakumas-data";
+import { HIDDEN_P_IDOL_IDS, PIdols } from "gakumas-data";
 import Collapse from "@/components/Collapse";
 import PlanIdolSelects from "@/components/PlanIdolSelects";
 import PIdol from "@/components/PIdol";
@@ -20,7 +20,10 @@ function PIdolSelect({ selected, onChange }) {
   }, [expanded, selected]);
 
   const pIdols = useMemo(
-    () => PIdols.getFiltered({ plans: [plan], idolIds: [idolId] }),
+    () =>
+      PIdols.getFiltered({ plans: [plan], idolIds: [idolId] }).filter(
+        (pIdol) => !HIDDEN_P_IDOL_IDS.has(pIdol.id),
+      ),
     [plan, idolId]
   );
 

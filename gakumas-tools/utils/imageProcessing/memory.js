@@ -10,7 +10,11 @@ import {
   extractLines,
 } from "./common";
 import DIGIT_TEMPLATES from "./contestLoadoutDigits.json";
-import { classifyCrops, ICON_SIZE } from "./entityClassifier";
+import {
+  classifyCrops,
+  COVERED_ENTITY_ID,
+  ICON_SIZE,
+} from "./entityClassifier";
 import { readNumber, segmentGlyphs } from "./glyphs";
 import {
   getPItemBoundingBoxes,
@@ -91,12 +95,23 @@ export async function getMemoryFromFile(
     pItemSession,
     pItemClasses
   );
-  const skillCards = await extractEntities(
+  // A card under the nav pill can't be read: it stays empty and the memory
+  // is flagged for the player to fill in.
+  const reads = await extractEntities(
     img,
     skillCardBoxes,
     skillCardSession,
-    skillCardClasses
+    skillCardClasses,
+    undefined,
+    undefined,
+    true,
   );
+  // 1-based slots, so the importer can tell the player which cards to pick.
+  const coveredSlots = reads
+    .map((id, i) => (id == COVERED_ENTITY_ID ? i + 1 : null))
+    .filter(Boolean);
+  const covered = coveredSlots.length > 0;
+  const skillCards = reads.map((id) => (id == COVERED_ENTITY_ID ? 0 : id));
 
   const customizations = skillCards.map((id, i) =>
     readCustomizations(imageData, skillCardBoxes[i], MEMORY_LAYOUT, id)
@@ -129,7 +144,9 @@ export async function getMemoryFromFile(
     customizations
   );
   const flag =
-    !powerCandidates.includes(calculatedPower) || itemsPIdolId != cardsPIdolId;
+    covered ||
+    !powerCandidates.includes(calculatedPower) ||
+    itemsPIdolId != cardsPIdolId;
 
   return {
     name: `${Math.max(...powerCandidates, 0)}${flag ? " (FIXME)" : ""}`,
@@ -138,6 +155,7 @@ export async function getMemoryFromFile(
     pItemIds: pItems,
     skillCardIds: skillCards,
     customizations,
+    coveredSlots,
   };
 }
 
@@ -261,6 +279,7 @@ export async function extractEntities(
   classes,
   allowed,
   refine,
+  keepCovered,
 ) {
   const canvas = document.createElement("canvas");
   canvas.width = ICON_SIZE;
@@ -286,7 +305,16 @@ export async function extractEntities(
     return ctx.getImageData(0, 0, ICON_SIZE, ICON_SIZE).data;
   });
 
-  return classifyCrops(ort, session, classes, crops, 4, allowed, refine);
+  return classifyCrops(
+    ort,
+    session,
+    classes,
+    crops,
+    4,
+    allowed,
+    refine,
+    keepCovered,
+  );
 }
 
 function downloadCrop(canvas, i) {

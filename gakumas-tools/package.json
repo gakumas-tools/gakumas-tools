@@ -23,7 +23,7 @@
     "gakumas-loadout": "workspace:*",
     "html2canvas": "^1.4.1",
     "mongodb": "^7.2.0",
-    "next": "^16.4.2",
+    "next": "^16.4.6",
     "next-auth": "^4.24.15",
     "next-intl": "^4.9.1",
     "onnxruntime-web": "^1.24.3",
