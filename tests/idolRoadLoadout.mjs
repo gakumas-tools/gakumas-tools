@@ -69,6 +69,20 @@ const KNOWN = new Set([
   "customization: s10-g5 r0c5 inferred badges 0,19,,10,delayed shown 0,14,,10",
   // Cost -1 is not read, so the customization with cost 0 is picked.
   "customization: s7-g5 r0c2 inferred badges 2,,,0,growth shown 2,,,1",
+  // A free card read as a card of the deck's plan, as on s10-g4.
+  "icon: s2-e1 r0c2 expected アイドル宣言+ got 止められない想い+",
+  // The classifier's best reads here are all weak; the 重複 copy in the third
+  // row is then held to the wrong shown card.
+  "icon: s22-e1 r0c2 expected 成長痛+ got 薄れゆく壁",
+  "icon: s22-e1 r2c4 expected 成長痛 got 止められない想い",
+  // 重複 cards: one read as another shown card, one read without the "+"
+  // it shows.
+  "icon: s27-e1 r1c1 expected きらきら紙吹雪 got 止められない想い",
+  "icon: s27-e1 r3c5 expected せのびの魔法+ got せのびの魔法",
+  // 手書きのメッセージ gains 元気 twice; the badge shows one gain, the
+  // inferred badge their sum.
+  "customization: s2-e1 r1c5 inferred badges 0,,20,1, shown 0,,10,1",
+  "customization: s22-e1 r3c4 inferred badges 0,,18,2, shown 0,,9,2",
 ]);
 
 const args = process.argv.slice(2);

@@ -122,8 +122,8 @@ function estimatePitch(rows, size) {
 // from the window grey between it and the row above, in the middle of each
 // card.
 function refineRowY(imageData, window, y, xs, size) {
-  const from = Math.round(y - 0.25 * size);
-  const to = Math.round(y + 0.25 * size);
+  const from = Math.round(y - 0.4 * size);
+  const to = Math.round(y + 0.4 * size);
   if (from < window.top || to >= window.bottom) return y;
   const tops = [];
   for (const left of xs) {
@@ -184,15 +184,30 @@ export function detectIdolRoadBoxes(imageData) {
       "Could not locate the deck. Is this an Idol Road スコア獲得編成確認 screenshot?",
     );
   }
-  const size = median(onWindow.map((r) => r.size));
+  // Each icon votes: a row whose outlines ran together (a 重複 veil, a
+  // badge over the frame) reads as a few oversized icons and is outvoted.
+  const voted = median(onWindow.flatMap((r) => r.icons.map(() => r.size)));
   const cardRows = onWindow.filter(
-    (r) => Math.abs(r.size - size) <= 0.06 * size,
+    (r) => Math.abs(r.size - voted) <= 0.06 * voted,
   );
-  const pitch = estimatePitch(cardRows, size);
+  const pitch = estimatePitch(cardRows, voted);
   const phase = leftmostOnLattice(
     cardRows.flatMap((r) => r.icons),
     pitch,
   );
+  // A row clipped by the window's edge reads a little small, so take the
+  // largest row whose icons mostly sit on the card lattice (one that ran
+  // together into a neighbour doesn't; a badge can nudge a single icon).
+  const onLattice = cardRows.filter((r) => {
+    const on = r.icons.filter((icon) => {
+      const steps = (icon.x - phase) / pitch;
+      return Math.abs(steps - Math.round(steps)) <= 0.05;
+    });
+    return on.length >= (2 / 3) * r.icons.length;
+  });
+  const size = onLattice.length
+    ? Math.max(...onLattice.map((r) => r.size))
+    : voted;
   const x0 =
     phase + Math.round((COLUMN_0_FRAC * width - phase) / pitch) * pitch;
   const window = findWindow(
@@ -204,9 +219,19 @@ export function detectIdolRoadBoxes(imageData) {
   // Rows sit on a lattice too; a row the outline search missed (mostly
   // greyed out, or clipped by the window) is still read at its lattice place.
   const rowPitch = ROW_PITCH * pitch;
-  // The first row found is the top deck row on screen: above it are the
-  // P-items, or the window's edge.
-  const anchor = cardRows[0].y;
+  // The first row found is usually the top deck row on screen. One the
+  // outline search lost sits a row pitch above it, still on the window.
+  // Only row 1 has no "+" marker, and above it are the P-items: stop there.
+  let anchor = cardRows[0].y;
+  for (;;) {
+    const row1 =
+      backgroundShare(imageData, clip(inset(x0, anchor, size), window)) < 0.5;
+    if (row1) break;
+    const y = Math.round(anchor - rowPitch);
+    if (y < window.top - 0.05 * size) break;
+    if (findIconsInBand(mask, width, y, size).length < 2) break;
+    anchor = y;
+  }
   const rows = [];
   let next = anchor;
   for (let k = 0; ; k++) {
