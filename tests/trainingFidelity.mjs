@@ -65,6 +65,7 @@ const FIXTURES = [
   "produce-exam-impression-final-r16c",
   "produce-exam-impression-final-r16d",
   "produce-exam-impression-final-r18d",
+  "produce-exam-impression-final-r19d",
 ];
 
 // Captures of a produce exam that has a ProduceExams row replay through
@@ -95,6 +96,7 @@ const PRODUCE_EXAM_IDS = {
   "produce-exam-impression-final-r16c": 1,
   "produce-exam-impression-final-r16d": 1,
   "produce-exam-impression-final-r18d": 1,
+  "produce-exam-impression-final-r19d": 1,
 };
 
 function getStage(capture) {
@@ -256,6 +258,12 @@ function replay(capture, play) {
   for (const [i, action] of play.actions.entries()) {
     const turn = i + 1;
     if (action.skip) {
+      // Drinks taken on a turn whose card play was skipped.
+      for (const drink of action.drinksBefore ?? []) {
+        const pDrink = PDrinks.getById(drink.id);
+        assert.equal(pDrink.name, drink.name);
+        engine.effectManager.triggerEffects(state, pDrink.actions);
+      }
       state = engine.endTurn(state);
       assert.equal(state[S.turnsElapsed], action.turnsElapsed ?? turn);
       for (const [field, value] of Object.entries(action.expected)) {
