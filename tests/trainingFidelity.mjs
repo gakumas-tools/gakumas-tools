@@ -1,7 +1,12 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { PDrinks, SkillCards, deserializeEffectSequence } from "gakumas-data";
-import { IdolConfig, StageEngine, S, G } from "gakumas-engine";
+import {
+  PDrinks,
+  ProduceExams,
+  SkillCards,
+  deserializeEffectSequence,
+} from "gakumas-data";
+import { IdolConfig, StageConfig, StageEngine, S, G } from "gakumas-engine";
 import { hasIngameFixtures, loadIngameFixture } from "./ingameFixtures.mjs";
 
 const FIXTURES = [
@@ -40,6 +45,30 @@ const FIXTURES = [
   "produce-exam-misuzu-run2-final-to-11658",
 ];
 
+// Captures of a produce exam that has a ProduceExams row replay through
+// that row (its gifts) and the turn order the game showed, the way the
+// simulator would run them, instead of a stage built from the capture.
+const PRODUCE_EXAM_IDS = {
+  "produce-exam-impression-final-r9": 1,
+  "produce-exam-impression-final-r9b": 1,
+};
+
+function getStage(capture) {
+  const examId = PRODUCE_EXAM_IDS[capture.fixture];
+  if (!examId) {
+    return {
+      type: "capturedTraining",
+      turnCount: capture.turnTypes.length,
+      passScore: capture.passScore,
+      effects: (capture.stageEffects ?? []).flatMap((e) =>
+        deserializeEffectSequence(e.effect),
+      ),
+    };
+  }
+  const exam = ProduceExams.getById(examId);
+  return new StageConfig({ ...exam, turnTypes: capture.turnTypes });
+}
+
 function getTypeMultipliers(capture) {
   if (capture.replayMultipliers) return capture.replayMultipliers;
 
@@ -72,16 +101,11 @@ function createEngine(capture, play) {
     idol,
     defaultCardIds: [],
     typeMultipliers: getTypeMultipliers(capture),
-    stage: {
-      type: "capturedTraining",
-      turnCount: capture.turnTypes.length,
-      passScore: capture.passScore,
-      effects: (capture.stageEffects ?? []).flatMap((e) =>
-        deserializeEffectSequence(e.effect),
-      ),
-    },
+    stage: getStage(capture),
   });
-  engine.turnManager.generateTurnTypes = () => [...capture.turnTypes];
+  if (!PRODUCE_EXAM_IDS[capture.fixture]) {
+    engine.turnManager.generateTurnTypes = () => [...capture.turnTypes];
+  }
   return engine;
 }
 
@@ -279,7 +303,9 @@ function replay(capture, play) {
   }
 }
 
-for (const capture of hasIngameFixtures ? FIXTURES.map(loadIngameFixture) : []) {
+for (const capture of hasIngameFixtures
+  ? FIXTURES.map((name) => ({ ...loadIngameFixture(name), fixture: name }))
+  : []) {
   for (const play of capture.plays) {
     test(`in-game ${capture.stage}: ${play.id}`, () => replay(capture, play));
   }

@@ -37,6 +37,7 @@ const P_ITEMS = readCsv("p_items.csv");
 const STAGES = readCsv("stages.csv");
 const P_DRINKS = readCsv("p_drinks.csv");
 const IDOL_ROAD_EFFECTS = readCsv("idol_road_effects.csv");
+const PRODUCE_EXAMS = readCsv("produce_exams.csv");
 
 let totalErrors = 0;
 
@@ -129,6 +130,15 @@ for (const item of P_ITEMS) {
 }
 for (const stage of STAGES) {
   validateEffectField("stage", stage.id, "effects", stage.effects);
+}
+for (const exam of PRODUCE_EXAMS) {
+  validateEffectField("produceExam", exam.id, "effects", exam.effects);
+  const counts = String(exam.turnCounts).split(",").map(Number);
+  if (counts.length != 3 || counts.some((n) => !Number.isInteger(n) || n < 0)) {
+    report("produceExam", exam.id, "turnCounts", exam.turnCounts, [
+      "turnCounts must be three whole numbers (Vo,Da,Vi).",
+    ]);
+  }
 }
 for (const row of IDOL_ROAD_EFFECTS) {
   const id = `${row.stageId}:${row.recommendedEffect}`;
