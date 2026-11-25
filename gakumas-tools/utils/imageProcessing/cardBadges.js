@@ -156,7 +156,7 @@ function adjacentRun(glyphs, fromRight) {
 
 // 重複 and 制限 grey a card out and put a dark label with white text at its
 // top right.
-function isGreyedOut({ data, width, height }, box) {
+export function isGreyedOut({ data, width, height }, box) {
   let dark = 0;
   let white = 0;
   let total = 0;
@@ -270,6 +270,10 @@ export function readBadges(imageData, box, layout) {
       readBadge(glyphs.costFallback, BADGE_TEMPLATES.white, true),
     icon: readBottomIcon(imageData, box, layout.icon),
   };
+}
+
+export function hasDot(imageData, box, layout) {
+  return !!findDot(imageData, box, layout);
 }
 
 export function readCustomizations(imageData, box, layout, cardId) {
