@@ -279,7 +279,8 @@ function StageSharedRuns({ stageId, yourRun }) {
           {yourListing?.step == "done" ? (
             <div className={styles.hint}>{t("listedNote")}</div>
           ) : (
-            <div className={styles.hint}>{t("howToList")}</div>
+            // With your result's row on screen, its own button lists it.
+            !yourRow && <div className={styles.hint}>{t("howToList")}</div>
           )}
         </div>
       )}
