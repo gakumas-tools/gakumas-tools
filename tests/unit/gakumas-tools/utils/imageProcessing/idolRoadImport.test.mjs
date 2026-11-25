@@ -47,6 +47,7 @@ test("Idol Road: top and bottom screenshots give three rows, 重複 left out", a
   // STAGE 10 on 花海 咲季's road.
   assert.deepEqual(loadout.stageCandidates, [{ stageId: 207 }]);
   assert.equal(loadout.stageId, 207);
+  assert.equal(loadout.idolRoadStage, 10);
   // The chosen P-items only; the 固定 one is the stage's.
   assert.deepEqual(loadout.pItemIds, [402, 82, 404, 78]);
   // Shown percents in place of Vo/Da/Vi, then 体力.
