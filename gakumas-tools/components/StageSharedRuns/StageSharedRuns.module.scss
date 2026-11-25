@@ -1,0 +1,165 @@
+@use "../../styles/tokens";
+
+.stageSharedRuns {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid tokens.$surface-border;
+  border-radius: tokens.$radius-md;
+  overflow: hidden;
+}
+
+.toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: tokens.$space-2 tokens.$space-3;
+  border: none;
+  background: tokens.$surface-muted;
+  color: tokens.$surface-ink;
+  font-size: tokens.$text-sm;
+  font-weight: tokens.$weight-semibold;
+  cursor: pointer;
+
+  &:hover {
+    background: tokens.$surface-muted-hover;
+  }
+}
+
+.chevron {
+  transition: transform tokens.$duration-fast;
+}
+
+.open {
+  transform: rotate(180deg);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$space-2;
+  padding: tokens.$space-2 tokens.$space-3;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: tokens.$space-2;
+  padding: tokens.$space-1 0;
+  color: inherit;
+  text-decoration: none;
+  border-radius: tokens.$radius-sm;
+
+  &:hover {
+    background: tokens.$link-hover-bg;
+  }
+}
+
+.rank {
+  min-width: 1.5em;
+  text-align: right;
+  color: tokens.$surface-ink-muted;
+  font-size: tokens.$text-xs;
+}
+
+.placeholder {
+  width: 32px;
+  height: 32px;
+  border-radius: tokens.$radius-icon;
+  background: tokens.$fill-muted;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: tokens.$text-sm;
+  font-weight: tokens.$weight-semibold;
+}
+
+.meta,
+.note,
+.hint {
+  color: tokens.$surface-ink-muted;
+  font-size: tokens.$text-xs;
+}
+
+.score {
+  font-size: tokens.$text-sm;
+  font-weight: tokens.$weight-bold;
+  font-variant-numeric: tabular-nums;
+}
+
+.seeAll {
+  align-self: flex-end;
+  color: tokens.$link;
+  font-size: tokens.$text-sm;
+  font-weight: tokens.$weight-semibold;
+  text-decoration: none;
+}
+
+.yours .row {
+  cursor: default;
+
+  &:hover {
+    background: tokens.$accent-tint;
+  }
+}
+
+.yours .name {
+  color: tokens.$accent-ink;
+}
+
+.listYours {
+  align-self: flex-start;
+  margin: 0 0 tokens.$space-1 calc(1.5em + 32px + 2 * #{tokens.$space-2});
+  padding: 0;
+  border: none;
+  background: none;
+  color: tokens.$link;
+  font-size: tokens.$text-xs;
+  font-weight: tokens.$weight-semibold;
+  cursor: pointer;
+}
+
+.yours {
+  display: flex;
+  flex-direction: column;
+  padding: 0 tokens.$space-2 0 0;
+  border-radius: tokens.$radius-sm;
+  background: tokens.$accent-tint;
+}
+
+.listForm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: tokens.$space-2;
+  padding: tokens.$space-1 0;
+
+  input {
+    flex: 1;
+    min-width: 8em;
+  }
+}
+
+.error {
+  flex-basis: 100%;
+  color: tokens.$danger;
+  font-size: tokens.$text-xs;
+}

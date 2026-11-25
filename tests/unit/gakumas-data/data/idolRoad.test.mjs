@@ -1,10 +1,10 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { IdolRoad } from "gakumas-data";
+import { IdolRoad, Stages } from "gakumas-data";
 import { createIdolRoad } from "gakumas-data/data/idolRoad";
 
 // Made-up rows for the resolver's own logic. They are not game data:
-// no Idol Road stage has been captured yet.
+// captured stages replay in tests/idolRoadFidelity.mjs.
 const STAGE_ROWS = [
   {
     stageId: 900,
@@ -73,4 +73,45 @@ test("the shipped Idol Road tables have no rows yet", () => {
   assert.equal(resolved.plan, "sense");
   assert.equal(resolved.criteria, stage.criteria);
   assert.equal(resolved.effects, stage.effects);
+});
+
+test("getMissingData names the rows a P-idol's stage lacks", () => {
+  // P-idol 2 (idol 2, concentration) has both rows.
+  assert.equal(idolRoad.getMissingData(stage, 2), null);
+  // P-idol 1 (idol 1, goodConditionTurns) has neither.
+  assert.deepEqual(idolRoad.getMissingData(stage, 1), {
+    recommendedEffect: "goodConditionTurns",
+    supportEffects: true,
+    idolRow: true,
+  });
+});
+
+test("getMissingData has nothing for other stage types or unknown P-idols", () => {
+  assert.equal(idolRoad.getMissingData({ ...stage, type: "contest" }, 1), null);
+  assert.equal(idolRoad.getMissingData(stage, 999999), null);
+  assert.equal(idolRoad.getMissingData(stage, undefined), null);
+  assert.equal(idolRoad.getMissingData(null, 1), null);
+});
+
+test("getMissingData on the shipped tables: STAGE 10 by おすすめ効果", () => {
+  const stage10 = Stages.getById(207);
+  assert.equal(stage10.type, "idolRoad");
+  // P-idol 130 (好印象) has its 応援効果 row and its idol's row.
+  assert.equal(IdolRoad.getMissingData(stage10, 130), null);
+  // P-idol 159 (やる気) and 148 (強気) have no 応援効果 row yet.
+  assert.deepEqual(IdolRoad.getMissingData(stage10, 159), {
+    recommendedEffect: "motivation",
+    supportEffects: true,
+    idolRow: false,
+  });
+  assert.deepEqual(IdolRoad.getMissingData(stage10, 148), {
+    recommendedEffect: "strength",
+    supportEffects: true,
+    idolRow: false,
+  });
+  // resolveStage still runs them, without the 応援効果.
+  assert.equal(
+    IdolRoad.resolveStage(stage10, 159).effects,
+    stage10.effects,
+  );
 });
