@@ -925,6 +925,7 @@ import image_925 from "./925.png";
 import image_926 from "./926.png";
 import image_927 from "./927.png";
 import image_928 from "./928.png";
+import image_933 from "./933.png";
 
 const IMAGES = {
   '1': image_1,
@@ -1854,6 +1855,7 @@ const IMAGES = {
   '926': image_926,
   '927': image_927,
   '928': image_928,
+  '933': image_933,
 };
 
 export default IMAGES;
