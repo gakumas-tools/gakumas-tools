@@ -105,15 +105,16 @@ test("other stage types and unknown P-idols come back unchanged", () => {
 
 test("the shipped tables put each idol on the road the game gives it", () => {
   // Pattern A: 咲季 手毬 千奈 清夏 莉波. Pattern B: ことね 麻央 リーリヤ 広
-  // 佑芽 星南. 美鈴 and 燕 aren't known yet.
+  // 佑芽 星南, and 美鈴 (her STAGE 1 is 8 turns, STAGE 2 14, on the
+  // account). 燕 isn't known yet.
   const byIdol = (idolId) =>
     IdolRoad.getPattern(PIdols.getAll().find((p) => p.idolId == idolId).id);
   assert.deepEqual([1, 2, 6, 7, 9].map(byIdol), ["A", "A", "A", "A", "A"]);
   assert.deepEqual(
-    [3, 4, 5, 8, 10, 11].map(byIdol),
-    ["B", "B", "B", "B", "B", "B"],
+    [3, 4, 5, 8, 10, 11, 12].map(byIdol),
+    ["B", "B", "B", "B", "B", "B", "B"],
   );
-  assert.deepEqual([12, 13].map(byIdol), [null, null]);
+  assert.equal(byIdol(13), null);
   // 咲季's STAGE 1-5 are pattern A's first five.
   assert.deepEqual(
     IdolRoad.getStageIds(1).slice(0, 5),
@@ -168,4 +169,31 @@ test("getMissingData on the shipped tables: STAGE 10 by おすすめ効果", () 
     IdolRoad.resolveStage(stage10, 159).effects,
     stage10.effects,
   );
+});
+
+test("美鈴's 温存 P-idols enter Idol Road as the おすすめ効果 their memory shows", () => {
+  // The formation screen shows 学園生活 as 全力 and ゆっくり、一歩ずつ as
+  // 強気; Idol Road has no 温存 branch.
+  const stage = Stages.getById(208);
+  const missing = (pIdolId) =>
+    IdolRoad.getMissingData(stage, pIdolId)?.recommendedEffect ?? null;
+  assert.equal(PIdols.getById(91).recommendedEffect, "preservation");
+  assert.equal(missing(91), null);
+  assert.equal(missing(92), null);
+  const effects = (pIdolId) => IdolRoad.resolveStage(stage, pIdolId).effects;
+  assert.notDeepEqual(effects(91), effects(92));
+  // ツキノカメ's hasn't been seen: it keeps its own and finds no row.
+  assert.equal(missing(93), "preservation");
+});
+
+test("a P-idol effect row picks the 応援/トラブル its branch has", () => {
+  const road = createIdolRoad(STAGE_ROWS, [
+    ...EFFECT_ROWS,
+    { stageId: 900, recommendedEffect: "strength", effects: "at:startOfTurn { score+=2; limit:1 }" },
+  ], [], [], undefined, [{ pIdolId: 2, recommendedEffect: "strength" }]);
+  const resolved = road.resolveStage(stage, 2);
+  const solo = createIdolRoad(STAGE_ROWS, EFFECT_ROWS).resolveStage(stage, 2);
+  assert.equal(resolved.effects.length, solo.effects.length);
+  assert.notDeepEqual(resolved.effects, solo.effects);
+  assert.equal(road.getMissingData(stage, 2), null);
 });

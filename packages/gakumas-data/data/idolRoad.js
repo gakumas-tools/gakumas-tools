@@ -2,6 +2,7 @@ import IDOL_ROAD_PATTERNS from "../csv/idol_road_patterns.csv";
 import IDOL_ROAD_PATTERN_STAGES from "../csv/idol_road_pattern_stages.csv";
 import IDOL_ROAD_STAGES from "../csv/idol_road_stages.csv";
 import IDOL_ROAD_EFFECTS from "../csv/idol_road_effects.csv";
+import IDOL_ROAD_P_IDOL_EFFECTS from "../csv/idol_road_p_idol_effects.csv";
 import { deserializeEffectSequence } from "../utils/effects";
 import PIdols from "./pIdols";
 import Stages from "./stages";
@@ -19,6 +20,9 @@ import Stages from "./stages";
 //   and first-turn weights.
 // - idol_road_effects.csv: per stage and recommended effect, the 応援/
 //   トラブル.
+// - idol_road_p_idol_effects.csv: the おすすめ効果 a P-idol's memory shows
+//   at the stage's formation, where it isn't the P-idol's own (Idol Road
+//   has no 温存 branch: 美鈴's 温存 P-idols enter as 強気 or 全力).
 // The stage's plan is the P-idol's. A stage or idol with no row keeps the
 // values on its stages.csv row.
 
@@ -46,7 +50,15 @@ export function createIdolRoad(
   patternRows = [],
   patternStageRows = [],
   stageNumberOf = stageNumber,
+  pIdolEffectRows = [],
 ) {
+  const effectByPIdol = Object.create(null);
+  for (const row of pIdolEffectRows) {
+    effectByPIdol[parseInt(row.pIdolId, 10)] = row.recommendedEffect;
+  }
+  // The おすすめ効果 that picks the P-idol's 応援/トラブル on Idol Road.
+  const branchOf = (pIdol) =>
+    effectByPIdol[pIdol.id] ?? pIdol.recommendedEffect;
   const patternByIdol = Object.create(null);
   for (const row of patternRows) {
     for (const idolId of parseIds(row.idolIds)) {
@@ -112,10 +124,7 @@ export function createIdolRoad(
       if (idolRow) Object.assign(resolved, idolRow);
       if (pIdol.plan) resolved.plan = pIdol.plan;
 
-      const supportEffects = getSupportEffects(
-        stage.id,
-        pIdol.recommendedEffect,
-      );
+      const supportEffects = getSupportEffects(stage.id, branchOf(pIdol));
       if (supportEffects.length) {
         resolved.effects = [...(stage.effects || []), ...supportEffects];
       }
@@ -132,13 +141,12 @@ export function createIdolRoad(
       const pIdol = PIdols.getById(pIdolId);
       if (!pIdol) return null;
 
-      const supportEffects = !(
-        `${stage.id}:${pIdol.recommendedEffect}` in byEffect
-      );
+      const recommendedEffect = branchOf(pIdol);
+      const supportEffects = !(`${stage.id}:${recommendedEffect}` in byEffect);
       const idolRow = !(`${stage.id}:${pIdol.idolId}` in byIdol);
       if (!supportEffects && !idolRow) return null;
       return {
-        recommendedEffect: pIdol.recommendedEffect,
+        recommendedEffect,
         supportEffects,
         idolRow,
       };
@@ -151,6 +159,8 @@ const IdolRoad = createIdolRoad(
   IDOL_ROAD_EFFECTS,
   IDOL_ROAD_PATTERNS,
   IDOL_ROAD_PATTERN_STAGES,
+  undefined,
+  IDOL_ROAD_P_IDOL_EFFECTS,
 );
 
 export default IdolRoad;
