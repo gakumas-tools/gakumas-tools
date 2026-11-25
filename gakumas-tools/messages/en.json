@@ -495,6 +495,10 @@
     "turnLabel": "Turn to drink P-drink {slot}",
     "note": "Drunk at the start of the turn chosen under each drink, before its first card. In the game you can drink them at any time."
   },
+  "StageStartStamina": {
+    "label": "体力 at the start of the exam",
+    "note": "The 体力 the produce had going into the exam. Blank starts at max 体力. Recovery during the exam still stops at max."
+  },
   "StageCustomizer": {
     "type": "Type",
     "contest": "Contest",

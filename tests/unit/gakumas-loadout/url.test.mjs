@@ -196,3 +196,29 @@ test("P-drink turns round-trip and default to 1", () => {
   });
   assert.equal(emptySlot.get("drink_turns"), "3-1-1");
 });
+
+test("a produce exam's start 体力 round-trips; other stages drop it", () => {
+  const exam = loadoutFromSearchParams(
+    new URLSearchParams("stage=exam-1&params=500-500-500-32&start_stamina=26"),
+  );
+  assert.equal(exam.startStamina, 26);
+  assert.equal(loadoutToSearchParams(exam).get("start_stamina"), "26");
+  assert.equal(new IdolConfig(exam).startStamina, 26);
+
+  const atMax = loadoutFromSearchParams(
+    new URLSearchParams("stage=exam-1&start_stamina=x"),
+  );
+  assert.equal(atMax.startStamina, null);
+  assert.equal(loadoutToSearchParams(atMax).has("start_stamina"), false);
+
+  const contest = loadoutFromSearchParams(
+    new URLSearchParams(`stage=${Stages.getAll()[0].id}&start_stamina=26`),
+  );
+  assert.equal(contest.startStamina, null);
+  assert.equal(
+    loadoutToSearchParams({ ...contest, startStamina: 26 }).has(
+      "start_stamina",
+    ),
+    false,
+  );
+});
