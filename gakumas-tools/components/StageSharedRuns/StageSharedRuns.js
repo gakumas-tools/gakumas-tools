@@ -21,7 +21,7 @@ import styles from "./StageSharedRuns.module.scss";
 // Runs other players listed for the stage being simulated, best first. Closed
 // until opened, so it costs nothing unless someone looks. yourRun is the
 // result on screen, if it's for this loadout: it gets a row of its own at the
-// place its mean would take, so a player sees where they stand, and can list
+// place its median would take, so a player sees where they stand, and can list
 // it there (save, share and show on the stage's page) in one step.
 // "Opened by N players", or nothing if no one else has opened it yet.
 function openedByText(tRun, run) {
@@ -44,7 +44,7 @@ function StageSharedRuns({ stageId, yourRun }) {
   // { runId, step: "naming" | "busy" | "done" | "error", name }
   const [listing, setListing] = useState(null);
 
-  const yourMean = yourRun?.stats?.mean;
+  const yourMedian = yourRun?.stats?.median;
   const yourListing = listing?.runId === yourRun?.id ? listing : null;
 
   const runs = byStage[stageId];
@@ -107,7 +107,7 @@ function StageSharedRuns({ stageId, yourRun }) {
 
   const place =
     runs && !failed && yourListing?.step != "done"
-      ? placeAmongRuns(runs, yourMean)
+      ? placeAmongRuns(runs, yourMedian)
       : null;
   const yourRow = place && (
     <li key="yours" className={styles.yours}>
@@ -133,7 +133,7 @@ function StageSharedRuns({ stageId, yourRun }) {
           </span>
         </span>
         <span className={styles.score}>
-          {Math.round(yourMean).toLocaleString()}
+          {Math.round(yourMedian).toLocaleString()}
         </span>
       </div>
       {!yourListing && (
@@ -208,7 +208,7 @@ function StageSharedRuns({ stageId, yourRun }) {
             : null;
           const plan = pIdol?.plan || card?.plan;
           const idol = getIdolName(run.derived?.idolId);
-          const mean = run.stats?.mean;
+          const median = run.stats?.median;
           const row = (
             <li key={run.id}>
               <Link href={`/s/${run.id}`} className={styles.row}>
@@ -239,7 +239,7 @@ function StageSharedRuns({ stageId, yourRun }) {
                   </span>
                 </span>
                 <span className={styles.score}>
-                  {mean == null ? "—" : Math.round(mean).toLocaleString()}
+                  {median == null ? "—" : Math.round(median).toLocaleString()}
                 </span>
               </Link>
             </li>
