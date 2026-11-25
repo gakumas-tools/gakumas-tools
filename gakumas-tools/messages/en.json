@@ -523,7 +523,7 @@
   },
   "SimulatorLoadoutImporterModal": {
     "title": "Import loadout from screenshot",
-    "instructions": "Upload a screenshot of the in-game contest loadout screen. Parameters, P-items and skill cards will be loaded, and the stage and support bonus will be inferred from the type multipliers.",
+    "instructions": "Upload a screenshot of the in-game contest loadout screen. Parameters, P-items and skill cards will be loaded, and the stage and support bonus will be inferred from the type multipliers. The Idol Road 「スコア獲得編成確認」 screen works too: upload its top screenshot, and for a deck of 3 rows also one scrolled to the bottom.",
     "processing": "Processing screenshot...",
     "error": "Failed to import",
     "matchingStages": "Matching stages",

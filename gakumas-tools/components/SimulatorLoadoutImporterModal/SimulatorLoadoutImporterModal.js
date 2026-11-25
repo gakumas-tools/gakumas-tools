@@ -10,8 +10,12 @@ import stageStyles from "@/components/StageSelect/StageSelect.module.scss";
 import LoadoutContext from "@/contexts/LoadoutContext";
 import ModalContext from "@/contexts/ModalContext";
 import c from "@/utils/classNames";
-import { getSimulatorLoadoutFromFile } from "@/utils/imageProcessing/simulatorLoadout";
+import { getSimulatorLoadoutFromFiles } from "@/utils/imageProcessing/simulatorLoadout";
 import styles from "./SimulatorLoadoutImporterModal.module.scss";
+
+// The Idol Road screen can take two: its top, and one scrolled to the
+// bottom of the deck.
+const MAX_FILES = 2;
 
 function SimulatorLoadoutImporterModal({ stageId, onImport }) {
   const t = useTranslations("SimulatorLoadoutImporterModal");
@@ -20,7 +24,7 @@ function SimulatorLoadoutImporterModal({ stageId, onImport }) {
   const [candidates, setCandidates] = useState(null);
 
   const importFn = useCallback(
-    (file) => getSimulatorLoadoutFromFile(file, stageId),
+    (files) => getSimulatorLoadoutFromFiles(files, stageId),
     [stageId],
   );
 
@@ -38,13 +42,15 @@ function SimulatorLoadoutImporterModal({ stageId, onImport }) {
         translationNamespace="SimulatorLoadoutImporterModal"
         importFn={importFn}
         onSuccess={handleImport}
+        maxFiles={MAX_FILES}
       />
     );
   }
 
   const pick = ({ stageId, supportBonus }) => {
     selectStage(stageId, {});
-    setSupportBonus(supportBonus);
+    // Idol Road stages have no support bonus to infer.
+    if (supportBonus != null) setSupportBonus(supportBonus);
     closeModal();
   };
 
@@ -69,9 +75,11 @@ function SimulatorLoadoutImporterModal({ stageId, onImport }) {
             <StageSummary
               stage={Stages.getById(candidate.stageId)}
               trailing={
-                <span className={styles.supportBonus}>
-                  {(candidate.supportBonus * 100).toFixed(2)}%
-                </span>
+                candidate.supportBonus != null && (
+                  <span className={styles.supportBonus}>
+                    {(candidate.supportBonus * 100).toFixed(2)}%
+                  </span>
+                )
               }
             />
           </button>
