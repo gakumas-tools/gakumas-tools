@@ -1,0 +1,117 @@
+@use "../../styles/mixins";
+@use "../../styles/colors";
+@use "../../styles/tokens";
+
+.browse {
+  width: calc(100% - #{2 * tokens.$space-3});
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$space-3;
+  margin: tokens.$space-3 auto;
+  color: tokens.$surface-ink;
+
+  @media (max-width: 480px) {
+    width: calc(100% - #{2 * tokens.$space-2});
+    margin: tokens.$space-2 auto;
+  }
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$space-2;
+  padding: tokens.$space-4;
+  @include mixins.card;
+
+  @media (max-width: 480px) {
+    padding: tokens.$space-3;
+  }
+}
+
+.title {
+  margin: 0;
+  font-size: tokens.$text-xl;
+  font-weight: tokens.$weight-bold;
+}
+
+.hint,
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: tokens.$space-3;
+  padding: tokens.$space-5 tokens.$space-3;
+  border-radius: tokens.$radius-md;
+  background: tokens.$surface-muted;
+  text-align: center;
+
+  p {
+    margin: 0;
+    color: tokens.$surface-ink-muted;
+    font-size: tokens.$text-sm;
+  }
+}
+
+.emptyAction {
+  display: inline-flex;
+  align-items: center;
+  gap: tokens.$space-2;
+  padding: tokens.$space-2 tokens.$space-4;
+  border-radius: tokens.$radius-pill;
+  background-color: tokens.$brand;
+  color: colors.$white;
+  @include mixins.raised(tokens.$brand-edge, 3px);
+  font-size: tokens.$text-sm;
+  font-weight: tokens.$weight-heavy;
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    background-color: tokens.$brand-hover;
+  }
+}
+
+.stagePicker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: tokens.$space-2;
+  font-size: tokens.$text-sm;
+
+  select {
+    max-width: 100%;
+  }
+}
+
+
+
+
+
+
+.pages {
+  display: flex;
+  justify-content: space-between;
+  gap: tokens.$space-3;
+}
+
+.sorts {
+  display: flex;
+  gap: tokens.$space-2;
+}
+
+.sort {
+  padding: tokens.$space-1 tokens.$space-3;
+  border-radius: tokens.$radius-pill;
+  background: tokens.$surface-muted;
+  color: inherit;
+  font-size: tokens.$text-sm;
+  text-decoration: none;
+
+  &.active {
+    background: tokens.$accent-tint;
+    color: tokens.$accent-ink;
+    font-weight: tokens.$weight-bold;
+  }
+}
+

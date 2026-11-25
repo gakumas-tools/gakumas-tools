@@ -60,6 +60,28 @@ export function createIdolRoad(stageRows, effectRows) {
       }
       return resolved;
     },
+
+    // What the data lacks for the given P-idol on an Idol Road stage:
+    // supportEffects when there is no 応援効果 row for the P-idol's
+    // おすすめ効果, idolRow when there is no criteria/turns row for the
+    // P-idol's idol. resolveStage then runs the stage without them. Null
+    // when nothing is missing, for other stage types and for unknown P-idols.
+    getMissingData(stage, pIdolId) {
+      if (stage?.type !== "idolRoad") return null;
+      const pIdol = PIdols.getById(pIdolId);
+      if (!pIdol) return null;
+
+      const supportEffects = !(
+        `${stage.id}:${pIdol.recommendedEffect}` in byEffect
+      );
+      const idolRow = !(`${stage.id}:${pIdol.idolId}` in byIdol);
+      if (!supportEffects && !idolRow) return null;
+      return {
+        recommendedEffect: pIdol.recommendedEffect,
+        supportEffects,
+        idolRow,
+      };
+    },
   };
 }
 

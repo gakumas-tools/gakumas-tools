@@ -6,3 +6,4 @@
 {"file":"tests/fixtures/rehearsal/06.png","note":"three full stages","scores":[[297325,177602,336596],[637060,671958,246341],[32874,112772,86995]]}
 {"file":"tests/fixtures/rehearsal/07.png","note":"one-character stages 1 and 3 (single idol) with an overlapping stage 2","scores":[[384178,0,0],[1172665,1161196,1093518],[177267,0,0]]}
 {"file":"tests/fixtures/rehearsal/08.png","note":"one-character stages 1 and 3, overlapping stage 2, and a stage total read with a leaked trailing digit","scores":[[407856,0,0],[1327533,1151661,0],[206256,0,0]]}
+{"file":"tests/fixtures/rehearsal/09.png","note":"two idols a stage with 4- and 5-figure scores and crown bonus labels (+545, +959, +6256) beside them, which are not scores","scores":[[1807,2728,0],[4797,1772,0],[31281,2903,0]]}

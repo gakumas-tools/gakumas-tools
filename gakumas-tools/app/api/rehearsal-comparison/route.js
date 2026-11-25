@@ -1,9 +1,9 @@
-import { createHash } from "node:crypto";
 import { getServerSession } from "next-auth/next";
 import { readJsonBody } from "@/utils/apiValidation";
 import { authOptions } from "@/utils/auth";
 import { clientIp } from "@/utils/clientIp";
 import { connect } from "@/utils/mongodb";
+import { pseudonym } from "@/utils/pseudonym";
 import { validateComparison } from "@/utils/rehearsalComparison";
 
 const MAX_BODY_BYTES = 100_000;
@@ -13,13 +13,6 @@ const RATE_WINDOW_MS = 60 * 60 * 1000;
 const MAX_TRACKED_CLIENTS = 10_000;
 
 const recentWrites = (global.rehearsalComparisonWrites ??= new Map());
-
-function pseudonym(value) {
-  return createHash("sha256")
-    .update(`${process.env.NEXTAUTH_SECRET || ""}:${value}`)
-    .digest("hex")
-    .slice(0, 16);
-}
 
 function rateLimited(key) {
   const now = Date.now();

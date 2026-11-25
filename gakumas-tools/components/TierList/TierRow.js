@@ -34,7 +34,17 @@ const TONE_BY_RANK = {
   F: "muted",
 };
 
-function SortableItem({ type, id, animateMount }) {
+function DeltaBadge({ delta }) {
+  if (!delta) return null;
+  return (
+    <span className={c(styles.delta, delta > 0 ? styles.deltaUp : styles.deltaDown)}>
+      {delta > 0 ? "↑" : "↓"}
+      {Math.abs(delta)}
+    </span>
+  );
+}
+
+function SortableItem({ type, id, animateMount, delta }) {
   const {
     attributes,
     listeners,
@@ -72,6 +82,7 @@ function SortableItem({ type, id, animateMount }) {
       )}
     >
       <EntityIcon type={type} id={id} size="fill" />
+      <DeltaBadge delta={delta} />
     </div>
   );
 }
@@ -80,6 +91,7 @@ function TierRow({
   type,
   tierKey,
   ids,
+  deltas,
   canDelete,
   addAbove,
   addBelow,
@@ -179,6 +191,7 @@ function TierRow({
                 type={type}
                 id={id}
                 animateMount={animateMount}
+                delta={deltas?.[id]?.delta}
               />
             ))}
           </SortableContext>
