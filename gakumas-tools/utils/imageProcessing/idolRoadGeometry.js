@@ -121,10 +121,10 @@ function estimatePitch(rows, size) {
 // drawn over the cards' frames, so the frame top is found by scanning down
 // from the window grey between it and the row above, in the middle of each
 // card.
-function refineRowY(imageData, window, y, xs, size) {
-  const from = Math.round(y - 0.25 * size);
-  const to = Math.round(y + 0.25 * size);
-  if (from < window.top || to >= window.bottom) return y;
+function refineRowY(imageData, scrollArea, y, xs, size) {
+  const from = Math.round(y - 0.4 * size);
+  const to = Math.round(y + 0.4 * size);
+  if (from < scrollArea.top || to >= scrollArea.bottom) return y;
   const tops = [];
   for (const left of xs) {
     for (const f of [0.35, 0.5, 0.65]) {
@@ -184,18 +184,33 @@ export function detectIdolRoadBoxes(imageData) {
       "Could not locate the deck. Is this an Idol Road スコア獲得編成確認 screenshot?",
     );
   }
-  const size = median(onWindow.map((r) => r.size));
+  // Each icon votes: a row whose outlines ran together (a 重複 veil, a
+  // badge over the frame) reads as a few oversized icons and is outvoted.
+  const voted = median(onWindow.flatMap((r) => r.icons.map(() => r.size)));
   const cardRows = onWindow.filter(
-    (r) => Math.abs(r.size - size) <= 0.06 * size,
+    (r) => Math.abs(r.size - voted) <= 0.06 * voted,
   );
-  const pitch = estimatePitch(cardRows, size);
+  const pitch = estimatePitch(cardRows, voted);
   const phase = leftmostOnLattice(
     cardRows.flatMap((r) => r.icons),
     pitch,
   );
+  // A row clipped by the window's edge reads a little small, so take the
+  // largest row whose icons mostly sit on the card lattice (one that ran
+  // together into a neighbour doesn't; a badge can nudge a single icon).
+  const onLattice = cardRows.filter((r) => {
+    const on = r.icons.filter((icon) => {
+      const steps = (icon.x - phase) / pitch;
+      return Math.abs(steps - Math.round(steps)) <= 0.05;
+    });
+    return on.length >= (2 / 3) * r.icons.length;
+  });
+  const size = onLattice.length
+    ? Math.max(...onLattice.map((r) => r.size))
+    : voted;
   const x0 =
     phase + Math.round((COLUMN_0_FRAC * width - phase) / pitch) * pitch;
-  const window = findWindow(
+  const scrollArea = findWindow(
     imageData,
     x0 - 0.05 * pitch,
     cardRows[0].y + size / 2,
@@ -204,14 +219,24 @@ export function detectIdolRoadBoxes(imageData) {
   // Rows sit on a lattice too; a row the outline search missed (mostly
   // greyed out, or clipped by the window) is still read at its lattice place.
   const rowPitch = ROW_PITCH * pitch;
-  // The first row found is the top deck row on screen: above it are the
-  // P-items, or the window's edge.
-  const anchor = cardRows[0].y;
+  // The first row found is usually the top deck row on screen. One the
+  // outline search lost sits a row pitch above it, still on the window.
+  // Only row 1 has no "+" marker, and above it are the P-items: stop there.
+  let anchor = cardRows[0].y;
+  for (;;) {
+    const row1 =
+      backgroundShare(imageData, clip(inset(x0, anchor, size), scrollArea)) < 0.5;
+    if (row1) break;
+    const y = Math.round(anchor - rowPitch);
+    if (y < scrollArea.top - 0.05 * size) break;
+    if (findIconsInBand(mask, width, y, size).length < 2) break;
+    anchor = y;
+  }
   const rows = [];
   let next = anchor;
   for (let k = 0; ; k++) {
     const lattice = Math.round(next);
-    if (lattice + size * 0.5 > window.bottom) break;
+    if (lattice + size * 0.5 > scrollArea.bottom) break;
     next += rowPitch;
     const columns = (plus) =>
       Array.from(
@@ -219,10 +244,10 @@ export function detectIdolRoadBoxes(imageData) {
         (_, i) => x0 + (i + (plus ? 1 : 0)) * pitch,
       ).filter((x) => x + size <= width);
     const plusAt = (yy) =>
-      backgroundShare(imageData, clip(inset(x0, yy, size), window)) >= 0.5;
-    const y = refineRowY(imageData, window, lattice, columns(plusAt(lattice)), size);
+      backgroundShare(imageData, clip(inset(x0, yy, size), scrollArea)) >= 0.5;
+    const y = refineRowY(imageData, scrollArea, lattice, columns(plusAt(lattice)), size);
     next = y + rowPitch;
-    const visible = y >= window.top - 2 && y + size <= window.bottom + 0.05 * size;
+    const visible = y >= scrollArea.top - 2 && y + size <= scrollArea.bottom + 0.05 * size;
     const column0 = inset(x0, y, size);
     const detected = cardRows.find((r) => Math.abs(r.y - y) <= 0.15 * size);
     const icons = detected
@@ -232,12 +257,12 @@ export function detectIdolRoadBoxes(imageData) {
       Array.from({ length: CARDS_PER_ROW }, (_, i) => {
         const box = inset(x0 + (i + (plus ? 1 : 0)) * pitch, y, size);
         return box.x + box.width <= width + 0.1 * box.width &&
-          backgroundShare(imageData, clip(box, window)) < 0.6
+          backgroundShare(imageData, clip(box, scrollArea)) < 0.6
           ? box
           : null;
       });
     // An empty lattice row (past the deck's end) has no cards at all.
-    const plus = backgroundShare(imageData, clip(column0, window)) >= 0.5;
+    const plus = backgroundShare(imageData, clip(column0, scrollArea)) >= 0.5;
     const rowBoxes = boxes(plus);
     if (!rowBoxes.some(Boolean) && !icons.length) continue;
     rows.push({ y, plus, boxes: rowBoxes, visible });
@@ -247,16 +272,16 @@ export function detectIdolRoadBoxes(imageData) {
     size,
     pitch,
     x0,
-    window,
+    scrollArea,
     rows,
     mainRow: main ? { x: x0, y: main.y, size, pitch } : null,
     pItemBoxes: main ? pItemBoxes(imageData, mask, main.y, x0, pitch) : null,
   };
 }
 
-function clip(box, window) {
-  const y0 = Math.max(box.y, window.top);
-  const y1 = Math.min(box.y + box.height, window.bottom);
+function clip(box, scrollArea) {
+  const y0 = Math.max(box.y, scrollArea.top);
+  const y1 = Math.min(box.y + box.height, scrollArea.bottom);
   return { ...box, y: y0, height: Math.max(0, y1 - y0) };
 }
 

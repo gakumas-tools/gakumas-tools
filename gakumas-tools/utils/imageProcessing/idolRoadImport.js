@@ -44,7 +44,7 @@ export function findIdolRoadLoadout(imageDatas) {
       "Every screenshot must be the Idol Road スコア獲得編成確認 screen",
     );
   }
-  const depth = (i) => layouts[i].mainRow.y - layouts[i].window.top;
+  const depth = (i) => layouts[i].mainRow.y - layouts[i].scrollArea.top;
   const order = imageDatas.map((_, i) => i).sort((a, b) => depth(b) - depth(a));
   return {
     order,
