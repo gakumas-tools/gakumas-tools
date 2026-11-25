@@ -1,13 +1,26 @@
+import IDOL_ROAD_PATTERNS from "../csv/idol_road_patterns.csv";
+import IDOL_ROAD_PATTERN_STAGES from "../csv/idol_road_pattern_stages.csv";
 import IDOL_ROAD_STAGES from "../csv/idol_road_stages.csv";
 import IDOL_ROAD_EFFECTS from "../csv/idol_road_effects.csv";
 import { deserializeEffectSequence } from "../utils/effects";
 import PIdols from "./pIdols";
+import Stages from "./stages";
 
 // Idol Road (アイドルへの道) stages change with the P-idol who enters them.
-// idol_road_stages.csv holds the criteria, turn counts and first-turn
-// weights per stage and idol; idol_road_effects.csv holds the 応援効果
-// per stage and recommended effect. The stage's plan is the P-idol's.
-// A stage or idol with no row keeps the values on its stages.csv row.
+// Each idol's road follows one stage list (pattern A or B). A pattern's
+// STAGE n is its own stages.csv row: pattern B's STAGE 6 has other turns
+// and other 応援/トラブル than pattern A's. The later stages every road
+// shares are one row, listed in each pattern.
+// - idol_road_patterns.csv: per pattern, its idols. An idol in no
+//   pattern isn't known yet.
+// - idol_road_pattern_stages.csv: per stage, a pattern it's on; a shared
+//   stage has a row for each. A new stage only adds rows.
+// - idol_road_stages.csv: per stage and idol, the criteria, turn counts
+//   and first-turn weights.
+// - idol_road_effects.csv: per stage and recommended effect, the 応援/
+//   トラブル.
+// The stage's plan is the P-idol's. A stage or idol with no row keeps the
+// values on its stages.csv row.
 
 function parseTriple(value, parse) {
   const [vocal, dance, visual] = String(value)
@@ -16,7 +29,40 @@ function parseTriple(value, parse) {
   return { vocal, dance, visual };
 }
 
-export function createIdolRoad(stageRows, effectRows) {
+function parseIds(value) {
+  return String(value ?? "")
+    .split(",")
+    .map((p) => p.trim())
+    .filter(Boolean)
+    .map((p) => parseInt(p, 10));
+}
+
+// Where a stage is on its road: its STAGE number.
+const stageNumber = (stageId) => Stages.getById(stageId)?.stage;
+
+export function createIdolRoad(
+  stageRows,
+  effectRows,
+  patternRows = [],
+  patternStageRows = [],
+  stageNumberOf = stageNumber,
+) {
+  const patternByIdol = Object.create(null);
+  for (const row of patternRows) {
+    for (const idolId of parseIds(row.idolIds)) {
+      patternByIdol[idolId] = row.pattern;
+    }
+  }
+  // Each pattern's stages in STAGE order, whatever order their rows came in.
+  const stageIdsByPattern = Object.create(null);
+  for (const row of patternStageRows) {
+    (stageIdsByPattern[row.pattern] ??= []).push(parseInt(row.stageId, 10));
+  }
+  const at = (id) => Number(stageNumberOf(id) ?? Infinity);
+  for (const ids of Object.values(stageIdsByPattern)) {
+    ids.sort((a, b) => at(a) - at(b));
+  }
+
   const byIdol = Object.create(null);
   for (const row of stageRows) {
     byIdol[`${row.stageId}:${row.idolId}`] = {
@@ -38,7 +84,22 @@ export function createIdolRoad(stageRows, effectRows) {
     return entry.parsed;
   }
 
+  function getPattern(pIdolId) {
+    const pIdol = PIdols.getById(pIdolId);
+    return (pIdol && patternByIdol[pIdol.idolId]) || null;
+  }
+
   return {
+    // The pattern ("A", "B") of the P-idol's road, or null if not known.
+    getPattern,
+
+    // The stage ids of the P-idol's road, in order, or null when its
+    // pattern isn't known (then every Idol Road stage may be its).
+    getStageIds(pIdolId) {
+      const pattern = getPattern(pIdolId);
+      return pattern ? stageIdsByPattern[pattern] || [] : null;
+    },
+
     // Returns the stage as the given P-idol plays it. Stages that aren't
     // Idol Road, and unknown P-idols, come back unchanged.
     resolveStage(stage, pIdolId) {
@@ -85,6 +146,11 @@ export function createIdolRoad(stageRows, effectRows) {
   };
 }
 
-const IdolRoad = createIdolRoad(IDOL_ROAD_STAGES, IDOL_ROAD_EFFECTS);
+const IdolRoad = createIdolRoad(
+  IDOL_ROAD_STAGES,
+  IDOL_ROAD_EFFECTS,
+  IDOL_ROAD_PATTERNS,
+  IDOL_ROAD_PATTERN_STAGES,
+);
 
 export default IdolRoad;
