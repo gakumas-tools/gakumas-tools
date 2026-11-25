@@ -50,6 +50,8 @@ const FIXTURES = [
   "idol-road-saki-s7-5894",
   "idol-road-saki-s8-9950",
   "idol-road-saki-s9-9135",
+  "idol-road-saki-s3-5689",
+  "idol-road-saki-fmw-s3-2460",
   "idol-road-saki-s10",
 ];
 
