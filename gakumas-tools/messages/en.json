@@ -553,9 +553,26 @@
     "title": "Share",
     "more": "More…",
     "x": "Share on X",
+    "xResult": "Share the result on X",
     "saveImage": "Save as image",
     "exporting": "Saving…",
-    "exportFailed": "Couldn't save. Try again"
+    "exportFailed": "Couldn't save. Try again",
+    "loadoutHelp": "Anyone with this link opens this loadout in the simulator.",
+    "copy": "Copy",
+    "copied": "Copied",
+    "copyThisLink": "Copy this link:",
+    "resultTitle": "Share this result",
+    "resultHelp": "Makes a link to this loadout and its scores that anyone can open, and keeps it in Compare.",
+    "signInToShareResult": "Sign in to make a link with the scores and list it on the stage's shared runs.",
+    "signIn": "Sign in with Discord",
+    "namePlaceholder": "Name (optional)",
+    "listOnStage": "Show it on this stage's shared runs",
+    "makeLink": "Make result link",
+    "making": "Making link…",
+    "failed": "Couldn't share it. Try again.",
+    "sharedNote": "Anyone with the link can open it. You can take it down in Compare.",
+    "listedNote": "It's on this stage's shared runs too. You can take it off in Compare.",
+    "seeOthers": "See the stage's runs"
   },
   "ConfirmModal": {
     "cancel": "Cancel",
@@ -580,8 +597,7 @@
     "optimizeNeedsSimulation": "Simulate the current loadout first",
     "staleResults": "These results are from an earlier loadout",
     "rehearsal": "Rehearsal",
-    "shareRun": "Share result",
-    "signInToShare": "Sharing a run requires sign-in. Continue to Discord?"
+    "shareRun": "Share"
   },
   "CompareTab": {
     "saved": "Saved",
@@ -665,7 +681,7 @@
       "top": "Top score"
     },
     "scores": "Average {mean} · Median {median}",
-    "empty": "No listed runs here yet. Simulate a loadout, then tap Share result to put yours here.",
+    "empty": "No listed runs here yet. Simulate a loadout, then tap Share to put yours here.",
     "older": "Older runs",
     "newest": "Back to newest",
     "emptyAction": "Share yours"
@@ -679,7 +695,7 @@
     "yourRun": "Your run (this result)",
     "place": "#{rank} of {count} with yours",
     "belowTop": "Below the top {count} listed",
-    "howToList": "To list yours, tap Share result after simulating.",
+    "howToList": "To list yours, tap Share after simulating.",
     "seeAll": "See them all",
     "listYours": "List it here",
     "namePlaceholder": "Name (optional)",
@@ -946,24 +962,6 @@
     "back": "All {category}",
     "open": "Open page",
     "customizations": "Customizations"
-  },
-  "ShareRunModal": {
-    "title": "Share this run",
-    "hint": "Makes a link to this loadout and its scores that anyone can open, and keeps it in Compare.",
-    "namePlaceholder": "Name (optional)",
-    "listOnStage": "Show it on this stage's shared runs",
-    "share": "Share",
-    "sharing": "Sharing…",
-    "cancel": "Cancel",
-    "failed": "Couldn't share it. Try again.",
-    "sharedTitle": "Shared",
-    "listedTitle": "Shared and listed",
-    "sharedNote": "Anyone with the link can open it. You can take it down in Compare.",
-    "listedNote": "It's on this stage's shared runs too. You can take it off in Compare.",
-    "copyLink": "Copy link",
-    "copied": "Copied",
-    "copyThisLink": "Copy this link:",
-    "seeOthers": "See the stage's runs"
   },
   "StagePage": {
     "turnsTotal": "{n} turns",

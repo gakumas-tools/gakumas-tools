@@ -413,7 +413,16 @@ export default function Simulator() {
         </div>
 
         <div className={styles.subLinks} data-export-hide="true">
-          <SimulatorButtons />
+          <SimulatorButtons
+            run={
+              strategy === "HeuristicStrategy" &&
+              !running &&
+              simulatorData?.input.config === config &&
+              simulatorData?.input.linkConfigs === linkConfigs
+                ? simulatorData.run
+                : null
+            }
+          />
           <a
             href="https://github.com/gakumas-tools/gakumas-tools/blob/master/gakumas-tools/simulator/CHANGELOG.md"
             target="_blank"

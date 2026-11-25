@@ -13,9 +13,13 @@ import Modal from "@/components/Modal";
 import ModalContext from "@/contexts/ModalContext";
 import c from "@/utils/classNames";
 import { exportImage } from "@/utils/exportImage";
+import LinkRow, { tweet } from "./LinkRow";
+import ResultShare from "./ResultShare";
 import styles from "./ShareModal.module.scss";
 
-export default function ShareModal({ url }) {
+// The simulator's one Share: the loadout's link, and, when a result is on
+// screen, a link to the result that can also be listed on the stage.
+export default function ShareModal({ url, result }) {
   const t = useTranslations("ShareModal");
   const { closeModal } = useContext(ModalContext);
   const [exporting, setExporting] = useState(false);
@@ -41,7 +45,7 @@ export default function ShareModal({ url }) {
       const timeout = new Promise((_, reject) => {
         timeoutId = setTimeout(
           () => reject(new Error("Export timed out")),
-          30000
+          30000,
         );
       });
       await Promise.race([exportImage(), timeout]);
@@ -58,9 +62,11 @@ export default function ShareModal({ url }) {
   return (
     <Modal dismissable={!exporting} size="small">
       <h3>{t("title")}</h3>
+      <p className={styles.help}>{t("loadoutHelp")}</p>
+      <LinkRow url={url} />
       <div className={styles.actions}>
         <Button
-          style="primary"
+          style={result ? "default" : "primary"}
           fill
           onClick={exporting ? undefined : saveImage}
         >
@@ -75,16 +81,7 @@ export default function ShareModal({ url }) {
             </span>
           </span>
         </Button>
-        <Button
-          style="default"
-          fill
-          onClick={() =>
-            window.open(
-              `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}`,
-              "_blank"
-            )
-          }
-        >
+        <Button style="default" fill onClick={() => tweet(url)}>
           <FaXTwitter />
           {t("x")}
         </Button>
@@ -95,6 +92,7 @@ export default function ShareModal({ url }) {
           </Button>
         )}
       </div>
+      {result && <ResultShare {...result} />}
     </Modal>
   );
 }
