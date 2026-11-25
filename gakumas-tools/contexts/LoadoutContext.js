@@ -15,6 +15,7 @@ import {
   getStage,
   deserializePDrinkIds,
   deserializePDrinkTurns,
+  deserializeStartStamina,
   knownStageId,
   produceExamIdOf,
 } from "gakumas-loadout";
@@ -61,6 +62,10 @@ export function LoadoutContextProvider({ children }) {
   const [pDrinkTurns, setPDrinkTurns] = useState(() =>
     deserializePDrinkTurns(initialLoadout.pDrinkTurns?.join("-")),
   );
+  // The 体力 a produce exam starts at (null = max). Held like the drinks.
+  const [startStamina, setStartStamina] = useState(
+    initialLoadout.startStamina ?? null,
+  );
   const [skillCardIdGroups, setSkillCardIdGroups] = useState(() =>
     initialLoadout.skillCardIdGroups.map((skillCardIds) =>
       getMemorySlotSkillCardIds({ skillCardIds }),
@@ -93,6 +98,7 @@ export function LoadoutContextProvider({ children }) {
       pItemIds,
       pDrinkIds: produceExamIdOf(stageId) ? pDrinkIds : [0, 0, 0],
       pDrinkTurns: produceExamIdOf(stageId) ? pDrinkTurns : [1, 1, 1],
+      startStamina: produceExamIdOf(stageId) ? startStamina : null,
       skillCardIdGroups,
       customizationGroups,
     }),
@@ -106,6 +112,7 @@ export function LoadoutContextProvider({ children }) {
       pItemIds,
       pDrinkIds,
       pDrinkTurns,
+      startStamina,
       skillCardIdGroups,
       customizationGroups,
     ]
@@ -146,6 +153,7 @@ export function LoadoutContextProvider({ children }) {
     if (produceExamIdOf(loadout.stageId)) {
       setPDrinkIds(deserializePDrinkIds(loadout.pDrinkIds?.join("-")));
       setPDrinkTurns(deserializePDrinkTurns(loadout.pDrinkTurns?.join("-")));
+      setStartStamina(deserializeStartStamina(loadout.startStamina));
     }
     const groups = loadout.skillCardIdGroups.map((skillCardIds) =>
       getMemorySlotSkillCardIds({ skillCardIds }),
@@ -199,6 +207,7 @@ export function LoadoutContextProvider({ children }) {
     setPItemIds([0, 0, 0, 0]);
     setPDrinkIds([0, 0, 0]);
     setPDrinkTurns([1, 1, 1]);
+    setStartStamina(null);
     setSkillCardIdGroups([
       [0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0],
@@ -406,6 +415,7 @@ export function LoadoutContextProvider({ children }) {
       replacePItemId,
       replacePDrinkId,
       setPDrinkTurn,
+      setStartStamina,
       swapPItemIds,
       replaceSkillCardId,
       swapSkillCardIds,

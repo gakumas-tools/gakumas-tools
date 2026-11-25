@@ -31,6 +31,7 @@ import StageSelect from "@/components/StageSelect";
 import StageSharedRuns from "@/components/StageSharedRuns";
 import StrategyPicker from "@/components/StrategyPicker";
 import StagePDrinks from "@/components/StagePDrinks";
+import StageStartStamina from "@/components/StageStartStamina";
 import TurnOrder from "@/components/TurnOrder";
 import LoadoutContext from "@/contexts/LoadoutContext";
 import SimulationRunsContext from "@/contexts/SimulationRunsContext";
@@ -283,6 +284,7 @@ export default function Simulator() {
           <>
             <TurnOrder />
             <StagePDrinks />
+            <StageStartStamina />
           </>
         )}
         {stage.type !== "contest" ? (

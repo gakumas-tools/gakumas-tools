@@ -63,6 +63,13 @@ export function deserializePDrinkTurns(value) {
   );
 }
 
+// The 体力 a produce exam starts at ("start_stamina=26"): a produce exam starts
+// at the 体力 the run had, which can be below max. null = start at max.
+export function deserializeStartStamina(value) {
+  const stamina = parseInt(value, 10);
+  return stamina >= 0 ? stamina : null;
+}
+
 function knownSkillCardId(id) {
   return SkillCards.getById(id) ? id : 0;
 }
@@ -115,6 +122,9 @@ export function loadoutFromSearchParams(searchParams) {
   const pDrinkTurns = deserializePDrinkTurns(
     isProduceExam ? searchParams.get("drink_turns") : null
   );
+  const startStamina = deserializeStartStamina(
+    isProduceExam ? searchParams.get("start_stamina") : null,
+  );
   supportBonus = parseFloat(supportBonus);
   if (isNaN(supportBonus)) supportBonus = null;
   params = params
@@ -146,6 +156,7 @@ export function loadoutFromSearchParams(searchParams) {
     pItemIds,
     pDrinkIds,
     pDrinkTurns,
+    startStamina,
     skillCardIdGroups,
     customizationGroups,
     hasDataFromParams,
@@ -162,6 +173,7 @@ export function loadoutToSearchParams(loadout) {
     pItemIds,
     pDrinkIds,
     pDrinkTurns,
+    startStamina,
     skillCardIdGroups,
     customizationGroups,
   } = loadout;
@@ -178,6 +190,9 @@ export function loadoutToSearchParams(loadout) {
           serializeIds(pDrinkIds.map((id, i) => (id && pDrinkTurns[i]) || 1)),
         );
       }
+    }
+    if (startStamina != null) {
+      searchParams.set("start_stamina", startStamina);
     }
   }
   if (enterPercents) searchParams.set("enter_percents", "1");

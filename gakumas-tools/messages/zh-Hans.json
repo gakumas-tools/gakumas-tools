@@ -495,6 +495,10 @@
     "turnLabel": "饮用 P 饮料 {slot} 的回合",
     "note": "在所选回合开始时、打出第一张卡之前饮用。游戏中可以随时饮用。"
   },
+  "StageStartStamina": {
+    "label": "考试开始时的体力",
+    "note": "培育中带入考试的体力。留空则从最大体力开始。考试中的回复仍以最大体力为上限。"
+  },
   "StageCustomizer": {
     "type": "类型",
     "contest": "竞技场",
