@@ -121,10 +121,10 @@ function estimatePitch(rows, size) {
 // drawn over the cards' frames, so the frame top is found by scanning down
 // from the window grey between it and the row above, in the middle of each
 // card.
-function refineRowY(imageData, window, y, xs, size) {
+function refineRowY(imageData, scrollArea, y, xs, size) {
   const from = Math.round(y - 0.4 * size);
   const to = Math.round(y + 0.4 * size);
-  if (from < window.top || to >= window.bottom) return y;
+  if (from < scrollArea.top || to >= scrollArea.bottom) return y;
   const tops = [];
   for (const left of xs) {
     for (const f of [0.35, 0.5, 0.65]) {
@@ -210,7 +210,7 @@ export function detectIdolRoadBoxes(imageData) {
     : voted;
   const x0 =
     phase + Math.round((COLUMN_0_FRAC * width - phase) / pitch) * pitch;
-  const window = findWindow(
+  const scrollArea = findWindow(
     imageData,
     x0 - 0.05 * pitch,
     cardRows[0].y + size / 2,
@@ -225,10 +225,10 @@ export function detectIdolRoadBoxes(imageData) {
   let anchor = cardRows[0].y;
   for (;;) {
     const row1 =
-      backgroundShare(imageData, clip(inset(x0, anchor, size), window)) < 0.5;
+      backgroundShare(imageData, clip(inset(x0, anchor, size), scrollArea)) < 0.5;
     if (row1) break;
     const y = Math.round(anchor - rowPitch);
-    if (y < window.top - 0.05 * size) break;
+    if (y < scrollArea.top - 0.05 * size) break;
     if (findIconsInBand(mask, width, y, size).length < 2) break;
     anchor = y;
   }
@@ -236,7 +236,7 @@ export function detectIdolRoadBoxes(imageData) {
   let next = anchor;
   for (let k = 0; ; k++) {
     const lattice = Math.round(next);
-    if (lattice + size * 0.5 > window.bottom) break;
+    if (lattice + size * 0.5 > scrollArea.bottom) break;
     next += rowPitch;
     const columns = (plus) =>
       Array.from(
@@ -244,10 +244,10 @@ export function detectIdolRoadBoxes(imageData) {
         (_, i) => x0 + (i + (plus ? 1 : 0)) * pitch,
       ).filter((x) => x + size <= width);
     const plusAt = (yy) =>
-      backgroundShare(imageData, clip(inset(x0, yy, size), window)) >= 0.5;
-    const y = refineRowY(imageData, window, lattice, columns(plusAt(lattice)), size);
+      backgroundShare(imageData, clip(inset(x0, yy, size), scrollArea)) >= 0.5;
+    const y = refineRowY(imageData, scrollArea, lattice, columns(plusAt(lattice)), size);
     next = y + rowPitch;
-    const visible = y >= window.top - 2 && y + size <= window.bottom + 0.05 * size;
+    const visible = y >= scrollArea.top - 2 && y + size <= scrollArea.bottom + 0.05 * size;
     const column0 = inset(x0, y, size);
     const detected = cardRows.find((r) => Math.abs(r.y - y) <= 0.15 * size);
     const icons = detected
@@ -257,12 +257,12 @@ export function detectIdolRoadBoxes(imageData) {
       Array.from({ length: CARDS_PER_ROW }, (_, i) => {
         const box = inset(x0 + (i + (plus ? 1 : 0)) * pitch, y, size);
         return box.x + box.width <= width + 0.1 * box.width &&
-          backgroundShare(imageData, clip(box, window)) < 0.6
+          backgroundShare(imageData, clip(box, scrollArea)) < 0.6
           ? box
           : null;
       });
     // An empty lattice row (past the deck's end) has no cards at all.
-    const plus = backgroundShare(imageData, clip(column0, window)) >= 0.5;
+    const plus = backgroundShare(imageData, clip(column0, scrollArea)) >= 0.5;
     const rowBoxes = boxes(plus);
     if (!rowBoxes.some(Boolean) && !icons.length) continue;
     rows.push({ y, plus, boxes: rowBoxes, visible });
@@ -272,16 +272,16 @@ export function detectIdolRoadBoxes(imageData) {
     size,
     pitch,
     x0,
-    window,
+    scrollArea,
     rows,
     mainRow: main ? { x: x0, y: main.y, size, pitch } : null,
     pItemBoxes: main ? pItemBoxes(imageData, mask, main.y, x0, pitch) : null,
   };
 }
 
-function clip(box, window) {
-  const y0 = Math.max(box.y, window.top);
-  const y1 = Math.min(box.y + box.height, window.bottom);
+function clip(box, scrollArea) {
+  const y0 = Math.max(box.y, scrollArea.top);
+  const y1 = Math.min(box.y + box.height, scrollArea.bottom);
   return { ...box, y: y0, height: Math.max(0, y1 - y0) };
 }
 
