@@ -37,6 +37,7 @@ const FIXTURES = [
   "produce-exam-misuzu-run2-final",
   "produce-exam-misuzu-run2-midterm-passed",
   "produce-exam-misuzu-run2-final-to-turn9",
+  "produce-exam-misuzu-run2-final-to-11658",
 ];
 
 function getTypeMultipliers(capture) {
@@ -55,10 +56,12 @@ function createEngine(capture, play) {
     play.actions.flatMap((action) =>
       action.skip
         ? []
-        : [
-            ...(action.handCardIds ?? [action.cardId]),
-            ...(action.drawnCardIds ?? []),
-          ],
+        : action.fromDrink
+          ? (action.handCardIds ?? []).filter((id) => id != action.cardId)
+          : [
+              ...(action.handCardIds ?? [action.cardId]),
+              ...(action.drawnCardIds ?? []),
+            ],
     );
   const idol = new IdolConfig({
     params: [0, 0, 0, capture.initial.stamina],
@@ -109,6 +112,24 @@ function putInHand(state, hand) {
     state[pile] = state[pile].filter((c) => !hand.includes(c));
   }
   state[S.handCards] = hand;
+}
+
+// A P-drink, as the game used it. One that puts a random card in the hand
+// (初星スペシャル青汁) puts the card the game showed: a new copy, so nothing
+// that grew the deck's cards has grown it.
+function drinkAsCaptured(engine, state, drink) {
+  const pDrink = PDrinks.getById(drink.id);
+  assert.equal(pDrink.name, drink.name);
+  const cardManager = engine.cardManager;
+  if (drink.addsCardId) {
+    cardManager.addRandomUpgradedCardToHand = (s) =>
+      cardManager.addCardToHand(s, drink.addsCardId);
+  }
+  try {
+    engine.effectManager.triggerEffects(state, pDrink.actions);
+  } finally {
+    delete cardManager.addRandomUpgradedCardToHand;
+  }
 }
 
 function holdAsCaptured(hold, onHold) {
@@ -168,13 +189,27 @@ function replay(capture, play) {
         action.handCardIds,
         `turn ${turn} hand (${action.handCapture})`,
       );
+    } else if (action.fromDrink) {
+      // The card a drink just put in the hand, with the hand the game showed
+      hand = supplyHand(state, {
+        handCardIds: (action.handCardIds ?? []).filter(
+          (id) => id != action.cardId,
+        ),
+      });
+      putInHand(state, hand);
+      for (const drink of action.drinksBefore ?? []) {
+        drinkAsCaptured(engine, state, drink);
+      }
+      hand = state[S.handCards];
     } else {
       hand = supplyHand(state, action, heldCard);
       putInHand(state, hand);
     }
     const card = action.useReturnedHeldCard
       ? heldCard
-      : hand.find((c) => state[S.cardMap][c].id == action.cardId);
+      : action.fromDrink
+        ? hand.findLast((c) => state[S.cardMap][c].id == action.cardId)
+        : hand.find((c) => state[S.cardMap][c].id == action.cardId);
     for (const [field, value] of Object.entries(action.growthBefore ?? {})) {
       assert.equal(
         state[S.cardMap][card].growth[G[field]],
@@ -203,10 +238,10 @@ function replay(capture, play) {
       }
       state[S.deckCards].push(drawn);
     }
-    for (const drink of action.drinksBefore ?? []) {
-      const pDrink = PDrinks.getById(drink.id);
-      assert.equal(pDrink.name, drink.name);
-      engine.effectManager.triggerEffects(state, pDrink.actions);
+    if (!action.fromDrink) {
+      for (const drink of action.drinksBefore ?? []) {
+        drinkAsCaptured(engine, state, drink);
+      }
     }
     if (action.playedName) {
       assert.equal(
