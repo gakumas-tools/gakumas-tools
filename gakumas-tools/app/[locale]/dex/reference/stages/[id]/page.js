@@ -1,3 +1,4 @@
+import { IdolRoad } from "gakumas-data";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { FaChevronLeft } from "react-icons/fa6";
@@ -55,9 +56,12 @@ export default async function StagePage({ params }) {
   const tType = await getTranslations({ locale, namespace: "StageSelectModal" });
   const tDex = await getTranslations({ locale, namespace: "Dex" });
   const tPage = await getTranslations({ locale, namespace: "EntityPage" });
+  const tEffect = await getTranslations({ locale, namespace: "stage" });
   const { counts, total } = stageTurns(stage);
   const idolRoad = stage.type == "idolRoad";
   const runs = await topRuns(Number(stage.id));
+  // The 応援/トラブル lines stay in the game's own wording in every locale.
+  const stageTexts = idolRoad ? IdolRoad.getStageTexts(Number(stage.id)) : [];
 
   return (
     <article className={styles.page}>
@@ -124,6 +128,39 @@ export default async function StagePage({ params }) {
         </tbody>
       </table>
       <CriteriaBar criteria={stage.criteria} />
+
+      {stageTexts.length > 0 && (
+        <section className={styles.section}>
+          <h2>{t("stageTexts")}</h2>
+          <p className={styles.note}>{t("stageTextsNote")}</p>
+          {stageTexts.map(({ recommendedEffect, lines }) => (
+            <div key={recommendedEffect} className={styles.branch}>
+              <h3>
+                {t("recommendedEffect", {
+                  effect: tEffect(recommendedEffect),
+                })}
+              </h3>
+              <ul className={`${styles.list} ${styles.effectLines}`}>
+                {lines.map((line, i) => (
+                  <li key={i} className={styles.effectLine}>
+                    <span className={styles.turns}>
+                      {t("turnN", { n: line.turn })}
+                    </span>
+                    {line.kind && (
+                      <span className={`${styles.tag} ${styles[line.kind]}`}>
+                        {t(line.kind)}
+                      </span>
+                    )}
+                    <span lang="ja" className={styles.effectText}>
+                      {line.text}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </section>
+      )}
 
       <div className={styles.links}>
         <Button style="primary" href={`/simulator?stage=${stage.id}`}>

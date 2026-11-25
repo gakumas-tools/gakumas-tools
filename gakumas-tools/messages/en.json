@@ -960,6 +960,12 @@
     "sharedRuns": "Shared runs for this stage",
     "metaDescription": "{name} ({type}): criteria Vo {vocal}% Da {dance}% Vi {visual}%, {turns} turns. Open it in the simulator or compare players' shared runs.",
     "topRuns": "Top shared runs",
-    "noRuns": "No one has shared a run for this stage yet. Open it in the simulator and share yours."
+    "noRuns": "No one has shared a run for this stage yet. Open it in the simulator and share yours.",
+    "stageTexts": "Support and trouble effects",
+    "stageTextsNote": "Each recommended effect's lines, as the game words them.",
+    "recommendedEffect": "Recommended effect: {effect}",
+    "turnN": "Turn {n}",
+    "support": "Support",
+    "trouble": "Trouble"
   }
 }

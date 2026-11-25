@@ -151,3 +151,49 @@
   gap: tokens.$space-2;
 }
 
+
+.branch {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$space-1;
+
+  h3 {
+    font-size: tokens.$text-md;
+    font-weight: tokens.$weight-bold;
+  }
+}
+
+.effectLines {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+}
+
+.effectLine {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  align-items: baseline;
+  column-gap: tokens.$space-2;
+  padding: tokens.$space-2 tokens.$space-3;
+  border-radius: tokens.$radius-lg;
+  background-color: tokens.$surface-alt;
+  color: tokens.$surface-ink;
+
+  .tag {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .support {
+    @include mixins.tag(tokens.$success-tint, tokens.$success-ink);
+  }
+
+  .trouble {
+    @include mixins.tag(tokens.$danger-tint, tokens.$danger);
+  }
+}
+
+.effectText {
+  grid-column: 3;
+  font-size: tokens.$text-sm;
+}
