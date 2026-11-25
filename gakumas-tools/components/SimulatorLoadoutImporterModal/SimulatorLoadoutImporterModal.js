@@ -22,6 +22,7 @@ function SimulatorLoadoutImporterModal({ stageId, onImport }) {
   const { stage, selectStage, setSupportBonus } = useContext(LoadoutContext);
   const { closeModal } = useContext(ModalContext);
   const [candidates, setCandidates] = useState(null);
+  const [idolRoadStage, setIdolRoadStage] = useState(null);
 
   const importFn = useCallback(
     (files) => getSimulatorLoadoutFromFiles(files, stageId),
@@ -29,8 +30,9 @@ function SimulatorLoadoutImporterModal({ stageId, onImport }) {
   );
 
   const handleImport = useCallback(
-    ({ stageCandidates, ...imported }) => {
+    ({ stageCandidates, idolRoadStage, ...imported }) => {
       onImport(imported);
+      setIdolRoadStage(idolRoadStage ?? null);
       setCandidates(stageCandidates);
     },
     [onImport],
@@ -58,7 +60,11 @@ function SimulatorLoadoutImporterModal({ stageId, onImport }) {
     <Modal>
       <h3>{t("matchingStages")}</h3>
       <p className={importerStyles.instructions}>
-        {candidates.length ? t("pickStage") : t("noStage")}
+        {candidates.length
+          ? t("pickStage")
+          : idolRoadStage
+            ? t("noIdolRoadStage", { stage: idolRoadStage })
+            : t("noStage")}
       </p>
       <div className={stageStyles.stageList}>
         {candidates.map((candidate, i) => (

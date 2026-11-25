@@ -102,6 +102,8 @@ export function idolRoadLoadout(found, cards, chosenPItemIds) {
   return {
     ...stageCandidates[0],
     stageCandidates,
+    // Shown in place of the contest wording when no stage is found.
+    idolRoadStage: found.stage,
     params: [...found.percents, found.params[3]],
     pItemIds: chosenPItemIds,
     skillCardIdGroups,

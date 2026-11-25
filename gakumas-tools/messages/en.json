@@ -528,7 +528,8 @@
     "error": "Failed to import",
     "matchingStages": "Matching stages",
     "pickStage": "Best match selected. Pick another if it's wrong.",
-    "noStage": "No stage matches the screenshot's type multipliers, so the stage and support bonus were left unchanged."
+    "noStage": "No stage matches the screenshot's type multipliers, so the stage and support bonus were left unchanged.",
+    "noIdolRoadStage": "This idol's Idol Road STAGE{stage} isn't in the simulator yet, so the stage was left unchanged. The parameters loaded are the screen's percentages, which only fit an Idol Road stage."
   },
   "ShareModal": {
     "title": "Share",
