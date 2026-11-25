@@ -103,6 +103,8 @@ const PRODUCE_EXAM_IDS = {
   "produce-exam-impression-final-r20d": 1,
   "produce-exam-impression-final-r23d": 1,
   "produce-exam-impression-final-r24c": 1,
+  "produce-exam-impression-final-r25b": 1,
+  "produce-exam-impression-final-r25c": 1,
 };
 
 function getStage(capture) {
@@ -149,7 +151,10 @@ function createEngine(capture, play) {
     ...(capture.extraCardIds ?? []),
   ];
   const idol = new IdolConfig({
-    params: [0, 0, 0, capture.initial.stamina],
+    // maxStamina: the run's max 体力 when the exam starts below it (a
+    // produce exam starts at the 体力 the run had), so heals cap there.
+    params: [0, 0, 0, capture.maxStamina ?? capture.initial.stamina],
+    startStamina: capture.initial.stamina,
     pItemIds: capture.pItemIds ?? [],
     skillCardIdGroups: [cardIds],
   });
@@ -382,7 +387,7 @@ function replay(capture, play) {
     state = engine.useCard(state, card);
 
     assert.equal(holds, action.hold ? 1 : 0);
-    assert.equal(state[S.turnsElapsed], action.turnsElapsed ?? turn);
+    assert.equal(state[S.turnsElapsed], action.turnsElapsed ?? turn, `action ${turn} turnsElapsed`);
     if (action.heldCardIds) {
       const heldIds = state[S.heldCards].map((c) => state[S.cardMap][c].id);
       assert.deepEqual(heldIds, action.heldCardIds);
