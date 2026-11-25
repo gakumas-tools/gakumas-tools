@@ -523,7 +523,7 @@
   },
   "SimulatorLoadoutImporterModal": {
     "title": "Importar formación desde captura",
-    "instructions": "Sube una captura de la pantalla de formación de concurso del juego. Se cargarán los parámetros, los objetos P y las cartas de habilidad, y la etapa y la bonificación de apoyo se deducirán de los multiplicadores por tipo.",
+    "instructions": "Sube una captura de la pantalla de formación de concurso del juego. Se cargarán los parámetros, los objetos P y las cartas de habilidad, y la etapa y la bonificación de apoyo se deducirán de los multiplicadores por tipo. También sirve la pantalla 「スコア獲得編成確認」 de Idol Road: sube su captura superior y, si el mazo tiene 3 filas, también una desplazada hasta abajo.",
     "processing": "Procesando captura...",
     "error": "No se ha podido importar",
     "matchingStages": "Etapas coincidentes",
