@@ -1,0 +1,142 @@
+@use "../../styles/tokens";
+
+.communityTierList {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid tokens.$surface-border;
+  border-radius: tokens.$radius-md;
+  overflow: hidden;
+}
+
+.toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: tokens.$space-2 tokens.$space-3;
+  border: none;
+  background: tokens.$surface-muted;
+  color: tokens.$surface-ink;
+  font-size: tokens.$text-sm;
+  font-weight: tokens.$weight-semibold;
+  cursor: pointer;
+
+  &:hover {
+    background: tokens.$surface-muted-hover;
+  }
+}
+
+.chevron {
+  transition: transform tokens.$duration-fast;
+}
+
+.open {
+  transform: rotate(180deg);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$space-2;
+  padding: tokens.$space-2 tokens.$space-3;
+}
+
+.summary {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: tokens.$space-2;
+  font-size: tokens.$text-sm;
+}
+
+.useLink {
+  font-weight: tokens.$weight-semibold;
+}
+
+.tiers {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  align-items: stretch;
+
+  & + & {
+    border-top: 1px solid tokens.$surface-border;
+  }
+}
+
+.label {
+  flex-shrink: 0;
+  width: 56px;
+  display: flex;
+  align-items: center;
+}
+
+.items {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 8px 0;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 52px;
+}
+
+.spread {
+  font-size: tokens.$text-xs;
+  font-weight: tokens.$weight-semibold;
+  white-space: nowrap;
+}
+
+.agreed {
+  color: tokens.$surface-ink-muted;
+}
+
+.note,
+.hint {
+  color: tokens.$surface-ink-muted;
+  font-size: tokens.$text-sm;
+}
+
+.icon {
+  position: relative;
+  width: 52px;
+  height: 52px;
+}
+
+.publish {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$space-2;
+  margin-top: tokens.$space-3;
+  padding-top: tokens.$space-3;
+  border-top: 1px solid tokens.$surface-border;
+
+  h4 {
+    margin: 0;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+.error {
+  color: tokens.$danger;
+  font-size: tokens.$text-sm;
+}
+
+.addYours {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
