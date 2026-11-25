@@ -69,6 +69,8 @@ const FIXTURES = [
   "produce-exam-impression-final-r20d",
   "produce-exam-impression-final-r23d",
   "produce-exam-impression-final-r24c",
+  "produce-exam-impression-final-r25b",
+  "produce-exam-impression-final-r25c",
 ];
 
 // Captures of a produce exam that has a ProduceExams row replay through
