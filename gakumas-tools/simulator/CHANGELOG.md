@@ -16,6 +16,27 @@ All notable changes to the contest simulator will be documented in this file.
 
 
 
+## 2026-11-20
+
+- Add uijin ume portrait
+- Add star-mine ume portrait
+- Add endless dance sena portrait
+- Add go my way ume portrait
+- Add kuraiai tsubame portrait
+- Add shirube china portrait
+- Add shirube sumika portrait
+- Add akogare wo daite ippozutsu kanae portrait
+- Add preview of unbalance tsubame
+- Add preview of unbalance mao
+- Fix Maigo no Oyobidashi welfare status
+
+## 2026-11-19
+
+- Add endless dance ume portrait
+- Add nee icchauyo temari portrait
+- Add agitato lilja portrait
+- Confirm contest season 56 stages
+
 ## 2026-11-16
 
 - Update metamorphose kanae

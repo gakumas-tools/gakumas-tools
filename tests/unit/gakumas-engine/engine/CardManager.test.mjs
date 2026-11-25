@@ -218,6 +218,19 @@ test("run #11's ++ popups: 前途洋々++, 元気な挨拶++ and a support's 紅
   }
 });
 
+test("run #14's ++ popup: パステル気分++ costs 2", () => {
+  // L5 lesson (run #14): パステル気分+ 67 → ++ shows 元気+7, やる気≥3 → 好印象+4 at cost 2 (+ is 3).
+  const engine = createEngine({ skillCardIds: [67] });
+  const state = engine.getInitialState(true);
+  const card = state[S.cardMap].findIndex((c) => c.id === 67);
+  assert.equal(engine.cardManager.supportUpgrade(state, card), true);
+  const plusPlus = SkillCards.getById(state[S.cardMap][card].id);
+  assert.equal(plusPlus.name, "パステル気分++");
+  assert.equal(state[S.cardMap][card].id, 10067);
+  assert.equal(state[S.cardMap][card].baseId, 66);
+  assert.equal(plusPlus.cost[0].actions[0].rhs.value, 2);
+});
+
 test("++ cards are found by id but never listed", () => {
   const plusPlus = SkillCards.getPlusPlus(45);
   assert.equal(plusPlus.name, "手拍子++");
