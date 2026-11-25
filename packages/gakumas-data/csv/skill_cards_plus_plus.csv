@@ -4,3 +4,5 @@ id,name,availableCustomizations,rarity,type,plan,unlockPlv,upgraded,unique,sourc
 10043,もう少しだけ++,,R,active,logic,1,TRUE,FALSE,produce,,FALSE,,cost-=5,score+=19; motivation+=4,,,43
 10045,手拍子++,,R,active,logic,13,TRUE,FALSE,produce,,FALSE,,cost-=4,score+=goodImpressionTurns*2,1,,45
 10089,ラブリーウインク++,,SR,active,logic,1,TRUE,FALSE,produce,,FALSE,,cost-=4,goodImpressionTurns+=5; score+=goodImpressionTurns*0.9,,,89
+10277,みずたまりスキップ++,,SSR,mental,free,1,TRUE,TRUE,support,,FALSE,,stamina-=1,genki+=10; cardUsesRemaining+=1,1,,277
+10369,挨拶の基本++,,N,active,anomaly,1,TRUE,FALSE,default,,FALSE,,cost-=0,setStance(strength); genki+=5,,,369
