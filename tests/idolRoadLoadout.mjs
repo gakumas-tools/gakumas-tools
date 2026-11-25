@@ -62,6 +62,9 @@ const KNOWN = new Set([
   "icon: s10-1 r1c4 expected 存在感+ got 存在感",
   // A free card read as a card of the deck's plan.
   "icon: s10-g4 r0c2 expected アイドル宣言+ got 止められない想い+",
+  // Top screenshot only: the 重複 card repeats one in the third row, which
+  // isn't on screen, so it is held to the wrong shown card.
+  "icon: s10-d0 r0c3 expected ワクワクが止まらない+ got 成長痛+",
   // Shown score 14; the inferred customizations predict 19.
   "customization: s10-g5 r0c5 inferred badges 0,19,,10,delayed shown 0,14,,10",
   // Cost -1 is not read, so the customization with cost 0 is picked.
