@@ -74,6 +74,9 @@ function collectActionNames(lines, nestedKey, skipReductions) {
         if (skipReductions && isReduction(action)) continue;
         const name = actionEffectName(action);
         if (name) names.add(name);
+        // のんびり is a 温存 state in game: a card that changes to のんびり is a
+        // 温存効果 card (休憩中のおやつ acts after のんびり屋さん).
+        if (name === "leisure") names.add("preservation");
       }
       if (entry[nestedKey]) walk(entry[nestedKey]);
     }
