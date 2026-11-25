@@ -57,3 +57,19 @@ class PrototypeClassifier(nn.Module):
     def forward(self, x):
         embedding = self.encoder(x)
         return embedding @ self.gallery * LOGIT_SCALE, embedding
+
+
+class EnsembleEncoder(nn.Module):
+    """Encoders trained alike with different seeds, read as one. Their unit
+    embeddings are joined and scaled by 1/sqrt(n), so the result is still a
+    unit vector and its cosine with a gallery built the same way is the mean
+    of the members' cosines. The exported model, gallery refresh and readers
+    are unchanged; only the embedding is wider."""
+
+    def __init__(self, encoders):
+        super().__init__()
+        self.members = nn.ModuleList(encoders)
+
+    def forward(self, x):
+        joined = torch.cat([member(x) for member in self.members], dim=1)
+        return joined / len(self.members) ** 0.5

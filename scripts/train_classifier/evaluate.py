@@ -8,7 +8,7 @@ from PIL import Image
 
 from . import gallery
 from .prepare import EMPTY_CLASS_ID
-from .train import class_images, export_onnx, train_encoder
+from .train import class_images, export_onnx, train_ensemble
 
 HELD_OUT_CLASS_FRACTION = 0.3
 SEEN_CROP_FRACTION = 0.15
@@ -52,7 +52,7 @@ def evaluate_entity(entity_type, class_names, epochs, device, seed=0):
     train_classes = sorted({name for _, name in train})
     index = {name: i for i, name in enumerate(train_classes)}
     print(f"\nevaluating {entity_type}: {len(train_classes)} trained classes, {len(train)} images")
-    encoder = train_encoder(
+    encoder = train_ensemble(
         entity_type, [(p, index[n]) for p, n in train], train_classes, device, epochs
     )
 
