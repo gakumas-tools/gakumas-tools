@@ -128,6 +128,8 @@ export default class TurnManager extends EngineComponent {
     );
     this.engine.effectManager.triggerEffectsForPhase(state, "everyTurn");
     state[S.unfreshPhase] = false;
+
+    this.engine.drinkPDrinks(state);
   }
 
   endTurn(state) {
