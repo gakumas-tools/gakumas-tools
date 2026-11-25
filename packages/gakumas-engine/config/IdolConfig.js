@@ -19,6 +19,7 @@ export default class IdolConfig {
       pDrinkTurns,
       skillCardIdGroups,
       customizationGroups,
+      startStamina,
     } = loadout;
 
     let skillCardIds = [];
@@ -80,6 +81,10 @@ export default class IdolConfig {
     // Params
     const [vocal, dance, visual, stamina] = params.map((p) => p || 0);
     this.params = { vocal, dance, visual, stamina };
+    // The 体力 the stage starts at. A produce exam starts at the 体力 the run
+    // had, which can be below max; heals still cap at params.stamina.
+    this.startStamina =
+      startStamina == null ? stamina : Math.max(0, Math.min(startStamina, stamina));
     this.supportBonus = supportBonus || 0;
   }
 

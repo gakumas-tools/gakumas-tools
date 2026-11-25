@@ -39,7 +39,7 @@ export default class StageEngine {
 
     // General
     state[S.cardUsesRemaining] = 0;
-    state[S.stamina] = this.getConfig(state).idol.params.stamina;
+    state[S.stamina] = this.getConfig(state).idol.startStamina;
     state[S.consumedStamina] = 0;
     state[S.genki] = 0;
     state[S.consumedGenki] = 0;
