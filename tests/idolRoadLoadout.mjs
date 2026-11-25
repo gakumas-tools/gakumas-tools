@@ -79,10 +79,6 @@ const KNOWN = new Set([
   // it shows.
   "icon: s27-e1 r1c1 expected きらきら紙吹雪 got 止められない想い",
   "icon: s27-e1 r3c5 expected せのびの魔法+ got せのびの魔法",
-  // 手書きのメッセージ gains 元気 twice; the badge shows one gain, the
-  // inferred badge their sum.
-  "customization: s2-e1 r1c5 inferred badges 0,,20,1, shown 0,,10,1",
-  "customization: s22-e1 r3c4 inferred badges 0,,18,2, shown 0,,9,2",
 ]);
 
 const args = process.argv.slice(2);
