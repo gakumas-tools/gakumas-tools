@@ -27,6 +27,7 @@ import {
   setMemorySlot,
 } from "@/utils/memorySlots";
 import { synchronizeLinkLoadouts } from "@/utils/linkLoadouts";
+import { fitPItemSlots } from "@/utils/pItemSlots";
 
 const LoadoutContext = createContext();
 
@@ -181,11 +182,9 @@ export function LoadoutContextProvider({ children }) {
   }, [loadout, currentLoadoutIndex, stage]);
 
   useEffect(() => {
-    // If fewer than 4 pItems, pad with 0s
-    if (pItemIds.length < 4) {
-      setPItemIds((cur) => cur.concat(new Array(4 - cur.length).fill(0)));
-    }
-  }, [pItemIds]);
+    // 4 slots, or in a produce exam one empty slot after the last filled one.
+    setPItemIds((cur) => fitPItemSlots(cur, !!produceExamIdOf(stageId)));
+  }, [pItemIds, stageId]);
 
   const stageRef = useRef(stage);
   stageRef.current = stage;
