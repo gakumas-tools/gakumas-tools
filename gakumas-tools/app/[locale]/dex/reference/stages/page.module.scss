@@ -1,0 +1,153 @@
+@use "../../../../../styles/colors";
+@use "../../../../../styles/mixins";
+@use "../../../../../styles/tokens";
+
+.page {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$space-4;
+  padding: tokens.$space-4;
+  @include mixins.card;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$space-2;
+
+  h2 {
+    font-size: tokens.$text-lg;
+    font-weight: tokens.$weight-heavy;
+  }
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$space-1;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  column-gap: tokens.$space-2;
+  row-gap: 4px;
+  padding: tokens.$space-2 tokens.$space-3;
+  border-radius: tokens.$radius-lg;
+  background-color: tokens.$surface-alt;
+  color: tokens.$surface-ink;
+
+  &:hover {
+    background-color: tokens.$fill-muted;
+  }
+
+  .criteria {
+    grid-column: 1 / -1;
+  }
+}
+
+.name {
+  font-weight: tokens.$weight-heavy;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.turns {
+  font-size: tokens.$text-sm;
+  color: tokens.$surface-ink-muted;
+}
+
+.criteria {
+  min-height: 5px;
+  display: flex;
+  gap: 3px;
+
+  span {
+    border-radius: 3px;
+
+    @include mixins.param-colors using ($color) {
+      background-color: $color;
+    }
+  }
+}
+
+.back {
+  align-self: flex-start;
+  font-size: tokens.$text-sm;
+  @include mixins.link-pill;
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$space-2;
+
+  h1 {
+    font-size: tokens.$text-xl;
+    font-weight: tokens.$weight-heavy;
+    line-height: 1.3;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  @include mixins.tag(tokens.$fill-muted, tokens.$surface-ink-muted);
+  padding: 1px 7px 1px 5px;
+  gap: 3px;
+}
+
+.note {
+  font-size: tokens.$text-sm;
+  color: tokens.$surface-ink-muted;
+}
+
+.table {
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+
+  th,
+  td {
+    padding: tokens.$space-1 tokens.$space-2;
+    text-align: right;
+    border-bottom: 1px solid tokens.$fill-muted;
+  }
+
+  tbody th {
+    text-align: left;
+    font-weight: normal;
+    color: tokens.$surface-ink-muted;
+  }
+
+  .vocal {
+    color: colors.$vocal;
+  }
+  .dance {
+    color: colors.$dance;
+  }
+  .visual {
+    color: colors.$visual;
+  }
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: tokens.$space-2;
+}
+

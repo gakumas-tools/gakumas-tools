@@ -148,3 +148,51 @@ test("empty customization slots keep later cards' customizations in place", () =
   const restored = loadoutFromSearchParams(loadoutToSearchParams(source));
   assert.deepEqual(restored.customizationGroups, [[{}, { 65: 1 }, {}]]);
 });
+
+test("P-drinks round-trip in the URL for produce exams only", () => {
+  const exam = loadoutFromSearchParams(
+    new URLSearchParams(`stage=exam-1&drinks=5-${UNKNOWN_ID}-18-11`),
+  );
+  assert.deepEqual(exam.pDrinkIds, [5, 0, 18]);
+  const params = loadoutToSearchParams(exam);
+  assert.equal(params.get("drinks"), "5-0-18");
+  assert.deepEqual(
+    loadoutFromSearchParams(new URLSearchParams(params.toString())).pDrinkIds,
+    [5, 0, 18],
+  );
+
+  const none = loadoutFromSearchParams(new URLSearchParams("stage=exam-1"));
+  assert.deepEqual(none.pDrinkIds, [0, 0, 0]);
+  assert.equal(loadoutToSearchParams(none).has("drinks"), false);
+
+  const contest = loadoutFromSearchParams(
+    new URLSearchParams(`stage=${knownStage.id}&drinks=5-11-18`),
+  );
+  assert.deepEqual(contest.pDrinkIds, [0, 0, 0]);
+  assert.equal(
+    loadoutToSearchParams({ ...contest, pDrinkIds: [5, 11, 18] }).has("drinks"),
+    false,
+  );
+});
+
+test("P-drink turns round-trip and default to 1", () => {
+  const exam = loadoutFromSearchParams(
+    new URLSearchParams("stage=exam-1&drinks=5-11-18&drink_turns=1-11-x"),
+  );
+  assert.deepEqual(exam.pDrinkTurns, [1, 11, 1]);
+  assert.equal(loadoutToSearchParams(exam).get("drink_turns"), "1-11-1");
+
+  const allFirst = loadoutFromSearchParams(
+    new URLSearchParams("stage=exam-1&drinks=5-11"),
+  );
+  assert.deepEqual(allFirst.pDrinkTurns, [1, 1, 1]);
+  assert.equal(loadoutToSearchParams(allFirst).has("drink_turns"), false);
+
+  // An empty slot's turn isn't kept.
+  const emptySlot = loadoutToSearchParams({
+    ...allFirst,
+    pDrinkIds: [5, 0, 0],
+    pDrinkTurns: [3, 7, 1],
+  });
+  assert.equal(emptySlot.get("drink_turns"), "3-1-1");
+});

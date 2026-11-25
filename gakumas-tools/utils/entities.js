@@ -1,6 +1,7 @@
 import {
   HIDDEN_CARD_IDS,
   HIDDEN_ITEM_IDS,
+  HIDDEN_P_IDOL_IDS,
   PDrinks,
   PIdols,
   PItems,
@@ -45,6 +46,7 @@ export const SIGNATURE_CARD_BY_PIDOL = SkillCards.getAll().reduce((acc, sc) => {
 export function isEntityHidden(type, id) {
   if (type === EntityTypes.SKILL_CARD) return HIDDEN_CARD_IDS.has(id);
   if (type === EntityTypes.P_ITEM) return HIDDEN_ITEM_IDS.has(id);
+  if (type === EntityTypes.P_IDOL) return HIDDEN_P_IDOL_IDS.has(id);
   return false;
 }
 

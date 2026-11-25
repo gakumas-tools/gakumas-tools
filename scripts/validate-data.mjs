@@ -32,10 +32,12 @@ const readCsv = (name) =>
 
 const CUSTOMIZATIONS = readCsv("customizations.csv");
 const SKILL_CARDS = readCsv("skill_cards.csv");
+const PLUS_PLUS_CARDS = readCsv("skill_cards_plus_plus.csv");
 const P_ITEMS = readCsv("p_items.csv");
 const STAGES = readCsv("stages.csv");
 const P_DRINKS = readCsv("p_drinks.csv");
 const IDOL_ROAD_EFFECTS = readCsv("idol_road_effects.csv");
+const PRODUCE_EXAMS = readCsv("produce_exams.csv");
 
 let totalErrors = 0;
 
@@ -107,7 +109,7 @@ function lintLevelForm(src) {
 // --- Skill cards ---
 // `actions`: immediate actions played when the card is used.
 // `effects`: triggered effects (at:phase) registered when the card enters play.
-for (const card of SKILL_CARDS) {
+for (const card of [...SKILL_CARDS, ...PLUS_PLUS_CARDS]) {
   validateEffectField("skillCard", card.id, "conditions", card.conditions);
   validateEffectField("skillCard", card.id, "cost", card.cost);
   validateEffectField("skillCard", card.id, "actions", card.actions);
@@ -128,6 +130,15 @@ for (const item of P_ITEMS) {
 }
 for (const stage of STAGES) {
   validateEffectField("stage", stage.id, "effects", stage.effects);
+}
+for (const exam of PRODUCE_EXAMS) {
+  validateEffectField("produceExam", exam.id, "effects", exam.effects);
+  const counts = String(exam.turnCounts).split(",").map(Number);
+  if (counts.length != 3 || counts.some((n) => !Number.isInteger(n) || n < 0)) {
+    report("produceExam", exam.id, "turnCounts", exam.turnCounts, [
+      "turnCounts must be three whole numbers (Vo,Da,Vi).",
+    ]);
+  }
 }
 for (const row of IDOL_ROAD_EFFECTS) {
   const id = `${row.stageId}:${row.recommendedEffect}`;
@@ -154,6 +165,21 @@ function validateUpgradedNames(entity, records) {
   }
 }
 validateUpgradedNames("skillCard", SKILL_CARDS);
+
+// --- ++ rows: each comes from an upgraded + row and is named after it with
+// one more "+"; ids must not collide with skill_cards.csv ---
+{
+  const byId = new Map(SKILL_CARDS.map((r) => [String(r.id), r]));
+  for (const record of PLUS_PLUS_CARDS) {
+    const from = byId.get(String(record.fromId));
+    const errors = [];
+    if (byId.has(String(record.id))) errors.push(`Id #${record.id} is already a skill_cards.csv row.`);
+    if (!from) errors.push(`fromId #${record.fromId} is not a skill_cards.csv row.`);
+    else if (String(from.upgraded).toUpperCase() !== "TRUE") errors.push(`fromId #${record.fromId} is not an upgraded (+) row.`);
+    else if (record.name !== `${from.name}+`) errors.push(`Name should be ${JSON.stringify(`${from.name}+`)} (from #${from.id}).`);
+    if (errors.length) report("skillCard", record.id, "name", record.name, errors);
+  }
+}
 validateUpgradedNames("pItem", P_ITEMS);
 
 if (totalErrors > 0) {

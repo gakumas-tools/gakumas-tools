@@ -193,7 +193,8 @@
       "p-items": "Pアイテム",
       "p-drinks": "Pドリンク",
       "p-idols": "Pアイドル",
-      "support-cards": "サポートカード"
+      "support-cards": "サポートカード",
+      "stages": "ステージ"
     },
     "categories": {
       "reference": {
@@ -452,6 +453,7 @@
     "supportBonus": "サポートボーナス%",
     "multiplierNote": "※スコアボーナスは、2400を超えるパラメータに対して不正確です。",
     "previewNote": "※ステージプレビューは、発表されたPアイテムと審査基準のみに基づいています。ターンタイプはまだ不明です。",
+    "idolRoadMissingData": "{missing, select, idolRow {このステージのこのアイドルの審査基準とターン数はまだシミュレーターにないため、スコアがゲームと異なることがあります。} other {このステージのおすすめ効果「{effect, select, goodConditionTurns {好調} concentration {集中} goodImpressionTurns {好印象} motivation {やる気} strength {強気} fullPower {全力} other {このPアイドル}}」の応援効果はまだシミュレーターにないため、スコアはゲームより低くなります。}}",
     "enterPercents": "計算式が解明されていないため、スコアボーナスの%を入力してください。",
     "linkContestNote": "リンクコンテストの挙動は正確に再現されない場合があります。アイドル間でのPアイテムやスキルカードの重複排除はまだ実装されていません。手動で重複排除を行って、基本カードを入れてください。",
     "custom": "カスタム",
@@ -475,13 +477,31 @@
     "linkContest": "リンクコンテスト",
     "event": "イベント",
     "idolRoad": "アイドルへの道",
+    "produceExam": "プロデュース試験",
     "custom": "カスタム"
   },
   "StageSummary": {
     "contestStageName": "シーズン{season} ステージ{stage}",
     "eventStageName": "{name} ステージ{stage} {round}周目",
+    "idolRoadStageName": "アイドルへの道 {name}",
     "custom": "カスタム",
     "activeSeason": "開催中のシーズン"
+  },
+  "TurnOrder": {
+    "label": "ターン順（ゲーム内の表示どおり）",
+    "turnLabel": "{turn}ターン目: {type}",
+    "vocal": "ボーカル",
+    "dance": "ダンス",
+    "visual": "ビジュアル",
+    "vocalShort": "Vo",
+    "danceShort": "Da",
+    "visualShort": "Vi"
+  },
+  "StagePDrinks": {
+    "label": "Pドリンク",
+    "turn": "{turn}ターン目",
+    "turnLabel": "Pドリンク{slot}を飲むターン",
+    "note": "選んだターンの開始時、最初のカードの前に飲みます。ゲームではいつでも飲めます。"
   },
   "StageCustomizer": {
     "type": "タイプ",
@@ -529,12 +549,13 @@
   },
   "SimulatorLoadoutImporterModal": {
     "title": "スクリーンショットから編成を読み込み",
-    "instructions": "コンテスト編成画面のスクリーンショットをアップロードしてください。パラメータ、Pアイテム、スキルカードを読み込み、タイプ倍率からステージとサポートボーナスを推定します。",
+    "instructions": "コンテスト編成画面のスクリーンショットをアップロードしてください。パラメータ、Pアイテム、スキルカードを読み込み、タイプ倍率からステージとサポートボーナスを推定します。アイドルへの道の「スコア獲得編成確認」画面にも対応しています。一番上のスクリーンショットを、デッキが3段のときは一番下までスクロールしたスクリーンショットも一緒に選んでください。",
     "processing": "処理中...",
     "error": "読み込みに失敗しました",
     "matchingStages": "一致するステージ",
     "pickStage": "最も一致するステージを選択しています。違う場合は選び直してください。",
-    "noStage": "スクリーンショットのタイプ倍率に一致するステージがないため、ステージとサポートボーナスは変更していません。"
+    "noStage": "スクリーンショットのタイプ倍率に一致するステージがないため、ステージとサポートボーナスは変更していません。",
+    "noIdolRoadStage": "このアイドルのアイドルへの道 STAGE{stage} はまだシミュレーターにないため、ステージは変更していません。読み込んだパラメータは画面の％の値で、アイドルへの道のステージ用です。"
   },
   "ShareModal": {
     "title": "共有",
@@ -798,6 +819,7 @@
     "stageEffect": "ステージ効果",
     "skillCard": "スキルカード",
     "pItem": "Pアイテム",
+    "pDrink": "Pドリンク",
     "numTurns": "{num}ターン",
     "hand": "手札",
     "turnN": "{n}ターン目",
@@ -948,5 +970,22 @@
     "back": "{category}一覧",
     "open": "ページを開く",
     "customizations": "カスタマイズ"
+  },
+  "StagePage": {
+    "turnsTotal": "{n}ターン",
+    "preview": "プレビュー",
+    "idolRoadNote": "アイドルへの道のターン数と審査基準はアイドルごとに異なります。ここに載せているのは、Pアイドルを選んでいないときにシミュレーターが使う値です。",
+    "vocal": "Vo",
+    "dance": "Da",
+    "visual": "Vi",
+    "total": "合計",
+    "criteria": "審査基準",
+    "turns": "ターン数",
+    "firstTurn": "1ターン目",
+    "openSimulator": "シミュレーターで開く",
+    "sharedRuns": "このステージの共有ラン",
+    "metaDescription": "{name}（{type}）：審査基準 Vo {vocal}% Da {dance}% Vi {visual}%、{turns}ターン。シミュレーターで開いたり、みんなの共有ランと比べたりできます。",
+    "topRuns": "上位の共有ラン",
+    "noRuns": "このステージの共有ランはまだありません。シミュレーターで開いて、あなたのランを共有してみましょう。"
   }
 }

@@ -185,7 +185,8 @@
       "p-items": "P아이템",
       "p-drinks": "P드링크",
       "p-idols": "P아이돌",
-      "support-cards": "서포트 카드"
+      "support-cards": "서포트 카드",
+      "stages": "스테이지"
     },
     "categories": {
       "reference": {
@@ -444,6 +445,7 @@
     "supportBonus": "서포트 보너스 %",
     "multiplierNote": "※ 스코어 보너스는 2400을 초과하는 패러미터에 대해 정확하지 않습니다.",
     "previewNote": "※ 스테이지 프리뷰는 발표된 P아이템과 심사 기준에만 기반합니다. 턴 타입은 아직 알려지지 않았습니다.",
+    "idolRoadMissingData": "{missing, select, idolRow {시뮬레이터에 아직 이 스테이지의 이 아이돌 심사 기준과 턴 수가 없어서 점수가 게임과 다를 수 있습니다.} other {시뮬레이터에 아직 이 스테이지의 추천 효과 「{effect, select, goodConditionTurns {호조} concentration {집중} goodImpressionTurns {호인상} motivation {의욕} strength {강기} fullPower {전력} other {이 P아이돌}}」 응원 효과(応援効果)가 없어서 점수가 게임보다 낮게 나옵니다.}}",
     "enterPercents": "계산식이 밝혀지지 않았으므로 스코어 보너스 %를 직접 입력해 주세요.",
     "linkContestNote": "링크 콘테스트의 행동은 정확하게 재현되지 않을 수 있습니다. 아이돌 간 P아이템과 스킬 카드들의 중복 제거는 아직 구현되지 않았습니다. 직접 중복을 제거하고 기본 카드를 추가해 주세요.",
     "custom": "커스텀",
@@ -467,13 +469,31 @@
     "linkContest": "링크 콘테스트",
     "event": "이벤트",
     "idolRoad": "Idol Road",
+    "produceExam": "프로듀스 시험",
     "custom": "커스텀"
   },
   "StageSummary": {
     "contestStageName": "시즌 {season} - 스테이지 {stage}",
     "eventStageName": "{name} - 스테이지 {stage} - 라운드 {round}",
+    "idolRoadStageName": "Idol Road {name}",
     "custom": "커스텀",
     "activeSeason": "현재 시즌"
+  },
+  "TurnOrder": {
+    "label": "턴 순서 (게임 화면 그대로)",
+    "turnLabel": "{turn}턴: {type}",
+    "vocal": "보컬",
+    "dance": "댄스",
+    "visual": "비주얼",
+    "vocalShort": "Vo",
+    "danceShort": "Da",
+    "visualShort": "Vi"
+  },
+  "StagePDrinks": {
+    "label": "P드링크",
+    "turn": "{turn}턴",
+    "turnLabel": "P드링크 {slot}을(를) 마실 턴",
+    "note": "고른 턴의 시작 시, 첫 카드 전에 마십니다. 게임에서는 언제든 마실 수 있습니다."
   },
   "StageCustomizer": {
     "type": "타입",
@@ -521,12 +541,13 @@
   },
   "SimulatorLoadoutImporterModal": {
     "title": "스크린샷에서 편성 불러오기",
-    "instructions": "콘테스트 편성 화면의 스크린샷을 업로드하세요. 파라미터, P아이템, 스킬 카드를 불러오고, 타입 배율로 스테이지와 서포트 보너스를 추정합니다.",
+    "instructions": "콘테스트 편성 화면의 스크린샷을 업로드하세요. 파라미터, P아이템, 스킬 카드를 불러오고, 타입 배율로 스테이지와 서포트 보너스를 추정합니다. Idol Road의 「スコア獲得編成確認」 화면도 지원합니다. 맨 위 스크린샷을 올리고, 덱이 3줄이면 맨 아래까지 스크롤한 스크린샷도 함께 선택하세요.",
     "processing": "처리 중...",
     "error": "불러오기에 실패했습니다",
     "matchingStages": "일치하는 스테이지",
     "pickStage": "가장 잘 맞는 스테이지를 선택했습니다. 다르면 다시 선택하세요.",
-    "noStage": "스크린샷의 타입 배율과 일치하는 스테이지가 없어 스테이지와 서포트 보너스는 변경하지 않았습니다."
+    "noStage": "스크린샷의 타입 배율과 일치하는 스테이지가 없어 스테이지와 서포트 보너스는 변경하지 않았습니다.",
+    "noIdolRoadStage": "이 아이돌의 아이돌 로드 STAGE{stage}는 아직 시뮬레이터에 없어 스테이지는 변경하지 않았습니다. 불러온 파라미터는 화면의 % 값으로, 아이돌 로드 스테이지에만 맞습니다."
   },
   "ShareModal": {
     "title": "공유",
@@ -790,6 +811,7 @@
     "stageEffect": "스테이지 효과",
     "skillCard": "스킬 카드",
     "pItem": "P아이템",
+    "pDrink": "P드링크",
     "numTurns": "{num} 턴",
     "hand": "손패",
     "turnN": "{n} 턴",
@@ -940,5 +962,22 @@
     "back": "{category} 목록",
     "open": "페이지 열기",
     "customizations": "커스터마이즈"
+  },
+  "StagePage": {
+    "turnsTotal": "{n}턴",
+    "preview": "프리뷰",
+    "idolRoadNote": "아이돌의 길의 턴 수와 심사 기준은 아이돌마다 다릅니다. 여기 있는 값은 P아이돌을 고르지 않았을 때 시뮬레이터가 쓰는 값입니다.",
+    "vocal": "Vo",
+    "dance": "Da",
+    "visual": "Vi",
+    "total": "합계",
+    "criteria": "심사 기준",
+    "turns": "턴 수",
+    "firstTurn": "첫 턴",
+    "openSimulator": "시뮬레이터에서 열기",
+    "sharedRuns": "이 스테이지의 공유 런",
+    "metaDescription": "{name} ({type}): 심사 기준 Vo {vocal}% Da {dance}% Vi {visual}%, {turns}턴. 시뮬레이터에서 열거나 다른 플레이어의 공유 런과 비교하세요.",
+    "topRuns": "상위 공유 런",
+    "noRuns": "이 스테이지에 공유된 런이 아직 없습니다. 시뮬레이터에서 열고 당신의 런을 공유해 보세요."
   }
 }

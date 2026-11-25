@@ -5,6 +5,7 @@ export { default as Idols } from "./data/idols";
 export { default as PDrinks } from "./data/pDrinks";
 export { default as PIdols } from "./data/pIdols";
 export { default as PItems } from "./data/pItems";
+export { default as ProduceExams } from "./data/produceExams";
 export { default as SkillCards } from "./data/skillCards";
 export { default as Stages } from "./data/stages";
 export {
@@ -14,7 +15,11 @@ export {
   deserializeEffectSequence,
   deserializePatchSequence,
 } from "./utils/effects";
-export { HIDDEN_CARD_IDS, HIDDEN_ITEM_IDS } from "./utils/hidden";
+export {
+  HIDDEN_CARD_IDS,
+  HIDDEN_ITEM_IDS,
+  HIDDEN_P_IDOL_IDS,
+} from "./utils/hidden";
 export { parseEffects, parsePatches } from "./utils/parser";
 export {
   calculateMemoryStamina,
