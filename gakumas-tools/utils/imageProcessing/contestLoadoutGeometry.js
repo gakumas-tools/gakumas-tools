@@ -4,7 +4,7 @@ function isOutline(r, g, b) {
   return luma >= 65 && luma < 175 && Math.max(r, g, b) - Math.min(r, g, b) < 60;
 }
 
-function outlineMask({ data, width, height }) {
+export function outlineMask({ data, width, height }) {
   const mask = new Uint8Array(width * height);
   for (let p = 0, i = 0; p < mask.length; p++, i += 4) {
     mask[p] = isOutline(data[i], data[i + 1], data[i + 2]) ? 1 : 0;
@@ -58,7 +58,7 @@ const SIDE_MARGIN = 0.2;
 const SIDE_COVERAGE = 0.5;
 const SIZE_TOLERANCE = 0.07;
 
-function findIconsInBand(mask, width, top, size) {
+export function findIconsInBand(mask, width, top, size) {
   const y0 = Math.round(top + size * SIDE_MARGIN);
   const y1 = Math.round(top + size * (1 - SIDE_MARGIN));
   const needed = (y1 - y0 + 1) * SIDE_COVERAGE;
@@ -89,7 +89,7 @@ function findIconsInBand(mask, width, top, size) {
   return icons;
 }
 
-function findIconRows(mask, width, { yMin, yMax, minSize, maxSize }) {
+export function findIconRows(mask, width, { yMin, yMax, minSize, maxSize }) {
   const edges = horizontalEdgeRows(mask, width, yMin, yMax);
   const candidates = [];
   for (let a = 0; a < edges.length; a++) {
@@ -329,7 +329,7 @@ function estimatePitch(rows, size) {
 
 const LATTICE_TOLERANCE = 0.2;
 
-function leftmostOnLattice(icons, pitch) {
+export function leftmostOnLattice(icons, pitch) {
   let best = null;
   for (const ref of icons) {
     const offsets = icons
@@ -354,7 +354,7 @@ function leftmostOnLattice(icons, pitch) {
   return best.phase + Math.round((left - best.phase) / pitch) * pitch;
 }
 
-function median(values) {
+export function median(values) {
   const sorted = [...values].sort((a, b) => a - b);
   return sorted[Math.floor(sorted.length / 2)];
 }
