@@ -242,7 +242,11 @@ function listingDb() {
 }
 
 // Shares n saved runs of one stage, each with its own mean score.
-async function shareRuns(db, means, { stageId = 52, userId = "owner" } = {}) {
+async function shareRuns(
+  db,
+  means,
+  { stageId = 52, userId = "owner", loadout = {} } = {},
+) {
   const ids = [];
   for (const mean of means) {
     const _id = new ObjectId();
@@ -253,6 +257,7 @@ async function shareRuns(db, means, { stageId = 52, userId = "owner" } = {}) {
       userId,
       name: `run ${mean}`,
       stats: mean == null ? null : { mean, median: mean, min: 0, max: mean },
+      ...loadout,
     });
     ids.push((await shareLoadout(db, userId, _id.toString())).id);
   }
@@ -327,6 +332,62 @@ test("a stage's listing is its own listed runs, best server mean first, without 
   assert.deepEqual(
     (await listStageRuns(db, 53)).map((r) => r.id),
     [other],
+  );
+});
+
+// savedRun is 初声 花海咲季's (P-idol 41, by its P-item); this one is
+// another P-idol's, by its P-idol card (184).
+const otherPIdol = { pItemIds: [0, 0, 0, 0], skillCardIdGroups: [[184, 13, 38, 125]] };
+
+test("a stage's listing can be narrowed to one P-idol, as the game ranks Idol Road", async () => {
+  const db = listingDb();
+  const sakis = await shareRuns(db, [1500, 2400]);
+  const [other] = await shareRuns(db, [9999], { loadout: otherPIdol });
+  for (const id of [...sakis, other]) await list(db, "owner", id);
+
+  assert.deepEqual(
+    (await listStageRuns(db, 52)).map((r) => r.name),
+    ["run 9999", "run 2400", "run 1500"],
+  );
+  assert.deepEqual(
+    (await listStageRuns(db, 52, STAGE_RUNS_LIMIT, 41)).map((r) => r.name),
+    ["run 2400", "run 1500"],
+  );
+  assert.deepEqual(
+    (await listStageRuns(db, 52, STAGE_RUNS_LIMIT, 2)).map((r) => r.id),
+    [other],
+  );
+  assert.deepEqual(await listStageRuns(db, 52, STAGE_RUNS_LIMIT, 3), []);
+  for (const bad of [0, -1, 1.5, "41"]) {
+    assert.deepEqual(await listStageRuns(db, 52, STAGE_RUNS_LIMIT, bad), []);
+  }
+  for (const run of await listStageRuns(db, 52)) {
+    assert.equal("pIdolId" in run, false);
+  }
+});
+
+test("a run's P-idol is read from its loadout, not from what the browser sent", async () => {
+  const db = listingDb();
+  const [id] = await shareRuns(db, [2000], {
+    loadout: { derived: { pIdolId: 2, idolId: 2 } },
+  });
+  await list(db, "owner", id);
+  assert.equal(db.collection("sharedRuns").docs[0].pIdolId, 41);
+  assert.deepEqual(await listStageRuns(db, 52, STAGE_RUNS_LIMIT, 2), []);
+});
+
+test("runs listed before the P-idol was kept get it on the next refresh", async () => {
+  const db = listingDb();
+  const [id] = await shareRuns(db, [2000]);
+  await setListed(db, "owner", id, true, fakeSimulate, "v1");
+  delete db.collection("sharedRuns").docs[0].pIdolId;
+  assert.deepEqual(await listStageRuns(db, 52, STAGE_RUNS_LIMIT, 41), []);
+
+  const simulate = async () => assert.fail("no simulation needed");
+  assert.equal(await refreshStageRuns(db, 52, "v1", { simulate }), 0);
+  assert.deepEqual(
+    (await listStageRuns(db, 52, STAGE_RUNS_LIMIT, 41)).map((r) => r.id),
+    [id],
   );
 });
 
