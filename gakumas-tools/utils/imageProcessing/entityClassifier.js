@@ -16,9 +16,19 @@ export function packCrops(crops, channels) {
   return batch;
 }
 
+// The skill card model's class for a card the game's nav pill covers: what
+// shows of it doesn't name the card. Readers that can leave a slot for the
+// player opt in with keepCovered; for the others it is never a read.
+export const COVERED_ENTITY_ID = -1;
+
 // Classes are "<entity id>" or "<entity id>_<idol id>" for art variants.
 // allowed(id, i) can rule out entity ids for the i-th crop.
-export function decodeEntityIds(logits, classes, allowed = () => true) {
+export function decodeEntityIds(
+  logits,
+  classes,
+  allowed = () => true,
+  keepCovered = false,
+) {
   const numClasses = classes.length;
   const classIds = classes.map((c) => parseInt(c.split("_")[0], 10));
   const ids = [];
@@ -26,6 +36,7 @@ export function decodeEntityIds(logits, classes, allowed = () => true) {
     const i = ids.length;
     let best = -1;
     for (let k = 0; k < numClasses; k++) {
+      if (!keepCovered && classIds[k] == COVERED_ENTITY_ID) continue;
       if (!allowed(classIds[k], i)) continue;
       if (best < 0 || logits[offset + k] > logits[offset + best]) best = k;
     }
@@ -104,6 +115,7 @@ export async function classifyCrops(
   channels,
   allowed,
   refine,
+  keepCovered = false,
 ) {
   if (!crops.length) return [];
   const input = new ort.Tensor("float32", packCrops(crops, channels), [
@@ -114,12 +126,13 @@ export async function classifyCrops(
   ]);
   const output = await session.run({ input }, ["classifier"]);
   const logits = output.classifier.data;
-  const ids = decodeEntityIds(logits, classes, allowed);
+  const ids = decodeEntityIds(logits, classes, allowed, keepCovered);
   if (!refine) return ids;
   const second = refine(ids);
   return decodeEntityIds(
     logits,
     classes,
     (id, i) => (!allowed || allowed(id, i)) && second(id, i),
+    keepCovered,
   );
 }

@@ -17,7 +17,7 @@ import {
   classifyMemories,
   generatePossibleMemories,
 } from "@/utils/skillCardLottery";
-import { PRODUCE_ONLY_FILTER } from "../skillCardFilters";
+import { DRAFT_FILTER } from "@/utils/memoryPickerFilters";
 import styles from "./DraftPick.module.scss";
 
 const DraftPickImporterModal = dynamic(
@@ -26,7 +26,7 @@ const DraftPickImporterModal = dynamic(
 );
 
 const EMPTY_SLOTS = [0, 0, 0];
-const FILTERS = [PRODUCE_ONLY_FILTER];
+const FILTERS = [DRAFT_FILTER];
 
 function DraftPick({ idolId }) {
   const t = useTranslations("DraftPick");

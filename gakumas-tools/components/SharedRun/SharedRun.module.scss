@@ -1,0 +1,96 @@
+@use "../../styles/mixins";
+@use "../../styles/tokens";
+
+.sharedRun {
+  width: calc(100% - #{2 * tokens.$space-3});
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$space-3;
+  margin: tokens.$space-3 auto;
+  padding: tokens.$space-4;
+  color: tokens.$surface-ink;
+  @include mixins.card;
+
+  @media (max-width: 480px) {
+    width: calc(100% - #{2 * tokens.$space-2});
+    margin: tokens.$space-2 auto;
+    padding: tokens.$space-3;
+  }
+}
+
+.name {
+  margin: 0;
+  font-size: tokens.$text-xl;
+  font-weight: tokens.$weight-bold;
+  overflow-wrap: anywhere;
+}
+
+.stage,
+.phase,
+.hint,
+.noScores {
+  color: tokens.$surface-ink-muted;
+  font-size: tokens.$text-sm;
+}
+
+.phase {
+  font-weight: tokens.$weight-bold;
+}
+
+.stats {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$space-2;
+}
+
+.numbers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: tokens.$space-2 tokens.$space-5;
+  margin: 0;
+
+  dt {
+    color: tokens.$surface-ink-muted;
+    font-size: tokens.$text-xs;
+  }
+
+  dd {
+    margin: 0;
+    font-size: tokens.$text-lg;
+    font-weight: tokens.$weight-bold;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.loadout {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$space-2;
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: tokens.$space-2;
+}
+
+.error {
+  color: tokens.$danger;
+  font-size: tokens.$text-sm;
+}
+
+.hint {
+  margin: 0;
+}
+
+.stageLink {
+  color: tokens.$link;
+  font-size: tokens.$text-sm;
+  font-weight: tokens.$weight-semibold;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

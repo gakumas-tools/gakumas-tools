@@ -65,6 +65,10 @@
     "rehearsal": {
       "title": "リハーサル読み取り",
       "description": "リハーサル画面のスクショからスコアを読み取る"
+    },
+    "sharedRuns": {
+      "title": "みんなのラン",
+      "description": "他のプレイヤーがステージに載せたシミュレーターのランを見る"
     }
   },
   "NavbarMenu": {
@@ -189,7 +193,8 @@
       "p-items": "Pアイテム",
       "p-drinks": "Pドリンク",
       "p-idols": "Pアイドル",
-      "support-cards": "サポートカード"
+      "support-cards": "サポートカード",
+      "stages": "ステージ"
     },
     "categories": {
       "reference": {
@@ -229,7 +234,35 @@
     "exportFailed": "画像の書き出しに失敗しました。",
     "shareToX": "Xで共有",
     "shareTweetText": "学マス {type} ティア表",
-    "confirmLeave": "タブを切り替えると現在のティア表は失われます。続けますか？"
+    "confirmLeave": "タブを切り替えると現在のティア表は失われます。続けますか？",
+    "compareWithMine": "自分の表と比較",
+    "keepMine": "自分の表に戻す",
+    "useTheirs": "この表を使う",
+    "compareAgreement": "あなたの表と同じランク：{common}件中{same}件（{percent}%）",
+    "compareNoCommon": "あなたの表と共通のアイテムはありません"
+  },
+  "CommunityTierList": {
+    "title": "みんなのティア表",
+    "loading": "読み込み中…",
+    "failed": "みんなのティア表を読み込めませんでした。",
+    "tooFew": "これまでに{count}人がティア表を追加しました。{min}人そろうと表示されます。",
+    "fromLists": "{count}人のティア表をまとめたもの",
+    "openInEditor": "エディタで開く",
+    "itemTitle": "{lists}件中{n}件のティア表に入っています",
+    "howToRead": "各アイテムは、それを置いたティア表の真ん中の段にあります。「SS–A」のような範囲は、真ん中の半分のティア表が置いた位置です。",
+    "howToPublish": "追加を選んだティア表だけが数えられ、誰のものかは表示されません。",
+    "addYours": "自分のティア表を追加",
+    "publishTitle": "みんなのティア表",
+    "publishHelp": "このティア表をみんなのティア表に追加しますか？まとめに数えられますが、名前は表示されません。",
+    "publishedThis": "このティア表はみんなのティア表に追加済みです。",
+    "publishedOther": "みんなのティア表には、別のティア表を追加しています。",
+    "publish": "みんなのティア表に追加",
+    "replacePublished": "このティア表に置き換える",
+    "unpublish": "自分のティア表を外す",
+    "emptyList": "先にアイテムを配置してください。",
+    "signInToPublish": "ログインすると、みんなのティア表に追加できます。",
+    "signIn": "ログイン",
+    "publishFailed": "みんなのティア表を更新できませんでした。"
   },
   "PIdolCollection": {
     "collected": "獲得済み",
@@ -412,12 +445,15 @@
     "failed": "読み込みに失敗しました。スクショを確認してもう一度お試しください。",
     "unreadable": "読み取れなかったスクショ: {files}",
     "selectScreenshots": "スクリーンショットを選択",
-    "dropHint": "タップして選択、またはスクリーンショットをここにドロップ"
+    "dropHint": "タップして選択、またはスクリーンショットをここにドロップ",
+    "covered": "メニューバーに隠れたスキルカードは空欄のままです。自分で選んでください：",
+    "coveredSlots": "{name}：{slots}枚目"
   },
   "Simulator": {
     "supportBonus": "サポートボーナス%",
     "multiplierNote": "※スコアボーナスは、2400を超えるパラメータに対して不正確です。",
     "previewNote": "※ステージプレビューは、発表されたPアイテムと審査基準のみに基づいています。ターンタイプはまだ不明です。",
+    "idolRoadMissingData": "{missing, select, idolRow {このステージのこのアイドルの審査基準とターン数はまだシミュレーターにないため、スコアがゲームと異なることがあります。} other {このステージのおすすめ効果「{effect, select, goodConditionTurns {好調} concentration {集中} goodImpressionTurns {好印象} motivation {やる気} strength {強気} fullPower {全力} other {このPアイドル}}」の応援効果はまだシミュレーターにないため、スコアはゲームより低くなります。}}",
     "enterPercents": "計算式が解明されていないため、スコアボーナスの%を入力してください。",
     "linkContestNote": "リンクコンテストの挙動は正確に再現されない場合があります。アイドル間でのPアイテムやスキルカードの重複排除はまだ実装されていません。手動で重複排除を行って、基本カードを入れてください。",
     "custom": "カスタム",
@@ -447,6 +483,7 @@
   "StageSummary": {
     "contestStageName": "シーズン{season} ステージ{stage}",
     "eventStageName": "{name} ステージ{stage} {round}周目",
+    "idolRoadStageName": "アイドルへの道 {name}",
     "custom": "カスタム",
     "activeSeason": "開催中のシーズン"
   },
@@ -506,12 +543,13 @@
   },
   "SimulatorLoadoutImporterModal": {
     "title": "スクリーンショットから編成を読み込み",
-    "instructions": "コンテスト編成画面のスクリーンショットをアップロードしてください。パラメータ、Pアイテム、スキルカードを読み込み、タイプ倍率からステージとサポートボーナスを推定します。",
+    "instructions": "コンテスト編成画面のスクリーンショットをアップロードしてください。パラメータ、Pアイテム、スキルカードを読み込み、タイプ倍率からステージとサポートボーナスを推定します。アイドルへの道の「スコア獲得編成確認」画面にも対応しています。一番上のスクリーンショットを、デッキが3段のときは一番下までスクロールしたスクリーンショットも一緒に選んでください。",
     "processing": "処理中...",
     "error": "読み込みに失敗しました",
     "matchingStages": "一致するステージ",
     "pickStage": "最も一致するステージを選択しています。違う場合は選び直してください。",
-    "noStage": "スクリーンショットのタイプ倍率に一致するステージがないため、ステージとサポートボーナスは変更していません。"
+    "noStage": "スクリーンショットのタイプ倍率に一致するステージがないため、ステージとサポートボーナスは変更していません。",
+    "noIdolRoadStage": "このアイドルのアイドルへの道 STAGE{stage} はまだシミュレーターにないため、ステージは変更していません。読み込んだパラメータは画面の％の値で、アイドルへの道のステージ用です。"
   },
   "ShareModal": {
     "title": "共有",
@@ -543,7 +581,9 @@
     "optimizeFailed": "最適化できません",
     "optimizeNeedsSimulation": "現在の編成でシミュレーションしてから最適化してください",
     "staleResults": "この結果は変更前の編成のものです",
-    "rehearsal": "リハーサル"
+    "rehearsal": "リハーサル",
+    "shareRun": "結果を共有",
+    "signInToShare": "ランを共有するにはサインインが必要です。Discordに進みますか？"
   },
   "CompareTab": {
     "saved": "保存済み",
@@ -580,7 +620,77 @@
     "retry": "再試行",
     "saveFailed": "保存に失敗",
     "renameFailed": "名前変更に失敗",
-    "deleteFailed": "削除に失敗"
+    "deleteFailed": "削除に失敗",
+    "share": "共有",
+    "copyLink": "リンクをコピー",
+    "unshare": "共有を停止",
+    "shared": "共有中",
+    "linkCopied": "リンクをコピーしました",
+    "confirmUnshare": "この編成の共有を停止しますか？リンクは使えなくなります。",
+    "shareFailed": "共有に失敗しました",
+    "unshareFailed": "共有の停止に失敗しました",
+    "copyThisLink": "このリンクをコピーしてください",
+    "confirmDeleteShared": "削除しますか？共有リンクも使えなくなります。",
+    "listOnStage": "ステージのページに載せる",
+    "unlistFromStage": "ステージのページから外す",
+    "listed": "掲載中",
+    "listFailed": "掲載の変更に失敗しました"
+  },
+  "SharedRun": {
+    "untitled": "共有された編成",
+    "mean": "平均",
+    "median": "中央値",
+    "min": "最小",
+    "max": "最大",
+    "stddev": "標準偏差",
+    "noScores": "スコアなし",
+    "openInSimulator": "シミュレーターで開く",
+    "saveToMyRuns": "保存済みに追加",
+    "saved": "保存しました",
+    "saveFailed": "保存に失敗しました",
+    "signInPrompt": "保存するにはサインインが必要です。Discordへ進みますか？",
+    "hint": "シミュレーターで開くと履歴に追加され、比較タブで自分の編成と並べて見られます。",
+    "metaDescription": "共有されたシミュレーター編成：平均 {mean}、中央値 {median}。",
+    "metaDescriptionNoScores": "共有されたシミュレーターの編成。",
+    "moreForStage": "このステージの他の共有ラン",
+    "openedBy": "{count}人が開きました",
+    "openedByMore": "{count}人以上が開きました"
+  },
+  "SharedRunsBrowse": {
+    "title": "みんなのラン",
+    "hint": "プレイヤーがステージのページに載せたシミュレーターのラン（新しい順）。ステージを選ぶと同じスコア軸で並びます。開くと自分のランと並べて試せます。スコアはサイトが各ランをシミュレートした結果です。",
+    "stage": "ステージ",
+    "allStages": "すべてのステージ",
+    "stageOption": "{name}（{count}）",
+    "sort": {
+      "new": "新しい順",
+      "top": "スコア順"
+    },
+    "scores": "平均 {mean}・中央値 {median}",
+    "empty": "ここに載せられたランはまだありません。シミュレーターで編成をシミュレートし、「結果を共有」から載せられます。",
+    "older": "さらに古いラン",
+    "newest": "最新に戻る",
+    "emptyAction": "自分のランを共有"
+  },
+  "StageSharedRuns": {
+    "title": "このステージの共有ラン",
+    "loading": "読み込み中…",
+    "empty": "このステージに掲載されたランはまだありません。",
+    "failed": "共有ランを読み込めませんでした。",
+    "untitled": "名前のないラン",
+    "yourRun": "あなたのラン（この結果）",
+    "place": "自分を含めて{count}件中 {rank}位",
+    "belowTop": "掲載上位{count}件より下",
+    "howToList": "自分のランを載せるには、シミュレート後に「結果を共有」をタップしてください。",
+    "seeAll": "すべて見る",
+    "listYours": "ここに載せる",
+    "namePlaceholder": "名前（任意）",
+    "list": "載せる",
+    "listing": "掲載中…",
+    "cancel": "キャンセル",
+    "listFailed": "載せられませんでした。もう一度お試しください。",
+    "signInToList": "ランを載せるにはサインインが必要です。Discordに進みますか？",
+    "listedNote": "載せました。比較タブに保存されていて、そこからこのページから外せます。"
   },
   "SimulatorStats": {
     "total": "合計",
@@ -837,5 +947,40 @@
     "back": "{category}一覧",
     "open": "ページを開く",
     "customizations": "カスタマイズ"
+  },
+  "ShareRunModal": {
+    "title": "このランを共有",
+    "hint": "この編成とスコアを誰でも開けるリンクにして、比較タブに保存します。",
+    "namePlaceholder": "名前（任意）",
+    "listOnStage": "このステージの「みんなのラン」に載せる",
+    "share": "共有",
+    "sharing": "共有中…",
+    "cancel": "キャンセル",
+    "failed": "共有できませんでした。もう一度お試しください。",
+    "sharedTitle": "共有しました",
+    "listedTitle": "共有して載せました",
+    "sharedNote": "リンクを知っている人なら誰でも開けます。比較タブから取り下げられます。",
+    "listedNote": "このステージの「みんなのラン」にも載りました。比較タブから外せます。",
+    "copyLink": "リンクをコピー",
+    "copied": "コピーしました",
+    "copyThisLink": "このリンクをコピーしてください:",
+    "seeOthers": "このステージのランを見る"
+  },
+  "StagePage": {
+    "turnsTotal": "{n}ターン",
+    "preview": "プレビュー",
+    "idolRoadNote": "アイドルへの道のターン数と審査基準はアイドルごとに異なります。ここに載せているのは、Pアイドルを選んでいないときにシミュレーターが使う値です。",
+    "vocal": "Vo",
+    "dance": "Da",
+    "visual": "Vi",
+    "total": "合計",
+    "criteria": "審査基準",
+    "turns": "ターン数",
+    "firstTurn": "1ターン目",
+    "openSimulator": "シミュレーターで開く",
+    "sharedRuns": "このステージの共有ラン",
+    "metaDescription": "{name}（{type}）：審査基準 Vo {vocal}% Da {dance}% Vi {visual}%、{turns}ターン。シミュレーターで開いたり、みんなの共有ランと比べたりできます。",
+    "topRuns": "上位の共有ラン",
+    "noRuns": "このステージの共有ランはまだありません。シミュレーターで開いて、あなたのランを共有してみましょう。"
   }
 }

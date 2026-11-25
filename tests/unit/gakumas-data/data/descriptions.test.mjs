@@ -11,6 +11,9 @@ test("Descriptions has the game's text, a line per effect", () => {
   assert.ok(Descriptions.get(PDrinks.getById(19)));
 });
 
-test("Descriptions has none for a panel the capture cut short", () => {
-  assert.equal(Descriptions.get(SkillCards.getById(723)), null);
+test("Descriptions has a long card's full text, from its もっとみる panel", () => {
+  assert.equal(
+    Descriptions.get(SkillCards.getById(723)).split("\n").at(-2),
+    "2ターン後、アクティブスキルカード使用不可（1ターン）",
+  );
 });
