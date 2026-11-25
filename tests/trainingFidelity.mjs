@@ -1,7 +1,12 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { PDrinks, SkillCards, deserializeEffectSequence } from "gakumas-data";
-import { IdolConfig, StageEngine, S, G } from "gakumas-engine";
+import {
+  PDrinks,
+  ProduceExams,
+  SkillCards,
+  deserializeEffectSequence,
+} from "gakumas-data";
+import { IdolConfig, StageConfig, StageEngine, S, G } from "gakumas-engine";
 import { hasIngameFixtures, loadIngameFixture } from "./ingameFixtures.mjs";
 
 const FIXTURES = [
@@ -29,7 +34,92 @@ const FIXTURES = [
   "produce-exam-impression-final",
   "produce-exam-impression-final-r9",
   "produce-exam-impression-final-r9b",
+  "produce-exam-preservation-final",
+  "produce-exam-preservation-midterm",
+  "produce-exam-leisure-stamina",
+  "produce-exam-preservation-midterm-passed",
+  "produce-exam-misuzu-run2-midterm",
+  "produce-exam-misuzu-run2-final",
+  "produce-exam-misuzu-run2-midterm-passed",
+  "produce-exam-misuzu-run2-final-to-turn9",
+  "produce-exam-misuzu-run2-final-to-11658",
+  "produce-exam-impression-final-r10",
+  "produce-exam-impression-final-r10b",
+  "produce-exam-impression-final-r11",
+  "produce-exam-impression-final-r11b",
+  "produce-exam-impression-final-r12",
+  "produce-exam-impression-final-r13",
+  "produce-exam-impression-final-r13b",
+  "produce-exam-impression-final-r13c",
+  "produce-exam-impression-final-r13d",
+  "produce-exam-impression-final-r14",
+  "produce-exam-impression-final-r14b",
+  "produce-exam-impression-final-r14c",
+  "produce-exam-impression-final-r14d",
+  "produce-exam-impression-final-r15",
+  "produce-exam-impression-final-r15b",
+  "produce-exam-impression-final-r15c",
+  "produce-exam-impression-final-r15d",
+  "produce-exam-impression-final-r16",
+  "produce-exam-impression-final-r16b",
+  "produce-exam-impression-final-r16c",
+  "produce-exam-impression-final-r16d",
+  "produce-exam-impression-final-r18d",
+  "produce-exam-impression-final-r19d",
+  "produce-exam-impression-final-r20d",
+  "produce-exam-impression-final-r23d",
+  "produce-exam-impression-final-r24c",
 ];
+
+// Captures of a produce exam that has a ProduceExams row replay through
+// that row (its gifts) and the turn order the game showed, the way the
+// simulator would run them, instead of a stage built from the capture.
+const PRODUCE_EXAM_IDS = {
+  "produce-exam-impression-final-r9": 1,
+  "produce-exam-impression-final-r9b": 1,
+  "produce-exam-impression-final-r10": 1,
+  "produce-exam-impression-final-r10b": 1,
+  "produce-exam-impression-final-r11": 1,
+  "produce-exam-impression-final-r11b": 1,
+  "produce-exam-impression-final-r12": 1,
+  "produce-exam-impression-final-r13": 1,
+  "produce-exam-impression-final-r13b": 1,
+  "produce-exam-impression-final-r13c": 1,
+  "produce-exam-impression-final-r13d": 1,
+  "produce-exam-impression-final-r14": 1,
+  "produce-exam-impression-final-r14b": 1,
+  "produce-exam-impression-final-r14c": 1,
+  "produce-exam-impression-final-r14d": 1,
+  "produce-exam-impression-final-r15": 1,
+  "produce-exam-impression-final-r15b": 1,
+  "produce-exam-impression-final-r15c": 1,
+  "produce-exam-impression-final-r15d": 1,
+  "produce-exam-impression-final-r16": 1,
+  "produce-exam-impression-final-r16b": 1,
+  "produce-exam-impression-final-r16c": 1,
+  "produce-exam-impression-final-r16d": 1,
+  "produce-exam-impression-final-r18d": 1,
+  "produce-exam-impression-final-r19d": 1,
+  "produce-exam-impression-final-r20d": 1,
+  "produce-exam-impression-final-r23d": 1,
+  "produce-exam-impression-final-r24c": 1,
+};
+
+function getStage(capture) {
+  const examId = PRODUCE_EXAM_IDS[capture.fixture];
+  if (!examId) {
+    return {
+      type: "capturedTraining",
+      turnCount: capture.turnTypes.length,
+      passScore: capture.passScore,
+      effects: (capture.stageEffects ?? []).flatMap((e) =>
+        deserializeEffectSequence(e.effect),
+      ),
+    };
+  }
+  const exam = ProduceExams.getById(examId);
+  return new StageConfig({ ...exam, turnTypes: capture.turnTypes });
+}
 
 function getTypeMultipliers(capture) {
   if (capture.replayMultipliers) return capture.replayMultipliers;
@@ -42,11 +132,22 @@ function getTypeMultipliers(capture) {
 }
 
 function createEngine(capture, play) {
-  const cardIds =
-    capture.drawCardIds ??
-    play.actions.flatMap((action) =>
-      action.skip ? [] : (action.handCardIds ?? [action.cardId]),
-    );
+  const cardIds = capture.drawCardIds ?? [
+    ...play.actions.flatMap((action) =>
+      // earlierCopy: the copy an earlier action supplied, raised since, so
+      // it adds none (one-copy cards like 200%スマイル keep only one).
+      action.skip || action.fromHand || action.earlierCopy
+        ? []
+        : action.fromDrink
+          ? (action.handCardIds ?? []).filter((id) => id != action.cardId)
+          : [
+              ...(action.handCardIds ?? [action.cardId]),
+              ...(action.drawnCardIds ?? []),
+            ],
+    ),
+    // Cards the game drew but that were never played (nextTurnDraw).
+    ...(capture.extraCardIds ?? []),
+  ];
   const idol = new IdolConfig({
     params: [0, 0, 0, capture.initial.stamina],
     pItemIds: capture.pItemIds ?? [],
@@ -56,15 +157,11 @@ function createEngine(capture, play) {
     idol,
     defaultCardIds: [],
     typeMultipliers: getTypeMultipliers(capture),
-    stage: {
-      type: "capturedTraining",
-      turnCount: capture.turnTypes.length,
-      effects: (capture.stageEffects ?? []).flatMap((e) =>
-        deserializeEffectSequence(e.effect),
-      ),
-    },
+    stage: getStage(capture),
   });
-  engine.turnManager.generateTurnTypes = () => [...capture.turnTypes];
+  if (!PRODUCE_EXAM_IDS[capture.fixture]) {
+    engine.turnManager.generateTurnTypes = () => [...capture.turnTypes];
+  }
   return engine;
 }
 
@@ -80,6 +177,15 @@ function findCopy(state, cardId, hand) {
 
 function supplyHand(state, action, heldCard) {
   if (action.useReturnedHeldCard) return [heldCard];
+  // fromHand: the copy the engine already has in hand (drawn via
+  // nextTurnDraw and raised there), not a fresh one.
+  if (action.fromHand) {
+    const card = state[S.handCards].find(
+      (c) => state[S.cardMap][c].id == action.cardId,
+    );
+    assert.ok(card !== undefined, `no card ${action.cardId} in hand`);
+    return [card];
+  }
 
   const hand = [];
   for (const cardId of action.handCardIds ?? [action.cardId]) {
@@ -95,6 +201,24 @@ function putInHand(state, hand) {
     state[pile] = state[pile].filter((c) => !hand.includes(c));
   }
   state[S.handCards] = hand;
+}
+
+// A P-drink, as the game used it. One that puts a random card in the hand
+// (初星スペシャル青汁) puts the card the game showed: a new copy, so nothing
+// that grew the deck's cards has grown it.
+function drinkAsCaptured(engine, state, drink) {
+  const pDrink = PDrinks.getById(drink.id);
+  assert.equal(pDrink.name, drink.name);
+  const cardManager = engine.cardManager;
+  if (drink.addsCardId) {
+    cardManager.addRandomUpgradedCardToHand = (s) =>
+      cardManager.addCardToHand(s, drink.addsCardId);
+  }
+  try {
+    engine.effectManager.triggerEffects(state, pDrink.actions);
+  } finally {
+    delete cardManager.addRandomUpgradedCardToHand;
+  }
 }
 
 function holdAsCaptured(hold, onHold) {
@@ -128,7 +252,11 @@ function replay(capture, play) {
   let state = engine.startStage(initialState);
   engine.logger.disable();
 
-  for (const [field, value] of Object.entries(capture.initial)) {
+  // afterStageStart: the state the ログ shows once turn 1 has started, when a
+  // start-of-turn P-item (e.g. 星のリトルプリンス) has already changed it.
+  for (const [field, value] of Object.entries(
+    capture.afterStageStart ?? capture.initial,
+  )) {
     assert.equal(state[S[field]], value, `initial ${field}`);
   }
 
@@ -136,6 +264,12 @@ function replay(capture, play) {
   for (const [i, action] of play.actions.entries()) {
     const turn = i + 1;
     if (action.skip) {
+      // Drinks taken on a turn whose card play was skipped.
+      for (const drink of action.drinksBefore ?? []) {
+        const pDrink = PDrinks.getById(drink.id);
+        assert.equal(pDrink.name, drink.name);
+        engine.effectManager.triggerEffects(state, pDrink.actions);
+      }
       state = engine.endTurn(state);
       assert.equal(state[S.turnsElapsed], action.turnsElapsed ?? turn);
       for (const [field, value] of Object.entries(action.expected)) {
@@ -144,6 +278,15 @@ function replay(capture, play) {
       continue;
     }
     assert.equal(SkillCards.getById(action.cardId).name, action.name);
+
+    // drinksBeforeHand: drinks the game showed before the hand the play
+    // came from (ミックススムージー redraws the hand), so they act on the
+    // engine's hand before the captured one is supplied.
+    for (const drink of action.drinksBeforeHand ?? []) {
+      const pDrink = PDrinks.getById(drink.id);
+      assert.equal(pDrink.name, drink.name);
+      engine.effectManager.triggerEffects(state, pDrink.actions);
+    }
 
     let hand;
     if (capture.drawCardIds) {
@@ -154,13 +297,27 @@ function replay(capture, play) {
         action.handCardIds,
         `turn ${turn} hand (${action.handCapture})`,
       );
+    } else if (action.fromDrink) {
+      // The card a drink just put in the hand, with the hand the game showed
+      hand = supplyHand(state, {
+        handCardIds: (action.handCardIds ?? []).filter(
+          (id) => id != action.cardId,
+        ),
+      });
+      putInHand(state, hand);
+      for (const drink of action.drinksBefore ?? []) {
+        drinkAsCaptured(engine, state, drink);
+      }
+      hand = state[S.handCards];
     } else {
       hand = supplyHand(state, action, heldCard);
       putInHand(state, hand);
     }
     const card = action.useReturnedHeldCard
       ? heldCard
-      : hand.find((c) => state[S.cardMap][c].id == action.cardId);
+      : action.fromDrink
+        ? hand.findLast((c) => state[S.cardMap][c].id == action.cardId)
+        : hand.find((c) => state[S.cardMap][c].id == action.cardId);
     for (const [field, value] of Object.entries(action.growthBefore ?? {})) {
       assert.equal(
         state[S.cardMap][card].growth[G[field]],
@@ -179,10 +336,20 @@ function replay(capture, play) {
       holds++;
       heldCard = held;
     });
-    for (const drink of action.drinksBefore ?? []) {
-      const pDrink = PDrinks.getById(drink.id);
-      assert.equal(pDrink.name, drink.name);
-      engine.effectManager.triggerEffects(state, pDrink.actions);
+    // Cards the play draws, as the game showed them: put copies on top of
+    // the deck so the engine draws the same ones.
+    for (const cardId of [...(action.drawnCardIds ?? [])].reverse()) {
+      const drawn = findCopy(state, cardId, hand);
+      assert.ok(drawn >= 0, `no copy of card ${cardId} left to draw`);
+      for (const pile of [S.deckCards, S.discardedCards]) {
+        state[pile] = state[pile].filter((c) => c != drawn);
+      }
+      state[S.deckCards].push(drawn);
+    }
+    if (!action.fromDrink) {
+      for (const drink of action.drinksBefore ?? []) {
+        drinkAsCaptured(engine, state, drink);
+      }
     }
     if (action.playedName) {
       assert.equal(
@@ -190,6 +357,26 @@ function replay(capture, play) {
         action.playedName,
         `turn ${turn}: played as`,
       );
+    }
+    // nextTurnDraw: the hand the ログ shows the next turn drawing, put on
+    // top of the deck so start-of-turn effects (発動予約) act on it.
+    if (action.nextTurnDraw) {
+      const drawn = [];
+      for (const entry of action.nextTurnDraw) {
+        const cardId = entry.cardId ?? entry;
+        const copy = findCopy(state, cardId, [...drawn, card]);
+        assert.ok(copy >= 0, `turn ${turn}: no copy of card ${cardId} to draw`);
+        // { cardId, supportUpgrades }: スキルカードサポート raised it as it
+        // was drawn (the badge on the card in hand).
+        for (let n = 0; n < (entry.supportUpgrades ?? 0); n++) {
+          engine.cardManager.supportUpgrade(state, copy);
+        }
+        drawn.push(copy);
+      }
+      for (const pile of [S.deckCards, S.discardedCards]) {
+        state[pile] = state[pile].filter((c) => !drawn.includes(c));
+      }
+      state[S.deckCards].push(...[...drawn].reverse());
     }
     assert.ok(engine.isCardUsable(state, card), `turn ${turn}: usable`);
     state = engine.useCard(state, card);
@@ -220,7 +407,9 @@ function replay(capture, play) {
   }
 }
 
-for (const capture of hasIngameFixtures ? FIXTURES.map(loadIngameFixture) : []) {
+for (const capture of hasIngameFixtures
+  ? FIXTURES.map((name) => ({ ...loadIngameFixture(name), fixture: name }))
+  : []) {
   for (const play of capture.plays) {
     test(`in-game ${capture.stage}: ${play.id}`, () => replay(capture, play));
   }

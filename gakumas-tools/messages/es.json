@@ -445,6 +445,7 @@
     "supportBonus": "% de bonificación de apoyo",
     "multiplierNote": "※ El multiplicador de puntuación no es preciso con parámetros superiores a 2400.",
     "previewNote": "※ La vista previa de la etapa se basa solo en los objetos P y los criterios anunciados. Aún no se conocen los tipos de turno.",
+    "idolRoadMissingData": "{missing, select, idolRow {El simulador aún no tiene los criterios ni los turnos de esta etapa para esta idol, así que la puntuación puede diferir del juego.} other {El simulador aún no tiene los efectos de apoyo (応援効果) de esta etapa para P-idols de {effect, select, goodConditionTurns {Buen estado} concentration {Concentración} goodImpressionTurns {Buena impresión} motivation {Motivación} strength {Fuerza} fullPower {Máxima potencia} other {este tipo}}, así que la puntuación será más baja que en el juego.}}",
     "enterPercents": "Como se desconoce cómo se calcula el multiplicador de puntuación, introduce directamente los multiplicadores (%).",
     "linkContestNote": "Es posible que los concursos Link no se simulen con precisión. Aún no se ha implementado la eliminación de objetos P y cartas de habilidad duplicados entre ídolos. Quita los duplicados y añade las cartas predeterminadas manualmente en el editor de formación.",
     "custom": "Personalizada",
@@ -523,20 +524,38 @@
   },
   "SimulatorLoadoutImporterModal": {
     "title": "Importar formación desde captura",
-    "instructions": "Sube una captura de la pantalla de formación de concurso del juego. Se cargarán los parámetros, los objetos P y las cartas de habilidad, y la etapa y la bonificación de apoyo se deducirán de los multiplicadores por tipo.",
+    "instructions": "Sube una captura de la pantalla de formación de concurso del juego. Se cargarán los parámetros, los objetos P y las cartas de habilidad, y la etapa y la bonificación de apoyo se deducirán de los multiplicadores por tipo. También sirve la pantalla 「スコア獲得編成確認」 de Idol Road: sube su captura superior y, si el mazo tiene 3 filas, también una desplazada hasta abajo.",
     "processing": "Procesando captura...",
     "error": "No se ha podido importar",
     "matchingStages": "Etapas coincidentes",
     "pickStage": "Se ha seleccionado la mejor coincidencia. Elige otra si no es correcta.",
-    "noStage": "Ninguna etapa coincide con los multiplicadores por tipo de la captura, así que no se han cambiado la etapa ni la bonificación de apoyo."
+    "noStage": "Ninguna etapa coincide con los multiplicadores por tipo de la captura, así que no se han cambiado la etapa ni la bonificación de apoyo.",
+    "noIdolRoadStage": "La STAGE{stage} del Idol Road de esta idol aún no está en el simulador, así que no se ha cambiado la etapa. Los parámetros cargados son los porcentajes de la pantalla, que solo sirven para una etapa del Idol Road."
   },
   "ShareModal": {
     "title": "Compartir",
     "more": "Más…",
     "x": "Compartir en X",
+    "xResult": "Compartir el resultado en X",
     "saveImage": "Guardar como imagen",
     "exporting": "Guardando…",
-    "exportFailed": "No se ha podido guardar. Vuelve a intentarlo"
+    "exportFailed": "No se ha podido guardar. Vuelve a intentarlo",
+    "loadoutHelp": "Con este enlace, cualquiera abre esta configuración en el simulador.",
+    "copy": "Copiar",
+    "copied": "Copiado",
+    "copyThisLink": "Copia este enlace:",
+    "resultTitle": "Compartir este resultado",
+    "resultHelp": "Crea un enlace a esta configuración y sus puntuaciones que cualquiera puede abrir, y la guarda en Comparar.",
+    "signInToShareResult": "Para crear un enlace con las puntuaciones y mostrarlo en las simulaciones compartidas de la etapa, inicia sesión.",
+    "signIn": "Iniciar sesión con Discord",
+    "namePlaceholder": "Nombre (opcional)",
+    "listOnStage": "Mostrarla en las simulaciones compartidas de esta etapa",
+    "makeLink": "Crear enlace del resultado",
+    "making": "Creando enlace…",
+    "failed": "No se ha podido compartir. Inténtalo de nuevo.",
+    "sharedNote": "Cualquiera con el enlace puede abrirla. Puedes retirarla en Comparar.",
+    "listedNote": "También aparece en las simulaciones compartidas de esta etapa. Puedes quitarla en Comparar.",
+    "seeOthers": "Ver las simulaciones de la etapa"
   },
   "ConfirmModal": {
     "cancel": "Cancelar",
@@ -561,8 +580,7 @@
     "optimizeNeedsSimulation": "Simula primero la formación actual",
     "staleResults": "Estos resultados son de una formación anterior",
     "rehearsal": "Ensayo",
-    "shareRun": "Compartir resultado",
-    "signInToShare": "Para compartir una simulación hay que iniciar sesión. ¿Continuar a Discord?"
+    "shareRun": "Compartir"
   },
   "CompareTab": {
     "saved": "Guardadas",
@@ -628,7 +646,8 @@
     "saved": "Guardada",
     "saveFailed": "No se pudo guardar",
     "signInPrompt": "Para guardar hay que iniciar sesión. ¿Continuar a Discord?",
-    "hint": "«Abrir en el simulador» añade esta simulación a tu historial, para que la pestaña Comparar la muestre junto a las tuyas.",
+    "compareWithMine": "Comparar con la mía",
+    "hint": "«Abrir en el simulador» carga esta simulación. «Comparar con la mía» mantiene tus cartas, las pasa a la etapa de esta simulación y la muestra junto a tu próximo resultado en la pestaña Comparar.",
     "metaDescription": "Una simulación compartida: media {mean}, mediana {median}.",
     "metaDescriptionNoScores": "Una formación del simulador compartida.",
     "moreForStage": "Más simulaciones compartidas de esta etapa",
@@ -646,7 +665,7 @@
       "top": "Mejor puntuación"
     },
     "scores": "Media {mean} · Mediana {median}",
-    "empty": "Aún no hay simulaciones mostradas aquí. Simula una configuración y toca Compartir resultado para mostrar la tuya.",
+    "empty": "Aún no hay simulaciones mostradas aquí. Simula una configuración y toca Compartir para mostrar la tuya.",
     "older": "Más antiguas",
     "newest": "Volver a las más recientes",
     "emptyAction": "Compartir la tuya"
@@ -660,7 +679,7 @@
     "yourRun": "Tu simulación (este resultado)",
     "place": "Puesto {rank} de {count} con la tuya",
     "belowTop": "Por debajo de las {count} primeras mostradas",
-    "howToList": "Para mostrar la tuya, toca Compartir resultado después de simular.",
+    "howToList": "Para mostrar la tuya, toca Compartir después de simular.",
     "seeAll": "Verlas todas",
     "listYours": "Mostrarla aquí",
     "namePlaceholder": "Nombre (opcional)",
@@ -733,6 +752,7 @@
     "noFullPowerChargeTurns": "Sin cartas con efecto de máxima potencia",
     "noCardUseTurns": "Sin uso de cartas",
     "uneaseTurns": "Inquietud",
+    "timidity": "Timidez",
     "metamorphosis": "Metamorfosis",
     "metamorphosisPreparation": "Metamorfosis (preparación)",
     "metamorphosisPerformance": "Metamorfosis (actuación)",
@@ -927,24 +947,6 @@
     "open": "Abrir página",
     "customizations": "Personalizaciones"
   },
-  "ShareRunModal": {
-    "title": "Compartir esta simulación",
-    "hint": "Crea un enlace a esta configuración y sus puntuaciones que cualquiera puede abrir, y la guarda en Comparar.",
-    "namePlaceholder": "Nombre (opcional)",
-    "listOnStage": "Mostrarla en las simulaciones compartidas de esta etapa",
-    "share": "Compartir",
-    "sharing": "Compartiendo…",
-    "cancel": "Cancelar",
-    "failed": "No se ha podido compartir. Inténtalo de nuevo.",
-    "sharedTitle": "Compartida",
-    "listedTitle": "Compartida y mostrada",
-    "sharedNote": "Cualquiera con el enlace puede abrirla. Puedes retirarla en Comparar.",
-    "listedNote": "También aparece en las simulaciones compartidas de esta etapa. Puedes quitarla en Comparar.",
-    "copyLink": "Copiar enlace",
-    "copied": "Copiado",
-    "copyThisLink": "Copia este enlace:",
-    "seeOthers": "Ver las simulaciones de la etapa"
-  },
   "StagePage": {
     "turnsTotal": "{n} turnos",
     "preview": "Vista previa",
@@ -960,6 +962,7 @@
     "sharedRuns": "Partidas compartidas de esta etapa",
     "metaDescription": "{name} ({type}): criterios Vo {vocal}% Da {dance}% Vi {visual}%, {turns} turnos. Ábrela en el simulador o compara las partidas compartidas de otros jugadores.",
     "topRuns": "Mejores partidas compartidas",
-    "noRuns": "Nadie ha compartido aún una partida de esta etapa. Ábrela en el simulador y comparte la tuya."
+    "noRuns": "Nadie ha compartido aún una partida de esta etapa. Ábrela en el simulador y comparte la tuya.",
+    "rehearsalGap": "{count} ensayos compartidos por {sources} jugadores en los últimos {days} días. Diferencia mediana entre la media del simulador y la del juego: {gap}."
   }
 }

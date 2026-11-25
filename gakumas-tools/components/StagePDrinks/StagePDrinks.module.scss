@@ -1,0 +1,35 @@
+@use "../../styles/tokens";
+
+.stagePDrinks {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$space-1;
+
+  label {
+    font-size: 14px;
+    font-weight: tokens.$weight-bold;
+  }
+}
+
+.slots {
+  display: flex;
+  gap: tokens.$space-2;
+}
+
+.slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 92px;
+}
+
+.icon {
+  width: 48px;
+}
+
+.note {
+  margin: 0;
+  font-size: 12px;
+  color: tokens.$surface-ink-muted;
+}

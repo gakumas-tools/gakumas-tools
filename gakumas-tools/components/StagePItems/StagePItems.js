@@ -3,9 +3,17 @@ import EntityIcon from "@/components/EntityIcon";
 import EntityPickerModal from "@/components/EntityPickerModal";
 import ModalContext from "@/contexts/ModalContext";
 import { EntityTypes } from "@/utils/entities";
+import { pickablePItem } from "@/utils/pItemSlots";
 import styles from "./StagePItems.module.scss";
 
-function StagePItems({ pItemIds, replacePItemId, swapPItemIds, indications, size }) {
+function StagePItems({
+  pItemIds,
+  replacePItemId,
+  swapPItemIds,
+  indications,
+  size,
+  produceExam = false,
+}) {
   const { setModal } = useContext(ModalContext);
 
   return (
@@ -22,7 +30,7 @@ function StagePItems({ pItemIds, replacePItemId, swapPItemIds, indications, size
               <EntityPickerModal
                 type={EntityTypes.P_ITEM}
                 onPick={(card) => replacePItemId(index, card.id)}
-                filters={[{ callback: (e) => e.sourceType != "produce" }]}
+                filters={[{ callback: (e) => pickablePItem(e, produceExam) }]}
               />
             )
           }

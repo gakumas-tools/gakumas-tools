@@ -21,6 +21,7 @@ import {
 import Alert from "@/components/Alert";
 import Button from "@/components/Button";
 import ButtonGroup from "@/components/ButtonGroup";
+import IdolRoadDataNotice from "@/components/IdolRoadDataNotice";
 import Input from "@/components/Input";
 import KofiAd from "@/components/KofiAd";
 import LoadoutEditor from "@/components/LoadoutEditor";
@@ -29,6 +30,8 @@ import SimulatorResult from "@/components/SimulatorResult";
 import StageSelect from "@/components/StageSelect";
 import StageSharedRuns from "@/components/StageSharedRuns";
 import StrategyPicker from "@/components/StrategyPicker";
+import StagePDrinks from "@/components/StagePDrinks";
+import TurnOrder from "@/components/TurnOrder";
 import LoadoutContext from "@/contexts/LoadoutContext";
 import SimulationRunsContext from "@/contexts/SimulationRunsContext";
 import WorkspaceContext from "@/contexts/WorkspaceContext";
@@ -275,6 +278,13 @@ export default function Simulator() {
       <div className={styles.configurator}>
         {stage.preview && <Alert>{t("previewNote")}</Alert>}
         <StageSelect />
+        <IdolRoadDataNotice stage={stage} pIdolId={config.idol.pIdolId} />
+        {stage.type == "produceExam" && (
+          <>
+            <TurnOrder />
+            <StagePDrinks />
+          </>
+        )}
         {stage.type !== "contest" ? (
           <Alert>{t("enterPercents")}</Alert>
         ) : (
@@ -403,7 +413,16 @@ export default function Simulator() {
         </div>
 
         <div className={styles.subLinks} data-export-hide="true">
-          <SimulatorButtons />
+          <SimulatorButtons
+            run={
+              strategy === "HeuristicStrategy" &&
+              !running &&
+              simulatorData?.input.config === config &&
+              simulatorData?.input.linkConfigs === linkConfigs
+                ? simulatorData.run
+                : null
+            }
+          />
           <a
             href="https://github.com/gakumas-tools/gakumas-tools/blob/master/gakumas-tools/simulator/CHANGELOG.md"
             target="_blank"
