@@ -47,6 +47,11 @@ export async function getSimulatorLoadoutFromFiles(files, currentStageId) {
   return readContestLoadout(imgs[0], imageDatas[0], currentStageId, modelsPromise);
 }
 
+// One screenshot, as before.
+export function getSimulatorLoadoutFromFile(file, currentStageId) {
+  return getSimulatorLoadoutFromFiles([file], currentStageId);
+}
+
 async function readIdolRoadLoadout(imgs, imageDatas, found, modelsPromise) {
   const [
     { session: pItemSession, classes: pItemClasses },
