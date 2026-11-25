@@ -14,3 +14,4 @@ id,name,availableCustomizations,rarity,type,plan,unlockPlv,upgraded,unique,sourc
 10047,元気な挨拶++,,R,active,logic,14,TRUE,FALSE,produce,,FALSE,,stamina-=3,score+=genki*1.4,1,,47
 10453,紅葉ランニング++,,SSR,mental,free,1,TRUE,TRUE,support,,FALSE,,cost-=0,genki+=1; nullifyDebuff+=1; drawCard(2); cardUsesRemaining+=1,1,,453
 10067,パステル気分++,,R,mental,logic,9,TRUE,FALSE,produce,,FALSE,,cost-=2,genki+=7; if:motivation>=3 { goodImpressionTurns+=4 },,,67
+10149,200%スマイル++,,SSR,active,logic,11,TRUE,TRUE,produce,,FALSE,,cost-=5,goodImpressionTurns+=6; score+=goodImpressionTurns*1.7,1,,149

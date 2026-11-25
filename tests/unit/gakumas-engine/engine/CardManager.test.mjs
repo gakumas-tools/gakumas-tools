@@ -170,12 +170,12 @@ test("copySelectedToBottomOfDeckUpto may copy nothing", () => {
 
 test("スキルカードサポート raises base to +, + to ++, and stops at ++ or an unread ++", () => {
   // 手拍子 44 → 手拍子+ 45 → 手拍子++; ふれあい+ 123 → ふれあい++ (run #10's popup);
-  // 200%スマイル+ 149 has no ++ read from the game yet.
-  const engine = createEngine({ skillCardIds: [44, 123, 149] });
+  // 思い出し笑い+ 65 has no ++ read from the game yet.
+  const engine = createEngine({ skillCardIds: [44, 123, 65] });
   const state = engine.getInitialState(true);
   const clap = state[S.cardMap].findIndex((c) => c.id === 44);
   const touch = state[S.cardMap].findIndex((c) => c.id === 123);
-  const smile = state[S.cardMap].findIndex((c) => c.id === 149);
+  const laugh = state[S.cardMap].findIndex((c) => c.id === 65);
   const name = (card) => SkillCards.getById(state[S.cardMap][card].id).name;
 
   assert.equal(engine.cardManager.supportUpgrade(state, clap), true);
@@ -187,8 +187,20 @@ test("スキルカードサポート raises base to +, + to ++, and stops at ++ 
   assert.equal(engine.cardManager.supportUpgrade(state, touch), true);
   assert.equal(name(touch), "ふれあい++");
   assert.equal(state[S.cardMap][touch].id, 10123);
-  assert.equal(engine.cardManager.supportUpgrade(state, smile), false);
-  assert.equal(name(smile), "200%スマイル+");
+  assert.equal(engine.cardManager.supportUpgrade(state, laugh), false);
+  assert.equal(name(laugh), "思い出し笑い+");
+});
+
+test("200%スマイル++ (run #16's ログ): cost 5, the + card's effects", () => {
+  // Card face cost 5 (+ is 6); 好印象 12→18, スコア 76→254 at 572% fit
+  // 好印象+6 and 好印象の170%分 (ログ B09/B10, run #16 F04).
+  const engine = createEngine({ skillCardIds: [149] });
+  const state = engine.getInitialState(true);
+  const smile = state[S.cardMap].findIndex((c) => c.id === 149);
+  assert.equal(engine.cardManager.supportUpgrade(state, smile), true);
+  const card = SkillCards.getById(state[S.cardMap][smile].id);
+  assert.equal(card.name, "200%スマイル++");
+  assert.equal(card.id, 10149);
 });
 
 test("run #11's ++ popups: 前途洋々++, 元気な挨拶++ and a support's 紅葉ランニング++", () => {

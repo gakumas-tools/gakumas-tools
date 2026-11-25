@@ -63,6 +63,7 @@ const FIXTURES = [
   "produce-exam-impression-final-r16",
   "produce-exam-impression-final-r16b",
   "produce-exam-impression-final-r16c",
+  "produce-exam-impression-final-r16d",
 ];
 
 // Captures of a produce exam that has a ProduceExams row replay through
@@ -91,6 +92,7 @@ const PRODUCE_EXAM_IDS = {
   "produce-exam-impression-final-r16": 1,
   "produce-exam-impression-final-r16b": 1,
   "produce-exam-impression-final-r16c": 1,
+  "produce-exam-impression-final-r16d": 1,
 };
 
 function getStage(capture) {
@@ -120,9 +122,8 @@ function getTypeMultipliers(capture) {
 }
 
 function createEngine(capture, play) {
-  const cardIds =
-    capture.drawCardIds ??
-    play.actions.flatMap((action) =>
+  const cardIds = capture.drawCardIds ?? [
+    ...play.actions.flatMap((action) =>
       action.skip
         ? []
         : action.fromDrink
@@ -131,7 +132,10 @@ function createEngine(capture, play) {
               ...(action.handCardIds ?? [action.cardId]),
               ...(action.drawnCardIds ?? []),
             ],
-    );
+    ),
+    // Cards the game drew but that were never played (nextTurnDraw).
+    ...(capture.extraCardIds ?? []),
+  ];
   const idol = new IdolConfig({
     params: [0, 0, 0, capture.initial.stamina],
     pItemIds: capture.pItemIds ?? [],
@@ -248,6 +252,15 @@ function replay(capture, play) {
     }
     assert.equal(SkillCards.getById(action.cardId).name, action.name);
 
+    // drinksBeforeHand: drinks the game showed before the hand the play
+    // came from (ミックススムージー redraws the hand), so they act on the
+    // engine's hand before the captured one is supplied.
+    for (const drink of action.drinksBeforeHand ?? []) {
+      const pDrink = PDrinks.getById(drink.id);
+      assert.equal(pDrink.name, drink.name);
+      engine.effectManager.triggerEffects(state, pDrink.actions);
+    }
+
     let hand;
     if (capture.drawCardIds) {
       hand = state[S.handCards];
@@ -317,6 +330,20 @@ function replay(capture, play) {
         action.playedName,
         `turn ${turn}: played as`,
       );
+    }
+    // nextTurnDraw: the hand the ログ shows the next turn drawing, put on
+    // top of the deck so start-of-turn effects (発動予約) act on it.
+    if (action.nextTurnDraw) {
+      const drawn = [];
+      for (const cardId of action.nextTurnDraw) {
+        const copy = findCopy(state, cardId, [...drawn, card]);
+        assert.ok(copy >= 0, `turn ${turn}: no copy of card ${cardId} to draw`);
+        drawn.push(copy);
+      }
+      for (const pile of [S.deckCards, S.discardedCards]) {
+        state[pile] = state[pile].filter((c) => !drawn.includes(c));
+      }
+      state[S.deckCards].push(...[...drawn].reverse());
     }
     assert.ok(engine.isCardUsable(state, card), `turn ${turn}: usable`);
     state = engine.useCard(state, card);
