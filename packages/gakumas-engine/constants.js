@@ -160,6 +160,7 @@ export const ALL_FIELDS = [
   "noFullPowerChargeTurns",
   "poorConditionTurns",
   "uneaseTurns",
+  "timidity",
   "scoreBuffs",
   "scoreDebuffs",
   "goodImpressionTurnsBuffs",
@@ -468,6 +469,7 @@ export const LOGGED_FIELDS = [
   S.noFullPowerChargeTurns,
   S.noCardUseTurns,
   S.uneaseTurns,
+  S.timidity,
 ];
 
 export const GRAPHED_FIELDS = [

@@ -299,6 +299,12 @@ export function resolveGenki(state, genki) {
     genki *= 0.67;
   }
 
+  // Apply timidity (弱気): each stack lowers the gain by 1, after motivation.
+  // It has no turn count and doesn't decay. Fixed genki (P-items) is unaffected.
+  if (state[S.timidity]) {
+    genki = Math.max(0, genki - state[S.timidity]);
+  }
+
   state[S.genki] += genki;
 }
 
