@@ -412,6 +412,7 @@ They are also valid as assignment LHS unless marked read-only.
 | カード使用不可                 | `noCardUseTurns`               |
 | 不調                           | `poorConditionTurns`           |
 | 不安                           | `uneaseTurns`                  |
+| 弱気                           | `timidity`                     |
 | 集中適用倍数                   | `concentrationMultiplier`      |
 | 熱気適用倍数                   | `enthusiasmMultiplier`         |
 | やる気適用倍数                 | `motivationMultiplier`         |

@@ -5,7 +5,7 @@ import {
   placeAmongRuns,
 } from "../../../../gakumas-tools/utils/stageListing";
 
-const runs = (...means) => means.map((mean) => ({ stats: { mean } }));
+const runs = (...medians) => medians.map((median) => ({ stats: { median } }));
 
 test("placeAmongRuns puts a run after every listed run that scores the same or better", () => {
   assert.deepEqual(placeAmongRuns(runs(9000, 8000, 7000), 8500), {
@@ -42,8 +42,21 @@ test("placeAmongRuns stops at runs with no stats, which the stage lists last", (
   assert.equal(placeAmongRuns([], 100).rank, 1);
 });
 
-test("placeAmongRuns places nothing without a list or a mean", () => {
+test("placeAmongRuns places nothing without a list or a median", () => {
   assert.equal(placeAmongRuns(null, 100), null);
   assert.equal(placeAmongRuns(runs(9000), null), null);
   assert.equal(placeAmongRuns(runs(9000), NaN), null);
+});
+
+test("placeAmongRuns ranks by median, as the stage lists runs, not by mean", () => {
+  // A run with a higher mean but a lower median sits below yours.
+  const listed = [
+    { stats: { mean: 900, median: 1000 } },
+    { stats: { mean: 2000, median: 700 } },
+  ];
+  assert.deepEqual(placeAmongRuns(listed, 800), {
+    index: 1,
+    rank: 2,
+    below: false,
+  });
 });

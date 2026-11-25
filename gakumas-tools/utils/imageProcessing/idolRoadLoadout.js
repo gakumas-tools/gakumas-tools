@@ -132,9 +132,9 @@ export function readIdolRoadStats(imageData, mainRow, templates = DIGIT_TEMPLATE
 }
 
 // The glyphs of the header's first word, 「STAGE10」.
-export function stageGlyphs(imageData, { x0, pitch, window }) {
+export function stageGlyphs(imageData, { x0, pitch, scrollArea }) {
   const area = region(
-    { x: x0, y: window.top, pitch },
+    { x: x0, y: scrollArea.top, pitch },
     HEADER_X,
     HEADER_SEARCH,
     imageData,

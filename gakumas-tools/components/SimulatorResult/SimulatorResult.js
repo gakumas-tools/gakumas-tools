@@ -14,7 +14,6 @@ import {
   FaShareNodes,
   FaWandMagicSparkles,
 } from "react-icons/fa6";
-import { signIn, useSession } from "next-auth/react";
 import { Stages } from "gakumas-data";
 import Alert from "@/components/Alert";
 import Button from "@/components/Button";
@@ -23,20 +22,17 @@ import useRehearsalParser from "@/components/Rehearsal/useRehearsalParser";
 import RehearsalComparison, {
   useComparisonSubmission,
 } from "@/components/RehearsalComparison";
-import ConfirmModal from "@/components/ConfirmModal";
-import ShareRunModal from "@/components/ShareRunModal";
+import useSimulatorShare from "@/components/ShareModal/useSimulatorShare";
 import CompareTab from "@/components/SimulationRuns";
 import SimulatorLogs from "@/components/SimulatorLogs";
 import SimulatorStats from "@/components/SimulatorStats";
 import { LoadoutActionsContext } from "@/contexts/LoadoutContext";
-import ModalContext from "@/contexts/ModalContext";
 import SimulationRunsContext from "@/contexts/SimulationRunsContext";
 import c from "@/utils/classNames";
 import { downloadBlob } from "@/utils/download";
 import { logEvent } from "@/utils/logging";
 import { findOptimalParams } from "@/utils/paramOptimizer";
 import { cellScores } from "@/utils/rehearsalComparison";
-import { isListableStageId } from "@/utils/stageListing";
 import ScoreStats from "./ScoreStats";
 import SimulatorResultGraphs from "./SimulatorResultGraphs";
 import styles from "./SimulatorResult.module.scss";
@@ -110,11 +106,7 @@ function SimulatorResult({
 }) {
   const t = useTranslations("SimulatorResult");
   const { setParams } = useContext(LoadoutActionsContext);
-  const { history, saveRun, shareSaved, listRun } = useContext(
-    SimulationRunsContext,
-  );
-  const { setModal } = useContext(ModalContext);
-  const { status } = useSession();
+  const { history } = useContext(SimulationRunsContext);
   const currentRun = data.run || history[0] || null;
   // Default rendered during SSR / pre-hydration. Hydrated from localStorage
   // in the effect below so the initial markup matches between server and
@@ -219,29 +211,9 @@ function SimulatorResult({
     logEvent("simulator_scores_download", { count: data.scores.length });
   }, [data.scores]);
 
-  // Saving and sharing need an account; signed out, it asks to sign in.
-  const shareResult = useCallback(() => {
-    if (!currentRun) return;
-    logEvent("simulator_result_share", { signedIn: status == "authenticated" });
-    if (status != "authenticated") {
-      setModal(
-        <ConfirmModal
-          message={t("signInToShare")}
-          onConfirm={() => signIn("discord")}
-        />,
-      );
-      return;
-    }
-    setModal(
-      <ShareRunModal
-        run={currentRun}
-        listable={isListableStageId(currentRun.loadout?.stageId)}
-        saveRun={saveRun}
-        shareSaved={shareSaved}
-        listRun={listRun}
-      />,
-    );
-  }, [currentRun, status, setModal, t, saveRun, shareSaved, listRun]);
+  const openShare = useSimulatorShare(
+    pending || stale ? null : currentRun,
+  );
 
   return (
     <div
@@ -262,7 +234,7 @@ function SimulatorResult({
           size="sm"
           style="primary"
           className={styles.share}
-          onClick={shareResult}
+          onClick={() => openShare("result")}
           disabled={pending || stale || !currentRun}
           title={stale ? t("optimizeNeedsSimulation") : undefined}
         >

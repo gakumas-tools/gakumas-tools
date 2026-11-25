@@ -47,6 +47,11 @@ const FIXTURES = [
   "idol-road-saki-s5-8350",
   "idol-road-saki-s6-5854",
   "idol-road-saki-s7-2263",
+  "idol-road-saki-s7-5894",
+  "idol-road-saki-s8-9950",
+  "idol-road-saki-s9-9135",
+  "idol-road-saki-s3-5689",
+  "idol-road-saki-fmw-s3-2460",
   "idol-road-saki-s10",
 ];
 
@@ -91,9 +96,39 @@ function createEngine(capture) {
 // The hand the game dealt, by card id: a copy that is not removed or held.
 // The engine must have dealt as many cards as the game did (応援 draws,
 // 手札減少); the ones it dealt that the game didn't go back to the deck.
-function supplyHand(state, cardIds, turn) {
+// Puts the cards the next turn draws on top of the deck before the turn ends,
+// so its start effects (発動予約's upgradeHand) act on them, as
+// contestFidelity.mjs does. One copy per id, not yet removed, held or being
+// played; a card still in hand would go back to the deck when it is reshuffled.
+// If a card can't be found, nothing is stacked and the hand is swapped in.
+function stackDeck(state, cardIds, playing) {
+  const picked = [];
+  for (const id of cardIds) {
+    const card = state[S.cardMap].findIndex(
+      (c, i) =>
+        c.id == id &&
+        !state[S.removedCards].includes(i) &&
+        !state[S.heldCards].includes(i) &&
+        i != playing &&
+        !picked.includes(i),
+    );
+    if (card < 0) return undefined;
+    picked.push(card);
+  }
+  for (const pile of [S.handCards, S.deckCards, S.discardedCards]) {
+    state[pile] = state[pile].filter((c) => !picked.includes(c));
+  }
+  // The deck draws from its end.
+  state[S.deckCards].push(...[...picked].reverse());
+  return picked;
+}
+
+function supplyHand(state, cardIds, turn, stacked) {
   const dealt = state[S.handCards];
   assert.equal(dealt.length, cardIds.length, `turn ${turn}: cards dealt`);
+  // The stacked cards were dealt: keep them, with whatever the turn's start
+  // did to them.
+  if (stacked && dealt.every((c) => stacked.includes(c))) return dealt;
   const hand = [];
   for (const cardId of cardIds) {
     const card = state[S.cardMap].findIndex(
@@ -122,9 +157,12 @@ function replay(capture, play) {
     assert.equal(state[S[field]], value, `initial ${field}`);
   }
 
+  let stacked;
   for (const [i, action] of play.actions.entries()) {
     const turn = i + 1;
-    const hand = supplyHand(state, action.handCardIds, turn);
+    const next = play.actions[i + 1];
+    const hand = supplyHand(state, action.handCardIds, turn, stacked);
+    stacked = undefined;
     // A turn with スキルカード使用数追加 plays more than one card from the
     // hand it was dealt. One that skips plays its cards first, if any, then
     // ends the turn with a play left (スキルカード未使用).
@@ -135,12 +173,16 @@ function replay(capture, play) {
         (c) => state[S.cardMap][c].id == cardId,
       );
       assert.ok(engine.isCardUsable(state, card), `turn ${turn}: usable`);
+      if (next && !action.skip && j == plays.length - 1) {
+        stacked = stackDeck(state, next.handCardIds, card);
+      }
       state = engine.useCard(state, card);
       if (j < plays.length - 1 || action.skip) {
         assert.equal(state[S.turnsElapsed], turn - 1, `turn ${turn}: extra play`);
       }
     }
     if (action.skip) {
+      if (next) stacked = stackDeck(state, next.handCardIds);
       state = engine.endTurn(state);
     }
     assert.equal(state[S.turnsElapsed], turn);

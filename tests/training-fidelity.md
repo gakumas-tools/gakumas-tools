@@ -31,6 +31,9 @@ or rank thresholds. Comparing whole stages and loadouts is
   `handCapture`, checked against the hand the engine draws.
 - `initial`: the state before the first turn, checked before any card is
   played. Its genki is given to the engine, as some lessons start with it.
+- `afterStageStart`: optional. When a P-item acts as the first turn starts
+  (星のリトルプリンス's 元気+2), the state the game shows after it, checked
+  in place of `initial`, while `initial` still sets the engine's start.
 - `turnTypes`: the turn order the game showed.
 - `displayedPercents`: the multiplier the game showed for each turn type, in
   an exam. Lessons show none, so their fixtures set `replayMultipliers` to 1

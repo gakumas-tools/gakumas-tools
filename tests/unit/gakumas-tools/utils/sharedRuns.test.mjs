@@ -658,3 +658,19 @@ test("ownsSharedRun is true only for the user who shared the run", async () => {
   assert.equal(await ownsSharedRun(db, "AAAAAAAA", null), false);
   assert.equal(await ownsSharedRun(db, "not an id", "me"), false);
 });
+
+test("a stage's listed runs are ranked by the server's median", async () => {
+  const sorts = [];
+  const cursor = {
+    sort: (spec) => (sorts.push(spec), cursor),
+    limit: () => cursor,
+    toArray: async () => [],
+  };
+  const db = { collection: () => ({ find: () => cursor }) };
+  await listStageRuns(db, 52);
+  await refreshStageRuns(db, 52, "v1");
+  assert.deepEqual(sorts, [
+    { "serverStats.median": -1, createdAt: -1 },
+    { "serverStats.median": -1, createdAt: -1 },
+  ]);
+});
