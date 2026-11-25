@@ -29,6 +29,7 @@ const FIXTURES = [
   "produce-exam-impression-final",
   "produce-exam-impression-final-r9",
   "produce-exam-impression-final-r9b",
+  "produce-exam-preservation-final",
 ];
 
 function getTypeMultipliers(capture) {
@@ -45,7 +46,12 @@ function createEngine(capture, play) {
   const cardIds =
     capture.drawCardIds ??
     play.actions.flatMap((action) =>
-      action.skip ? [] : (action.handCardIds ?? [action.cardId]),
+      action.skip
+        ? []
+        : [
+            ...(action.handCardIds ?? [action.cardId]),
+            ...(action.drawnCardIds ?? []),
+          ],
     );
   const idol = new IdolConfig({
     params: [0, 0, 0, capture.initial.stamina],
@@ -179,6 +185,16 @@ function replay(capture, play) {
       holds++;
       heldCard = held;
     });
+    // Cards the play draws, as the game showed them: put copies on top of
+    // the deck so the engine draws the same ones.
+    for (const cardId of [...(action.drawnCardIds ?? [])].reverse()) {
+      const drawn = findCopy(state, cardId, hand);
+      assert.ok(drawn >= 0, `no copy of card ${cardId} left to draw`);
+      for (const pile of [S.deckCards, S.discardedCards]) {
+        state[pile] = state[pile].filter((c) => c != drawn);
+      }
+      state[S.deckCards].push(drawn);
+    }
     for (const drink of action.drinksBefore ?? []) {
       const pDrink = PDrinks.getById(drink.id);
       assert.equal(pDrink.name, drink.name);
