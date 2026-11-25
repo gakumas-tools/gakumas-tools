@@ -7,7 +7,15 @@ import onnxruntime as ort
 from onnx import numpy_helper
 from PIL import Image
 
-from .prepare import EMPTY_CLASS_ID, REPO_ROOT, empty_icon, icon_classes
+from .prepare import (
+    COVERED_CLASS_ID,
+    EMPTY_CLASS_ID,
+    REPO_ROOT,
+    covered_references,
+    empty_icon,
+    has_covered_class,
+    icon_classes,
+)
 
 INPUT_SIZE = 64
 GALLERY_INITIALIZER = "gallery"
@@ -69,6 +77,10 @@ def refresh(entity_type):
     session = ort.InferenceSession(model.SerializeToString())
     classes, images = reference_images(entity_type)
     gallery = embed(session, images).T.astype(np.float32)
+    if has_covered_class(entity_type):
+        mean = embed(session, covered_references(entity_type)).mean(0)
+        classes.insert(0, COVERED_CLASS_ID)
+        gallery = np.concatenate([(mean / np.linalg.norm(mean))[:, None], gallery], 1).astype(np.float32)
 
     old_classes = []
     if os.path.exists(classes_path(entity_type)):

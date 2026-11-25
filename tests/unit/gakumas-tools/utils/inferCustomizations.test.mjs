@@ -20,6 +20,8 @@ const HIYAKU = 78;
 const SPURT = 372;
 const CHOKOGAKUREKI = 196;
 const TREND_LEADER = 550;
+const TEGAKI = 176;
+const TEGAKI_PLUS = 177;
 
 test("predicts the badges of an uncustomized card", () => {
   assert.deepEqual(predictBadges(SEISHIN_TOUITSU), {
@@ -84,6 +86,12 @@ test("breaks ties with the closest candidate icon", () => {
 
 test("sums appended genki into the shown genki", () => {
   assert.equal(predictBadges(KIMAGURE_HEART, { 27: 1 }).genki, 7);
+});
+
+test("shows one genki gain for a card that gains it twice", () => {
+  // 手書きのメッセージ gains 9 twice and shows 9; its + shows 10.
+  assert.equal(predictBadges(TEGAKI).genki, 9);
+  assert.equal(predictBadges(TEGAKI_PLUS).genki, 10);
 });
 
 test("shows the constant part of a scaling gain", () => {
