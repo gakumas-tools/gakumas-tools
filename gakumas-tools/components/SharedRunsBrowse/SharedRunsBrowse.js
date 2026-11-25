@@ -3,9 +3,11 @@ import { memo } from "react";
 import { useTranslations } from "next-intl";
 import { FaShareNodes } from "react-icons/fa6";
 import { getStage } from "gakumas-loadout";
+import Button from "@/components/Button";
+import ButtonGroup from "@/components/ButtonGroup";
+import Select from "@/components/Select";
 import SharedRunsList from "@/components/SharedRunsList";
-import { Link, useRouter } from "@/i18n/routing";
-import c from "@/utils/classNames";
+import { useRouter } from "@/i18n/routing";
 import { formatStageName } from "@/utils/stages";
 import styles from "./SharedRunsBrowse.module.scss";
 
@@ -27,8 +29,21 @@ function SharedRunsBrowse({ stages, stageId, sort, runs, next, paged }) {
 
   const stageName = (id) => formatStageName(getStage(id), tStage);
 
-  function pickStage(e) {
-    const value = e.target.value;
+  const stageOptions = [
+    { value: "", label: t("allStages") },
+    ...(stageId != null && !stages.some((stage) => stage.stageId === stageId)
+      ? [{ value: stageId, label: stageName(stageId) }]
+      : []),
+    ...stages.map((stage) => ({
+      value: stage.stageId,
+      label: t("stageOption", {
+        name: stageName(stage.stageId),
+        count: stage.count,
+      }),
+    })),
+  ];
+
+  function pickStage(value) {
     router.push({
       pathname: "/shared",
       query: pageQuery({ stageId: value ? Number(value) : null, sort }),
@@ -42,35 +57,23 @@ function SharedRunsBrowse({ stages, stageId, sort, runs, next, paged }) {
         <p className={styles.hint}>{t("hint")}</p>
         <label className={styles.stagePicker}>
           {t("stage")}
-          <select value={stageId ?? ""} onChange={pickStage}>
-            <option value="">{t("allStages")}</option>
-            {stageId != null &&
-              !stages.some((stage) => stage.stageId === stageId) && (
-                <option value={stageId}>{stageName(stageId)}</option>
-              )}
-            {stages.map((stage) => (
-              <option key={stage.stageId} value={stage.stageId}>
-                {t("stageOption", {
-                  name: stageName(stage.stageId),
-                  count: stage.count,
-                })}
-              </option>
-            ))}
-          </select>
+          <Select
+            value={stageId ?? ""}
+            options={stageOptions}
+            onChange={pickStage}
+            size="sm"
+          />
         </label>
         {stageId != null && (
-          <div className={styles.sorts}>
-            {["new", "top"].map((key) => (
-              <Link
-                key={key}
-                href={{ pathname: "/shared", query: pageQuery({ stageId, sort: key }) }}
-                className={c(styles.sort, sort == key && styles.active)}
-                aria-current={sort == key ? "page" : undefined}
-              >
-                {t(`sort.${key}`)}
-              </Link>
-            ))}
-          </div>
+          <ButtonGroup
+            className={styles.sorts}
+            selected={sort}
+            options={["new", "top"].map((key) => ({
+              value: key,
+              label: t(`sort.${key}`),
+              href: { pathname: "/shared", query: pageQuery({ stageId, sort: key }) },
+            }))}
+          />
         )}
       </div>
 
@@ -79,28 +82,33 @@ function SharedRunsBrowse({ stages, stageId, sort, runs, next, paged }) {
       ) : (
         <div className={styles.empty}>
           <p>{t("empty")}</p>
-          <Link href="/simulator" className={styles.emptyAction}>
+          <Button href="/simulator" style="primary" size="sm">
             <FaShareNodes />
             {t("emptyAction")}
-          </Link>
+          </Button>
         </div>
       )}
 
       <div className={styles.pages}>
         {paged && (
-          <Link href={{ pathname: "/shared", query: pageQuery({ stageId }) }}>
+          <Button
+            size="sm"
+            href={{ pathname: "/shared", query: pageQuery({ stageId }) }}
+          >
             {t("newest")}
-          </Link>
+          </Button>
         )}
         {next && (
-          <Link
+          <Button
+            size="sm"
+            className={styles.older}
             href={{
               pathname: "/shared",
               query: pageQuery({ stageId, after: next }),
             }}
           >
             {t("older")}
-          </Link>
+          </Button>
         )}
       </div>
     </div>
