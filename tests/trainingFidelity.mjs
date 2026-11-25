@@ -32,6 +32,7 @@ const FIXTURES = [
   "produce-exam-preservation-final",
   "produce-exam-preservation-midterm",
   "produce-exam-leisure-stamina",
+  "produce-exam-preservation-midterm-passed",
 ];
 
 function getTypeMultipliers(capture) {
