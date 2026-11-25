@@ -1,25 +1,110 @@
 import { PItems, SkillCards } from "gakumas-data";
 import { IdolConfig } from "gakumas-engine";
+import * as ort from "onnxruntime-web/wasm";
 import { findStageCandidates } from "@/utils/supportBonus";
 import { readLoadoutCards } from "./cardBadges";
 import { DEBUG, getImageData, loadImageFromFile } from "./common";
 import { detectLoadoutBoxes } from "./contestLoadoutGeometry";
 import { readStats } from "./contestLoadoutStats";
 import {
+  classifyCrops,
   firstPItemFilter,
+  ICON_SIZE,
   samePlanFilter,
   slotFilters,
 } from "./entityClassifier";
+import {
+  findIdolRoadLoadout,
+  idolRoadLoadout,
+} from "./idolRoadImport";
+import {
+  idolRoadCardFilter,
+  liftGreyedOut,
+  readIdolRoadCards,
+} from "./idolRoadLoadout";
 import { extractEntities } from "./memory";
 import { loadPItemModel, loadSkillCardModel } from "./models";
 
-export async function getSimulatorLoadoutFromFile(file, currentStageId) {
-  const img = await loadImageFromFile(file);
+// One or two screenshots: the Idol Road 「スコア獲得編成確認」 screen (its top,
+// and optionally one scrolled to the bottom of the deck, in either order),
+// else a contest loadout, read from the first.
+export async function getSimulatorLoadoutFromFiles(files, currentStageId) {
+  const imgs = await Promise.all([...files].map(loadImageFromFile));
   // Kick off model loads in parallel with pixel work — cold start dominates
   // first-use latency and the two are independent.
   const modelsPromise = Promise.all([loadPItemModel(), loadSkillCardModel()]);
-  const imageData = getImageData(img);
+  const imageDatas = imgs.map(getImageData);
+  const idolRoad = findIdolRoadLoadout(imageDatas);
+  if (idolRoad) {
+    const { order, found } = idolRoad;
+    return readIdolRoadLoadout(
+      order.map((i) => imgs[i]),
+      order.map((i) => imageDatas[i]),
+      found,
+      modelsPromise,
+    );
+  }
+  return readContestLoadout(imgs[0], imageDatas[0], currentStageId, modelsPromise);
+}
 
+async function readIdolRoadLoadout(imgs, imageDatas, found, modelsPromise) {
+  const [
+    { session: pItemSession, classes: pItemClasses },
+    { session: skillCardSession, classes: skillCardClasses },
+  ] = await modelsPromise;
+
+  // Sequential, as below: the WASM runtime runs one session at a time.
+  const present = found.slots.flat().filter(Boolean);
+  const cardIds = await classifyCrops(
+    ort,
+    skillCardSession,
+    skillCardClasses,
+    present.map((slot) => {
+      const pixels = cropPixels(imgs[slot.image], slot.box);
+      return slot.greyed ? liftGreyedOut(pixels) : pixels;
+    }),
+    4,
+    undefined,
+    idolRoadCardFilter(found.slots).refine,
+  );
+  const cards = readIdolRoadCards(imageDatas, found.slots, cardIds);
+  const chosenBoxes = found.pItemBoxes.slice(1);
+  const reads = await classifyCrops(
+    ort,
+    pItemSession,
+    pItemClasses,
+    chosenBoxes.filter(Boolean).map((box) => cropPixels(imgs[0], box)),
+    4,
+  );
+  const chosenPItemIds = chosenBoxes.map((box) => (box ? reads.shift() : 0));
+
+  const loadout = idolRoadLoadout(found, cards, chosenPItemIds);
+  if (DEBUG) {
+    console.log("Idol Road stage:", found.stage, loadout.stageCandidates);
+    console.log("Extracted Idol Road loadout:", loadout);
+  }
+  return loadout;
+}
+
+// The ICON_SIZE square RGBA pixels of one box.
+function cropPixels(img, box) {
+  const canvas = new OffscreenCanvas(ICON_SIZE, ICON_SIZE);
+  const ctx = canvas.getContext("2d", { willReadFrequently: true });
+  ctx.drawImage(
+    img,
+    box.x,
+    box.y,
+    box.width,
+    box.height,
+    0,
+    0,
+    ICON_SIZE,
+    ICON_SIZE,
+  );
+  return ctx.getImageData(0, 0, ICON_SIZE, ICON_SIZE).data;
+}
+
+async function readContestLoadout(img, imageData, currentStageId, modelsPromise) {
   const { mainRow, pItemBoxes, mainBoxes, subBoxes } =
     detectLoadoutBoxes(imageData);
   const { params, percents } = readStats(imageData, mainRow);
