@@ -1,7 +1,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
+  aggregateLists,
   clampList,
+  compareLists,
   decodeList,
   encodeList,
 } from "../../../../gakumas-tools/utils/tierList.js";
@@ -44,4 +46,119 @@ test("a rank repeated in the list is kept once", () => {
   const list = clampList(decodeList(Array(1000).fill("S=1.2").join("_")), 16);
   assert.deepEqual(list.tiers, ["S"]);
   assert.deepEqual(list.items, { S: [1, 2] });
+});
+
+const mine = {
+  tiers: ["SSS", "SS", "S", "A"],
+  items: { SSS: [1], SS: [2], S: [3, 4], A: [5] },
+};
+const theirs = {
+  tiers: ["S4", "SS", "S", "B"],
+  items: { S4: [2], SS: [1], S: [3], B: [5, 6] },
+};
+
+test("gives each id its rank in both lists and how far theirs moves it", () => {
+  const r = compareLists(mine, theirs);
+  assert.deepEqual(r.byId[1], { mine: "SSS", theirs: "SS", delta: -1 });
+  assert.deepEqual(r.byId[2], { mine: "SS", theirs: "S4", delta: 2 });
+  assert.deepEqual(r.byId[3], { mine: "S", theirs: "S", delta: 0 });
+  assert.deepEqual(r.byId[5], { mine: "A", theirs: "B", delta: -1 });
+  assert.deepEqual(r.byId[4], { mine: "S", theirs: null, delta: null });
+  assert.deepEqual(r.byId[6], { mine: null, theirs: "B", delta: null });
+});
+
+test("moving one row in the default tiers is one step", () => {
+  // S4 and SSS are neighbours on the page; SSS+ (between them in the rank
+  // icons) is in neither list, so it isn't counted.
+  const a = { tiers: ["S4", "SSS", "SS"], items: { S4: [1], SSS: [2], SS: [3] } };
+  const b = { tiers: ["S4", "SSS", "SS"], items: { S4: [2], SSS: [3], SS: [1] } };
+  const r = compareLists(a, b);
+  assert.equal(r.byId[2].delta, 1);
+  assert.equal(r.byId[3].delta, 1);
+  assert.equal(r.byId[1].delta, -2);
+});
+
+test("lists ids found in only one list", () => {
+  const r = compareLists(mine, theirs);
+  assert.deepEqual(r.onlyMine, [4]);
+  assert.deepEqual(r.onlyTheirs, [6]);
+});
+
+test("agreement is the share of common ids at the same rank", () => {
+  const r = compareLists(mine, theirs);
+  assert.equal(r.common, 4);
+  assert.equal(r.agreement, 0.25);
+  assert.equal(compareLists(mine, mine).agreement, 1);
+});
+
+test("agreement is null when nothing is common, and empty input is safe", () => {
+  const r = compareLists({ tiers: ["S"], items: { S: [1] } }, null);
+  assert.equal(r.agreement, null);
+  assert.deepEqual(r.onlyMine, [1]);
+  assert.deepEqual(compareLists(null, undefined).byId, {});
+});
+
+test("aggregates lists by median rank with a quartile spread", () => {
+  const lists = [
+    { tiers: ["S", "A"], items: { S: [1, 2], A: [3] } },
+    { tiers: ["SS", "A"], items: { SS: [1], A: [2, 3] } },
+    { tiers: ["S", "B"], items: { S: [1, 1], B: [2] } },
+    { tiers: ["S"], items: { S: [1] } },
+    null,
+  ];
+  const result = aggregateLists(lists);
+  assert.equal(result.lists, 4);
+  assert.equal(result.skipped, 1);
+  // 1 is SS, S, S, S: median S, counted once per list; the one SS is left
+  // out of the middle half.
+  assert.deepEqual(result.byId[1], {
+    n: 4,
+    median: "S",
+    low: "S",
+    high: "S",
+    counts: { SS: 1, S: 3 },
+  });
+  // 2 is S, A, B: median A; with 3 lists nothing is trimmed, spread S..B.
+  assert.equal(result.byId[2].median, "A");
+  assert.equal(result.byId[2].low, "S");
+  assert.equal(result.byId[2].high, "B");
+  assert.deepEqual(result.list, {
+    tiers: ["S", "A"],
+    items: { S: [1], A: [2, 3] },
+  });
+});
+
+test("one outlier widens the spread the same on either side", () => {
+  const list = (rank) => ({ tiers: [rank], items: { [rank]: [1] } });
+  const higher = aggregateLists(["SSS", "SS", "SS", "SS"].map(list)).byId[1];
+  const lower = aggregateLists(["SS", "SS", "SS", "S"].map(list)).byId[1];
+  assert.deepEqual([higher.low, higher.high], ["SS", "SS"]);
+  assert.deepEqual([lower.low, lower.high], ["SS", "SS"]);
+  // With 3 lists the spread is the whole range, both ways alike.
+  const three = (ranks) => aggregateLists(ranks.map(list)).byId[1];
+  assert.deepEqual(
+    [three(["SSS", "SS", "SS"]).low, three(["SSS", "SS", "SS"]).high],
+    ["SSS", "SS"]
+  );
+  assert.deepEqual(
+    [three(["SS", "SS", "S"]).low, three(["SS", "SS", "S"]).high],
+    ["SS", "S"]
+  );
+  // 8 lists: two left off each end.
+  const eight = aggregateLists(
+    ["SSS", "SSS", "SS", "SS", "SS", "S", "A", "A"].map(list)
+  ).byId[1];
+  assert.deepEqual([eight.low, eight.high], ["SS", "S"]);
+});
+
+test("leaves out ids fewer than minLists rank, and unknown ranks", () => {
+  const lists = [
+    { tiers: ["S", "Z"], items: { S: [1], Z: [9] } },
+    { tiers: ["A"], items: { A: [1, 2] } },
+  ];
+  const result = aggregateLists(lists, { minLists: 2 });
+  assert.deepEqual(Object.keys(result.byId), ["1"]);
+  assert.equal(result.byId[1].median, "S");
+  assert.equal(result.byId[1].n, 2);
+  assert.equal(result.byId[9], undefined);
 });

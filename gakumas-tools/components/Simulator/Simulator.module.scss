@@ -384,3 +384,8 @@
   max-width: Min(100%, 800px);
   @include mixins.pop-in;
 }
+
+.stageSharedRuns {
+  flex: 1 1 100%;
+  max-width: 600px;
+}

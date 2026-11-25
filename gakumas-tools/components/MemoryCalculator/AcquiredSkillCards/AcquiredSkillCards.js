@@ -5,10 +5,10 @@ import MemoryCalculatorContext from "@/contexts/MemoryCalculatorContext";
 import WorkspaceContext from "@/contexts/WorkspaceContext";
 import ModalContext from "@/contexts/ModalContext";
 import { EntityTypes } from "@/utils/entities";
-import { NON_PIDOL_FILTER } from "../skillCardFilters";
+import { ACQUIRED_FILTER } from "@/utils/memoryPickerFilters";
 import styles from "./AcquiredSkillCards.module.scss";
 
-const FILTERS = [NON_PIDOL_FILTER];
+const FILTERS = [ACQUIRED_FILTER];
 
 function AcquiredSkillCards() {
   const { acquiredSkillCardIds, replaceAcquiredCardId } = useContext(

@@ -19,6 +19,7 @@ const LANGUAGES = [
   ["ja", "日本語"],
   ["zh-Hans", "简体中文"],
   ["ko", "한국어"],
+  ["es", "Español"],
 ];
 
 function LanguageLinks({ locale, query }) {
