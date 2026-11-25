@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { Idols } from "gakumas-data";
+import { HIDDEN_P_IDOL_IDS, Idols, PIdols } from "gakumas-data";
 import gkImg from "gakumas-images";
 import IconSelect from "@/components/IconSelect";
 import { PLANS } from "@/utils/plans";
@@ -11,11 +11,18 @@ const plans = PLANS.map((alias) => ({
   alt: alias,
 }));
 
-const idols = Idols.getAll().map((idol) => ({
-  id: idol.id,
-  iconSrc: gkImg(idol).icon,
-  alt: idol.name,
-}));
+// Idols with no P-idol to pick (all hidden) are left out.
+const idols = Idols.getAll()
+  .filter((idol) =>
+    PIdols.getFiltered({ idolIds: [idol.id] }).some(
+      (pIdol) => !HIDDEN_P_IDOL_IDS.has(pIdol.id),
+    ),
+  )
+  .map((idol) => ({
+    id: idol.id,
+    iconSrc: gkImg(idol).icon,
+    alt: idol.name,
+  }));
 
 function PlanIdolSelects({ plan, idolId, setPlan, setIdolId, includeAll }) {
   return (
