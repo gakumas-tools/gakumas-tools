@@ -43,6 +43,8 @@ const FIXTURES = [
   "produce-exam-misuzu-run2-midterm-passed",
   "produce-exam-misuzu-run2-final-to-turn9",
   "produce-exam-misuzu-run2-final-to-11658",
+  "produce-exam-impression-final-r10",
+  "produce-exam-impression-final-r10b",
 ];
 
 // Captures of a produce exam that has a ProduceExams row replay through
@@ -51,6 +53,8 @@ const FIXTURES = [
 const PRODUCE_EXAM_IDS = {
   "produce-exam-impression-final-r9": 1,
   "produce-exam-impression-final-r9b": 1,
+  "produce-exam-impression-final-r10": 1,
+  "produce-exam-impression-final-r10b": 1,
 };
 
 function getStage(capture) {
