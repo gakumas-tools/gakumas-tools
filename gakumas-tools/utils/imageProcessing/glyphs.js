@@ -173,7 +173,7 @@ function splitTouching(mask, w, g) {
   ];
 }
 
-function normalizeGlyph(mask, w, g) {
+export function normalizeGlyph(mask, w, g) {
   const gh = g.y1 - g.y0 + 1;
   const gw = g.x1 - g.x0 + 1;
   const scale = gh / GLYPH_HEIGHT;

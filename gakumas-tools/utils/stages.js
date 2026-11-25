@@ -26,6 +26,8 @@ export function formatStageName(stage, t) {
     // The name as the game shows it, from stages.csv, after the road's
     // name so it reads as an Idol Road stage wherever it's listed.
     stageName = t("idolRoadStageName", { name: stage.name });
+  } else if (stage.type == "produceExam") {
+    stageName = stage.name;
   }
   if (stage.preview) {
     stageName += "*";
@@ -67,6 +69,8 @@ export function formatStageShortName(stage, t) {
     stageName = `${stage.stage} - ${stage.round}`;
   } else if (stage.type == "idolRoad") {
     stageName = `${stage.stage}`;
+  } else if (stage.type == "produceExam") {
+    stageName = stage.name;
   }
   return stageName;
 }

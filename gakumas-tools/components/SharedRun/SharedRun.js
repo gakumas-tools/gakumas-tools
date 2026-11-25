@@ -2,12 +2,13 @@
 import { memo, useContext, useMemo, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
-import { FaPlay, FaRegFloppyDisk } from "react-icons/fa6";
+import { FaCodeCompare, FaPlay, FaRegFloppyDisk } from "react-icons/fa6";
 import { getStage } from "gakumas-loadout";
 import Button from "@/components/Button";
 import ConfirmModal from "@/components/ConfirmModal";
 import LoadoutSummary from "@/components/LoadoutHistory/LoadoutSummary";
 import MiniBoxPlot from "@/components/SimulationRuns/MiniBoxPlot";
+import { LoadoutActionsContext } from "@/contexts/LoadoutContext";
 import ModalContext from "@/contexts/ModalContext";
 import SimulationRunsContext from "@/contexts/SimulationRunsContext";
 import { Link, useRouter } from "@/i18n/routing";
@@ -32,6 +33,7 @@ function SharedRun({ run: shared }) {
   const { status } = useSession();
   const { setModal } = useContext(ModalContext);
   const { addToHistory, loadRun, saveRun } = useContext(SimulationRunsContext);
+  const { selectStage } = useContext(LoadoutActionsContext);
   const [saveState, setSaveState] = useState(null);
 
   const run = useMemo(() => normalizeSavedRun(shared), [shared]);
@@ -47,6 +49,37 @@ function SharedRun({ run: shared }) {
   // own runs, and into the simulator to run it again.
   function openInSimulator() {
     loadRun(addToHistory(run));
+    router.push("/simulator");
+  }
+
+  // Into the history only: your own cards stay in the simulator, moved to
+  // this run's stage so the two scores mean the same thing, and its Compare
+  // tab (chosen for you, filtered to this stage) shows your next result
+  // beside this run.
+  function compareWithMine() {
+    addToHistory(run);
+    selectStage(loadout.stageId, loadout.customStage);
+    try {
+      localStorage.setItem("simulatorResultTab", "compare");
+      localStorage.setItem(
+        "gakumas-tools.compare.stageFilter",
+        JSON.stringify(String(loadout.stageId)),
+      );
+      localStorage.setItem(
+        "gakumas-tools.compare.seasonFilter",
+        JSON.stringify("all"),
+      );
+      localStorage.setItem(
+        "gakumas-tools.compare.idolFilter",
+        JSON.stringify("all"),
+      );
+      localStorage.setItem(
+        "gakumas-tools.compare.subTab",
+        JSON.stringify("history"),
+      );
+    } catch {
+      // Storage blocked: the run is still in the history.
+    }
     router.push("/simulator");
   }
 
@@ -117,6 +150,9 @@ function SharedRun({ run: shared }) {
       <div className={styles.buttons}>
         <Button style="primary" onClick={openInSimulator}>
           <FaPlay /> {t("openInSimulator")}
+        </Button>
+        <Button onClick={compareWithMine}>
+          <FaCodeCompare /> {t("compareWithMine")}
         </Button>
         <Button
           onClick={save}

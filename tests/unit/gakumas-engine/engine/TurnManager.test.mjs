@@ -82,3 +82,29 @@ test("a stage short of turns or types gets exactly its turn counts", () => {
     }
   }
 });
+
+test("a stage with turnTypes uses that order and counts", async () => {
+  const { ProduceExams } = await import("gakumas-data");
+  const order = ["visual", "visual", "vocal", "visual", "dance", "vocal",
+    "visual", "dance", "vocal", "dance", "visual"];
+  const stage = new StageConfig({ ...ProduceExams.getById(1), turnTypes: order });
+  assert.equal(stage.turnCount, 11);
+  assert.deepEqual(stage.turnCounts, { vocal: 3, dance: 3, visual: 5 });
+  order[0] = "dance";
+  assert.equal(stage.turnTypes[0], "visual");
+
+  const engine = createEngine();
+  engine.config.stage = stage;
+  for (const seed of [1, 2, 3]) {
+    resetRand(seed);
+    const state = engine.getInitialState(true);
+    assert.deepEqual(state[S.turnTypes], stage.turnTypes);
+  }
+});
+
+test("turnTypes with an unknown type is refused", () => {
+  assert.throws(
+    () => new StageConfig({ type: "produceExam", turnTypes: ["visual", "sing"] }),
+    /Unknown turn type: sing/,
+  );
+});

@@ -1,0 +1,46 @@
+@use "../../styles/tokens";
+
+.turnOrder {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$space-1;
+
+  label {
+    font-size: 14px;
+    font-weight: tokens.$weight-bold;
+  }
+}
+
+.turns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: tokens.$space-1;
+}
+
+.turn {
+  min-width: 32px;
+  padding: tokens.$space-1;
+  border: 1px solid;
+  border-radius: tokens.$radius-xs;
+  font-size: 12px;
+  font-weight: tokens.$weight-bold;
+  cursor: pointer;
+}
+
+.vocal {
+  border-color: tokens.$vocal-edge;
+  background-color: tokens.$vocal-tint;
+  color: tokens.$vocal-ink;
+}
+
+.dance {
+  border-color: tokens.$dance-edge;
+  background-color: tokens.$dance-tint;
+  color: tokens.$dance-ink;
+}
+
+.visual {
+  border-color: tokens.$visual-edge;
+  background-color: tokens.$visual-tint;
+  color: tokens.$visual-ink;
+}

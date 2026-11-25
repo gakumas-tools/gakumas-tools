@@ -231,7 +231,7 @@ export async function refreshStageRuns(
   const shared = db.collection(SHARED_RUNS);
   const docs = await shared
     .find({ stageId, listed: true })
-    .sort({ "serverStats.mean": -1, createdAt: -1 })
+    .sort({ "serverStats.median": -1, createdAt: -1 })
     .limit(STAGE_RUNS_MAX)
     .toArray();
   const stale = docs
@@ -262,10 +262,10 @@ function withoutVersion(serverStats) {
 }
 
 /**
- * The runs listed on a stage's page, highest server-simulated mean first, as
+ * The runs listed on a stage's page, highest server-simulated median first, as
  * anyone may see them: never their owners. Their stats are serverStats, not
  * what the owner's browser sent.
- * Index: { stageId: 1, listed: 1, "serverStats.mean": -1 }.
+ * Index: { stageId: 1, listed: 1, "serverStats.median": -1 }.
  */
 export async function listStageRuns(db, stageId, limit = STAGE_RUNS_LIMIT) {
   if (!isListableStageId(stageId)) return [];
@@ -278,7 +278,7 @@ export async function listStageRuns(db, stageId, limit = STAGE_RUNS_LIMIT) {
       { stageId, listed: true },
       { projection },
     )
-    .sort({ "serverStats.mean": -1, createdAt: -1 })
+    .sort({ "serverStats.median": -1, createdAt: -1 })
     .limit(count)
     .toArray();
   return docs.map((doc) => ({

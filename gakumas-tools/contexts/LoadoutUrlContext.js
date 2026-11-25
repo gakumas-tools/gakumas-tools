@@ -1,8 +1,9 @@
 "use client";
 import { createContext, useCallback, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
-import { Stages } from "gakumas-data";
 import {
+  getStage,
+  knownStageId,
   loadoutFromSearchParams,
   loadoutsFromSearchParams,
   loadoutsToSearchParams,
@@ -25,11 +26,11 @@ export function LoadoutUrlContextProvider({ children }) {
   const updateUrl = useCallback((loadout, loadouts) => {
     const url = new URL(window.location);
 
-    const stage = Stages.getById(loadout.stageId);
-    if (!stage) {
+    if (loadout.stageId == "custom" || !knownStageId(loadout.stageId)) {
       window.history.replaceState(null, "", url.pathname);
       return;
     }
+    const stage = getStage(loadout.stageId, loadout.customStage);
 
     if (stage.type === "linkContest") {
       url.search = loadoutsToSearchParams(loadouts).toString();

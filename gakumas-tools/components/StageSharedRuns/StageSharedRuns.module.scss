@@ -128,13 +128,6 @@
 .listYours {
   align-self: flex-start;
   margin: 0 0 tokens.$space-1 calc(1.5em + 32px + 2 * #{tokens.$space-2});
-  padding: 0;
-  border: none;
-  background: none;
-  color: tokens.$link;
-  font-size: tokens.$text-xs;
-  font-weight: tokens.$weight-semibold;
-  cursor: pointer;
 }
 
 .yours {
@@ -150,9 +143,9 @@
   flex-wrap: wrap;
   align-items: center;
   gap: tokens.$space-2;
-  padding: tokens.$space-1 0;
+  padding: tokens.$space-1 0 tokens.$space-1 tokens.$space-2;
 
-  input {
+  .listName {
     flex: 1;
     min-width: 8em;
   }
