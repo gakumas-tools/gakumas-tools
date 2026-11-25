@@ -2,7 +2,10 @@ import { memo, useContext } from "react";
 import { useTranslations } from "next-intl";
 import EntityIcon from "@/components/EntityIcon";
 import EntityPickerModal from "@/components/EntityPickerModal";
-import LoadoutContext, { LoadoutActionsContext } from "@/contexts/LoadoutContext";
+import Select from "@/components/Select";
+import LoadoutContext, {
+  LoadoutActionsContext,
+} from "@/contexts/LoadoutContext";
 import ModalContext from "@/contexts/ModalContext";
 import { EntityTypes } from "@/utils/entities";
 import styles from "./StagePDrinks.module.scss";
@@ -23,35 +26,34 @@ function StagePDrinks() {
       <div className={styles.slots}>
         {loadout.pDrinkIds.map((pDrinkId, index) => (
           <div key={`${index}_${pDrinkId}`} className={styles.slot}>
-            <EntityIcon
-              type={EntityTypes.P_DRINK}
-              id={pDrinkId}
-              onClick={() =>
-                setModal(
-                  <EntityPickerModal
-                    type={EntityTypes.P_DRINK}
-                    onPick={(drink) => replacePDrinkId(index, drink.id)}
-                  />,
-                )
-              }
-              size="small"
-              showEmptyPlaceholder
-            />
-            {!!pDrinkId && (
-              <select
-                className={styles.turn}
-                value={loadout.pDrinkTurns?.[index] || 1}
-                onChange={(e) =>
-                  setPDrinkTurn(index, parseInt(e.target.value, 10))
+            <div className={styles.icon}>
+              <EntityIcon
+                type={EntityTypes.P_DRINK}
+                id={pDrinkId}
+                onClick={() =>
+                  setModal(
+                    <EntityPickerModal
+                      type={EntityTypes.P_DRINK}
+                      onPick={(drink) => replacePDrinkId(index, drink.id)}
+                    />,
+                  )
                 }
+                size="fill"
+                showEmptyPlaceholder
+              />
+            </div>
+            {!!pDrinkId && (
+              <Select
+                size="sm"
+                fill
+                value={loadout.pDrinkTurns?.[index] || 1}
+                options={turns.map((turn) => ({
+                  value: turn,
+                  label: t("turn", { turn }),
+                }))}
+                onChange={(turn) => setPDrinkTurn(index, turn)}
                 aria-label={t("turnLabel", { slot: index + 1 })}
-              >
-                {turns.map((turn) => (
-                  <option key={turn} value={turn}>
-                    {t("turn", { turn })}
-                  </option>
-                ))}
-              </select>
+              />
             )}
           </div>
         ))}

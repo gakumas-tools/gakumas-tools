@@ -36,6 +36,12 @@ export function SimulationRunsContextProvider({ children }) {
   const [savedLoading, setSavedLoading] = useState(true);
   const [savedError, setSavedError] = useState(false);
   const [savedWanted, setSavedWanted] = useState(false);
+  // Saved run id → the id of its shared copy, for the user's shared runs.
+  const [sharedIds, setSharedIds] = useState({});
+  // Shared run id → true, for those listed on their stage's page.
+  const [listedIds, setListedIds] = useState({});
+  // Shared run id → { count, more }: how many others have opened its link.
+  const [openers, setOpeners] = useState({});
   const savedRunsRef = useRef(savedRuns);
   savedRunsRef.current = savedRuns;
   const didInitRef = useRef(false);
@@ -65,6 +71,36 @@ export function SimulationRunsContextProvider({ children }) {
     saveHistoryToStorage(history);
   }, [history, loaded]);
 
+  // Which saved runs are shared only marks them; a failure here leaves
+  // the saved runs usable.
+  const fetchShared = useCallback(async () => {
+    try {
+      const res = await fetch("/api/share");
+      if (!res.ok) throw new Error(`GET /api/share failed with ${res.status}`);
+      const list = await res.json();
+      setSharedIds(
+        Object.fromEntries(list.map(({ id, loadoutId }) => [loadoutId, id])),
+      );
+      setListedIds(
+        Object.fromEntries(
+          list.filter(({ listed }) => listed).map(({ id }) => [id, true]),
+        ),
+      );
+      setOpeners(
+        Object.fromEntries(
+          list
+            .filter(({ openedBy }) => openedBy > 0)
+            .map(({ id, openedBy, openedByMore }) => [
+              id,
+              { count: openedBy, more: !!openedByMore },
+            ]),
+        ),
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  }, []);
+
   const fetchSaved = useCallback(async ({ quiet = false } = {}) => {
     if (!quiet) setSavedLoading(true);
     try {
@@ -75,13 +111,14 @@ export function SimulationRunsContextProvider({ children }) {
       const list = await res.json();
       setSavedRuns(list.map(normalizeSavedRun).filter(Boolean));
       setSavedError(false);
+      fetchShared();
     } catch (err) {
       console.error(err);
       setSavedError(true);
     } finally {
       setSavedLoading(false);
     }
-  }, []);
+  }, [fetchShared]);
 
   const mutateSaved = useCallback(
     async (method, body) => {
@@ -109,6 +146,8 @@ export function SimulationRunsContextProvider({ children }) {
       if (savedWanted) fetchSaved();
     } else if (status === "unauthenticated") {
       setSavedRuns([]);
+      setSharedIds({});
+      setListedIds({});
       setSavedLoading(false);
     }
   }, [status, savedWanted, fetchSaved]);
@@ -200,6 +239,94 @@ export function SimulationRunsContextProvider({ children }) {
     [mutateSavedOptimistically],
   );
 
+  const shareSaved = useCallback(async (loadoutId) => {
+    const res = await fetch("/api/share", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ loadoutId }),
+    });
+    if (!res.ok) throw new Error(`POST /api/share failed with ${res.status}`);
+    const { id } = await res.json();
+    setSharedIds((cur) => ({ ...cur, [loadoutId]: id }));
+    return id;
+  }, []);
+
+  const unshareSaved = useCallback(
+    async (loadoutId) => {
+      const id = sharedIds[loadoutId];
+      if (!id) return;
+      const res = await fetch("/api/share", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      // 404: already taken down.
+      if (!res.ok && res.status != 404) {
+        throw new Error(`DELETE /api/share failed with ${res.status}`);
+      }
+      setSharedIds(({ [loadoutId]: _, ...rest }) => rest);
+      setListedIds(({ [id]: _, ...rest }) => rest);
+    },
+    [sharedIds],
+  );
+
+  // Lists or unlists a shared saved run on its stage's page.
+  const setSavedListed = useCallback(
+    async (loadoutId, listed) => {
+      const id = sharedIds[loadoutId];
+      if (!id) return;
+      const res = await fetch("/api/share", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, listed }),
+      });
+      if (!res.ok) throw new Error(`PATCH /api/share failed with ${res.status}`);
+      setListedIds(({ [id]: _, ...rest }) =>
+        listed ? { ...rest, [id]: true } : rest,
+      );
+    },
+    [sharedIds],
+  );
+
+  // Saves a run, shares it and shows it on its stage's page, in one go, for
+  // the stage's panel of listed runs. The shared run's id.
+  const listRun = useCallback(
+    async (run, name) => {
+      const loadoutId = await saveRun(run, name);
+      const id = await shareSaved(loadoutId);
+      const res = await fetch("/api/share", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, listed: true }),
+      });
+      if (!res.ok) throw new Error(`PATCH /api/share failed with ${res.status}`);
+      setListedIds((cur) => ({ ...cur, [id]: true }));
+      return id;
+    },
+    [saveRun, shareSaved],
+  );
+
+  // Puts someone else's run (a shared one) at the top of the history, so it
+  // can be loaded and compared like the user's own.
+  const addToHistory = useCallback((run) => {
+    const entry = {
+      id: newRunId(),
+      createdAt: new Date().toISOString(),
+      name: run.name || null,
+      loadout: extractLoadoutFields(run.loadout),
+      linkLoadouts: run.linkLoadouts?.map(extractLoadoutFields) || null,
+      stats: run.stats || null,
+      derived: run.derived || deriveRunMeta(run.loadout),
+    };
+    setHistory((cur) =>
+      [entry, ...cur.filter((r) => !sameRunInputs(r, entry))].slice(
+        0,
+        MAX_HISTORY,
+      ),
+    );
+    return entry;
+  }, []);
+
   const loadRun = useCallback(
     (run) => {
       setLoadout(run.loadout);
@@ -222,6 +349,14 @@ export function SimulationRunsContextProvider({ children }) {
       saveRun,
       deleteSaved,
       renameSaved,
+      sharedIds,
+      listedIds,
+      openers,
+      shareSaved,
+      unshareSaved,
+      setSavedListed,
+      listRun,
+      addToHistory,
       loadRun,
       requestSaved,
       refetchSaved: fetchSaved,
@@ -237,6 +372,14 @@ export function SimulationRunsContextProvider({ children }) {
       saveRun,
       deleteSaved,
       renameSaved,
+      sharedIds,
+      listedIds,
+      openers,
+      shareSaved,
+      unshareSaved,
+      setSavedListed,
+      listRun,
+      addToHistory,
       loadRun,
       requestSaved,
       fetchSaved,

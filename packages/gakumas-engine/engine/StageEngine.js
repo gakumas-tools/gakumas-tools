@@ -130,12 +130,23 @@ export default class StageEngine {
   useCard(prevState, card) {
     const state = deepCopy(prevState);
     this.cardManager.useCard(state, card);
+    this.endIfPassed(state);
     return state;
   }
 
   endTurn(prevState) {
     const state = deepCopy(prevState);
     this.turnManager.endTurn(state);
+    this.endIfPassed(state);
     return state;
+  }
+
+  // A produce exam ends as soon as the score reaches its 合格条件 score,
+  // with the turns left unplayed.
+  endIfPassed(state) {
+    const { passScore } = this.getConfig(state).stage;
+    if (passScore && state[S.score] >= passScore) {
+      state[S.turnsRemaining] = 0;
+    }
   }
 }
