@@ -10,6 +10,11 @@ import { connect } from "@/utils/mongodb";
 import { withOpeners } from "@/utils/shareOpens";
 import { listStageRuns } from "@/utils/sharedRuns";
 import { getReferenceStage, stageTurns } from "@/utils/stageReference";
+import {
+  STAGE_GAP_DAYS,
+  refreshStageComparisons,
+  stageRehearsalGap,
+} from "@/utils/stageRehearsals";
 import { formatStageName } from "@/utils/stages";
 import CriteriaBar from "../CriteriaBar";
 import styles from "../page.module.scss";
@@ -31,6 +36,32 @@ async function topRuns(stageId) {
   } catch (e) {
     console.error(e);
     return [];
+  }
+}
+
+// The deployed commit stands for the engine version, as for listed runs.
+const ENGINE_VERSION = process.env.RENDER_GIT_COMMIT || null;
+
+// One comparison simulated per page view, in the background, one at a time.
+let refreshing = null;
+function refreshInBackground(db, stageId) {
+  if (refreshing) return;
+  refreshing = refreshStageComparisons(db, stageId, ENGINE_VERSION)
+    .catch((err) => console.error("refreshStageComparisons", err))
+    .finally(() => (refreshing = null));
+}
+
+// How the simulator compares with the rehearsals players shared for this
+// stage, summed up (never one comparison), or null.
+async function rehearsalGap(stageId) {
+  try {
+    const { db } = await connect();
+    const gap = await stageRehearsalGap(db, stageId);
+    refreshInBackground(db, stageId);
+    return gap;
+  } catch (e) {
+    console.error(e);
+    return null;
   }
 }
 
@@ -57,7 +88,10 @@ export default async function StagePage({ params }) {
   const tPage = await getTranslations({ locale, namespace: "EntityPage" });
   const { counts, total } = stageTurns(stage);
   const idolRoad = stage.type == "idolRoad";
-  const runs = await topRuns(Number(stage.id));
+  const [runs, gap] = await Promise.all([
+    topRuns(Number(stage.id)),
+    rehearsalGap(Number(stage.id)),
+  ]);
 
   return (
     <article className={styles.page}>
@@ -124,6 +158,17 @@ export default async function StagePage({ params }) {
         </tbody>
       </table>
       <CriteriaBar criteria={stage.criteria} />
+
+      {gap && (
+        <p className={styles.note}>
+          {t("rehearsalGap", {
+            count: gap.count,
+            sources: gap.sources,
+            days: STAGE_GAP_DAYS,
+            gap: `${(Math.round(gap.medianAbsGap * 1000) / 10).toFixed(1)}%`,
+          })}
+        </p>
+      )}
 
       <div className={styles.links}>
         <Button style="primary" href={`/simulator?stage=${stage.id}`}>

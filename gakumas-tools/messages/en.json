@@ -978,6 +978,7 @@
     "sharedRuns": "Shared runs for this stage",
     "metaDescription": "{name} ({type}): criteria Vo {vocal}% Da {dance}% Vi {visual}%, {turns} turns. Open it in the simulator or compare players' shared runs.",
     "topRuns": "Top shared runs",
-    "noRuns": "No one has shared a run for this stage yet. Open it in the simulator and share yours."
+    "noRuns": "No one has shared a run for this stage yet. Open it in the simulator and share yours.",
+    "rehearsalGap": "{count} rehearsals shared by {sources} players in the last {days} days. Median gap between the simulator's mean and the game's: {gap}."
   }
 }

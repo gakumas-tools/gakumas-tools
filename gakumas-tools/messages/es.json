@@ -960,6 +960,7 @@
     "sharedRuns": "Partidas compartidas de esta etapa",
     "metaDescription": "{name} ({type}): criterios Vo {vocal}% Da {dance}% Vi {visual}%, {turns} turnos. Ábrela en el simulador o compara las partidas compartidas de otros jugadores.",
     "topRuns": "Mejores partidas compartidas",
-    "noRuns": "Nadie ha compartido aún una partida de esta etapa. Ábrela en el simulador y comparte la tuya."
+    "noRuns": "Nadie ha compartido aún una partida de esta etapa. Ábrela en el simulador y comparte la tuya.",
+    "rehearsalGap": "{count} ensayos compartidos por {sources} jugadores en los últimos {days} días. Diferencia mediana entre la media del simulador y la del juego: {gap}."
   }
 }
