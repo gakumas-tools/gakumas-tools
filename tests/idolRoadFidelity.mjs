@@ -8,7 +8,8 @@ import { hasIngameFixtures, loadIngameFixture } from "./ingameFixtures.mjs";
 // simulator builds it: the stages.csv row, resolved for the P-idol by
 // IdolRoad (its idol's criteria and turn counts, its おすすめ効果's 応援/
 // トラブル). The game's turn order and the hands it dealt are supplied, so
-// only the stage data and the engine decide the numbers.
+// only the stage data and the engine decide the numbers. A turn flagged
+// engineDraws is the exception: the engine deals it from its own deck.
 const FIXTURES = [
   "idol-road-saki-s1",
   "idol-road-saki-fmw-s1",
@@ -189,6 +190,20 @@ function supplyHand(state, cardIds, turn, stacked) {
   return hand;
 }
 
+// A turn flagged engineDraws is dealt by the engine itself, from the deck as
+// the earlier turns left it: nothing is stacked for it, and the hand the
+// engine dealt must be the game's, as a multiset of card ids.
+function checkEngineDraw(state, cardIds, turn) {
+  const dealt = state[S.handCards].map((c) => state[S.cardMap][c].id);
+  const byId = (a, b) => a - b;
+  assert.deepEqual(
+    [...dealt].sort(byId),
+    [...cardIds].sort(byId),
+    `turn ${turn}: engine draw`,
+  );
+  return state[S.handCards];
+}
+
 function replay(capture, play) {
   const engine = createEngine(capture);
   let state = engine.startStage(engine.getInitialState());
@@ -201,7 +216,9 @@ function replay(capture, play) {
   for (const [i, action] of play.actions.entries()) {
     const turn = i + 1;
     const next = play.actions[i + 1];
-    const hand = supplyHand(state, action.handCardIds, turn, stacked);
+    const hand = action.engineDraws
+      ? checkEngineDraw(state, action.handCardIds, turn)
+      : supplyHand(state, action.handCardIds, turn, stacked);
     stacked = undefined;
     // Cards a play draws mid-turn (ティーパーティ's スキルカードを引く), as
     // the game showed them: put copies on top of the deck so the engine
@@ -230,7 +247,7 @@ function replay(capture, play) {
         (c) => state[S.cardMap][c].id == cardId,
       );
       assert.ok(engine.isCardUsable(state, card), `turn ${turn}: usable`);
-      if (next && !action.skip && j == plays.length - 1) {
+      if (next && !next.engineDraws && !action.skip && j == plays.length - 1) {
         stacked = stackDeck(state, next.handCardIds, card);
       }
       state = engine.useCard(state, card);
@@ -239,7 +256,7 @@ function replay(capture, play) {
       }
     }
     if (action.skip) {
-      if (next) stacked = stackDeck(state, next.handCardIds);
+      if (next && !next.engineDraws) stacked = stackDeck(state, next.handCardIds);
       state = engine.endTurn(state);
     }
     assert.equal(state[S.turnsElapsed], turn);
