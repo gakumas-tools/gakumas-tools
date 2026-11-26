@@ -24,8 +24,9 @@ export default function ResultShare({
   listRun,
 }) {
   const t = useTranslations("ShareModal");
+  const tRun = useTranslations("SharedRun");
   const { closeModal } = useContext(ModalContext);
-  const { status } = useSession();
+  const { data: session, status } = useSession();
   const [name, setName] = useState("");
   const [list, setList] = useState(listable);
   const [step, setStep] = useState("form");
@@ -108,6 +109,11 @@ export default function ResultShare({
             label={t("listOnStage")}
             onChange={(v) => !busy && setList(v)}
           />
+        )}
+        {session?.user?.name && (
+          <p className={styles.shownAs}>
+            {tRun("shownAs", { name: session.user.name })}
+          </p>
         )}
         {step == "error" && <p className={styles.error}>{t("failed")}</p>}
         <Button style="primary" fill disabled={busy} onClick={share}>

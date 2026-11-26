@@ -108,6 +108,11 @@ function SharedRun({ run: shared }) {
       <div className={styles.header}>
         <h2 className={styles.name}>{run.name || t("untitled")}</h2>
         <div className={styles.stage}>{formatStageName(stage, tStage)}</div>
+        {run.sharedBy && (
+          <div className={styles.stage}>
+            {t("sharedBy", { name: run.sharedBy })}
+          </div>
+        )}
       </div>
 
       {stats ? (

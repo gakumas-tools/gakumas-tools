@@ -681,7 +681,9 @@
     "metaDescriptionNoScores": "共有されたシミュレーターの編成。",
     "moreForStage": "このステージの他の共有ラン",
     "openedBy": "{count}人が開きました",
-    "openedByMore": "{count}人以上が開きました"
+    "openedByMore": "{count}人以上が開きました",
+    "sharedBy": "{name}さん",
+    "shownAs": "{name}さんとして表示されます"
   },
   "SharedRunsBrowse": {
     "title": "みんなのラン",

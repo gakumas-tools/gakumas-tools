@@ -652,7 +652,9 @@
     "metaDescriptionNoScores": "Una formación del simulador compartida.",
     "moreForStage": "Más simulaciones compartidas de esta etapa",
     "openedBy": "{count, plural, one {Abierta por # jugador} other {Abierta por # jugadores}}",
-    "openedByMore": "Abierta por {count} o más jugadores"
+    "openedByMore": "Abierta por {count} o más jugadores",
+    "sharedBy": "de {name}",
+    "shownAs": "Se mostrará como {name}"
   },
   "SharedRunsBrowse": {
     "title": "Simulaciones compartidas",

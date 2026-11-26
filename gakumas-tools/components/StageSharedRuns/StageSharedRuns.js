@@ -38,7 +38,7 @@ function StageSharedRuns({ stageId, yourRun }) {
   const [open, setOpen] = useState(false);
   const [byStage, setByStage] = useState({});
   const [failed, setFailed] = useState(false);
-  const { status } = useSession();
+  const { data: session, status } = useSession();
   const { setModal } = useContext(ModalContext);
   const { listRun } = useContext(SimulationRunsContext);
   // { runId, step: "naming" | "busy" | "done" | "error", name }
@@ -161,6 +161,11 @@ function StageSharedRuns({ stageId, yourRun }) {
             }}
             autoFocus
           />
+          {session?.user?.name && (
+            <p className={styles.shownAs}>
+              {tRun("shownAs", { name: session.user.name })}
+            </p>
+          )}
           <Button
             style="blue"
             size="sm"
@@ -230,6 +235,7 @@ function StageSharedRuns({ stageId, yourRun }) {
                   </span>
                   <span className={styles.meta}>
                     {[
+                      run.sharedBy && tRun("sharedBy", { name: run.sharedBy }),
                       idol,
                       plan && plan != "free" && tDex(`plans.${plan}`),
                       openedByText(tRun, run),

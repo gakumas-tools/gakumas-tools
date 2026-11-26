@@ -64,6 +64,11 @@ function SharedRunsList({ runs: listed, stageId = null, ranked = false }) {
           <Link href={`/s/${run.id}`} className={styles.runLink}>
             {ranked && <span className={styles.rank}>{i + 1}</span>}
             <span className={styles.name}>{run.name || tRun("untitled")}</span>
+            {run.sharedBy && (
+              <span className={styles.sharedBy}>
+                {tRun("sharedBy", { name: run.sharedBy })}
+              </span>
+            )}
             {stageId == null && (
               <span className={styles.stage}>
                 {stageName(run.loadout.stageId)}
