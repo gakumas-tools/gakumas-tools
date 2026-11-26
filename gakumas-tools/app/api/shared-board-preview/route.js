@@ -1,4 +1,6 @@
 import { getTranslations } from "next-intl/server";
+import { SkillCards } from "gakumas-data";
+import gkImg from "gakumas-images";
 import { getStage } from "gakumas-loadout";
 import BoardCard from "@/components/OgImage/BoardCard";
 import { routing } from "@/i18n/routing";
@@ -11,15 +13,19 @@ import {
   renderImage,
 } from "@/utils/og";
 import { loadTextFonts } from "@/utils/ogTextFont";
+import { createPngCache, fetchAsPng } from "@/utils/pngCache";
 import {
   listStageRuns,
   listedRunStages,
   parseStageId,
 } from "@/utils/sharedRuns";
-import { computeRange } from "@/utils/simulationRun";
+import { computeRange, deriveRunMeta } from "@/utils/simulationRun";
 import { formatStageNameText } from "@/utils/stages";
 
 const SHOWN = 5;
+const ICON_SIZE = 48;
+
+const cachedPng = createPngCache(200);
 
 // A board changes as players list runs, so it's kept an hour, not a day.
 const BOARD_CACHE_CONTROL = "public, max-age=3600, s-maxage=3600";
@@ -28,6 +34,22 @@ const hasScores = ({ stats }) =>
   ["min", "q1", "median", "q3", "max"].every((k) =>
     Number.isFinite(stats?.[k]),
   );
+
+// A run's signature card icon as the board shows it, as a PNG data URL;
+// null when the run has none, or false when it couldn't be fetched.
+async function cardIcon(run, origin) {
+  const id = deriveRunMeta(run).signatureCardId;
+  const card = id ? SkillCards.getById(id) : null;
+  const icon = card && gkImg(card).icon;
+  if (!icon) return null;
+  // A CDN URL, or a bundled image ({ src }) served by this site.
+  const src = typeof icon == "string" ? icon : `${origin}${icon.src}`;
+  return (
+    (await cachedPng(`${src}@${ICON_SIZE}`, () =>
+      fetchAsPng(src, ICON_SIZE),
+    )) || false
+  );
+}
 
 // The link card of a stage's board of shared runs (/shared?stage=<id>): its
 // top runs by the server's median, as the board ranks them on Top score.
@@ -55,9 +77,13 @@ export async function GET(request) {
       (namespace) => getTranslations({ locale, namespace }),
     ),
   );
-  const runs = shown.map((run) => ({
+  const icons = await Promise.all(
+    shown.map((run) => cardIcon(run, url.origin)),
+  );
+  const runs = shown.map((run, i) => ({
     name: run.name || tRun("untitled"),
     by: run.sharedBy ? tRun("sharedBy", { name: run.sharedBy }) : null,
+    icon: icons[i] || null,
     stats: run.stats,
   }));
   const title = tTools("sharedRuns.title");
@@ -96,7 +122,12 @@ export async function GET(request) {
     {
       ...OG_SIZE,
       fonts: [...fonts, ...textFonts],
-      headers: { "Cache-Control": BOARD_CACHE_CONTROL },
+      headers: {
+        // An icon that didn't load is tried again in a minute.
+        "Cache-Control": icons.includes(false)
+          ? PREVIEW_RETRY_CACHE_CONTROL
+          : BOARD_CACHE_CONTROL,
+      },
     },
   );
 }

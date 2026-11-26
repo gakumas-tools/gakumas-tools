@@ -3,7 +3,8 @@ import { COLORS, FONT_FAMILY, SITE_HOST } from "./theme";
 import { TEXT_FONT_FAMILY } from "@/utils/ogTextFont";
 
 const PAD = 56;
-const NAME_WIDTH = 360;
+const ICON_SIZE = 48;
+const NAME_WIDTH = 294;
 // The median column fits a six-digit score (263,076) at 28px; the plot
 // takes what the row has left.
 const MEDIAN_WIDTH = 140;
@@ -82,6 +83,25 @@ function RunRow({ rank, run, axis }) {
       >
         {rank}
       </div>
+      {run.icon ? (
+        <img
+          src={run.icon}
+          width={ICON_SIZE}
+          height={ICON_SIZE}
+          style={{ borderRadius: 8, flexShrink: 0 }}
+        />
+      ) : (
+        <div
+          style={{
+            display: "flex",
+            width: ICON_SIZE,
+            height: ICON_SIZE,
+            flexShrink: 0,
+            borderRadius: 8,
+            backgroundColor: COLORS.border,
+          }}
+        />
+      )}
       <div
         style={{
           display: "flex",
@@ -196,7 +216,8 @@ export default function BoardCard({ title, stageName, runs, axis, more }) {
               fontSize: 22,
               fontWeight: 600,
               color: COLORS.muted,
-              padding: "4px 0 8px 52px",
+              // Under the names: past the rank, the icon and their gaps.
+              padding: `4px 0 8px ${34 + ICON_SIZE + 2 * 18}px`,
             }}
           >
             {more}
