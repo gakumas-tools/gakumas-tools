@@ -237,6 +237,7 @@ export const ALL_FIELDS = [
   "paidCardUses",
   "unfreshPhase",
   "buffCostConsumed",
+  "pDrinks",
 
   // Delta
   "goodImpressionTurnsDelta",

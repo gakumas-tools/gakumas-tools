@@ -51,3 +51,25 @@ test("a selected use picks a card whose conditions pass", () => {
     strategy.pickCardsToHold(state, cards),
   );
 });
+
+// P-drinks are moves: the strategy drinks one when doing so plays better
+// than not, at any point in a turn, and never drinks one twice.
+test("the heuristic drinks a held P-drink when it helps, and the play goes on", () => {
+  const engine = createEngine({
+    params: [1000, 1000, 1000, 50],
+    skillCardIds: [1, 3, 5, 13, 43, 45],
+    pDrinkIds: [1], // 初星水: score+=10
+  });
+  const strategy = new STRATEGIES.HeuristicStrategy(engine);
+  engine.strategy = strategy;
+  let state = engine.startStage(engine.getInitialState());
+  let drunkAt = null;
+  while (state[S.turnsRemaining] > 0) {
+    state = strategy.evaluate(state).state;
+    if (drunkAt == null && !engine.getHeldPDrinks(state).length)
+      drunkAt = state[S.turnsElapsed];
+  }
+  assert.notEqual(drunkAt, null, "初星水 was drunk");
+  assert.deepEqual(engine.getHeldPDrinks(state), []);
+});
+
