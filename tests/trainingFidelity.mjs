@@ -71,6 +71,7 @@ const FIXTURES = [
   "produce-exam-impression-final-r24c",
   "produce-exam-impression-final-r25b",
   "produce-exam-impression-final-r25c",
+  "produce-exam-misuzu-drink-midturn",
 ];
 
 // Captures of a produce exam that has a ProduceExams row replay through
@@ -158,6 +159,8 @@ function createEngine(capture, play) {
     params: [0, 0, 0, capture.maxStamina ?? capture.initial.stamina],
     startStamina: capture.initial.stamina,
     pItemIds: capture.pItemIds ?? [],
+    // engineDrinks: the drinks are held and drunk through the engine.
+    pDrinkIds: capture.engineDrinks ? capture.pDrinkIds : undefined,
     skillCardIdGroups: [cardIds],
   });
   const engine = new StageEngine({
@@ -228,6 +231,18 @@ function drinkAsCaptured(engine, state, drink) {
   }
 }
 
+// engineDrinks: each drink is drunk through the engine, from those held,
+// at the point the game showed (before the action it's listed on).
+function drinkThroughEngine(engine, state, drinks) {
+  for (const drink of drinks) {
+    assert.equal(PDrinks.getById(drink.id).name, drink.name);
+    const index = engine.getHeldPDrinks(state).indexOf(drink.id);
+    assert.ok(index >= 0, `P-drink ${drink.name} not held`);
+    state = engine.usePDrink(state, index);
+  }
+  return state;
+}
+
 function holdAsCaptured(hold, onHold) {
   return {
     pickCardsToHold(state, candidates, count, optional) {
@@ -268,8 +283,12 @@ function replay(capture, play) {
   }
 
   let heldCard;
-  for (const [i, action] of play.actions.entries()) {
+  for (let [i, action] of play.actions.entries()) {
     const turn = i + 1;
+    if (capture.engineDrinks && action.drinksBefore) {
+      state = drinkThroughEngine(engine, state, action.drinksBefore);
+      action = { ...action, drinksBefore: undefined };
+    }
     if (action.skip) {
       // Drinks taken on a turn whose card play was skipped.
       for (const drink of action.drinksBefore ?? []) {
