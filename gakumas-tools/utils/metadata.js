@@ -110,6 +110,25 @@ export async function generateMetadataForSharedRun(run, locale) {
   });
 }
 
+// One stage's board of listed runs (/shared?stage=<id>): where the link is
+// posted, its card names the stage and how many runs players shared there.
+export async function generateMetadataForSharedStage(stage, count, locale) {
+  const t_meta = await getTranslations({ locale, namespace: "metadata" });
+  const t_tools = await getTranslations({ locale, namespace: "tools" });
+  const t_stage = await getTranslations({ locale, namespace: "StageSummary" });
+  const t = await getTranslations({ locale, namespace: "SharedRunsBrowse" });
+  const name = formatStageNameText(stage, t_stage);
+  const description = t("metaStage", { count, name });
+  return buildMetadata({
+    locale,
+    path: `/shared?stage=${stage.id}`,
+    title: `${name} | ${t_tools("sharedRuns.title")} - ${t_meta("title")}`,
+    description,
+    ogDescription: description,
+    twitterCard: "summary_large_image",
+  });
+}
+
 function buildMetadata({
   locale,
   path,
