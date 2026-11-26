@@ -1,5 +1,6 @@
 import { getMessages, getTranslations } from "next-intl/server";
 import { Descriptions } from "gakumas-data";
+import { getStage } from "gakumas-loadout";
 import { SITE_URL, alternateLanguages, localePath } from "@/utils/localeUrls";
 import { stagePath, stageTurns } from "@/utils/stageReference";
 import { formatStageNameText } from "@/utils/stages";
@@ -84,13 +85,21 @@ export async function generateMetadataForStage(stage, locale) {
 export async function generateMetadataForSharedRun(run, locale) {
   const t_meta = await getTranslations({ locale, namespace: "metadata" });
   const t = await getTranslations({ locale, namespace: "SharedRun" });
-  const title = `${run.name || t("untitled")} - ${t_meta("title")}`;
-  const description = Number.isFinite(run.stats?.mean)
+  const t_stage = await getTranslations({ locale, namespace: "StageSummary" });
+  // Where the link is posted, its card says what was run, where, and by whom.
+  const stage = run.stageId != null && getStage(run.stageId, run.customStage);
+  const stageName = stage ? formatStageNameText(stage, t_stage) : null;
+  const what = [run.name || t("untitled"), stageName].filter(Boolean);
+  const title = `${what.join(" | ")} - ${t_meta("title")}`;
+  const scores = Number.isFinite(run.stats?.mean)
     ? t("metaDescription", {
         mean: Math.round(run.stats.mean).toLocaleString(locale),
         median: Math.round(run.stats.median).toLocaleString(locale),
       })
     : t("metaDescriptionNoScores");
+  const description = run.sharedBy
+    ? `${t("sharedBy", { name: run.sharedBy })} · ${scores}`
+    : scores;
   return buildMetadata({
     locale,
     path: `/s/${run.id}`,
