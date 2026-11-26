@@ -97,7 +97,7 @@ export function LoadoutContextProvider({ children }) {
       params,
       pItemIds,
       pDrinkIds: produceExamIdOf(stageId) ? pDrinkIds : [0, 0, 0],
-      pDrinkTurns: produceExamIdOf(stageId) ? pDrinkTurns : [1, 1, 1],
+      pDrinkTurns: produceExamIdOf(stageId) ? pDrinkTurns : [0, 0, 0],
       startStamina: produceExamIdOf(stageId) ? startStamina : null,
       skillCardIdGroups,
       customizationGroups,
@@ -206,7 +206,7 @@ export function LoadoutContextProvider({ children }) {
     setParams(getDefaultParams(stageRef.current));
     setPItemIds([0, 0, 0, 0]);
     setPDrinkIds([0, 0, 0]);
-    setPDrinkTurns([1, 1, 1]);
+    setPDrinkTurns([0, 0, 0]);
     setStartStamina(null);
     setSkillCardIdGroups([
       [0, 0, 0, 0, 0, 0],

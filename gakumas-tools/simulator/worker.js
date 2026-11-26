@@ -1,4 +1,4 @@
-import { createSimulation } from ".";
+import { createSimulation, scorePDrinkOptions } from ".";
 import { WORKER_MESSAGE } from "./constants";
 
 const simulations = new Map();
@@ -6,11 +6,20 @@ let queue = Promise.resolve();
 
 async function handle({ type, runId, ...data }) {
   if (type === WORKER_MESSAGE.START) {
-    const { idolStageConfig, linkConfigs, strategyName } = data;
+    const { idolStageConfig, linkConfigs, strategyName, pDrinkTurns } = data;
     simulations.set(
       runId,
-      createSimulation(idolStageConfig, linkConfigs, strategyName)
+      createSimulation(idolStageConfig, linkConfigs, strategyName, pDrinkTurns)
     );
+  } else if (type === WORKER_MESSAGE.SCORE_P_DRINKS) {
+    const { idolStageConfig, linkConfigs, strategyName, ...share } = data;
+    const scores = await scorePDrinkOptions(
+      idolStageConfig,
+      linkConfigs,
+      strategyName,
+      share
+    );
+    postMessage({ type: WORKER_MESSAGE.P_DRINK_SCORES, runId, scores });
   } else if (type === WORKER_MESSAGE.CANCEL) {
     simulations.delete(runId);
   } else if (!simulations.has(runId)) {

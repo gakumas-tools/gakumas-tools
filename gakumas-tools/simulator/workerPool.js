@@ -1,7 +1,9 @@
+import { planPDrinkTurns, StageEngine } from "gakumas-engine";
 import {
   CHUNKS_PER_WORKER,
   MAX_CHUNK_SIZE,
   MAX_WORKERS,
+  P_DRINK_PLAN_RUNS,
   WORKER_MESSAGE,
 } from "./constants";
 
@@ -70,8 +72,96 @@ function getWorkerPool() {
   return workers;
 }
 
+// Plans the turn of each P-drink left on auto (planPDrinkTurns), with each
+// drink's options split across the workers so planning takes about as long
+// as one option. Returns the planned turns, one per drink the engine holds
+// (its idol.pDrinkIds), or null when no drink is on auto.
+export async function planPDrinksOnWorkers(
+  { idolStageConfig, linkConfigs, strategyName },
+  signal
+) {
+  const { idol } = idolStageConfig;
+  if (!idol.pDrinkIds?.some((_, slot) => !idol.pDrinkTurns?.[slot])) {
+    return null;
+  }
+  const engine = new StageEngine(idolStageConfig, linkConfigs);
+  return planPDrinkTurns(engine, null, {
+    scoreOptions: (options, seed) =>
+      scoreOnWorkers(
+        { idolStageConfig, linkConfigs, strategyName, options, seed },
+        signal
+      ),
+  });
+}
+
+function scoreOnWorkers(
+  { idolStageConfig, linkConfigs, strategyName, options, seed },
+  signal
+) {
+  if (signal?.aborted) return Promise.reject(signal.reason);
+  const allWorkers = getWorkerPool();
+  const shareSize = Math.ceil(options.length / allWorkers.length);
+  const shares = [];
+  for (let i = 0; i < options.length; i += shareSize) {
+    shares.push(options.slice(i, i + shareSize));
+  }
+  const pool = allWorkers.slice(0, shares.length);
+  const runId = nextRunId++;
+
+  const listeners = new AbortController();
+  signal?.addEventListener(
+    "abort",
+    () => {
+      terminatePool(signal.reason);
+      schedulePrewarm();
+    },
+    { once: true, signal: listeners.signal }
+  );
+
+  let rejectRun;
+  return new Promise((resolve, reject) => {
+    rejectRun = reject;
+    pendingRejects.add(reject);
+    const scores = new Array(shares.length);
+    let done = 0;
+    pool.forEach((worker, i) => {
+      worker.addEventListener(
+        "message",
+        ({ data }) => {
+          if (data.runId !== runId) return;
+          if (data.type === WORKER_MESSAGE.P_DRINK_SCORES) {
+            scores[i] = data.scores;
+            if (++done === pool.length) resolve(scores.flat());
+          } else if (data.type === WORKER_MESSAGE.ERROR) {
+            reject(new Error(data.message));
+          }
+        },
+        { signal: listeners.signal }
+      );
+      worker.addEventListener(
+        "error",
+        (e) => reject(e.error || new Error(e.message || "Worker failed")),
+        { signal: listeners.signal }
+      );
+      worker.postMessage({
+        type: WORKER_MESSAGE.SCORE_P_DRINKS,
+        runId,
+        idolStageConfig,
+        linkConfigs,
+        strategyName,
+        options: shares[i],
+        seed,
+        runsPerOption: P_DRINK_PLAN_RUNS,
+      });
+    });
+  }).finally(() => {
+    listeners.abort();
+    pendingRejects.delete(rejectRun);
+  });
+}
+
 export function runOnWorkers(
-  { idolStageConfig, linkConfigs, strategyName, numRuns },
+  { idolStageConfig, linkConfigs, strategyName, numRuns, pDrinkTurns },
   onProgress,
   signal
 ) {
@@ -149,6 +239,7 @@ export function runOnWorkers(
         idolStageConfig,
         linkConfigs,
         strategyName,
+        pDrinkTurns,
       });
       sendChunk(worker);
     }

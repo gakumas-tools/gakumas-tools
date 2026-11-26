@@ -491,9 +491,12 @@
   },
   "StagePDrinks": {
     "label": "P-drinks",
+    "auto": "Auto",
     "turn": "Turn {turn}",
     "turnLabel": "Turn to drink P-drink {slot}",
-    "note": "Drunk at the start of the turn chosen under each drink, before its first card. In the game you can drink them at any time."
+    "planned": "Planned: turn {turn}",
+    "plannedAnyTurn": "Planned: when it scores best",
+    "note": "Auto: before its runs, the simulator plays each turn for the drink and keeps the one that scores best. A chosen turn: drunk in that turn, before or after a card. In the game you can drink them at any time."
   },
   "StageStartStamina": {
     "label": "体力 at the start of the exam",
@@ -829,6 +832,7 @@
     "unplayable": "Unplayable",
     "linkPhaseChange": "Idol changed",
     "skip": "Skip",
+    "drink": "Drink {name}",
     "selectCardsToHold": "Select {num} {num, plural, =1 {card} other {cards}} to hold",
     "selectCardsToMoveToHand": "Select {num} {num, plural, =1 {card} other {cards}} to move to hand",
     "selectCardsToMoveToTopOfDeck": "Select {num} {num, plural, =1 {card} other {cards}} to move to the top of the deck",

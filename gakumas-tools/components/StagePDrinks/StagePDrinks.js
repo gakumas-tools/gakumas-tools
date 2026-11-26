@@ -11,8 +11,9 @@ import { EntityTypes } from "@/utils/entities";
 import styles from "./StagePDrinks.module.scss";
 
 // The P-drinks held going into a produce exam, each with the turn it is
-// drunk at the start of (in the game they can be drunk at any time).
-function StagePDrinks() {
+// drunk in: auto (0) leaves the turn to the simulator, which plans it before
+// its runs (plannedTurns, under the loadout's slots, once it has).
+function StagePDrinks({ plannedTurns }) {
   const t = useTranslations("StagePDrinks");
   const { loadout, stage } = useContext(LoadoutContext);
   const { replacePDrinkId, setPDrinkTurn } = useContext(LoadoutActionsContext);
@@ -46,15 +47,27 @@ function StagePDrinks() {
               <Select
                 size="sm"
                 fill
-                value={loadout.pDrinkTurns?.[index] || 1}
-                options={turns.map((turn) => ({
-                  value: turn,
-                  label: t("turn", { turn }),
-                }))}
+                value={loadout.pDrinkTurns?.[index] || 0}
+                options={[
+                  { value: 0, label: t("auto") },
+                  ...turns.map((turn) => ({
+                    value: turn,
+                    label: t("turn", { turn }),
+                  })),
+                ]}
                 onChange={(turn) => setPDrinkTurn(index, turn)}
                 aria-label={t("turnLabel", { slot: index + 1 })}
               />
             )}
+            {!!pDrinkId &&
+              !loadout.pDrinkTurns?.[index] &&
+              plannedTurns?.[index] !== undefined && (
+                <span className={styles.planned}>
+                  {plannedTurns[index]
+                    ? t("planned", { turn: plannedTurns[index] })
+                    : t("plannedAnyTurn")}
+                </span>
+              )}
           </div>
         ))}
       </div>

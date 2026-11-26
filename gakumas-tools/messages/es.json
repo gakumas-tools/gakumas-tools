@@ -807,6 +807,7 @@
     "unplayable": "No jugable",
     "linkPhaseChange": "Cambio de ídolo",
     "skip": "Omitir",
+    "drink": "Beber {name}",
     "selectCardsToHold": "Selecciona {num} {num, plural, =1 {carta} other {cartas}} para reservar",
     "selectCardsToMoveToHand": "Selecciona {num} {num, plural, =1 {carta} other {cartas}} para mover a la mano",
     "selectCardsToMoveToTopOfDeck": "Selecciona {num} {num, plural, =1 {carta} other {cartas}} para mover a la parte superior del mazo",

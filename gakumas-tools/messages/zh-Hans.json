@@ -491,9 +491,12 @@
   },
   "StagePDrinks": {
     "label": "P 饮料",
+    "auto": "自动",
     "turn": "第{turn}回合",
     "turnLabel": "饮用 P 饮料 {slot} 的回合",
-    "note": "在所选回合开始时、打出第一张卡之前饮用。游戏中可以随时饮用。"
+    "planned": "计划: 第{turn}回合",
+    "plannedAnyTurn": "计划: 得分最高的时机",
+    "note": "自动：模拟前逐回合试饮，选得分最高的回合。选定回合则在该回合中（出卡前或后）饮用。游戏中可以随时饮用。"
   },
   "StageStartStamina": {
     "label": "考试开始时的体力",
@@ -829,6 +832,7 @@
     "unplayable": "无法使用",
     "linkPhaseChange": "偶像更换",
     "skip": "跳过",
+    "drink": "饮用{name}",
     "selectCardsToHold": "选择 {num} 张卡片",
     "selectCardsToMoveToHand": "选择 {num} 张卡片",
     "selectCardsToMoveToTopOfDeck": "选择 {num} 张移到牌库顶端的卡片",

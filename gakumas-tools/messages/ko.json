@@ -491,9 +491,12 @@
   },
   "StagePDrinks": {
     "label": "P드링크",
+    "auto": "자동",
     "turn": "{turn}턴",
     "turnLabel": "P드링크 {slot}을(를) 마실 턴",
-    "note": "고른 턴의 시작 시, 첫 카드 전에 마십니다. 게임에서는 언제든 마실 수 있습니다."
+    "planned": "예정: {turn}턴",
+    "plannedAnyTurn": "예정: 점수가 가장 오를 때",
+    "note": "자동: 시뮬레이션 전에 턴마다 마셔 보고 점수가 가장 높은 턴으로 정합니다. 턴을 고르면 그 턴 중(카드 전이나 후)에 마십니다. 게임에서는 언제든 마실 수 있습니다."
   },
   "StageStartStamina": {
     "label": "시험 시작 시 체력",
@@ -829,6 +832,7 @@
     "unplayable": "사용 불가",
     "linkPhaseChange": "아이돌 교대",
     "skip": "스킵",
+    "drink": "{name} 마시기",
     "selectCardsToHold": "{num}장의 카드 선택",
     "selectCardsToMoveToHand": "{num}장의 카드 선택",
     "selectCardsToMoveToTopOfDeck": "덱 맨 위로 이동할 카드 {num}장 선택",

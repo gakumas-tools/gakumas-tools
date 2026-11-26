@@ -499,9 +499,12 @@
   },
   "StagePDrinks": {
     "label": "Pドリンク",
+    "auto": "自動",
     "turn": "{turn}ターン目",
     "turnLabel": "Pドリンク{slot}を飲むターン",
-    "note": "選んだターンの開始時、最初のカードの前に飲みます。ゲームではいつでも飲めます。"
+    "planned": "予定: {turn}ターン目",
+    "plannedAnyTurn": "予定: スコアが最も伸びる時",
+    "note": "自動: シミュレーション前に各ターンで飲む場合を試し、スコアが最も高いターンにします。ターンを選ぶと、そのターン中（カードの前か後）に飲みます。ゲームではいつでも飲めます。"
   },
   "StageStartStamina": {
     "label": "試験開始時の体力",
@@ -837,6 +840,7 @@
     "unplayable": "使用不可",
     "linkPhaseChange": "アイドル交代",
     "skip": "スキップ",
+    "drink": "{name}を飲む",
     "selectCardsToHold": "{num}枚のカードを選択",
     "selectCardsToMoveToHand": "{num}枚のカードを選択",
     "selectCardsToMoveToTopOfDeck": "山札の一番上に移動するカードを{num}枚選択",
