@@ -5,7 +5,6 @@ All notable changes to the contest simulator will be documented in this file.
 
 
 
-- Exam P-drinks: auto turns (planned before the runs), and drinks in manual play
 
 
 
@@ -21,6 +20,7 @@ All notable changes to the contest simulator will be documented in this file.
 
 - Preview unbalance support card 勝たしてもらうで！
 - Set costs of 噛み合わないプライド+ and 噛み合わない理屈+ from the announcement
+- Exam P-drinks: auto turns (planned before the runs), and drinks in manual play
 
 ## 2026-11-20
 
