@@ -126,9 +126,11 @@ test("moveAllToBottomOfDeck puts every matching card under the deck", () => {
   const piles = pilesOf(state);
   assert.deepEqual(piles.hand, [NOT_BASIC]);
   assert.deepEqual(piles.discarded, []);
-  // Bottom of the deck is index 0; the top (drawn next) is the end.
+  // Bottom of the deck is index 0; the top (drawn next) is the end. The
+  // moved cards are drawn in the order they were taken (hand, deck, discard;
+  // 除外's order is the in-game one, the order across piles is unverified).
   assert.deepEqual(piles.deck, [BASIC, BASIC, BASIC, NOT_BASIC]);
-  assert.deepEqual(state[S.deckCards], [0, 1, 2, 4]);
+  assert.deepEqual(state[S.deckCards], [2, 1, 0, 4]);
 });
 
 test("copySelectedToBottomOfDeckUpto copies the picked card, growth included", () => {

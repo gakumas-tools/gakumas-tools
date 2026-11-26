@@ -1326,8 +1326,10 @@ export default class CardManager extends EngineComponent {
   }
 
   // The bottom of the deck is index 0 (cards are drawn from the end).
-  // UNVERIFIED: which piles this reaches, and the order the cards end up
-  // in, are not yet checked against a capture.
+  // Verified for 除外 (Idol Road 美鈴 STAGE 10, moveAllToBottomOfDeck[removed]):
+  // the moved cards are drawn in the order they went to 除外, first-removed
+  // first, after the cards already in the deck.
+  // UNVERIFIED: which other piles this reaches, and their order.
   moveAllToBottomOfDeckByTarget(state, targetRule) {
     const targetCards = this.getTargetRuleCards(state, targetRule, null);
     const piles = [S.handCards, S.deckCards, S.discardedCards, S.removedCards];
@@ -1342,7 +1344,8 @@ export default class CardManager extends EngineComponent {
       state[pile] = kept;
     }
     if (!moved.length) return;
-    state[S.deckCards] = moved.concat(state[S.deckCards]);
+    // moved is in pile order, so the first-removed goes nearest the top.
+    state[S.deckCards] = [...moved].reverse().concat(state[S.deckCards]);
     for (const cardIdx of moved) {
       state[S.movedCard] = cardIdx;
       this.logger.log(state, "moveCardToBottomOfDeck", {
