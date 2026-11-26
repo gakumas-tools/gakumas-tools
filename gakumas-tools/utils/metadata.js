@@ -7,6 +7,12 @@ import { formatStageNameText } from "@/utils/stages";
 
 const SITE_NAME = "Gakumas Tools";
 
+// The site's card (app/[locale]/opengraph-image.js). A page that sets
+// openGraph loses the card it would inherit, so its link would post with no
+// image: it gets this one. Metadata images also win over a segment's own
+// opengraph-image file, so a page with one passes ownImage to keep it.
+const SITE_IMAGE = { url: "/opengraph-image", width: 1200, height: 630 };
+
 export async function generateDefaultMetadata(locale) {
   const t = await getTranslations({ locale, namespace: "metadata" });
   return buildMetadata({
@@ -15,10 +21,16 @@ export async function generateDefaultMetadata(locale) {
     description: t("description"),
     ogDescription: t("description"),
     twitterCard: "summary",
+    ownImage: true,
   });
 }
 
-export async function generateMetadataForTool(tool, locale, path) {
+export async function generateMetadataForTool(
+  tool,
+  locale,
+  path,
+  { ownImage = false } = {},
+) {
   const t_meta = await getTranslations({ locale, namespace: "metadata" });
   const t_tools = await getTranslations({ locale, namespace: "tools" });
   // Optional SEO-specific strings; fall back to the UI title/description.
@@ -33,6 +45,7 @@ export async function generateMetadataForTool(tool, locale, path) {
       `${t_tools(`${tool}.description`)} - ${t_meta("description")}`,
     ogDescription: metaDescription ?? t_tools(`${tool}.description`),
     twitterCard: "summary_large_image",
+    ownImage,
   });
 }
 
@@ -136,6 +149,7 @@ function buildMetadata({
   description,
   ogDescription,
   twitterCard,
+  ownImage = false,
 }) {
   // Only emit canonical/hreflang/og:url when the page's path is known.
   const url =
@@ -157,6 +171,7 @@ function buildMetadata({
       siteName: SITE_NAME,
       locale,
       type: "website",
+      ...(!ownImage && { images: [SITE_IMAGE] }),
     },
     twitter: {
       card: twitterCard,
