@@ -691,7 +691,8 @@
     "empty": "这里还没有展示的记录。在模拟器中模拟编成后，点“分享”即可展示。",
     "older": "更早的记录",
     "newest": "回到最新",
-    "emptyAction": "分享你的记录"
+    "emptyAction": "分享你的记录",
+    "metaStage": "玩家在{name}分享的 {count} 个编组，附网站模拟的分数，可与自己的编组并排比较。"
   },
   "StageSharedRuns": {
     "title": "本舞台的分享记录",

@@ -1,6 +1,10 @@
 import { setRequestLocale } from "next-intl/server";
 import SharedRunsBrowse from "@/components/SharedRunsBrowse";
-import { generateMetadataForTool } from "@/utils/metadata";
+import { getStage } from "gakumas-loadout";
+import {
+  generateMetadataForSharedStage,
+  generateMetadataForTool,
+} from "@/utils/metadata";
 import { connect } from "@/utils/mongodb";
 import { withOpeners } from "@/utils/shareOpens";
 import {
@@ -12,8 +16,19 @@ import {
   parseStageId,
 } from "@/utils/sharedRuns";
 
-export async function generateMetadata({ params }) {
+export async function generateMetadata({ params, searchParams }) {
   const { locale } = await params;
+  const stageId = parseStageId((await searchParams).stage);
+  // getStage falls back to a default stage for an id it doesn't know.
+  const stage = stageId != null ? getStage(stageId) : null;
+  if (stage?.id == stageId) {
+    const { db } = await connect();
+    const listed = await listedRunStages(db);
+    const count = listed.find((s) => s.stageId == stageId)?.count ?? 0;
+    if (count) {
+      return await generateMetadataForSharedStage(stage, count, locale);
+    }
+  }
   return await generateMetadataForTool("sharedRuns", locale, "/shared");
 }
 

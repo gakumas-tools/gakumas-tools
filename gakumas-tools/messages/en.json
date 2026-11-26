@@ -691,7 +691,8 @@
     "empty": "No listed runs here yet. Simulate a loadout, then tap Share to put yours here.",
     "older": "Older runs",
     "newest": "Back to newest",
-    "emptyAction": "Share yours"
+    "emptyAction": "Share yours",
+    "metaStage": "{count, plural, one {# run} other {# runs}} players shared on {name}, each simulated by the site. Open one to run it beside your own."
   },
   "StageSharedRuns": {
     "title": "Shared runs for this stage",

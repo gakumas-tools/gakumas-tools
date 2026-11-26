@@ -670,7 +670,8 @@
     "empty": "Aún no hay simulaciones mostradas aquí. Simula una configuración y toca Compartir para mostrar la tuya.",
     "older": "Más antiguas",
     "newest": "Volver a las más recientes",
-    "emptyAction": "Compartir la tuya"
+    "emptyAction": "Compartir la tuya",
+    "metaStage": "{count, plural, one {# simulación compartida} other {# simulaciones compartidas}} por jugadores en {name}, cada una simulada por el sitio. Abre una para compararla con la tuya."
   },
   "StageSharedRuns": {
     "title": "Simulaciones compartidas de esta etapa",
