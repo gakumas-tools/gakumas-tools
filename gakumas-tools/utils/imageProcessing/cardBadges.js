@@ -230,6 +230,8 @@ export function badgeGlyphs(imageData, box, layout) {
     cost: cost(isCostWhite),
     // The stricter mask can thin an antialiased digit away.
     costFallback: cost(isWhite),
+    // A cost of some other kind than 体力 (全力値, やる気…) has no heart.
+    typedCost: !heart,
   };
 }
 
@@ -243,6 +245,16 @@ export function readBadge(glyphs, templates, fromRight = false) {
   }
   if (!digits.length) return undefined;
   return parseInt((fromRight ? digits.reverse() : digits).join(""), 10);
+}
+
+// Costs other than 体力 are one digit, and the edge of the card's effect
+// icon can sit right beside it (巻き返し+'s 全力値 star), so when the run
+// doesn't read, its rightmost glyph alone is the cost.
+function lastDigit({ cost, costFallback }) {
+  return (
+    readBadge(cost.slice(-1), BADGE_TEMPLATES.white) ??
+    readBadge(costFallback.slice(-1), BADGE_TEMPLATES.white)
+  );
 }
 
 function readDot(glyphs) {
@@ -267,7 +279,8 @@ export function readBadges(imageData, box, layout) {
     genki: glyphs.genki ? readBadge(glyphs.genki, BADGE_TEMPLATES.white) : null,
     cost:
       readBadge(glyphs.cost, BADGE_TEMPLATES.white, true) ??
-      readBadge(glyphs.costFallback, BADGE_TEMPLATES.white, true),
+      readBadge(glyphs.costFallback, BADGE_TEMPLATES.white, true) ??
+      (glyphs.typedCost ? lastDigit(glyphs) : undefined),
     icon: readBottomIcon(imageData, box, layout.icon),
   };
 }

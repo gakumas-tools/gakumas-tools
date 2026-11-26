@@ -69,20 +69,9 @@ const KNOWN = new Set([
   "icon: s10-d0 r0c3 expected ワクワクが止まらない+ got 紅葉ランニング",
   // Read as a card of the same deck or of a similar plan.
   "icon: s11-b r0c2 expected プライド+ got リスキーチャンス+",
-  // Cost -1 is not read, so the customization with cost 0 is picked.
-  "customization: s7-g5 r0c2 inferred badges 2,,,0,growth shown 2,,,1",
   // Score digits misread.
   "badge: s12-b r0c5 score read 74 shown 24",
   "badge: s20-g1 r0c1 score read 5 shown 6",
-  // Cost shown one higher than the inferred customizations give, as on
-  // s7-g5 (巻き返し+ and きらきら紙吹雪+ with dots).
-  "customization: s12-b r1c2 inferred badges 1,,,0,growth shown 1,,,1",
-  "customization: s18-b r1c2 inferred badges 3,,,0,growth shown 3,,,1",
-  "customization: s24-a r2c1 inferred badges 2,,,1,delayed shown 2,,,2",
-  "customization: s24-b r1c2 inferred badges 2,,,0,growth shown 2,,,1",
-  "customization: s24-b r3c2 inferred badges 3,,,0,growth shown 3,,,1",
-  // Shown cost 0; the inferred customizations predict 1.
-  "customization: s27-a r2c3 inferred badges 2,,5,1,concentration shown 2,,5,0",
 ]);
 
 const args = process.argv.slice(2);
