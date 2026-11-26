@@ -2,13 +2,20 @@
 // script, and the bundled CJK fonts are subsets of the site's own titles. So
 // the glyphs a card needs come from Google Fonts' per-text subsets: a few KB
 // each, cached here. A failed fetch leaves those glyphs out, never the image.
-export const TEXT_FONT_FAMILY = "Noto Sans Text";
-
+// One name per Noto family: satori takes a single font for a name and weight,
+// so Hangul under the locale's own family name drew in its thin fallback.
+const fontName = (family) => `Text ${family}`;
 const FAMILY_BY_LOCALE = {
   ko: "Noto Sans KR",
   "zh-Hans": "Noto Sans SC",
 };
 const DEFAULT_FAMILY = "Noto Sans JP";
+// A card loads its locale's family, plus Korean's for Hangul; Korean goes
+// last so that it only draws what the locale's family lacks.
+export const TEXT_FONT_FAMILY = [DEFAULT_FAMILY, "Noto Sans SC", "Noto Sans KR"]
+  .map(fontName)
+  .join(", ");
+
 const FETCH_TIMEOUT_MS = 3000;
 const CACHE_MAX = 200;
 
@@ -45,8 +52,9 @@ function subset(family, text) {
 
 /**
  * Fonts for the characters of `text` beyond Latin, as satori font entries
- * named TEXT_FONT_FAMILY: the locale's Noto Sans, and Korean's too when the
- * text has Hangul. Empty when there's nothing to fetch or the fetch fails.
+ * each under its family's name in TEXT_FONT_FAMILY: the locale's Noto Sans,
+ * and Korean's too when the text has Hangul. Empty when there's nothing to
+ * fetch or the fetch fails.
  */
 export async function loadTextFonts(text, locale) {
   const chars = [...new Set(text)].filter((ch) => ch.codePointAt(0) > 0x24f);
@@ -58,7 +66,7 @@ export async function loadTextFonts(text, locale) {
   }
   const fonts = await Promise.all(
     families.map(async (family) => ({
-      name: TEXT_FONT_FAMILY,
+      name: fontName(family),
       weight: 700,
       data: await subset(family, wanted),
     })),
