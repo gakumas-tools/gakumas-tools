@@ -932,4 +932,4 @@ id,name,availableCustomizations,rarity,type,plan,unlockPlv,upgraded,unique,sourc
 931,噛み合わないプライド,,SSR,active,anomaly,1,FALSE,TRUE,pIdol,168,FALSE,,,,,
 932,噛み合わないプライド+,,SSR,active,anomaly,1,TRUE,TRUE,pIdol,168,FALSE,,cost-=4,setStance(strength); score+=13; if:isPreservation { drawCard },1,at:stanceChanged { if:isFullPower { target:this { g.scoreTimes+=1; g.score+=15 } }; limit:1 }
 933,勝たしてもらうで！,,SSR,mental,sense,1,FALSE,TRUE,support,,FALSE,,,,,
-934,勝たしてもらうで！+,,SSR,mental,sense,1,TRUE,TRUE,support,,FALSE,,cost-=1,concentration+=5,1,at:mentalCardUsed { effectCounter+=1; if:effectCounter%2==1 { setConcentrationBuff(0.1,2); limit:3 } }
+934,勝たしてもらうで！+,,SSR,mental,sense,1,TRUE,TRUE,support,,FALSE,,cost-=1,concentration+=5,1,"at:mentalCardUsed { effectCounter+=1; if:effectCounter%2==1 { setConcentrationBuff(0.1,2); limit:3 } }"
