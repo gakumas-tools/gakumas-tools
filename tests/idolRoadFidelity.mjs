@@ -101,6 +101,9 @@ const FIXTURES = [
   "idol-road-misuzu-s8-strength-7877",
   "idol-road-misuzu-s8-strength-6707",
   "idol-road-misuzu-s8-strength-7873",
+  "idol-road-misuzu-s9-strength-7658",
+  "idol-road-misuzu-s9-strength-7550",
+  "idol-road-misuzu-s9-strength-7022",
 ];
 
 function createEngine(capture) {
