@@ -673,7 +673,9 @@
     "metaDescriptionNoScores": "A shared simulator loadout.",
     "moreForStage": "More shared runs for this stage",
     "openedBy": "{count, plural, one {Opened by # player} other {Opened by # players}}",
-    "openedByMore": "Opened by {count}+ players"
+    "openedByMore": "Opened by {count}+ players",
+    "sharedBy": "by {name}",
+    "shownAs": "Shown as {name}"
   },
   "SharedRunsBrowse": {
     "title": "Shared runs",

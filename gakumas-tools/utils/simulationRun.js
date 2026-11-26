@@ -292,6 +292,7 @@ export function normalizeSavedRun(doc) {
     id: doc._id?.toString?.() || doc._id || doc.id,
     _id: doc._id,
     name: doc.name || null,
+    sharedBy: doc.sharedBy || null,
     createdAt: doc.createdAt || null,
     loadout,
     linkLoadouts: doc.linkLoadouts || null,

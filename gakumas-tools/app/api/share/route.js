@@ -37,7 +37,13 @@ export async function POST(request) {
   if (error) return new Response(error, { status });
 
   const { db } = await connect();
-  const result = await shareLoadout(db, session.user.id, body.loadoutId);
+  const result = await shareLoadout(
+    db,
+    session.user.id,
+    body.loadoutId,
+    undefined,
+    session.user.name,
+  );
   if (result.error) {
     return new Response(result.error, { status: result.status });
   }
@@ -58,9 +64,10 @@ export async function GET(request) {
     const runs = await withOpeners(db, await listStageRuns(db, stageId));
     refreshInBackground(db, stageId);
     return Response.json(
-      runs.map(({ id, name, stats, derived, createdAt, openedBy, openedByMore }) => ({
+      runs.map(({ id, name, sharedBy, stats, derived, createdAt, openedBy, openedByMore }) => ({
         id,
         name,
+        sharedBy,
         stats,
         derived,
         createdAt,
@@ -122,6 +129,7 @@ export async function PATCH(request) {
     body.listed,
     undefined,
     ENGINE_VERSION,
+    session.user.name,
   );
   if (result.error) return new Response(result.error, { status: result.status });
   return new Response(null, { status: 204 });

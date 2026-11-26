@@ -673,7 +673,9 @@
     "metaDescriptionNoScores": "공유된 시뮬레이터 편성.",
     "moreForStage": "이 스테이지의 다른 공유된 런",
     "openedBy": "{count}명이 열어 봤어요",
-    "openedByMore": "{count}명 이상이 열어 봤어요"
+    "openedByMore": "{count}명 이상이 열어 봤어요",
+    "sharedBy": "{name}님",
+    "shownAs": "{name}(으)로 표시됩니다"
   },
   "SharedRunsBrowse": {
     "title": "모두의 런",
