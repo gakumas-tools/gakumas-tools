@@ -14,10 +14,12 @@ import {
   IdolConfig,
   StageConfig,
   IdolStageConfig,
+  planPDrinkTurns,
   STRATEGIES,
   StageEngine,
   StagePlayer,
 } from "gakumas-engine";
+import { PDrinks } from "gakumas-data";
 import Alert from "@/components/Alert";
 import Button from "@/components/Button";
 import ButtonGroup from "@/components/ButtonGroup";
@@ -39,6 +41,7 @@ import WorkspaceContext from "@/contexts/WorkspaceContext";
 import { simulate } from "@/simulator";
 import { DEFAULT_NUM_RUNS, SYNC } from "@/simulator/constants";
 import {
+  planPDrinksOnWorkers,
   retainWorkerPool,
   runOnWorkers,
   workerCount,
@@ -56,6 +59,16 @@ import styles from "./Simulator.module.scss";
 
 const LINK_PHASES = ["OP", "MID", "ED"];
 const NUM_RUNS_KEY = "gakumas-tools.simulator.numRuns";
+
+// The engine's planned drink turns (one per drink it holds, the loadout's
+// known drinks in slot order) under the loadout's slots.
+function plannedBySlot(pDrinkIds, pDrinkTurns) {
+  if (!pDrinkTurns) return null;
+  let held = 0;
+  return pDrinkIds.map((id) =>
+    id && PDrinks.getById(id) ? (pDrinkTurns[held++] ?? null) : null,
+  );
+}
 
 export default function Simulator() {
   const t = useTranslations("Simulator");
@@ -242,6 +255,12 @@ export default function Simulator() {
 
     try {
       let result;
+      const pDrinkTurns = await planPDrinks(input, controller.signal);
+      if (controller.signal.aborted) return;
+      input.plannedPDrinkTurns = plannedBySlot(
+        input.loadout.pDrinkIds,
+        pDrinkTurns,
+      );
       if (SYNC) {
         result = await simulate(
           input.config,
@@ -249,6 +268,7 @@ export default function Simulator() {
           strategy,
           numRuns,
           (completed) => progress.set(completed),
+          pDrinkTurns,
         );
       } else {
         const results = await runOnWorkers(
@@ -257,6 +277,7 @@ export default function Simulator() {
             linkConfigs: input.linkConfigs,
             strategyName: strategy,
             numRuns,
+            pDrinkTurns,
           },
           (delta) => progress.set((p) => p + delta),
           controller.signal,
@@ -274,6 +295,24 @@ export default function Simulator() {
   }
   runSimulationRef.current = runSimulation;
 
+  // The turn of each P-drink left on auto, planned before the runs (one
+  // per drink the engine holds), or null when none is on auto.
+  async function planPDrinks(input, signal) {
+    if (!SYNC) {
+      return planPDrinksOnWorkers(
+        {
+          idolStageConfig: input.config,
+          linkConfigs: input.linkConfigs,
+          strategyName: strategy,
+        },
+        signal,
+      );
+    }
+    const engine = new StageEngine(input.config, input.linkConfigs);
+    engine.strategy = new STRATEGIES[strategy](engine);
+    return planPDrinkTurns(engine, engine.strategy);
+  }
+
   return (
     <div id="simulator_loadout" className={styles.loadoutEditor}>
       <div className={styles.configurator}>
@@ -283,7 +322,13 @@ export default function Simulator() {
         {stage.type == "produceExam" && (
           <>
             <TurnOrder />
-            <StagePDrinks />
+            <StagePDrinks
+              plannedTurns={
+                simulatorData?.input.config === config
+                  ? simulatorData.input.plannedPDrinkTurns
+                  : null
+              }
+            />
             <StageStartStamina />
           </>
         )}

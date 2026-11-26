@@ -1,6 +1,6 @@
 import React, { memo, useState } from "react";
 import { useTranslations } from "next-intl";
-import { SkillCards } from "gakumas-data";
+import { PDrinks, SkillCards } from "gakumas-data";
 import Button from "@/components/Button";
 import Collapse from "@/components/Collapse";
 import EntityIcon from "@/components/EntityIcon";
@@ -50,6 +50,9 @@ function InteractiveHand({
     onDecision(null);
   };
 
+  // The P-drinks still held: one may be drunk now, before the next card.
+  const pDrinks = pendingDecision?.pDrinks || [];
+
   return (
     <div ref={handRef} className={c(styles.hand, styles.pending)}>
       <HandTitle
@@ -89,6 +92,23 @@ function InteractiveHand({
           </button>
         ))}
       </div>
+      {pDrinks.length > 0 && (
+        <div className={styles.pDrinks}>
+          {pDrinks.map((id, index) => (
+            <Button
+              key={index}
+              size="sm"
+              onClick={() => onDecision({ pDrink: index })}
+              ariaLabel={t("drink", { name: PDrinks.getById(id).name })}
+            >
+              <span className={styles.pDrinkIcon}>
+                <EntityIcon type={EntityTypes.P_DRINK} id={id} size="fill" />
+              </span>
+              {PDrinks.getById(id).name}
+            </Button>
+          ))}
+        </div>
+      )}
       <div className={styles.skip}>
         <Button fill onClick={handleEndTurn}>
           {t("skip")}

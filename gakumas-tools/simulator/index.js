@@ -1,4 +1,9 @@
-import { StageEngine, StagePlayer, STRATEGIES } from "gakumas-engine";
+import {
+  scorePDrinkTurns,
+  StageEngine,
+  StagePlayer,
+  STRATEGIES,
+} from "gakumas-engine";
 import {
   accumulateCardUsage,
   accumulateScoreStats,
@@ -6,10 +11,49 @@ import {
   formatRun,
 } from "@/utils/simulator";
 
-export function createSimulation(idolStageConfig, linkConfigs, strategyName) {
+function createEngine(idolStageConfig, linkConfigs, strategyName) {
   const engine = new StageEngine(idolStageConfig, linkConfigs);
   const strategy = new STRATEGIES[strategyName](engine);
   engine.strategy = strategy;
+  return { engine, strategy };
+}
+
+// The config with the P-drink turns planned for it (planPDrinkTurns), if any.
+function withPDrinkTurns(idolStageConfig, pDrinkTurns) {
+  if (!pDrinkTurns) return idolStageConfig;
+  return {
+    ...idolStageConfig,
+    idol: { ...idolStageConfig.idol, pDrinkTurns },
+  };
+}
+
+// The mean score of each P-drink turn option, for a worker's share of a plan.
+export function scorePDrinkOptions(
+  idolStageConfig,
+  linkConfigs,
+  strategyName,
+  { options, seed, runsPerOption },
+) {
+  // A copy: scoring sets its idol's pDrinkTurns while it plays.
+  const { engine, strategy } = createEngine(
+    withPDrinkTurns(idolStageConfig, idolStageConfig.idol.pDrinkTurns),
+    linkConfigs,
+    strategyName,
+  );
+  return scorePDrinkTurns(engine, strategy, options, { seed, runsPerOption });
+}
+
+export function createSimulation(
+  idolStageConfig,
+  linkConfigs,
+  strategyName,
+  pDrinkTurns = null,
+) {
+  const { engine, strategy } = createEngine(
+    withPDrinkTurns(idolStageConfig, pDrinkTurns),
+    linkConfigs,
+    strategyName,
+  );
 
   let totalScore = 0;
   let averageScore = 0;
@@ -78,9 +122,15 @@ export async function simulate(
   linkConfigs,
   strategyName,
   numRuns,
-  onProgress
+  onProgress,
+  pDrinkTurns = null
 ) {
-  const simulation = createSimulation(idolStageConfig, linkConfigs, strategyName);
+  const simulation = createSimulation(
+    idolStageConfig,
+    linkConfigs,
+    strategyName,
+    pDrinkTurns
+  );
   await simulation.run(numRuns, onProgress);
   return simulation.result();
 }

@@ -5,6 +5,7 @@ All notable changes to the contest simulator will be documented in this file.
 
 
 
+- Exam P-drinks: auto turns (planned before the runs), and drinks in manual play
 
 
 

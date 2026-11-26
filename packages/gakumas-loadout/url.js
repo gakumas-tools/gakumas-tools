@@ -54,12 +54,12 @@ export function deserializePDrinkIds(value) {
   return Array.from({ length: P_DRINK_SLOTS }, (_, i) => ids[i] || 0);
 }
 
-// The turn each drink is drunk at the start of: "drink_turns=1-11-11",
-// 1-based, 1 when missing.
+// The turn each drink is drunk on: "drink_turns=0-11-1", 1-based, 0 (or
+// missing) for auto, where the simulator plans the turn.
 export function deserializePDrinkTurns(value) {
   const turns = value ? deserializeIds(value) : [];
   return Array.from({ length: P_DRINK_SLOTS }, (_, i) =>
-    Math.max(1, turns[i] || 1),
+    Math.max(0, turns[i] || 0),
   );
 }
 
@@ -184,10 +184,10 @@ export function loadoutToSearchParams(loadout) {
     searchParams.set("turns", serializeTurnTypes(turnTypes));
     if (pDrinkIds?.some((id) => id)) {
       searchParams.set("drinks", serializeIds(pDrinkIds));
-      if (pDrinkTurns?.some((turn, i) => pDrinkIds[i] && turn > 1)) {
+      if (pDrinkTurns?.some((turn, i) => pDrinkIds[i] && turn > 0)) {
         searchParams.set(
           "drink_turns",
-          serializeIds(pDrinkIds.map((id, i) => (id && pDrinkTurns[i]) || 1)),
+          serializeIds(pDrinkIds.map((id, i) => (id && pDrinkTurns[i]) || 0)),
         );
       }
     }

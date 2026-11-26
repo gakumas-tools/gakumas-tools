@@ -331,6 +331,27 @@
   }
 }
 
+.pDrinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: tokens.$space-2;
+  padding: 0 10px 10px;
+
+  > button {
+    gap: 6px;
+    background-color: tokens.$surface-panel;
+
+    &:hover {
+      background-color: tokens.$surface-alt;
+    }
+  }
+}
+
+.pDrinkIcon {
+  width: 24px;
+  flex-shrink: 0;
+}
+
 .skip {
   padding: 0 10px 10px;
 

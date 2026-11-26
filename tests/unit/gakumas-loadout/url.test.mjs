@@ -175,26 +175,33 @@ test("P-drinks round-trip in the URL for produce exams only", () => {
   );
 });
 
-test("P-drink turns round-trip and default to 1", () => {
+test("P-drink turns round-trip; missing or 0 is auto, and a set turn 1 stays set", () => {
   const exam = loadoutFromSearchParams(
     new URLSearchParams("stage=exam-1&drinks=5-11-18&drink_turns=1-11-x"),
   );
-  assert.deepEqual(exam.pDrinkTurns, [1, 11, 1]);
-  assert.equal(loadoutToSearchParams(exam).get("drink_turns"), "1-11-1");
+  assert.deepEqual(exam.pDrinkTurns, [1, 11, 0]);
+  assert.equal(loadoutToSearchParams(exam).get("drink_turns"), "1-11-0");
 
-  const allFirst = loadoutFromSearchParams(
+  // Links made before auto with every drink on turn 1 had no drink_turns.
+  const auto = loadoutFromSearchParams(
     new URLSearchParams("stage=exam-1&drinks=5-11"),
   );
-  assert.deepEqual(allFirst.pDrinkTurns, [1, 1, 1]);
-  assert.equal(loadoutToSearchParams(allFirst).has("drink_turns"), false);
+  assert.deepEqual(auto.pDrinkTurns, [0, 0, 0]);
+  assert.equal(loadoutToSearchParams(auto).has("drink_turns"), false);
+
+  const pinnedFirst = loadoutFromSearchParams(
+    new URLSearchParams("stage=exam-1&drinks=5-11&drink_turns=1-0"),
+  );
+  assert.deepEqual(pinnedFirst.pDrinkTurns, [1, 0, 0]);
+  assert.equal(loadoutToSearchParams(pinnedFirst).get("drink_turns"), "1-0-0");
 
   // An empty slot's turn isn't kept.
   const emptySlot = loadoutToSearchParams({
-    ...allFirst,
+    ...auto,
     pDrinkIds: [5, 0, 0],
-    pDrinkTurns: [3, 7, 1],
+    pDrinkTurns: [3, 7, 0],
   });
-  assert.equal(emptySlot.get("drink_turns"), "3-1-1");
+  assert.equal(emptySlot.get("drink_turns"), "3-0-0");
 });
 
 test("a produce exam's start 体力 round-trips; other stages drop it", () => {
