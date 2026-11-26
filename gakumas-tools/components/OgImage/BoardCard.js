@@ -4,7 +4,10 @@ import { TEXT_FONT_FAMILY } from "@/utils/ogTextFont";
 
 const PAD = 56;
 const NAME_WIDTH = 360;
-const PLOT_WIDTH = 520;
+// The median column fits a six-digit score (263,076) at 28px; the plot
+// takes what the row has left.
+const MEDIAN_WIDTH = 140;
+const PLOT_WIDTH = 452;
 const PLOT_HEIGHT = 34;
 const BOX = "#2a8de0";
 const BOX_FILL = "#e6f1fc";
@@ -120,7 +123,8 @@ function RunRow({ rank, run, axis }) {
       <div
         style={{
           display: "flex",
-          flexGrow: 1,
+          width: MEDIAN_WIDTH,
+          flexShrink: 0,
           justifyContent: "flex-end",
           fontSize: 28,
           fontWeight: 700,
