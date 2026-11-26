@@ -58,46 +58,19 @@ const DIGITS_PATH = join(
 );
 // Each checked against its screenshot.
 const KNOWN = new Set([
-  // The classifier takes the base for the upgraded card here.
-  "icon: s10-1 r1c4 expected 存在感+ got 存在感",
-  // A free card read as a card of the deck's plan.
-  "icon: s10-g4 r0c2 expected アイドル宣言+ got 止められない想い+",
+  // Read without the "+" it shows (base/+ pairs, often a 重複 copy).
+  "icon: s10-g5 r0c5 expected クライマックス+ got クライマックス",
+  "icon: s10-g8 r2c3 expected 願いの力+ got 願いの力",
+  "icon: s24-a r3c1 expected きらきら紙吹雪+ got きらきら紙吹雪",
+  "icon: s27-a r1c3 expected 願いの力+ got 願いの力",
+  "icon: s27-e1 r3c5 expected せのびの魔法+ got せのびの魔法",
   // Top screenshot only: the 重複 card repeats one in the third row, which
   // isn't on screen, so it is held to the wrong shown card.
-  "icon: s10-d0 r0c3 expected ワクワクが止まらない+ got 成長痛+",
-  // Shown score 14; the inferred customizations predict 19.
-  "customization: s10-g5 r0c5 inferred badges 0,19,,10,delayed shown 0,14,,10",
+  "icon: s10-d0 r0c3 expected ワクワクが止まらない+ got 紅葉ランニング",
+  // Read as a card of the same deck or of a similar plan.
+  "icon: s11-b r0c2 expected プライド+ got リスキーチャンス+",
   // Cost -1 is not read, so the customization with cost 0 is picked.
   "customization: s7-g5 r0c2 inferred badges 2,,,0,growth shown 2,,,1",
-  // A free card read as a card of the deck's plan, as on s10-g4.
-  "icon: s2-e1 r0c2 expected アイドル宣言+ got 止められない想い+",
-  // The classifier's best reads here are all weak; the 重複 copy in the third
-  // row is then held to the wrong shown card.
-  "icon: s22-e1 r0c2 expected 成長痛+ got 薄れゆく壁",
-  "icon: s22-e1 r2c4 expected 成長痛 got 止められない想い",
-  // 重複 cards: one read as another shown card, one read without the "+"
-  // it shows.
-  "icon: s27-e1 r1c1 expected きらきら紙吹雪 got 止められない想い",
-  "icon: s27-e1 r3c5 expected せのびの魔法+ got せのびの魔法",
-  // Screens added with s11-b to s27-b. Each checked against its screenshot.
-  // Cards read as another card of the same deck or of a similar plan.
-  "icon: s11-b r0c2 expected プライド+ got リスキーチャンス+",
-  "icon: s20-g1 r3c3 expected 魅惑のパフォーマンス+ got スリリング+",
-  // A free card read as a card of the deck's plan, as on s10-g4.
-  "icon: s24-a r1c3 expected アイドル宣言+ got 止められない想い+",
-  "icon: s24-b r1c3 expected アイドル宣言+ got 汗と成長+",
-  "icon: s26-a r0c3 expected アイドル宣言+ got 止められない想い+",
-  // Read without the "+" it shows.
-  "icon: s14-b r0c1 expected 薄れゆく壁+ got 薄れゆく壁",
-  // 重複 cards held to the wrong shown card, or read without the "+".
-  "icon: s12-b r2c1 expected 夏夜に咲く思い出+ got 盛り上げ上手",
-  "icon: s16-b r2c1 expected 夏夜に咲く思い出+ got 盛り上げ上手",
-  "icon: s18-b r3c0 expected わたしの人生を込めて+ got 泥臭くあれ！+",
-  "icon: s22-b r3c0 expected わたしの人生を込めて+ got 手を伸ばした先に+",
-  "icon: s24-a r3c1 expected きらきら紙吹雪+ got 止められない想い+",
-  "icon: s24-b r2c0 expected わたしの人生を込めて+ got 手を伸ばした先に+",
-  "icon: s26-b r1c0 expected わたしの人生を込めて+ got 泥臭くあれ！+",
-  "icon: s27-b r1c3 expected シュプレヒコール+ got シュプレヒコール",
   // Score digits misread.
   "badge: s12-b r0c5 score read 74 shown 24",
   "badge: s20-g1 r0c1 score read 5 shown 6",

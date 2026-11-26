@@ -9,7 +9,7 @@ from PIL import Image
 
 from . import gallery
 from .augment import augment
-from .models import EMBEDDING_DIM, INPUT_SIZE, CosineMarginHead, Encoder, PrototypeClassifier
+from .models import INPUT_SIZE, CosineMarginHead, Encoder, EnsembleEncoder, PrototypeClassifier
 from .prepare import COVERED_CLASS_ID, ENTITY_CONFIG, has_covered_class, load_upgraded_ids
 
 DEFAULT_EPOCHS = 120
@@ -17,6 +17,10 @@ BATCH_SIZE = 128
 LEARNING_RATE = 2e-3
 SOURCE_SIZE = 96
 SEED = 0
+# One encoder per seed, read as one (EnsembleEncoder). Single seeds of the
+# skill-card model miss almost disjoint sets of Idol Road cards (978 and 973
+# of 1000 icons); the two together read 993.
+ENSEMBLE_SEEDS = {"skill_card": (0, 1)}
 
 
 def default_device():
@@ -45,9 +49,19 @@ def class_images(entity_type, class_name):
     )
 
 
-def train_encoder(entity_type, samples, class_names, device, epochs):
-    torch.manual_seed(SEED)
-    random.seed(SEED)
+def train_ensemble(entity_type, samples, class_names, device, epochs):
+    seeds = ENSEMBLE_SEEDS.get(entity_type, (SEED,))
+    encoders = []
+    for seed in seeds:
+        if len(seeds) > 1:
+            print(f"  seed {seed}:")
+        encoders.append(train_encoder(entity_type, samples, class_names, device, epochs, seed))
+    return encoders[0] if len(encoders) == 1 else EnsembleEncoder(encoders).eval()
+
+
+def train_encoder(entity_type, samples, class_names, device, epochs, seed=SEED):
+    torch.manual_seed(seed)
+    random.seed(seed)
 
     images = to_tensor([load_image(path) for path, _ in samples], device)
     labels = torch.tensor([label for _, label in samples], device=device)
@@ -106,7 +120,9 @@ def train_encoder(entity_type, samples, class_names, device, epochs):
 
 def export_onnx(encoder, path):
     # Placeholder gallery; gallery.refresh fills it.
-    model = PrototypeClassifier(encoder, torch.zeros(EMBEDDING_DIM, 1)).eval()
+    with torch.no_grad():
+        dim = encoder(torch.zeros(1, 3, INPUT_SIZE, INPUT_SIZE)).shape[1]
+    model = PrototypeClassifier(encoder, torch.zeros(dim, 1)).eval()
     torch.onnx.export(
         model,
         torch.zeros(1, 3, INPUT_SIZE, INPUT_SIZE),
@@ -131,7 +147,7 @@ def train_entity(entity_type, class_names, epochs, device):
         for path in class_images(entity_type, name)
     ]
     print(f"  classes: {len(class_names)}, images: {len(samples)}")
-    encoder = train_encoder(entity_type, samples, class_names, device, epochs)
+    encoder = train_ensemble(entity_type, samples, class_names, device, epochs)
 
     export_onnx(encoder, gallery.onnx_path(entity_type))
     gallery.print_summary(entity_type, gallery.refresh(entity_type))
