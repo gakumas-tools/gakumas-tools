@@ -2,19 +2,25 @@
 // script, and the bundled CJK fonts are subsets of the site's own titles. So
 // the glyphs a card needs come from Google Fonts' per-text subsets: a few KB
 // each, cached here. A failed fetch leaves those glyphs out, never the image.
-// One name per Noto family: satori takes a single font for a name and weight,
-// so Hangul under the locale's own family name drew in its thin fallback.
-const fontName = (family) => `Text ${family}`;
+// Fonts go by role, one name each (satori takes one font per name and
+// weight): the locale's Noto Sans first, then a second Han family for the
+// characters the first lacks (Simplified ones on a Japanese page), then
+// Korean's for Hangul.
+const MAIN = "Text Main";
+const HAN = "Text Han";
+const HANGUL = "Text Hangul";
+export const TEXT_FONT_FAMILY = [MAIN, HAN, HANGUL].join(", ");
+
 const FAMILY_BY_LOCALE = {
   ko: "Noto Sans KR",
   "zh-Hans": "Noto Sans SC",
 };
 const DEFAULT_FAMILY = "Noto Sans JP";
-// A card loads its locale's family, plus Korean's for Hangul; Korean goes
-// last so that it only draws what the locale's family lacks.
-export const TEXT_FONT_FAMILY = [DEFAULT_FAMILY, "Noto Sans SC", "Noto Sans KR"]
-  .map(fontName)
-  .join(", ");
+const HAN_FALLBACK = {
+  "Noto Sans JP": "Noto Sans SC",
+  "Noto Sans KR": "Noto Sans SC",
+  "Noto Sans SC": "Noto Sans JP",
+};
 
 const FETCH_TIMEOUT_MS = 3000;
 const CACHE_MAX = 200;
@@ -52,21 +58,23 @@ function subset(family, text) {
 
 /**
  * Fonts for the characters of `text` beyond Latin, as satori font entries
- * each under its family's name in TEXT_FONT_FAMILY: the locale's Noto Sans,
- * and Korean's too when the text has Hangul. Empty when there's nothing to
- * fetch or the fetch fails.
+ * named for their roles in TEXT_FONT_FAMILY: the locale's Noto Sans, a second
+ * Han family when the text has Han, and Korean's when it has Hangul. Empty
+ * when there's nothing to fetch or the fetches fail.
  */
 export async function loadTextFonts(text, locale) {
   const chars = [...new Set(text)].filter((ch) => ch.codePointAt(0) > 0x24f);
   if (!chars.length) return [];
   const wanted = chars.sort().join("");
-  const families = [FAMILY_BY_LOCALE[locale] ?? DEFAULT_FAMILY];
-  if (/\p{Script=Hangul}/u.test(wanted) && !families.includes("Noto Sans KR")) {
-    families.push("Noto Sans KR");
+  const main = FAMILY_BY_LOCALE[locale] ?? DEFAULT_FAMILY;
+  const roles = [[MAIN, main]];
+  if (/\p{Script=Han}/u.test(wanted)) roles.push([HAN, HAN_FALLBACK[main]]);
+  if (/\p{Script=Hangul}/u.test(wanted) && main !== "Noto Sans KR") {
+    roles.push([HANGUL, "Noto Sans KR"]);
   }
   const fonts = await Promise.all(
-    families.map(async (family) => ({
-      name: fontName(family),
+    roles.map(async ([name, family]) => ({
+      name,
       weight: 700,
       data: await subset(family, wanted),
     })),
