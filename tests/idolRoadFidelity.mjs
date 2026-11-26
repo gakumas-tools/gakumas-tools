@@ -172,6 +172,23 @@ function replay(capture, play) {
     const next = play.actions[i + 1];
     const hand = supplyHand(state, action.handCardIds, turn, stacked);
     stacked = undefined;
+    // Cards a play draws mid-turn (ティーパーティ's スキルカードを引く), as
+    // the game showed them: put copies on top of the deck so the engine
+    // draws the same ones, as trainingFidelity.mjs does.
+    for (const cardId of [...(action.drawnCardIds ?? [])].reverse()) {
+      const drawn = state[S.cardMap].findIndex(
+        (c, index) =>
+          c.id == cardId &&
+          !state[S.removedCards].includes(index) &&
+          !state[S.heldCards].includes(index) &&
+          !hand.includes(index),
+      );
+      assert.ok(drawn >= 0, `turn ${turn}: no copy of card ${cardId} left to draw`);
+      for (const pile of [S.deckCards, S.discardedCards]) {
+        state[pile] = state[pile].filter((c) => c != drawn);
+      }
+      state[S.deckCards].push(drawn);
+    }
     // A turn with スキルカード使用数追加 plays more than one card from the
     // hand it was dealt. One that skips plays its cards first, if any, then
     // ends the turn with a play left (スキルカード未使用).
