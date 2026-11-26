@@ -9,16 +9,17 @@ import { getRand, resetRand } from "../utils";
 // before them already planned; leaving a drink to the strategy's own timing
 // (null) is one of the options.
 //
-// Every option is played on the same `runsPerOption` seeds, so they're
-// compared on the same draws. This reseeds the engine's random numbers;
-// afterwards they're reseeded from a draw made before planning.
+// Every option is played on the same seeds, so they're compared on the same
+// draws. `scoreOptions(options, seed)` can score them elsewhere (the
+// simulator splits them across its workers); by default they're played here
+// with scorePDrinkTurns.
 //
 // Returns the planned turns (1-based, or null), one per drink slot. The
 // engine's config is left as it was.
 export default async function planPDrinkTurns(
   engine,
   strategy,
-  { runsPerOption = 16 } = {},
+  { runsPerOption = 16, scoreOptions } = {},
 ) {
   const { idol, stage } = engine.config;
   const original = idol.pDrinkTurns || [];
@@ -27,33 +28,56 @@ export default async function planPDrinkTurns(
   if (!auto.length) return plan;
 
   const seed = Math.floor(getRand() * 2 ** 32);
-  const logger = engine.logger;
-  async function meanScore(turns) {
-    idol.pDrinkTurns = turns;
-    let total = 0;
-    for (let r = 0; r < runsPerOption; r++) {
-      resetRand(seed + r + 1);
-      total += (await new StagePlayer(engine, strategy).play()).score;
-    }
-    return total / runsPerOption;
-  }
+  const score =
+    scoreOptions ||
+    ((options) =>
+      scorePDrinkTurns(engine, strategy, options, { seed, runsPerOption }));
 
-  try {
-    for (const slot of auto) {
-      let best = null;
-      for (let turn = 0; turn <= stage.turnCount; turn++) {
-        const option = turn || null;
-        const turns = plan.slice();
-        turns[slot] = option;
-        const score = await meanScore(turns);
-        if (!best || score > best.score) best = { option, score };
-      }
-      plan[slot] = best.option;
-    }
-  } finally {
-    idol.pDrinkTurns = original;
-    logger.reset();
-    resetRand(seed);
+  for (const slot of auto) {
+    const options = Array.from({ length: stage.turnCount + 1 }, (_, turn) => {
+      const turns = plan.slice();
+      turns[slot] = turn || null;
+      return turns;
+    });
+    const scores = await score(options, seed);
+    let best = 0;
+    scores.forEach((s, i) => {
+      if (s > scores[best]) best = i;
+    });
+    plan[slot] = options[best][slot];
   }
   return plan;
+}
+
+// The mean score of each option (a pDrinkTurns array), each played on seeds
+// seed + 1 .. seed + runsPerOption. Reseeds the engine's random numbers
+// afterwards from a draw made before scoring, so engines that score the same
+// options (one per worker) don't go on with the same draws. The engine's
+// config is left as it was.
+export async function scorePDrinkTurns(
+  engine,
+  strategy,
+  options,
+  { seed, runsPerOption = 16 },
+) {
+  const { idol } = engine.config;
+  const original = idol.pDrinkTurns;
+  const after = Math.floor(getRand() * 2 ** 32);
+  try {
+    const scores = [];
+    for (const turns of options) {
+      idol.pDrinkTurns = turns;
+      let total = 0;
+      for (let r = 0; r < runsPerOption; r++) {
+        resetRand(seed + r + 1);
+        total += (await new StagePlayer(engine, strategy).play()).score;
+      }
+      scores.push(total / runsPerOption);
+    }
+    return scores;
+  } finally {
+    idol.pDrinkTurns = original;
+    engine.logger.reset();
+    resetRand(after);
+  }
 }

@@ -153,3 +153,48 @@ test("planning a drink's turn picks one, keeps set turns and leaves the config a
   assert.ok(plan[1] == null || (plan[1] >= 1 && plan[1] <= engine.config.stage.turnCount));
   assert.deepEqual(engine.config.idol.pDrinkTurns, [2, null]);
 });
+
+test("planning drinks gives the same plan when the options are scored on separate engines", async () => {
+  const { STRATEGIES, planPDrinkTurns, scorePDrinkTurns } = await import(
+    "gakumas-engine"
+  );
+  const loadout = {
+    params: [1000, 1000, 1000, 50],
+    skillCardIds: [1, 3, 5, 13, 43, 45],
+    pDrinkIds: [1, 5],
+  };
+  const withStrategy = () => {
+    const engine = createEngine(loadout);
+    const strategy = new STRATEGIES.HeuristicStrategy(engine);
+    engine.strategy = strategy;
+    return { engine, strategy };
+  };
+  const here = withStrategy();
+  resetRand(7);
+  const plan = await planPDrinkTurns(here.engine, here.strategy, {
+    runsPerOption: 2,
+  });
+
+  // As the simulator does it: each worker scores a share of the options.
+  const workers = [withStrategy(), withStrategy()];
+  resetRand(7);
+  const split = await planPDrinkTurns(withStrategy().engine, null, {
+    scoreOptions: async (options, seed) => {
+      const half = Math.ceil(options.length / 2);
+      const shares = [options.slice(0, half), options.slice(half)];
+      // One after the other: workers don't share the random numbers.
+      const scores = [];
+      for (const [i, share] of shares.entries()) {
+        const { engine, strategy } = workers[i];
+        scores.push(
+          ...(await scorePDrinkTurns(engine, strategy, share, {
+            seed,
+            runsPerOption: 2,
+          })),
+        );
+      }
+      return scores;
+    },
+  });
+  assert.deepEqual(split, plan);
+});
