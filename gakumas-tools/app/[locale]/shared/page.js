@@ -6,6 +6,7 @@ import {
   generateMetadataForTool,
 } from "@/utils/metadata";
 import { connect } from "@/utils/mongodb";
+import { OG_SIZE } from "@/utils/og";
 import { withOpeners } from "@/utils/shareOpens";
 import {
   STAGE_RUNS_MAX,
@@ -26,7 +27,18 @@ export async function generateMetadata({ params, searchParams }) {
     const listed = await listedRunStages(db);
     const count = listed.find((s) => s.stageId == stageId)?.count ?? 0;
     if (count) {
-      return await generateMetadataForSharedStage(stage, count, locale);
+      const metadata = await generateMetadataForSharedStage(
+        stage,
+        count,
+        locale,
+      );
+      // The count changes the URL, so where it was posted fetches a new card
+      // once more runs are listed.
+      const query = new URLSearchParams({ stage: stageId, locale, n: count });
+      metadata.openGraph.images = [
+        { url: `/api/shared-board-preview?${query}`, ...OG_SIZE },
+      ];
+      return metadata;
     }
   }
   return await generateMetadataForTool("sharedRuns", locale, "/shared");

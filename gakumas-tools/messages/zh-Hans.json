@@ -692,7 +692,8 @@
     "older": "更早的记录",
     "newest": "回到最新",
     "emptyAction": "分享你的记录",
-    "metaStage": "玩家在{name}分享的 {count} 个编组，附网站模拟的分数，可与自己的编组并排比较。"
+    "metaStage": "玩家在{name}分享的 {count} 个编组，附网站模拟的分数，可与自己的编组并排比较。",
+    "metaMore": "另有 {count} 个"
   },
   "StageSharedRuns": {
     "title": "本舞台的分享记录",

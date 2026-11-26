@@ -692,7 +692,8 @@
     "older": "Older runs",
     "newest": "Back to newest",
     "emptyAction": "Share yours",
-    "metaStage": "{count, plural, one {# run} other {# runs}} players shared on {name}, each simulated by the site. Open one to run it beside your own."
+    "metaStage": "{count, plural, one {# run} other {# runs}} players shared on {name}, each simulated by the site. Open one to run it beside your own.",
+    "metaMore": "+{count} more"
   },
   "StageSharedRuns": {
     "title": "Shared runs for this stage",

@@ -700,7 +700,8 @@
     "older": "さらに古いラン",
     "newest": "最新に戻る",
     "emptyAction": "自分のランを共有",
-    "metaStage": "{name}でみんなが共有した編成 {count}件。サイトがシミュレーションしたスコア付きで、自分の編成と並べて比べられます。"
+    "metaStage": "{name}でみんなが共有した編成 {count}件。サイトがシミュレーションしたスコア付きで、自分の編成と並べて比べられます。",
+    "metaMore": "ほか{count}件"
   },
   "StageSharedRuns": {
     "title": "このステージの共有ラン",
