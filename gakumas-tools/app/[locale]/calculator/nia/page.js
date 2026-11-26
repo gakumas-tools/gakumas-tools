@@ -7,7 +7,9 @@ import { TARGET_RATING_BY_RANK } from "@/utils/produceRank";
 export async function generateMetadata({ params }) {
   const { locale } = await params;
 
-  return await generateMetadataForTool("niaCalculator", locale, "/calculator/nia");
+  return await generateMetadataForTool("niaCalculator", locale, "/calculator/nia", {
+    ownImage: true,
+  });
 }
 
 export default async function NiaProduceRankCalculatorPage({ params }) {

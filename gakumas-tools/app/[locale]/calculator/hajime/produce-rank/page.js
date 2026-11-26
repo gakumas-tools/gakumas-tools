@@ -11,6 +11,7 @@ export async function generateMetadata({ params }) {
     "produceRankCalculator",
     locale,
     "/calculator/hajime/produce-rank",
+    { ownImage: true },
   );
 }
 
