@@ -522,3 +522,4 @@ id,name,rarity,upgraded,plan,mode,sourceType,pIdolId,welfare,effects
 521,乖離する美学+,SSR,TRUE,sense,stage,pIdol,167,FALSE,"at:mentalCardUsed { if:concentration>=13 { effectCounter+=1; if:effectCounter%3==2 { concentration+=6; genki+=5; limit:3 } } }"
 522,轟く名前,SSR,FALSE,anomaly,stage,pIdol,168,FALSE,
 523,轟く名前+,SSR,TRUE,anomaly,stage,pIdol,168,FALSE,"at:afterCardUsed { if:fullPowerTimes>=1 & cardHasEffect(strength) { effectCounter+=1; if:effectCounter%3==2 { setStance(preservation2); setStrengthEffectBuff(0.3); genki+=14; limit:2 } } }"
+524,変身ヒーローズ,SR,FALSE,anomaly,produce,support,,FALSE,
