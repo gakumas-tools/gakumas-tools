@@ -35,6 +35,7 @@ export default function ManualPlay({
         "MOVE_TO_HAND_SELECTION",
         "MOVE_TO_TOP_OF_DECK_SELECTION",
         "USE_CARD_FREE_SELECTION",
+        "GROW_SELECTION",
       ].includes(pendingDecision?.type) && (
         <HoldModal
           decision={pendingDecision}

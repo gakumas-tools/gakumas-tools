@@ -15,6 +15,7 @@ import { S } from "../../constants";
  * @param {Function} getCardEffects - Function to get card effects
  * @param {Function} getCardCosts - Function to get card costs
  * @param {Function} getCardRarity - Function to get card rarity
+ * @param {Function} selectCardsToGrow - Function to select cards to grow
  * @returns {Set} Set of matching card indices
  */
 export function getTargetRuleCards(
@@ -23,11 +24,12 @@ export function getTargetRuleCards(
   source,
   getCardEffects,
   getCardCosts,
-  getCardRarity
+  getCardRarity,
+  selectCardsToGrow,
 ) {
   // Handle AST nodes
   if (targetRule && typeof targetRule === "object") {
-    return evaluateTargetAST(state, targetRule, source, getCardEffects, getCardCosts, getCardRarity);
+    return evaluateTargetAST(state, targetRule, source, getCardEffects, getCardCosts, getCardRarity, selectCardsToGrow);
   }
 
   // Handle simple string identifier (fallback for direct calls)
@@ -41,11 +43,11 @@ export function getTargetRuleCards(
 /**
  * Evaluate a target expression AST node
  */
-function evaluateTargetAST(state, node, source, getCardEffects, getCardCosts, getCardRarity) {
+function evaluateTargetAST(state, node, source, getCardEffects, getCardCosts, getCardRarity, selectCardsToGrow) {
   switch (node.type) {
     case "binary": {
-      const left = evaluateTargetAST(state, node.left, source, getCardEffects, getCardCosts, getCardRarity);
-      const right = evaluateTargetAST(state, node.right, source, getCardEffects, getCardCosts, getCardRarity);
+      const left = evaluateTargetAST(state, node.left, source, getCardEffects, getCardCosts, getCardRarity, selectCardsToGrow);
+      const right = evaluateTargetAST(state, node.right, source, getCardEffects, getCardCosts, getCardRarity, selectCardsToGrow);
       if (node.op === "&") {
         // Intersection
         const result = new Set();
@@ -65,7 +67,7 @@ function evaluateTargetAST(state, node, source, getCardEffects, getCardCosts, ge
     case "unary": {
       if (node.op === "!") {
         // Complement (relative to all cards)
-        const operand = evaluateTargetAST(state, node.operand, source, getCardEffects, getCardCosts, getCardRarity);
+        const operand = evaluateTargetAST(state, node.operand, source, getCardEffects, getCardCosts, getCardRarity, selectCardsToGrow);
         const result = new Set();
         for (let k = 0; k < state[S.cardMap].length; k++) {
           if (!operand.has(k)) result.add(k);
@@ -115,6 +117,13 @@ function evaluateTargetAST(state, node, source, getCardEffects, getCardCosts, ge
           if (state[S.cardMap][k].id == wantId) result.add(k);
         }
         return result;
+      }
+      if (name === "selectUpto") {
+        const num = args.length > 0 && args[0].type === "number" ? args[0].value : 1;
+        const targets = node.target ?
+          evaluateTargetAST(state, node.target, source, getCardEffects, getCardCosts, getCardRarity, selectCardsToGrow) :
+          new Set(Array.from({ length: state[S.cardMap].length }, (_, i) => i));
+        return selectCardsToGrow(state, targets, num, true);
       }
       console.warn(`Unknown target function: ${name}`);
       return new Set();

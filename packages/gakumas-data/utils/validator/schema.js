@@ -58,6 +58,9 @@ export const GROWTH_FIELDS = new Set([
   "g.scoreByGenki",
   "g.stanceLevel",
 ]);
+export const GROWTH_ASSIGNABLE_FIELDS = new Set([
+  "g.staminaCost",
+]);
 
 // Introspect the real engine components so the schema stays in lockstep.
 // Stub engine supplies just the fields constructors touch (logger, plus
@@ -132,7 +135,7 @@ export const TARGET_IDENTIFIERS = new Set([
 ]);
 
 // Target-expression function calls (appear inside `target:` / `[...]`).
-export const TARGET_FUNCTIONS = new Set(["effect", "cost", "baseId", "id"]);
+export const TARGET_FUNCTIONS = new Set(["effect", "cost", "baseId", "id", "selectUpto"]);
 
 // Filter identifiers on `at:phase[...]` phase filters — reuse target ids.
 // (The engine evaluates phase filters via getTargetRuleCards.)

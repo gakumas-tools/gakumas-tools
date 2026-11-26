@@ -17,6 +17,7 @@ export default function HoldModal({ decision, onDecision, idolId }) {
     {
       HOLD_SELECTION: "selectCardsToHold",
       MOVE_TO_TOP_OF_DECK_SELECTION: "selectCardsToMoveToTopOfDeck",
+      GROW_SELECTION: "selectCardsToGrow",
     }[decision.type] ?? "selectCardsToMoveToHand";
 
   const toggleCard = (arrayIndex) => {

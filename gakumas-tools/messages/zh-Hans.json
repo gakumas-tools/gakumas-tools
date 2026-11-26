@@ -832,6 +832,7 @@
     "selectCardsToHold": "选择 {num} 张卡片",
     "selectCardsToMoveToHand": "选择 {num} 张卡片",
     "selectCardsToMoveToTopOfDeck": "选择 {num} 张移到牌库顶端的卡片",
+    "selectCardsToGrow": "选择 {num} 张卡片进行成长",
     "confirm": "确认"
   },
   "BoxPlot": {

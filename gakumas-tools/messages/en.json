@@ -832,6 +832,7 @@
     "selectCardsToHold": "Select {num} {num, plural, =1 {card} other {cards}} to hold",
     "selectCardsToMoveToHand": "Select {num} {num, plural, =1 {card} other {cards}} to move to hand",
     "selectCardsToMoveToTopOfDeck": "Select {num} {num, plural, =1 {card} other {cards}} to move to the top of the deck",
+    "selectCardsToGrow": "Select {num} {num, plural, =1 {card} other {cards}} to grow",
     "confirm": "Confirm"
   },
   "BoxPlot": {

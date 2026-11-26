@@ -840,6 +840,7 @@
     "selectCardsToHold": "{num}枚のカードを選択",
     "selectCardsToMoveToHand": "{num}枚のカードを選択",
     "selectCardsToMoveToTopOfDeck": "山札の一番上に移動するカードを{num}枚選択",
+    "selectCardsToGrow": "成長させるカードを{num}枚選択",
     "confirm": "確認"
   },
   "BoxPlot": {
