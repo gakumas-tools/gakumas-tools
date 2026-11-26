@@ -86,10 +86,13 @@ export default class ManualStrategy extends BaseStrategy {
       state,
       handCards: state[S.handCards],
       usableCards,
+      pDrinks: this.engine.getHeldPDrinks(state),
     });
 
     // Selection prompts replay this use with the draws it made.
     recordRand();
+    // The player may drink a held P-drink instead: { pDrink: index }.
+    if (selectedCard?.pDrink != null) return { pDrink: selectedCard.pDrink };
     return { card: selectedCard };
   }
 

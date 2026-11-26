@@ -195,3 +195,23 @@ test("an Upto selection is optional", () => {
   assert.equal(request.num, 1);
   assert.equal(request.optional, true);
 });
+
+test("manual play offers the held P-drinks and passes a drink choice on", async () => {
+  const state = [];
+  let request;
+  const engine = {
+    logger: { log: () => ({}), getHandStateForLogging: () => ({}) },
+    isCardUsable: () => true,
+    getHeldPDrinks: () => [5, 18],
+  };
+  state[S.handCards] = [0];
+  state[S.cardMap] = [{ id: 1 }];
+  const strategy = new ManualStrategy(engine, async (pending) => {
+    request = pending;
+    return { pDrink: 1 };
+  });
+  const decision = await strategy.evaluate(state);
+  assert.equal(request.type, "CARD_SELECTION");
+  assert.deepEqual(request.pDrinks, [5, 18]);
+  assert.deepEqual(decision, { pDrink: 1 });
+});

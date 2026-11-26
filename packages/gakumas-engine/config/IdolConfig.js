@@ -51,14 +51,17 @@ export default class IdolConfig {
     // P-items and skill cards
     this.pItemIds = [...new Set(pItemIds.filter((id) => id))];
     // P-drinks (produce exams only). Up to 3, as in the game's drink slots;
-    // the same drink may be held more than once, so no dedupe. Each is drunk
-    // at the start of its turn (pDrinkTurns, 1-based, default 1).
+    // the same drink may be held more than once, so no dedupe. Each may have
+    // a turn set for it (pDrinkTurns, 1-based); one with none (null) is the
+    // strategy's to time (StageEngine.usePDrink).
     const drinks = (pDrinkIds || [])
-      .map((id, i) => ({ id, turn: parseInt(pDrinkTurns?.[i], 10) || 1 }))
+      .map((id, i) => ({ id, turn: parseInt(pDrinkTurns?.[i], 10) || null }))
       .filter((drink) => PDrinks.getById(drink.id))
       .slice(0, MAX_P_DRINKS);
     this.pDrinkIds = drinks.map((drink) => drink.id);
-    this.pDrinkTurns = drinks.map((drink) => Math.max(1, drink.turn));
+    this.pDrinkTurns = drinks.map((drink) =>
+      drink.turn > 0 ? drink.turn : null,
+    );
     const { dedupedCards, dupeIndices } = this.getDedupedCards(cards);
     dedupedCards.forEach((c) => {
       delete c.index;
