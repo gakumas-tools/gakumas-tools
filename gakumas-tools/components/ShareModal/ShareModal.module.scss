@@ -1,3 +1,4 @@
+@use "../../styles/mixins";
 @use "../../styles/tokens";
 
 .actions {
@@ -38,4 +39,72 @@
     opacity: 1;
     translate: 0 0;
   }
+}
+
+.help {
+  margin: 0 0 tokens.$space-3;
+  color: tokens.$surface-ink-muted;
+  font-size: tokens.$text-sm;
+}
+
+.urlRow {
+  display: flex;
+  gap: tokens.$space-2;
+  margin-bottom: tokens.$space-3;
+}
+
+.urlInput {
+  flex: 1;
+  min-width: 0;
+  @include mixins.field;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: tokens.$text-xs;
+  font-weight: tokens.$weight-semibold;
+  @include mixins.no-focus-zoom;
+}
+
+.urlRow .copyBtn {
+  flex-shrink: 0;
+  min-height: tokens.$field-height;
+  padding: 0 tokens.$space-3;
+}
+
+.result {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$space-2;
+  margin-top: tokens.$space-3;
+  padding-top: tokens.$space-3;
+  border-top: 1px solid tokens.$surface-border;
+
+  h4 {
+    margin: 0;
+  }
+
+  .help,
+  .urlRow {
+    margin: 0;
+  }
+}
+
+.name {
+  width: 100%;
+}
+
+.error {
+  margin: 0;
+  color: tokens.$danger;
+  font-size: tokens.$text-sm;
+}
+
+.seeAll {
+  color: tokens.$link;
+  font-size: tokens.$text-sm;
+  text-align: center;
+}
+
+.shownAs {
+  margin: 0;
+  color: tokens.$surface-ink-muted;
+  font-size: tokens.$text-sm;
 }

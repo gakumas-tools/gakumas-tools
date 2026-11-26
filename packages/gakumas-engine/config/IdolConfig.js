@@ -1,5 +1,13 @@
-import { Customizations, PIdols, PItems, SkillCards } from "gakumas-data";
+import {
+  Customizations,
+  PDrinks,
+  PIdols,
+  PItems,
+  SkillCards,
+} from "gakumas-data";
 import { getBaseId, isUniqueCard } from "../utils";
+
+export const MAX_P_DRINKS = 3;
 
 export default class IdolConfig {
   constructor(loadout) {
@@ -7,8 +15,11 @@ export default class IdolConfig {
       params,
       supportBonus,
       pItemIds,
+      pDrinkIds,
+      pDrinkTurns,
       skillCardIdGroups,
       customizationGroups,
+      startStamina,
     } = loadout;
 
     let skillCardIds = [];
@@ -39,6 +50,15 @@ export default class IdolConfig {
 
     // P-items and skill cards
     this.pItemIds = [...new Set(pItemIds.filter((id) => id))];
+    // P-drinks (produce exams only). Up to 3, as in the game's drink slots;
+    // the same drink may be held more than once, so no dedupe. Each is drunk
+    // at the start of its turn (pDrinkTurns, 1-based, default 1).
+    const drinks = (pDrinkIds || [])
+      .map((id, i) => ({ id, turn: parseInt(pDrinkTurns?.[i], 10) || 1 }))
+      .filter((drink) => PDrinks.getById(drink.id))
+      .slice(0, MAX_P_DRINKS);
+    this.pDrinkIds = drinks.map((drink) => drink.id);
+    this.pDrinkTurns = drinks.map((drink) => Math.max(1, drink.turn));
     const { dedupedCards, dupeIndices } = this.getDedupedCards(cards);
     dedupedCards.forEach((c) => {
       delete c.index;
@@ -61,6 +81,10 @@ export default class IdolConfig {
     // Params
     const [vocal, dance, visual, stamina] = params.map((p) => p || 0);
     this.params = { vocal, dance, visual, stamina };
+    // The 体力 the stage starts at. A produce exam starts at the 体力 the run
+    // had, which can be below max; heals still cap at params.stamina.
+    this.startStamina =
+      startStamina == null ? stamina : Math.max(0, Math.min(startStamina, stamina));
     this.supportBonus = supportBonus || 0;
   }
 

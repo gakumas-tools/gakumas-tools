@@ -11,6 +11,7 @@ import {
   FaCheck,
   FaCircleArrowUp,
   FaDownload,
+  FaShareNodes,
   FaWandMagicSparkles,
 } from "react-icons/fa6";
 import { Stages } from "gakumas-data";
@@ -21,6 +22,7 @@ import useRehearsalParser from "@/components/Rehearsal/useRehearsalParser";
 import RehearsalComparison, {
   useComparisonSubmission,
 } from "@/components/RehearsalComparison";
+import useSimulatorShare from "@/components/ShareModal/useSimulatorShare";
 import CompareTab from "@/components/SimulationRuns";
 import SimulatorLogs from "@/components/SimulatorLogs";
 import SimulatorStats from "@/components/SimulatorStats";
@@ -209,6 +211,10 @@ function SimulatorResult({
     logEvent("simulator_scores_download", { count: data.scores.length });
   }, [data.scores]);
 
+  const openShare = useSimulatorShare(
+    pending || stale ? null : currentRun,
+  );
+
   return (
     <div
       id="simulator_result"
@@ -223,6 +229,18 @@ function SimulatorResult({
       </div>
 
       <div className={styles.actions} data-export-hide="true">
+        <Button
+          fill
+          size="sm"
+          style="primary"
+          className={styles.share}
+          onClick={() => openShare("result")}
+          disabled={pending || stale || !currentRun}
+          title={stale ? t("optimizeNeedsSimulation") : undefined}
+        >
+          <FaShareNodes />
+          {t("shareRun")}
+        </Button>
         <Button fill size="sm" onClick={downloadScores}>
           <FaDownload />
           {t("downloadScores")}

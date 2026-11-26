@@ -385,7 +385,24 @@
   @include mixins.pop-in;
 }
 
+// The result (or its error) and the stage's shared runs under it, as one
+// column beside the loadout.
+.resultColumn {
+  flex: 1;
+  max-width: Min(100%, 800px);
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$space-3;
+
+  @media (max-width: 480px) {
+    gap: tokens.$space-2;
+  }
+
+  & > * {
+    max-width: 100%;
+  }
+}
+
 .stageSharedRuns {
-  flex: 1 1 100%;
-  max-width: 600px;
+  min-width: 0;
 }

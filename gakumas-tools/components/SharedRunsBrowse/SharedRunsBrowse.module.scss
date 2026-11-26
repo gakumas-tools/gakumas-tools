@@ -1,4 +1,5 @@
 @use "../../styles/mixins";
+@use "../../styles/colors";
 @use "../../styles/tokens";
 
 .browse {
@@ -16,8 +17,7 @@
   }
 }
 
-.header,
-.run {
+.header {
   display: flex;
   flex-direction: column;
   gap: tokens.$space-2;
@@ -36,13 +36,21 @@
 }
 
 .hint,
-.stage,
-.opened,
-.noScores,
 .empty {
-  margin: 0;
-  color: tokens.$surface-ink-muted;
-  font-size: tokens.$text-sm;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: tokens.$space-3;
+  padding: tokens.$space-5 tokens.$space-3;
+  border-radius: tokens.$radius-md;
+  background: tokens.$surface-muted;
+  text-align: center;
+
+  p {
+    margin: 0;
+    color: tokens.$surface-ink-muted;
+    font-size: tokens.$text-sm;
+  }
 }
 
 .stagePicker {
@@ -53,47 +61,15 @@
   font-size: tokens.$text-sm;
 
   select {
-    max-width: 100%;
+    flex: 1;
+    min-width: 0;
   }
 }
 
-.runs {
-  display: flex;
-  flex-direction: column;
-  gap: tokens.$space-2;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
 
-.runLink {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: tokens.$space-2;
-  color: inherit;
-  text-decoration: none;
 
-  &:hover .name {
-    text-decoration: underline;
-  }
-}
 
-.name {
-  font-weight: tokens.$weight-bold;
-  overflow-wrap: anywhere;
-}
 
-.stats {
-  display: flex;
-  flex-direction: column;
-  gap: tokens.$space-1;
-}
-
-.median {
-  font-size: tokens.$text-sm;
-  font-variant-numeric: tabular-nums;
-}
 
 .pages {
   display: flex;
@@ -102,27 +78,10 @@
 }
 
 .sorts {
-  display: flex;
-  gap: tokens.$space-2;
+  align-self: flex-start;
 }
 
-.sort {
-  padding: tokens.$space-1 tokens.$space-3;
-  border-radius: tokens.$radius-pill;
-  background: tokens.$surface-muted;
-  color: inherit;
-  font-size: tokens.$text-sm;
-  text-decoration: none;
-
-  &.active {
-    background: tokens.$accent-tint;
-    color: tokens.$accent-ink;
-    font-weight: tokens.$weight-bold;
-  }
+.older {
+  margin-left: auto;
 }
 
-.rank {
-  font-weight: tokens.$weight-bold;
-  font-variant-numeric: tabular-nums;
-  color: tokens.$surface-ink-muted;
-}

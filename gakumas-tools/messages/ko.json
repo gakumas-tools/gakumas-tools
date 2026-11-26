@@ -185,7 +185,8 @@
       "p-items": "P아이템",
       "p-drinks": "P드링크",
       "p-idols": "P아이돌",
-      "support-cards": "서포트 카드"
+      "support-cards": "서포트 카드",
+      "stages": "스테이지"
     },
     "categories": {
       "reference": {
@@ -241,7 +242,8 @@
     "openInEditor": "편집기에서 열기",
     "itemTitle": "티어리스트 {lists}개 중 {n}개에 포함",
     "howToRead": "각 항목은 그것을 놓은 티어리스트들의 가운데 단에 있습니다. SS–A 같은 범위는 가운데 절반의 티어리스트가 놓은 위치입니다.",
-    "howToPublish": "내 티어리스트는 공유에서 추가할 수 있습니다. 추가를 선택한 티어리스트만 집계되며, 누구의 티어리스트인지는 표시되지 않습니다.",
+    "howToPublish": "추가를 선택한 티어리스트만 집계되며, 누구의 티어리스트인지는 표시되지 않습니다.",
+    "addYours": "내 티어리스트 추가",
     "publishTitle": "커뮤니티 티어리스트",
     "publishHelp": "이 티어리스트를 커뮤니티 티어리스트에 추가할까요? 합계에 반영되지만 이름은 표시되지 않습니다.",
     "publishedThis": "이 티어리스트는 커뮤니티 티어리스트에 추가되어 있습니다.",
@@ -443,6 +445,7 @@
     "supportBonus": "서포트 보너스 %",
     "multiplierNote": "※ 스코어 보너스는 2400을 초과하는 패러미터에 대해 정확하지 않습니다.",
     "previewNote": "※ 스테이지 프리뷰는 발표된 P아이템과 심사 기준에만 기반합니다. 턴 타입은 아직 알려지지 않았습니다.",
+    "idolRoadMissingData": "{missing, select, idolRow {시뮬레이터에 아직 이 스테이지의 이 아이돌 심사 기준과 턴 수가 없어서 점수가 게임과 다를 수 있습니다.} other {시뮬레이터에 아직 이 스테이지의 추천 효과 「{effect, select, goodConditionTurns {호조} concentration {집중} goodImpressionTurns {호인상} motivation {의욕} strength {강기} fullPower {전력} other {이 P아이돌}}」 응원 효과(応援効果)가 없어서 점수가 게임보다 낮게 나옵니다.}}",
     "enterPercents": "계산식이 밝혀지지 않았으므로 스코어 보너스 %를 직접 입력해 주세요.",
     "linkContestNote": "링크 콘테스트의 행동은 정확하게 재현되지 않을 수 있습니다. 아이돌 간 P아이템과 스킬 카드들의 중복 제거는 아직 구현되지 않았습니다. 직접 중복을 제거하고 기본 카드를 추가해 주세요.",
     "custom": "커스텀",
@@ -466,13 +469,35 @@
     "linkContest": "링크 콘테스트",
     "event": "이벤트",
     "idolRoad": "Idol Road",
+    "produceExam": "프로듀스 시험",
     "custom": "커스텀"
   },
   "StageSummary": {
     "contestStageName": "시즌 {season} - 스테이지 {stage}",
     "eventStageName": "{name} - 스테이지 {stage} - 라운드 {round}",
+    "idolRoadStageName": "Idol Road {name}",
     "custom": "커스텀",
     "activeSeason": "현재 시즌"
+  },
+  "TurnOrder": {
+    "label": "턴 순서 (게임 화면 그대로)",
+    "turnLabel": "{turn}턴: {type}",
+    "vocal": "보컬",
+    "dance": "댄스",
+    "visual": "비주얼",
+    "vocalShort": "Vo",
+    "danceShort": "Da",
+    "visualShort": "Vi"
+  },
+  "StagePDrinks": {
+    "label": "P드링크",
+    "turn": "{turn}턴",
+    "turnLabel": "P드링크 {slot}을(를) 마실 턴",
+    "note": "고른 턴의 시작 시, 첫 카드 전에 마십니다. 게임에서는 언제든 마실 수 있습니다."
+  },
+  "StageStartStamina": {
+    "label": "시험 시작 시 체력",
+    "note": "프로듀스에서 시험에 가져온 체력입니다. 비워 두면 최대 체력에서 시작합니다. 시험 중 회복은 최대 체력에서 멈춥니다."
   },
   "StageCustomizer": {
     "type": "타입",
@@ -520,20 +545,38 @@
   },
   "SimulatorLoadoutImporterModal": {
     "title": "스크린샷에서 편성 불러오기",
-    "instructions": "콘테스트 편성 화면의 스크린샷을 업로드하세요. 파라미터, P아이템, 스킬 카드를 불러오고, 타입 배율로 스테이지와 서포트 보너스를 추정합니다.",
+    "instructions": "콘테스트 편성 화면의 스크린샷을 업로드하세요. 파라미터, P아이템, 스킬 카드를 불러오고, 타입 배율로 스테이지와 서포트 보너스를 추정합니다. Idol Road의 「スコア獲得編成確認」 화면도 지원합니다. 맨 위 스크린샷을 올리고, 덱이 3줄이면 맨 아래까지 스크롤한 스크린샷도 함께 선택하세요.",
     "processing": "처리 중...",
     "error": "불러오기에 실패했습니다",
     "matchingStages": "일치하는 스테이지",
     "pickStage": "가장 잘 맞는 스테이지를 선택했습니다. 다르면 다시 선택하세요.",
-    "noStage": "스크린샷의 타입 배율과 일치하는 스테이지가 없어 스테이지와 서포트 보너스는 변경하지 않았습니다."
+    "noStage": "스크린샷의 타입 배율과 일치하는 스테이지가 없어 스테이지와 서포트 보너스는 변경하지 않았습니다.",
+    "noIdolRoadStage": "이 아이돌의 아이돌 로드 STAGE{stage}는 아직 시뮬레이터에 없어 스테이지는 변경하지 않았습니다. 불러온 파라미터는 화면의 % 값으로, 아이돌 로드 스테이지에만 맞습니다."
   },
   "ShareModal": {
     "title": "공유",
     "more": "더보기",
     "x": "X에 공유",
+    "xResult": "결과를 X에 공유",
     "saveImage": "이미지로 저장",
     "exporting": "저장 중…",
-    "exportFailed": "저장 실패. 다시 시도"
+    "exportFailed": "저장 실패. 다시 시도",
+    "loadoutHelp": "이 링크를 열면 시뮬레이터에서 이 편성이 열립니다.",
+    "copy": "복사",
+    "copied": "복사했습니다",
+    "copyThisLink": "이 링크를 복사하세요:",
+    "resultTitle": "이 결과 공유",
+    "resultHelp": "이 편성과 점수를 누구나 열 수 있는 링크로 만들고, 비교 탭에 저장합니다.",
+    "signInToShareResult": "결과 링크를 만들고 스테이지의 「모두의 런」에 게시하려면 로그인이 필요합니다.",
+    "signIn": "Discord로 로그인",
+    "namePlaceholder": "이름 (선택)",
+    "listOnStage": "이 스테이지의 「모두의 런」에 게시",
+    "makeLink": "결과 링크 만들기",
+    "making": "만드는 중…",
+    "failed": "공유하지 못했습니다. 다시 시도해 주세요.",
+    "sharedNote": "링크가 있는 사람은 누구나 열 수 있습니다. 비교 탭에서 내릴 수 있습니다.",
+    "listedNote": "이 스테이지의 「모두의 런」에도 게시되었습니다. 비교 탭에서 내릴 수 있습니다.",
+    "seeOthers": "이 스테이지의 런 보기"
   },
   "ConfirmModal": {
     "cancel": "취소",
@@ -557,7 +600,8 @@
     "optimizeFailed": "최적화 불가",
     "optimizeNeedsSimulation": "현재 편성으로 시뮬레이션한 후 최적화하세요",
     "staleResults": "변경 전 편성의 결과입니다",
-    "rehearsal": "리허설"
+    "rehearsal": "리허설",
+    "shareRun": "공유"
   },
   "CompareTab": {
     "saved": "저장됨",
@@ -623,12 +667,15 @@
     "saved": "저장됨",
     "saveFailed": "저장 실패",
     "signInPrompt": "저장하려면 로그인이 필요합니다. Discord로 이동할까요?",
-    "hint": "시뮬레이터에서 열면 기록에 추가되어 비교 탭에서 내 편성과 나란히 볼 수 있습니다.",
+    "compareWithMine": "내 것과 비교",
+    "hint": "'시뮬레이터에서 열기'는 이 편성을 불러옵니다. '내 것과 비교'는 내 편성을 그대로 두고 이 스테이지로 바꾼 뒤, 다음 결과 옆에 이 편성을 비교 탭에 보여 줍니다.",
     "metaDescription": "공유된 시뮬레이터 편성: 평균 {mean}, 중앙값 {median}.",
     "metaDescriptionNoScores": "공유된 시뮬레이터 편성.",
     "moreForStage": "이 스테이지의 다른 공유된 런",
     "openedBy": "{count}명이 열어 봤어요",
-    "openedByMore": "{count}명 이상이 열어 봤어요"
+    "openedByMore": "{count}명 이상이 열어 봤어요",
+    "sharedBy": "{name}님",
+    "shownAs": "{name}(으)로 표시됩니다"
   },
   "SharedRunsBrowse": {
     "title": "모두의 런",
@@ -641,9 +688,12 @@
       "top": "점수순"
     },
     "scores": "평균 {mean} · 중앙값 {median}",
-    "empty": "아직 게시된 런이 없습니다. 내 런을 게시하려면 시뮬레이터의 비교 탭에서 저장된 런을 공유한 뒤 「스테이지 페이지에 표시」를 선택하세요.",
+    "empty": "아직 게시된 런이 없습니다. 시뮬레이터에서 편성을 시뮬레이트한 뒤, 「공유」로 게시할 수 있습니다.",
     "older": "이전 런",
-    "newest": "최신으로"
+    "newest": "최신으로",
+    "emptyAction": "내 런 공유",
+    "metaStage": "{name}에서 플레이어들이 공유한 편성 {count}개. 사이트가 시뮬레이션한 점수와 함께, 내 편성과 나란히 비교할 수 있습니다.",
+    "metaMore": "외 {count}개"
   },
   "StageSharedRuns": {
     "title": "이 스테이지의 공유된 런",
@@ -654,7 +704,7 @@
     "yourRun": "내 런 (이 결과)",
     "place": "내 런 포함 {count}개 중 {rank}위",
     "belowTop": "게시된 상위 {count}개보다 아래",
-    "howToList": "내 런을 게시하려면 비교 탭에서 저장된 런을 공유한 뒤 「스테이지 페이지에 표시」를 선택하세요.",
+    "howToList": "내 런을 게시하려면 시뮬레이트한 뒤 「공유」를 누르세요.",
     "seeAll": "모두 보기",
     "listYours": "여기에 게시",
     "namePlaceholder": "이름 (선택)",
@@ -727,6 +777,7 @@
     "noFullPowerChargeTurns": "전력 효과 스킬 카드 사용 불가",
     "noCardUseTurns": "스킬 카드 사용 불가",
     "uneaseTurns": "불안",
+    "timidity": "소심",
     "metamorphosis": "메타모르포제",
     "metamorphosisPreparation": "메타모르포제(준비)",
     "metamorphosisPerformance": "메타모르포제(공연)",
@@ -770,6 +821,7 @@
     "stageEffect": "스테이지 효과",
     "skillCard": "스킬 카드",
     "pItem": "P아이템",
+    "pDrink": "P드링크",
     "numTurns": "{num} 턴",
     "hand": "손패",
     "turnN": "{n} 턴",
@@ -921,5 +973,23 @@
     "back": "{category} 목록",
     "open": "페이지 열기",
     "customizations": "커스터마이즈"
+  },
+  "StagePage": {
+    "turnsTotal": "{n}턴",
+    "preview": "프리뷰",
+    "idolRoadNote": "아이돌의 길의 턴 수와 심사 기준은 아이돌마다 다릅니다. 여기 있는 값은 P아이돌을 고르지 않았을 때 시뮬레이터가 쓰는 값입니다.",
+    "vocal": "Vo",
+    "dance": "Da",
+    "visual": "Vi",
+    "total": "합계",
+    "criteria": "심사 기준",
+    "turns": "턴 수",
+    "firstTurn": "첫 턴",
+    "openSimulator": "시뮬레이터에서 열기",
+    "sharedRuns": "이 스테이지의 공유 런",
+    "metaDescription": "{name} ({type}): 심사 기준 Vo {vocal}% Da {dance}% Vi {visual}%, {turns}턴. 시뮬레이터에서 열거나 다른 플레이어의 공유 런과 비교하세요.",
+    "topRuns": "상위 공유 런",
+    "noRuns": "이 스테이지에 공유된 런이 아직 없습니다. 시뮬레이터에서 열고 당신의 런을 공유해 보세요.",
+    "rehearsalGap": "최근 {days}일 동안 {sources}명의 플레이어가 공유한 리허설 {count}건. 시뮬레이터 평균과 실제 게임의 차이(중앙값): {gap}"
   }
 }

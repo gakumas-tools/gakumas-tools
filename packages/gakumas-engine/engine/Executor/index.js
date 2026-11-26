@@ -98,10 +98,16 @@ export default class Executor extends EngineComponent {
       fixedGenki: (state, value) => resolvers.resolveFixedGenki(state, value),
       fixedStamina: (state, value) =>
         resolvers.resolveFixedStamina(state, value),
-      score: (state, value, growth, rhs) =>
+      score: (state, value, growth, rhs) => {
         resolvers.resolveScore(state, value, growth, rhs, (s) =>
           this.engine.turnManager.getTurnMultiplier(s),
-        ),
+        );
+        // A produce exam's 合格条件 score: the score stops there
+        const { passScore } = this.getConfig(state).stage;
+        if (passScore && state[S.score] > passScore) {
+          state[S.score] = passScore;
+        }
+      },
       goodImpressionTurns: (state, value) =>
         resolvers.resolveGoodImpressionTurns(state, value),
       motivation: (state, value) => resolvers.resolveMotivation(state, value),

@@ -185,7 +185,8 @@
       "p-items": "P-items",
       "p-drinks": "P-drinks",
       "p-idols": "P-idols",
-      "support-cards": "Support cards"
+      "support-cards": "Support cards",
+      "stages": "Stages"
     },
     "categories": {
       "reference": {
@@ -241,7 +242,8 @@
     "openInEditor": "Open in the editor",
     "itemTitle": "Ranked in {n} of {lists} lists",
     "howToRead": "Each item sits in the middle tier of the lists that rank it. A range like SS–A shows where the middle half of lists put it.",
-    "howToPublish": "Add your own list from Share. Only lists their players chose to add are counted, and no one's list is shown by name.",
+    "howToPublish": "Only lists their players chose to add are counted, and no one's list is shown by name.",
+    "addYours": "Add your list",
     "publishTitle": "Community tier list",
     "publishHelp": "Add this list to the community tier list? It counts toward the combined list, never under your name.",
     "publishedThis": "This list is in the community tier list.",
@@ -443,6 +445,7 @@
     "supportBonus": "Support bonus %",
     "multiplierNote": "※ Score multiplier is inaccurate for parameters above 2400.",
     "previewNote": "※ Stage preview is based only on the announced p-items and criteria. Turn types are not yet known.",
+    "idolRoadMissingData": "{missing, select, idolRow {The simulator doesn't have this stage's criteria and turns for this idol yet, so scores may differ from the game.} other {The simulator doesn't have this stage's support effects (応援効果) for {effect, select, goodConditionTurns {Good condition} concentration {Concentration} goodImpressionTurns {Good impression} motivation {Motivation} strength {Strength} fullPower {Full power} other {these}} P-idols yet, so scores will be lower than in game.}}",
     "enterPercents": "Since the score multiplier calculation is unknown, please enter the multipliers (%) directly.",
     "linkContestNote": "Link contest behavior may not be accurately simulated. Deduplication of p-items and skill cards across idols is not yet implemented. Please deduplicate and add default cards manually in the loadout editor.",
     "custom": "Custom",
@@ -466,13 +469,35 @@
     "linkContest": "Link Contest",
     "event": "Event",
     "idolRoad": "Idol Road",
+    "produceExam": "Produce exam",
     "custom": "Custom"
   },
   "StageSummary": {
     "contestStageName": "Season {season} - Stage {stage}",
     "eventStageName": "{name} - Stage {stage} - Round {round}",
+    "idolRoadStageName": "Idol Road {name}",
     "custom": "Custom",
     "activeSeason": "Current season"
+  },
+  "TurnOrder": {
+    "label": "Turn order (as shown in game)",
+    "turnLabel": "Turn {turn}: {type}",
+    "vocal": "Vocal",
+    "dance": "Dance",
+    "visual": "Visual",
+    "vocalShort": "Vo",
+    "danceShort": "Da",
+    "visualShort": "Vi"
+  },
+  "StagePDrinks": {
+    "label": "P-drinks",
+    "turn": "Turn {turn}",
+    "turnLabel": "Turn to drink P-drink {slot}",
+    "note": "Drunk at the start of the turn chosen under each drink, before its first card. In the game you can drink them at any time."
+  },
+  "StageStartStamina": {
+    "label": "体力 at the start of the exam",
+    "note": "The 体力 the produce had going into the exam. Blank starts at max 体力. Recovery during the exam still stops at max."
   },
   "StageCustomizer": {
     "type": "Type",
@@ -520,20 +545,38 @@
   },
   "SimulatorLoadoutImporterModal": {
     "title": "Import loadout from screenshot",
-    "instructions": "Upload a screenshot of the in-game contest loadout screen. Parameters, P-items and skill cards will be loaded, and the stage and support bonus will be inferred from the type multipliers.",
+    "instructions": "Upload a screenshot of the in-game contest loadout screen. Parameters, P-items and skill cards will be loaded, and the stage and support bonus will be inferred from the type multipliers. The Idol Road 「スコア獲得編成確認」 screen works too: upload its top screenshot, and for a deck of 3 rows also one scrolled to the bottom.",
     "processing": "Processing screenshot...",
     "error": "Failed to import",
     "matchingStages": "Matching stages",
     "pickStage": "Best match selected. Pick another if it's wrong.",
-    "noStage": "No stage matches the screenshot's type multipliers, so the stage and support bonus were left unchanged."
+    "noStage": "No stage matches the screenshot's type multipliers, so the stage and support bonus were left unchanged.",
+    "noIdolRoadStage": "This idol's Idol Road STAGE{stage} isn't in the simulator yet, so the stage was left unchanged. The parameters loaded are the screen's percentages, which only fit an Idol Road stage."
   },
   "ShareModal": {
     "title": "Share",
     "more": "More…",
     "x": "Share on X",
+    "xResult": "Share the result on X",
     "saveImage": "Save as image",
     "exporting": "Saving…",
-    "exportFailed": "Couldn't save. Try again"
+    "exportFailed": "Couldn't save. Try again",
+    "loadoutHelp": "Anyone with this link opens this loadout in the simulator.",
+    "copy": "Copy",
+    "copied": "Copied",
+    "copyThisLink": "Copy this link:",
+    "resultTitle": "Share this result",
+    "resultHelp": "Makes a link to this loadout and its scores that anyone can open, and keeps it in Compare.",
+    "signInToShareResult": "Sign in to make a link with the scores and list it on the stage's shared runs.",
+    "signIn": "Sign in with Discord",
+    "namePlaceholder": "Name (optional)",
+    "listOnStage": "Show it on this stage's shared runs",
+    "makeLink": "Make result link",
+    "making": "Making link…",
+    "failed": "Couldn't share it. Try again.",
+    "sharedNote": "Anyone with the link can open it. You can take it down in Compare.",
+    "listedNote": "It's on this stage's shared runs too. You can take it off in Compare.",
+    "seeOthers": "See the stage's runs"
   },
   "ConfirmModal": {
     "cancel": "Cancel",
@@ -557,7 +600,8 @@
     "optimizeFailed": "Can't optimize",
     "optimizeNeedsSimulation": "Simulate the current loadout first",
     "staleResults": "These results are from an earlier loadout",
-    "rehearsal": "Rehearsal"
+    "rehearsal": "Rehearsal",
+    "shareRun": "Share"
   },
   "CompareTab": {
     "saved": "Saved",
@@ -623,12 +667,15 @@
     "saved": "Saved",
     "saveFailed": "Save failed",
     "signInPrompt": "Saving requires sign-in. Continue to Discord?",
-    "hint": "Open in simulator puts this run in your history, so the Compare tab shows it beside your own runs.",
+    "compareWithMine": "Compare with mine",
+    "hint": "Open in simulator loads this run. Compare with mine keeps your own cards, moves them to this run's stage, and shows this run beside your next result in the Compare tab.",
     "metaDescription": "A shared simulator run: mean {mean}, median {median}.",
     "metaDescriptionNoScores": "A shared simulator loadout.",
     "moreForStage": "More shared runs for this stage",
     "openedBy": "{count, plural, one {Opened by # player} other {Opened by # players}}",
-    "openedByMore": "Opened by {count}+ players"
+    "openedByMore": "Opened by {count}+ players",
+    "sharedBy": "by {name}",
+    "shownAs": "Shown as {name}"
   },
   "SharedRunsBrowse": {
     "title": "Shared runs",
@@ -641,9 +688,12 @@
       "top": "Top score"
     },
     "scores": "Average {mean} · Median {median}",
-    "empty": "No listed runs here yet. To list yours, share a saved run in the simulator's Compare tab and choose \"Show on the stage's page\".",
+    "empty": "No listed runs here yet. Simulate a loadout, then tap Share to put yours here.",
     "older": "Older runs",
-    "newest": "Back to newest"
+    "newest": "Back to newest",
+    "emptyAction": "Share yours",
+    "metaStage": "{count, plural, one {# run} other {# runs}} players shared on {name}, each simulated by the site. Open one to run it beside your own.",
+    "metaMore": "+{count} more"
   },
   "StageSharedRuns": {
     "title": "Shared runs for this stage",
@@ -654,7 +704,7 @@
     "yourRun": "Your run (this result)",
     "place": "#{rank} of {count} with yours",
     "belowTop": "Below the top {count} listed",
-    "howToList": "To list yours, share a saved run in Compare and choose \"Show on the stage's page\".",
+    "howToList": "To list yours, tap Share after simulating.",
     "seeAll": "See them all",
     "listYours": "List it here",
     "namePlaceholder": "Name (optional)",
@@ -727,6 +777,7 @@
     "noFullPowerChargeTurns": "No full power effect cards",
     "noCardUseTurns": "No card use",
     "uneaseTurns": "Unease",
+    "timidity": "Timidity",
     "metamorphosis": "Metamorphose",
     "metamorphosisPreparation": "Metamorphose (preparation)",
     "metamorphosisPerformance": "Metamorphose (performance)",
@@ -770,6 +821,7 @@
     "stageEffect": "Stage effect",
     "skillCard": "Skill card",
     "pItem": "P-item",
+    "pDrink": "P-drink",
     "numTurns": "{num} {num, plural, =1 {turn} other {turns}}",
     "hand": "Hand",
     "turnN": "Turn {n}",
@@ -921,5 +973,23 @@
     "back": "All {category}",
     "open": "Open page",
     "customizations": "Customizations"
+  },
+  "StagePage": {
+    "turnsTotal": "{n} turns",
+    "preview": "Preview",
+    "idolRoadNote": "Each idol's road has its own turns and criteria. These are the ones the simulator uses when no P-idol is chosen.",
+    "vocal": "Vo",
+    "dance": "Da",
+    "visual": "Vi",
+    "total": "Total",
+    "criteria": "Criteria",
+    "turns": "Turns",
+    "firstTurn": "First turn",
+    "openSimulator": "Open in simulator",
+    "sharedRuns": "Shared runs for this stage",
+    "metaDescription": "{name} ({type}): criteria Vo {vocal}% Da {dance}% Vi {visual}%, {turns} turns. Open it in the simulator or compare players' shared runs.",
+    "topRuns": "Top shared runs",
+    "noRuns": "No one has shared a run for this stage yet. Open it in the simulator and share yours.",
+    "rehearsalGap": "{count} rehearsals shared by {sources} players in the last {days} days. Median gap between the simulator's mean and the game's: {gap}."
   }
 }

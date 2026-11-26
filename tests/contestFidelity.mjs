@@ -115,6 +115,19 @@ const FIXTURES = [
   "contest-rehearsal-s55-misuzu-7",
   "contest-rehearsal-s55-misuzu-70",
   "contest-rehearsal-s55-misuzu-75",
+  "contest-rehearsal-s56-kotone-m08",
+  "contest-rehearsal-s56-tsubame-m31",
+  "contest-rehearsal-s56-kotone-m15",
+  "contest-rehearsal-s56-misuzu-m14",
+  "contest-rehearsal-s56-misuzu-m01",
+  "contest-rehearsal-s56-misuzu-m01-2",
+  "contest-rehearsal-s56-tsubame-m19",
+  "contest-rehearsal-s56-saki-7932",
+  "contest-rehearsal-s56-temari-5319-5613",
+  "contest-rehearsal-s56-saki-7935-6552",
+  "contest-rehearsal-s56-misuzu-5334-5364",
+  "contest-rehearsal-s56-misuzu-8187-6372",
+  "contest-rehearsal-s56-tsubame-5301",
 ];
 
 function getTypeMultipliers(capture) {
@@ -156,8 +169,33 @@ function putInHand(state, card) {
   state[S.handCards] = [card];
 }
 
-function playAction(engine, state, action, turn) {
-  if (action.cardId === null) return engine.endTurn(state);
+// Puts the cards the next turn draws on top of the deck, so its start
+// effects (e.g. upgradeHand) act on them. One copy per id, not yet removed.
+function stackDeck(state, cardIds) {
+  const picked = [];
+  for (const id of cardIds) {
+    const card = state[S.cardMap].findIndex(
+      (c, i) =>
+        c.id == id &&
+        !state[S.removedCards].includes(i) &&
+        !picked.includes(i) &&
+        !state[S.handCards].includes(i),
+    );
+    assert.ok(card >= 0, `hand: no copy of ${id} left`);
+    picked.push(card);
+  }
+  for (const pile of [S.deckCards, S.discardedCards, S.heldCards]) {
+    state[pile] = state[pile].filter((c) => !picked.includes(c));
+  }
+  // The deck draws from its end.
+  state[S.deckCards].push(...picked.reverse());
+}
+
+function playAction(engine, state, action, turn, nextHand) {
+  if (action.cardId === null) {
+    if (nextHand) stackDeck(state, nextHand);
+    return engine.endTurn(state);
+  }
 
   assert.equal(SkillCards.getById(action.cardId).name, action.name);
 
@@ -167,6 +205,7 @@ function playAction(engine, state, action, turn) {
   );
   assert.ok(card >= 0, `${action.name} removed`);
   putInHand(state, card);
+  if (nextHand) stackDeck(state, nextHand);
   assert.ok(engine.isCardUsable(state, card), `turn ${turn}: usable`);
   return engine.useCard(state, card);
 }
@@ -185,7 +224,9 @@ function replay(capture, play) {
     const turn = action.turn ?? i + 1;
     const next = play.actions[i + 1];
     const endsTurn = !next || (next.turn ?? i + 2) != turn;
-    state = playAction(engine, state, action, turn);
+    assert.ok(i > 0 || !action.hand, "hand: not on the first turn");
+    const nextHand = endsTurn ? next?.hand : undefined;
+    state = playAction(engine, state, action, turn, nextHand);
 
     assert.equal(state[S.turnsElapsed], endsTurn ? turn : turn - 1);
     for (const [field, value] of Object.entries(action.expected)) {

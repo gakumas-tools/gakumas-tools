@@ -16,6 +16,11 @@ All notable changes to the contest simulator will be documented in this file.
 
 
 
+## 2026-11-26
+
+- Preview unbalance support card 勝たしてもらうで！
+- Set costs of 噛み合わないプライド+ and 噛み合わない理屈+ from the announcement
+
 ## 2026-11-20
 
 - Add uijin ume portrait
@@ -28,6 +33,7 @@ All notable changes to the contest simulator will be documented in this file.
 - Add akogare wo daite ippozutsu kanae portrait
 - Add preview of unbalance tsubame
 - Add preview of unbalance mao
+- Fix Maigo no Oyobidashi welfare status
 
 ## 2026-11-19
 

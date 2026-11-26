@@ -1,8 +1,17 @@
 import { getMessages, getTranslations } from "next-intl/server";
 import { Descriptions } from "gakumas-data";
+import { getStage } from "gakumas-loadout";
 import { SITE_URL, alternateLanguages, localePath } from "@/utils/localeUrls";
+import { stagePath, stageTurns } from "@/utils/stageReference";
+import { formatStageNameText } from "@/utils/stages";
 
 const SITE_NAME = "Gakumas Tools";
+
+// The site's card (app/[locale]/opengraph-image.js). A page that sets
+// openGraph loses the card it would inherit, so its link would post with no
+// image: it gets this one. Metadata images also win over a segment's own
+// opengraph-image file, so a page with one passes ownImage to keep it.
+const SITE_IMAGE = { url: "/opengraph-image", width: 1200, height: 630 };
 
 export async function generateDefaultMetadata(locale) {
   const t = await getTranslations({ locale, namespace: "metadata" });
@@ -12,10 +21,16 @@ export async function generateDefaultMetadata(locale) {
     description: t("description"),
     ogDescription: t("description"),
     twitterCard: "summary",
+    ownImage: true,
   });
 }
 
-export async function generateMetadataForTool(tool, locale, path) {
+export async function generateMetadataForTool(
+  tool,
+  locale,
+  path,
+  { ownImage = false } = {},
+) {
   const t_meta = await getTranslations({ locale, namespace: "metadata" });
   const t_tools = await getTranslations({ locale, namespace: "tools" });
   // Optional SEO-specific strings; fall back to the UI title/description.
@@ -30,6 +45,7 @@ export async function generateMetadataForTool(tool, locale, path) {
       `${t_tools(`${tool}.description`)} - ${t_meta("description")}`,
     ogDescription: metaDescription ?? t_tools(`${tool}.description`),
     twitterCard: "summary_large_image",
+    ownImage,
   });
 }
 
@@ -51,20 +67,75 @@ export async function generateMetadataForReference(entity, slug, locale) {
   });
 }
 
+// A stage's reference page: its kind, criteria and turns in the description.
+export async function generateMetadataForStage(stage, locale) {
+  const t_meta = await getTranslations({ locale, namespace: "metadata" });
+  const t_dex = await getTranslations({ locale, namespace: "Dex" });
+  const t_stage = await getTranslations({ locale, namespace: "StageSummary" });
+  const t_type = await getTranslations({ locale, namespace: "StageSelectModal" });
+  const t = await getTranslations({ locale, namespace: "StagePage" });
+  const name = formatStageNameText(stage, t_stage);
+  const pct = (k) => Math.round((Number(stage.criteria?.[k]) || 0) * 100);
+  const turns = stageTurns(stage);
+  const description = t("metaDescription", {
+    name,
+    type: t_type(stage.type),
+    vocal: pct("vocal"),
+    dance: pct("dance"),
+    visual: pct("visual"),
+    turns: turns.total,
+  });
+  return buildMetadata({
+    locale,
+    path: stagePath(stage.id),
+    title: `${name} | ${t_dex("tabs.stages")} - ${t_meta("title")}`,
+    description,
+    ogDescription: description,
+    twitterCard: "summary_large_image",
+  });
+}
+
 export async function generateMetadataForSharedRun(run, locale) {
   const t_meta = await getTranslations({ locale, namespace: "metadata" });
   const t = await getTranslations({ locale, namespace: "SharedRun" });
-  const title = `${run.name || t("untitled")} - ${t_meta("title")}`;
-  const description = Number.isFinite(run.stats?.mean)
+  const t_stage = await getTranslations({ locale, namespace: "StageSummary" });
+  // Where the link is posted, its card says what was run, where, and by whom.
+  const stage = run.stageId != null && getStage(run.stageId, run.customStage);
+  const stageName = stage ? formatStageNameText(stage, t_stage) : null;
+  const what = [run.name || t("untitled"), stageName].filter(Boolean);
+  const title = `${what.join(" | ")} - ${t_meta("title")}`;
+  const scores = Number.isFinite(run.stats?.mean)
     ? t("metaDescription", {
         mean: Math.round(run.stats.mean).toLocaleString(locale),
         median: Math.round(run.stats.median).toLocaleString(locale),
       })
     : t("metaDescriptionNoScores");
+  const description = run.sharedBy
+    ? `${t("sharedBy", { name: run.sharedBy })} · ${scores}`
+    : scores;
   return buildMetadata({
     locale,
     path: `/s/${run.id}`,
     title,
+    description,
+    ogDescription: description,
+    twitterCard: "summary_large_image",
+  });
+}
+
+// One stage's board of listed runs (/shared?stage=<id>): where the link is
+// posted, its card names the stage and how many runs players shared there.
+export async function generateMetadataForSharedStage(stage, count, locale) {
+  const t_meta = await getTranslations({ locale, namespace: "metadata" });
+  const t_tools = await getTranslations({ locale, namespace: "tools" });
+  const t_stage = await getTranslations({ locale, namespace: "StageSummary" });
+  const t = await getTranslations({ locale, namespace: "SharedRunsBrowse" });
+  const name = formatStageNameText(stage, t_stage);
+  const description = t("metaStage", { count, name });
+  return buildMetadata({
+    locale,
+    path: `/shared?stage=${stage.id}`,
+    title: `${name} | ${t_tools("sharedRuns.title")} - ${t_meta("title")}`,
     description,
     ogDescription: description,
     twitterCard: "summary_large_image",
@@ -78,6 +149,7 @@ function buildMetadata({
   description,
   ogDescription,
   twitterCard,
+  ownImage = false,
 }) {
   // Only emit canonical/hreflang/og:url when the page's path is known.
   const url =
@@ -99,6 +171,7 @@ function buildMetadata({
       siteName: SITE_NAME,
       locale,
       type: "website",
+      ...(!ownImage && { images: [SITE_IMAGE] }),
     },
     twitter: {
       card: twitterCard,

@@ -214,3 +214,59 @@ export function likelyMisPick(simMean, grid, stage, slot) {
   );
   return best;
 }
+
+// A stage page's line about the rehearsals players shared for it: how many,
+// from how many players, and the median gap between the simulator and the
+// game. Never one comparison on its own: below MIN_SOURCES players there is
+// no line at all.
+export const STAGE_GAP_MIN_SOURCES = 3;
+// A comparison with fewer rehearsal scores than this says too little.
+export const STAGE_GAP_MIN_SCORES = 3;
+
+function median(values) {
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = sorted.length >> 1;
+  return sorted.length % 2
+    ? sorted[mid]
+    : (sorted[mid - 1] + sorted[mid]) / 2;
+}
+
+/**
+ * Sums up one stage's comparisons, each with `simMean` (the simulator's mean
+ * for its loadout, on the engine now running), its rehearsal and its source
+ * (userHash or ipHash). The same loadout and scores shared twice count once,
+ * and likely mis-picks (scores from another stage or slot than the one
+ * picked) are left out. { count, sources, medianGap, medianAbsGap }, or null
+ * if fewer than STAGE_GAP_MIN_SOURCES players are left.
+ */
+export function stageGapSummary(comparisons) {
+  const unique = new Map();
+  for (const c of comparisons) {
+    const scores = c?.rehearsal?.scores;
+    if (!Number.isFinite(c?.simMean) || !Array.isArray(scores)) continue;
+    if (scores.length < STAGE_GAP_MIN_SCORES) continue;
+    unique.set(
+      JSON.stringify([c.loadout ?? null, !!c.enterPercents, scores]),
+      c,
+    );
+  }
+  const gaps = [];
+  const sources = new Set();
+  for (const c of unique.values()) {
+    const source = c.userHash || c.ipHash;
+    if (!source) continue;
+    const { stage, slot, scores, grid } = c.rehearsal;
+    const gap = compareScores([c.simMean], scores);
+    if (!gap || !Number.isFinite(gap.diffPct)) continue;
+    if (likelyMisPick(c.simMean, grid, stage, slot)) continue;
+    gaps.push(gap.diffPct);
+    sources.add(source);
+  }
+  if (sources.size < STAGE_GAP_MIN_SOURCES) return null;
+  return {
+    count: gaps.length,
+    sources: sources.size,
+    medianGap: median(gaps),
+    medianAbsGap: median(gaps.map(Math.abs)),
+  };
+}

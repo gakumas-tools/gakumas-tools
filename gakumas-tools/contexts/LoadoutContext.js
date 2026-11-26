@@ -13,7 +13,11 @@ import {
   getDefaultParams,
   getSimulatorUrl,
   getStage,
+  deserializePDrinkIds,
+  deserializePDrinkTurns,
+  deserializeStartStamina,
   knownStageId,
+  produceExamIdOf,
 } from "gakumas-loadout";
 import { usePathname } from "@/i18n/routing";
 import LoadoutUrlContext from "@/contexts/LoadoutUrlContext";
@@ -24,6 +28,7 @@ import {
   setMemorySlot,
 } from "@/utils/memorySlots";
 import { synchronizeLinkLoadouts } from "@/utils/linkLoadouts";
+import { fitPItemSlots } from "@/utils/pItemSlots";
 
 const LoadoutContext = createContext();
 
@@ -42,10 +47,25 @@ export function LoadoutContextProvider({ children }) {
   const [enterPercents, setEnterPercents] = useState(
     !!initialLoadout.enterPercents
   );
-  const [customStage, setCustomStage] = useState(null);
+  // A custom stage, or a produce exam's turn order ({ turnTypes }).
+  const [customStage, setCustomStage] = useState(
+    produceExamIdOf(initialLoadout.stageId) ? initialLoadout.customStage : null,
+  );
   const [supportBonus, setSupportBonus] = useState(initialLoadout.supportBonus);
   const [params, setParams] = useState(initialLoadout.params);
   const [pItemIds, setPItemIds] = useState(initialLoadout.pItemIds);
+  // Held only in produce exams; kept while another stage is picked so going
+  // back to the exam restores them, but never passed to other stages.
+  const [pDrinkIds, setPDrinkIds] = useState(() =>
+    deserializePDrinkIds(initialLoadout.pDrinkIds?.join("-")),
+  );
+  const [pDrinkTurns, setPDrinkTurns] = useState(() =>
+    deserializePDrinkTurns(initialLoadout.pDrinkTurns?.join("-")),
+  );
+  // The 体力 a produce exam starts at (null = max). Held like the drinks.
+  const [startStamina, setStartStamina] = useState(
+    initialLoadout.startStamina ?? null,
+  );
   const [skillCardIdGroups, setSkillCardIdGroups] = useState(() =>
     initialLoadout.skillCardIdGroups.map((skillCardIds) =>
       getMemorySlotSkillCardIds({ skillCardIds }),
@@ -58,16 +78,27 @@ export function LoadoutContextProvider({ children }) {
     ),
   );
 
-  const stage = getStage(stageId, customStage);
+  const stage = useMemo(
+    () => getStage(stageId, customStage),
+    [stageId, customStage],
+  );
 
   const loadout = useMemo(
     () => ({
       stageId,
       enterPercents,
-      customStage: stageId == "custom" ? customStage : {},
+      customStage:
+        stageId == "custom"
+          ? customStage
+          : produceExamIdOf(stageId)
+            ? { turnTypes: stage.turnTypes }
+            : {},
       supportBonus,
       params,
       pItemIds,
+      pDrinkIds: produceExamIdOf(stageId) ? pDrinkIds : [0, 0, 0],
+      pDrinkTurns: produceExamIdOf(stageId) ? pDrinkTurns : [1, 1, 1],
+      startStamina: produceExamIdOf(stageId) ? startStamina : null,
       skillCardIdGroups,
       customizationGroups,
     }),
@@ -75,9 +106,13 @@ export function LoadoutContextProvider({ children }) {
       stageId,
       enterPercents,
       customStage,
+      stage,
       supportBonus,
       params,
       pItemIds,
+      pDrinkIds,
+      pDrinkTurns,
+      startStamina,
       skillCardIdGroups,
       customizationGroups,
     ]
@@ -108,11 +143,18 @@ export function LoadoutContextProvider({ children }) {
         }, {});
       }
       setCustomStage(custom);
+    } else if (produceExamIdOf(loadout.stageId)) {
+      setCustomStage({ turnTypes: loadout.customStage?.turnTypes });
     }
     setSupportBonus(loadout.supportBonus);
     setMemorySlots([null, null]);
     setParams(loadout.params);
     setPItemIds(loadout.pItemIds);
+    if (produceExamIdOf(loadout.stageId)) {
+      setPDrinkIds(deserializePDrinkIds(loadout.pDrinkIds?.join("-")));
+      setPDrinkTurns(deserializePDrinkTurns(loadout.pDrinkTurns?.join("-")));
+      setStartStamina(deserializeStartStamina(loadout.startStamina));
+    }
     const groups = loadout.skillCardIdGroups.map((skillCardIds) =>
       getMemorySlotSkillCardIds({ skillCardIds }),
     );
@@ -148,11 +190,9 @@ export function LoadoutContextProvider({ children }) {
   }, [loadout, currentLoadoutIndex, stage]);
 
   useEffect(() => {
-    // If fewer than 4 pItems, pad with 0s
-    if (pItemIds.length < 4) {
-      setPItemIds((cur) => cur.concat(new Array(4 - cur.length).fill(0)));
-    }
-  }, [pItemIds]);
+    // 4 slots, or in a produce exam one empty slot after the last filled one.
+    setPItemIds((cur) => fitPItemSlots(cur, !!produceExamIdOf(stageId)));
+  }, [pItemIds, stageId]);
 
   const stageRef = useRef(stage);
   stageRef.current = stage;
@@ -165,6 +205,9 @@ export function LoadoutContextProvider({ children }) {
     setMemorySlots([null, null]);
     setParams(getDefaultParams(stageRef.current));
     setPItemIds([0, 0, 0, 0]);
+    setPDrinkIds([0, 0, 0]);
+    setPDrinkTurns([1, 1, 1]);
+    setStartStamina(null);
     setSkillCardIdGroups([
       [0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0],
@@ -179,6 +222,22 @@ export function LoadoutContextProvider({ children }) {
     setPItemIds((cur) => {
       const next = [...cur];
       next[index] = itemId;
+      return next;
+    });
+  }, []);
+
+  const replacePDrinkId = useCallback((index, drinkId) => {
+    setPDrinkIds((cur) => {
+      const next = [...cur];
+      next[index] = drinkId;
+      return next;
+    });
+  }, []);
+
+  const setPDrinkTurn = useCallback((index, turn) => {
+    setPDrinkTurns((cur) => {
+      const next = [...cur];
+      next[index] = turn;
       return next;
     });
   }, []);
@@ -310,6 +369,13 @@ export function LoadoutContextProvider({ children }) {
     }
   }, []);
 
+  // The turn order a produce exam shows in game, one entry per turn.
+  const setTurnType = useCallback((turnIndex, type) => {
+    const turnTypes = [...stageRef.current.turnTypes];
+    turnTypes[turnIndex] = type;
+    setCustomStage({ turnTypes });
+  }, []);
+
   const setMemory = useCallback((memory, index) => {
     const stage = stageRef.current;
     const multiplier = stage.type !== "linkContest" && index ? 0.2 : 1;
@@ -342,10 +408,14 @@ export function LoadoutContextProvider({ children }) {
       setLoadout,
       setMemory,
       selectStage,
+      setTurnType,
       setSupportBonus,
       setEnterPercents,
       setParams,
       replacePItemId,
+      replacePDrinkId,
+      setPDrinkTurn,
+      setStartStamina,
       swapPItemIds,
       replaceSkillCardId,
       swapSkillCardIds,
@@ -361,7 +431,10 @@ export function LoadoutContextProvider({ children }) {
       setLoadout,
       setMemory,
       selectStage,
+      setTurnType,
       replacePItemId,
+      replacePDrinkId,
+      setPDrinkTurn,
       swapPItemIds,
       replaceSkillCardId,
       swapSkillCardIds,

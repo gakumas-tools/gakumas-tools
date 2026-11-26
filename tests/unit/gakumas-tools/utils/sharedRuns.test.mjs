@@ -19,6 +19,7 @@ import {
   refreshStageRuns,
   setListed,
   shareLoadout,
+  sharerName,
   unshareRun,
 } from "../../../../gakumas-tools/utils/sharedRuns.js";
 
@@ -141,6 +142,39 @@ test("sharing the same run again gives the same link, with its new name", async 
   assert.equal(second.id, first.id);
   assert.equal(db.collection("sharedRuns").docs.length, 1);
   assert.equal((await getSharedRun(db, first.id)).name, "Saki final (renamed)");
+});
+
+test("a shared run shows the name its owner shared it under", async () => {
+  const db = dbWithSavedRun();
+  const { id } = await shareLoadout(
+    db,
+    "owner",
+    loadoutId.toString(),
+    undefined,
+    "  りす  ",
+  );
+  assert.equal((await getSharedRun(db, id)).sharedBy, "りす");
+
+  // Sharing again takes the owner's name as it is now.
+  await shareLoadout(db, "owner", loadoutId.toString(), undefined, "risu");
+  assert.equal((await getSharedRun(db, id)).sharedBy, "risu");
+});
+
+test("a run shared with no name shows none", async () => {
+  const db = dbWithSavedRun();
+  const { id } = await shareLoadout(db, "owner", loadoutId.toString());
+  assert.equal((await getSharedRun(db, id)).sharedBy, null);
+  // A run shared before names were kept has no field at all.
+  delete db.collection("sharedRuns").docs[0].sharedBy;
+  assert.equal((await getSharedRun(db, id)).sharedBy, null);
+});
+
+test("sharerName trims, caps and drops what isn't a name", () => {
+  assert.equal(sharerName(" a "), "a");
+  assert.equal(sharerName("x".repeat(100)).length, 64);
+  for (const bad of ["", "   ", null, undefined, 3, {}]) {
+    assert.equal(sharerName(bad), null);
+  }
 });
 
 test("a taken id is skipped", async () => {
@@ -269,6 +303,14 @@ async function fakeSimulate(doc) {
 }
 const list = (db, userId, id, listed = true) =>
   setListed(db, userId, id, listed, fakeSimulate);
+
+test("listing a run puts it under its owner's name as it is now", async () => {
+  const db = listingDb();
+  const [id] = await shareRuns(db, [2000]);
+  await setListed(db, "owner", id, true, fakeSimulate, null, "りす");
+  const [run] = await listStageRuns(db, 52);
+  assert.equal(run.sharedBy, "りす");
+});
 
 test("a shared run is unlisted until its owner lists it", async () => {
   const db = listingDb();
@@ -657,4 +699,20 @@ test("ownsSharedRun is true only for the user who shared the run", async () => {
   assert.equal(await ownsSharedRun(db, "BBBBBBBB", "me"), false);
   assert.equal(await ownsSharedRun(db, "AAAAAAAA", null), false);
   assert.equal(await ownsSharedRun(db, "not an id", "me"), false);
+});
+
+test("a stage's listed runs are ranked by the server's median", async () => {
+  const sorts = [];
+  const cursor = {
+    sort: (spec) => (sorts.push(spec), cursor),
+    limit: () => cursor,
+    toArray: async () => [],
+  };
+  const db = { collection: () => ({ find: () => cursor }) };
+  await listStageRuns(db, 52);
+  await refreshStageRuns(db, 52, "v1");
+  assert.deepEqual(sorts, [
+    { "serverStats.median": -1, createdAt: -1 },
+    { "serverStats.median": -1, createdAt: -1 },
+  ]);
 });

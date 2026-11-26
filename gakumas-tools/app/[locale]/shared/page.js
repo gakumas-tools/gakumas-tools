@@ -1,7 +1,12 @@
 import { setRequestLocale } from "next-intl/server";
 import SharedRunsBrowse from "@/components/SharedRunsBrowse";
-import { generateMetadataForTool } from "@/utils/metadata";
+import { getStage } from "gakumas-loadout";
+import {
+  generateMetadataForSharedStage,
+  generateMetadataForTool,
+} from "@/utils/metadata";
 import { connect } from "@/utils/mongodb";
+import { OG_SIZE } from "@/utils/og";
 import { withOpeners } from "@/utils/shareOpens";
 import {
   STAGE_RUNS_MAX,
@@ -12,8 +17,30 @@ import {
   parseStageId,
 } from "@/utils/sharedRuns";
 
-export async function generateMetadata({ params }) {
+export async function generateMetadata({ params, searchParams }) {
   const { locale } = await params;
+  const stageId = parseStageId((await searchParams).stage);
+  // getStage falls back to a default stage for an id it doesn't know.
+  const stage = stageId != null ? getStage(stageId) : null;
+  if (stage?.id == stageId) {
+    const { db } = await connect();
+    const listed = await listedRunStages(db);
+    const count = listed.find((s) => s.stageId == stageId)?.count ?? 0;
+    if (count) {
+      const metadata = await generateMetadataForSharedStage(
+        stage,
+        count,
+        locale,
+      );
+      // The count changes the URL, so where it was posted fetches a new card
+      // once more runs are listed.
+      const query = new URLSearchParams({ stage: stageId, locale, n: count });
+      metadata.openGraph.images = [
+        { url: `/api/shared-board-preview?${query}`, ...OG_SIZE },
+      ];
+      return metadata;
+    }
+  }
   return await generateMetadataForTool("sharedRuns", locale, "/shared");
 }
 

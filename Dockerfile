@@ -14,6 +14,12 @@ COPY packages/gakumas-data/package.json ./packages/gakumas-data/package.json
 COPY packages/gakumas-engine/package.json ./packages/gakumas-engine/package.json
 COPY packages/gakumas-images/package.json ./packages/gakumas-images/package.json
 
+# onnxruntime-node's postinstall would fetch its CUDA add-on (linux/x64 only)
+# from an outside feed. The site never loads it (only the import test
+# harnesses do, on CPU, which ships in the package), and a timeout on that
+# fetch has failed deploys, so skip it.
+ENV ONNXRUNTIME_NODE_INSTALL=skip
+
 # Install with frozen lockfile. Security settings (minimum release age,
 # build-script allowlist) are read from pnpm-workspace.yaml / .npmrc.
 RUN pnpm install --frozen-lockfile

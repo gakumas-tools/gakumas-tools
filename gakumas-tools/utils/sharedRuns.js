@@ -22,9 +22,12 @@ const ID_LENGTH = 8;
 const SHARE_ID = new RegExp(`^[0-9A-Za-z]{${ID_LENGTH}}$`);
 const ID_ATTEMPTS = 5;
 
-// What a saved run holds that others may see: never its owner.
+// What a saved run holds that others may see: never its owner's id, only
+// the name they shared it under (sharedBy, their Discord display name when
+// they shared or listed it; null for runs shared before names were shown).
 const PUBLIC_FIELDS = [
   "name",
+  "sharedBy",
   "stageId",
   "enterPercents",
   "customStage",
@@ -46,6 +49,15 @@ export function newShareId() {
   return id;
 }
 
+const MAX_SHARED_BY = 64;
+
+/** The name a run is shown under: the sharer's display name, trimmed, or null. */
+export function sharerName(name) {
+  if (typeof name != "string") return null;
+  const trimmed = name.trim().slice(0, MAX_SHARED_BY);
+  return trimmed || null;
+}
+
 export function isShareId(value) {
   return typeof value == "string" && SHARE_ID.test(value);
 }
@@ -60,7 +72,14 @@ function publicFields(doc) {
  * Shares one of the user's saved runs: { id } of its public copy, made now
  * or the one already made for it, or { error, status }.
  */
-export async function shareLoadout(db, userId, loadoutId, makeId = newShareId) {
+export async function shareLoadout(
+  db,
+  userId,
+  loadoutId,
+  makeId = newShareId,
+  sharedBy = null,
+) {
+  sharedBy = sharerName(sharedBy);
   if (!isObjectId(loadoutId)) return { error: "Invalid id", status: 400 };
   const sourceId = new ObjectId(loadoutId);
   const loadout = await db
@@ -74,10 +93,11 @@ export async function shareLoadout(db, userId, loadoutId, makeId = newShareId) {
     { projection: { _id: 1 } },
   );
   if (existing) {
-    // The saved run may have been renamed since; the rest can't change.
+    // The saved run may have been renamed since, and its owner's display
+    // name changed; the rest can't change.
     await shared.updateOne(
       { _id: existing._id },
-      { $set: { name: loadout.name ?? null } },
+      { $set: { name: loadout.name ?? null, sharedBy } },
     );
     return { id: existing._id };
   }
@@ -91,6 +111,7 @@ export async function shareLoadout(db, userId, loadoutId, makeId = newShareId) {
       await shared.insertOne({
         _id: id,
         ...publicFields(loadout),
+        sharedBy,
         userId,
         sourceId,
         listed: false,
@@ -168,6 +189,7 @@ export async function setListed(
   listed,
   simulate = simulateRunStats,
   version = null,
+  sharedBy = null,
 ) {
   if (!isShareId(id) || typeof listed != "boolean") {
     return { error: "Not found", status: 404 };
@@ -196,7 +218,7 @@ export async function setListed(
   }
   const { matchedCount } = await shared.updateOne(
     { _id: id, userId },
-    { $set: { listed: true, serverStats } },
+    { $set: { listed: true, serverStats, sharedBy: sharerName(sharedBy) } },
   );
   return matchedCount > 0 ? { ok: true } : { error: "Not found", status: 404 };
 }
@@ -231,7 +253,7 @@ export async function refreshStageRuns(
   const shared = db.collection(SHARED_RUNS);
   const docs = await shared
     .find({ stageId, listed: true })
-    .sort({ "serverStats.mean": -1, createdAt: -1 })
+    .sort({ "serverStats.median": -1, createdAt: -1 })
     .limit(STAGE_RUNS_MAX)
     .toArray();
   const stale = docs
@@ -262,10 +284,10 @@ function withoutVersion(serverStats) {
 }
 
 /**
- * The runs listed on a stage's page, highest server-simulated mean first, as
+ * The runs listed on a stage's page, highest server-simulated median first, as
  * anyone may see them: never their owners. Their stats are serverStats, not
  * what the owner's browser sent.
- * Index: { stageId: 1, listed: 1, "serverStats.mean": -1 }.
+ * Index: { stageId: 1, listed: 1, "serverStats.median": -1 }.
  */
 export async function listStageRuns(db, stageId, limit = STAGE_RUNS_LIMIT) {
   if (!isListableStageId(stageId)) return [];
@@ -278,7 +300,7 @@ export async function listStageRuns(db, stageId, limit = STAGE_RUNS_LIMIT) {
       { stageId, listed: true },
       { projection },
     )
-    .sort({ "serverStats.mean": -1, createdAt: -1 })
+    .sort({ "serverStats.median": -1, createdAt: -1 })
     .limit(count)
     .toArray();
   return docs.map((doc) => ({

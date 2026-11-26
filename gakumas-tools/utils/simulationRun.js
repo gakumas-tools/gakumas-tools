@@ -1,4 +1,5 @@
 import { Idols, PIdols, SkillCards, Stages } from "gakumas-data";
+import { getStage } from "gakumas-loadout";
 
 export const MAX_HISTORY = 20;
 
@@ -9,6 +10,8 @@ const LOADOUT_FIELDS = [
   "supportBonus",
   "params",
   "pItemIds",
+  "pDrinkIds",
+  "pDrinkTurns",
   "skillCardIdGroups",
   "customizationGroups",
 ];
@@ -80,7 +83,7 @@ export function deriveRunMeta(loadout) {
   if (stageId === "custom") {
     stageName = customStage?.name || null;
   } else if (stageId) {
-    const stage = Stages.getById(stageId);
+    const stage = getStage(stageId, customStage);
     if (stage) {
       stageName = stage.name;
       season = stage.season || null;
@@ -289,6 +292,7 @@ export function normalizeSavedRun(doc) {
     id: doc._id?.toString?.() || doc._id || doc.id,
     _id: doc._id,
     name: doc.name || null,
+    sharedBy: doc.sharedBy || null,
     createdAt: doc.createdAt || null,
     loadout,
     linkLoadouts: doc.linkLoadouts || null,

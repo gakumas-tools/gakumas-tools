@@ -20,11 +20,13 @@ const INDEXES = {
   sharedRuns: [
     { userId: 1, sourceId: 1 },
     // The stage page (listStageRuns) and the /shared page (browseListedRuns).
-    { stageId: 1, listed: 1, "serverStats.mean": -1 },
+    { stageId: 1, listed: 1, "serverStats.median": -1 },
     { listed: 1, createdAt: -1, _id: -1 },
     { listed: 1, stageId: 1, createdAt: -1, _id: -1 },
   ],
   communityTierLists: { userId: 1, type: 1 },
+  // The stage page (stageRehearsalGap).
+  rehearsalComparisons: { "loadout.stageId": 1, updatedAt: -1 },
 };
 
 /**

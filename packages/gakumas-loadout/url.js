@@ -1,13 +1,34 @@
-import { PItems, SkillCards, Stages } from "gakumas-data";
+import { PDrinks, PItems, SkillCards, Stages } from "gakumas-data";
 import {
   deserializeCustomizations,
   fixCustomizationGroups,
   serializeCustomizations,
 } from "./customizations";
 import { deserializeIds, serializeIds } from "./ids";
-import { getDefaultParams, getStage, knownStageId } from "./stages";
+import {
+  getDefaultParams,
+  getStage,
+  knownStageId,
+  produceExamIdOf,
+  TURN_TYPES,
+} from "./stages";
 
 const SIMULATOR_BASE_URL = "https://gktools.ris.moe/simulator";
+
+// Turn order of a produce exam in the URL: "vo-da-vi-...".
+const TURN_TYPE_CODES = { vocal: "vo", dance: "da", visual: "vi" };
+
+export function serializeTurnTypes(turnTypes) {
+  return turnTypes.map((type) => TURN_TYPE_CODES[type]).join("-");
+}
+
+export function deserializeTurnTypes(value) {
+  if (!value) return null;
+  const types = value
+    .split("-")
+    .map((code) => TURN_TYPES.find((type) => TURN_TYPE_CODES[type] == code));
+  return types.every(Boolean) ? types : null;
+}
 
 const DEFAULTS = {
   stageId: Stages.findLast((s) => s.type == "contest" && !s.preview).id,
@@ -21,13 +42,43 @@ function knownPItemId(id) {
   return PItems.getById(id) ? id : 0;
 }
 
+function knownPDrinkId(id) {
+  return PDrinks.getById(id) ? id : 0;
+}
+
+// P-drinks are held only in produce exams: 3 slots, "drinks=5-11-18".
+export const P_DRINK_SLOTS = 3;
+
+export function deserializePDrinkIds(value) {
+  const ids = value ? deserializeIds(value).map(knownPDrinkId) : [];
+  return Array.from({ length: P_DRINK_SLOTS }, (_, i) => ids[i] || 0);
+}
+
+// The turn each drink is drunk at the start of: "drink_turns=1-11-11",
+// 1-based, 1 when missing.
+export function deserializePDrinkTurns(value) {
+  const turns = value ? deserializeIds(value) : [];
+  return Array.from({ length: P_DRINK_SLOTS }, (_, i) =>
+    Math.max(1, turns[i] || 1),
+  );
+}
+
+// The 体力 a produce exam starts at ("start_stamina=26"): a produce exam starts
+// at the 体力 the run had, which can be below max. null = start at max.
+export function deserializeStartStamina(value) {
+  const stamina = parseInt(value, 10);
+  return stamina >= 0 ? stamina : null;
+}
+
 function knownSkillCardId(id) {
   return SkillCards.getById(id) ? id : 0;
 }
 
 export function getSimulatorUrl(loadout, loadouts) {
-  const stage = Stages.getById(loadout.stageId);
-  if (!stage) return null;
+  if (loadout.stageId == "custom" || !knownStageId(loadout.stageId)) {
+    return null;
+  }
+  const stage = getStage(loadout.stageId, loadout.customStage);
   if (stage.type === "linkContest") {
     const searchParams = loadoutsToSearchParams(loadouts);
     return `${SIMULATOR_BASE_URL}/?${searchParams.toString()}`;
@@ -59,10 +110,26 @@ export function loadoutFromSearchParams(searchParams) {
   skillCardIdGroups = skillCardIdGroups || DEFAULTS.skillCardIdGroups;
   customizationGroups = customizationGroups || DEFAULTS.customizationGroups;
 
-  stageId = knownStageId(parseInt(stageId, 10));
+  const isProduceExam = !!produceExamIdOf(stageId);
+  stageId = knownStageId(isProduceExam ? stageId : parseInt(stageId, 10));
+  const turnTypes = isProduceExam
+    ? deserializeTurnTypes(searchParams.get("turns"))
+    : null;
+  const customStage = turnTypes ? { turnTypes } : {};
+  const pDrinkIds = deserializePDrinkIds(
+    isProduceExam ? searchParams.get("drinks") : null
+  );
+  const pDrinkTurns = deserializePDrinkTurns(
+    isProduceExam ? searchParams.get("drink_turns") : null
+  );
+  const startStamina = deserializeStartStamina(
+    isProduceExam ? searchParams.get("start_stamina") : null,
+  );
   supportBonus = parseFloat(supportBonus);
   if (isNaN(supportBonus)) supportBonus = null;
-  params = params ? deserializeIds(params) : getDefaultParams(getStage(stageId));
+  params = params
+    ? deserializeIds(params)
+    : getDefaultParams(getStage(stageId, customStage));
   pItemIds = deserializeIds(pItemIds).map(knownPItemId);
   skillCardIdGroups = skillCardIdGroups
     .split("_")
@@ -82,10 +149,14 @@ export function loadoutFromSearchParams(searchParams) {
 
   return {
     stageId,
+    customStage,
     enterPercents,
     supportBonus,
     params,
     pItemIds,
+    pDrinkIds,
+    pDrinkTurns,
+    startStamina,
     skillCardIdGroups,
     customizationGroups,
     hasDataFromParams,
@@ -95,15 +166,35 @@ export function loadoutFromSearchParams(searchParams) {
 export function loadoutToSearchParams(loadout) {
   const {
     stageId,
+    customStage,
     enterPercents,
     supportBonus,
     params,
     pItemIds,
+    pDrinkIds,
+    pDrinkTurns,
+    startStamina,
     skillCardIdGroups,
     customizationGroups,
   } = loadout;
   const searchParams = new URLSearchParams();
   searchParams.set("stage", stageId);
+  if (produceExamIdOf(stageId)) {
+    const { turnTypes } = getStage(stageId, customStage);
+    searchParams.set("turns", serializeTurnTypes(turnTypes));
+    if (pDrinkIds?.some((id) => id)) {
+      searchParams.set("drinks", serializeIds(pDrinkIds));
+      if (pDrinkTurns?.some((turn, i) => pDrinkIds[i] && turn > 1)) {
+        searchParams.set(
+          "drink_turns",
+          serializeIds(pDrinkIds.map((id, i) => (id && pDrinkTurns[i]) || 1)),
+        );
+      }
+    }
+    if (startStamina != null) {
+      searchParams.set("start_stamina", startStamina);
+    }
+  }
   if (enterPercents) searchParams.set("enter_percents", "1");
   if (supportBonus != null) {
     searchParams.set("support_bonus", supportBonus);

@@ -1,0 +1,32 @@
+@use "../../styles/tokens";
+
+.stageStartStamina {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$space-1;
+
+  label {
+    font-size: 14px;
+    font-weight: tokens.$weight-bold;
+  }
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: tokens.$space-2;
+}
+
+.input {
+  width: 92px;
+}
+
+.max {
+  color: tokens.$surface-ink-muted;
+}
+
+.note {
+  margin: 0;
+  font-size: 12px;
+  color: tokens.$surface-ink-muted;
+}

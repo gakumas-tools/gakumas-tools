@@ -21,6 +21,7 @@ import {
 import Alert from "@/components/Alert";
 import Button from "@/components/Button";
 import ButtonGroup from "@/components/ButtonGroup";
+import IdolRoadDataNotice from "@/components/IdolRoadDataNotice";
 import Input from "@/components/Input";
 import KofiAd from "@/components/KofiAd";
 import LoadoutEditor from "@/components/LoadoutEditor";
@@ -29,6 +30,9 @@ import SimulatorResult from "@/components/SimulatorResult";
 import StageSelect from "@/components/StageSelect";
 import StageSharedRuns from "@/components/StageSharedRuns";
 import StrategyPicker from "@/components/StrategyPicker";
+import StagePDrinks from "@/components/StagePDrinks";
+import StageStartStamina from "@/components/StageStartStamina";
+import TurnOrder from "@/components/TurnOrder";
 import LoadoutContext from "@/contexts/LoadoutContext";
 import SimulationRunsContext from "@/contexts/SimulationRunsContext";
 import WorkspaceContext from "@/contexts/WorkspaceContext";
@@ -275,6 +279,14 @@ export default function Simulator() {
       <div className={styles.configurator}>
         {stage.preview && <Alert>{t("previewNote")}</Alert>}
         <StageSelect />
+        <IdolRoadDataNotice stage={stage} pIdolId={config.idol.pIdolId} />
+        {stage.type == "produceExam" && (
+          <>
+            <TurnOrder />
+            <StagePDrinks />
+            <StageStartStamina />
+          </>
+        )}
         {stage.type !== "contest" ? (
           <Alert>{t("enterPercents")}</Alert>
         ) : (
@@ -403,62 +415,74 @@ export default function Simulator() {
         </div>
 
         <div className={styles.subLinks} data-export-hide="true">
-          <SimulatorButtons />
+          <SimulatorButtons
+            run={
+              strategy === "HeuristicStrategy" &&
+              !running &&
+              simulatorData?.input.config === config &&
+              simulatorData?.input.linkConfigs === linkConfigs
+                ? simulatorData.run
+                : null
+            }
+          />
           <a
             href="https://github.com/gakumas-tools/gakumas-tools/blob/master/gakumas-tools/simulator/CHANGELOG.md"
             target="_blank"
           >
-            {t("lastUpdated")}: 2026-11-20
+            {t("lastUpdated")}: 2026-11-26
           </a>
         </div>
       </div>
 
-      {strategy === "ManualStrategy" && simulatorData && (
-        <ManualPlay
-          logs={simulatorData.logs}
-          pendingDecision={pendingDecision}
-          onDecision={handleDecision}
-          idolId={simulatorData.input.idolId}
-        />
+      {!simulatorData && !simError && (
+        <div className={styles.resultPlaceholder} />
       )}
 
-      {strategy === "HeuristicStrategy" && simulatorData && (
-        <SimulatorResult
-          pending={running}
-          data={simulatorData}
-          config={config}
-          stale={
-            simulatorData.input.config !== config ||
-            simulatorData.input.linkConfigs !== linkConfigs
-          }
-          enterPercents={simulatorData.input.enterPercents}
-          idolId={simulatorData.input.idolId}
-          plan={simulatorData.input.plan}
-        />
-      )}
+      <div className={styles.resultColumn}>
+        {strategy === "ManualStrategy" && simulatorData && (
+          <ManualPlay
+            logs={simulatorData.logs}
+            pendingDecision={pendingDecision}
+            onDecision={handleDecision}
+            idolId={simulatorData.input.idolId}
+          />
+        )}
 
-      {!simulatorData &&
-        (simError ? (
+        {strategy === "HeuristicStrategy" && simulatorData && (
+          <SimulatorResult
+            pending={running}
+            data={simulatorData}
+            config={config}
+            stale={
+              simulatorData.input.config !== config ||
+              simulatorData.input.linkConfigs !== linkConfigs
+            }
+            enterPercents={simulatorData.input.enterPercents}
+            idolId={simulatorData.input.idolId}
+            plan={simulatorData.input.plan}
+          />
+        )}
+
+        {!simulatorData && simError && (
           <Alert variant="danger" className={styles.resultError}>
             {simError}
           </Alert>
-        ) : (
-          <div className={styles.resultPlaceholder} />
-        ))}
+        )}
 
-      {/* Below the result, so a screenshot of the loadout and its score spread still fits one phone screen. */}
-      <div className={styles.stageSharedRuns} data-export-hide="true">
-        <StageSharedRuns
-          stageId={stage.id}
-          yourRun={
-            strategy === "HeuristicStrategy" &&
-            !running &&
-            simulatorData?.input.config === config &&
-            simulatorData?.input.linkConfigs === linkConfigs
-              ? simulatorData.run
-              : null
-          }
-        />
+        {/* Under the result, in its column, so it never takes a column of its own. */}
+        <div className={styles.stageSharedRuns} data-export-hide="true">
+          <StageSharedRuns
+            stageId={stage.id}
+            yourRun={
+              strategy === "HeuristicStrategy" &&
+              !running &&
+              simulatorData?.input.config === config &&
+              simulatorData?.input.linkConfigs === linkConfigs
+                ? simulatorData.run
+                : null
+            }
+          />
+        </div>
       </div>
     </div>
   );

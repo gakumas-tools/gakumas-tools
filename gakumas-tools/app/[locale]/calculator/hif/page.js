@@ -7,7 +7,9 @@ import { generateMetadataForTool } from "@/utils/metadata";
 export async function generateMetadata({ params }) {
   const { locale } = await params;
 
-  return await generateMetadataForTool("hifCalculator", locale, "/calculator/hif");
+  return await generateMetadataForTool("hifCalculator", locale, "/calculator/hif", {
+    ownImage: true,
+  });
 }
 
 export default async function HifProduceRankCalculatorPage({ params }) {
