@@ -927,10 +927,10 @@ id,name,availableCustomizations,rarity,type,plan,unlockPlv,upgraded,unique,sourc
 926,忠義を胸に+,,SR,mental,sense,1,TRUE,TRUE,pIdol,165,FALSE,,cost-=1,goodConditionTurns+=4; concentration+=1; perfectConditionTurns+=1,1,
 927,一途な従者,,R,active,sense,1,FALSE,TRUE,pIdol,166,FALSE,,cost-=5,score+=3; at:endOfTurn { score+=3; score+=3; limit:1; delay:0 },1,
 928,一途な従者+,,R,active,sense,1,TRUE,TRUE,pIdol,166,FALSE,,cost-=2,score+=3; at:endOfTurn { score+=3; score+=3; limit:1; delay:0 },1,
-929,噛み合わない理屈,,SSR,mental,sense,1,FALSE,TRUE,pIdol,167,FALSE,,stamina-=3,cardUsesRemaining+=1,1,at:goodConditionTurnsIncreased { if:isDirectEffect & goodConditionTurnsDelta>=7 { goodConditionTurns+=6; concentration-=1 }; limit:2 }
-930,噛み合わない理屈+,,SSR,mental,sense,1,TRUE,TRUE,pIdol,167,FALSE,,stamina-=1,cardUsesRemaining+=1,1,at:goodConditionTurnsIncreased { if:isDirectEffect & goodConditionTurnsDelta>=7 { goodConditionTurns+=6; concentration-=1 }; limit:2 }
+929,噛み合わない理屈,,SSR,mental,sense,1,FALSE,TRUE,pIdol,167,FALSE,,stamina-=3,cardUsesRemaining+=1; at:goodConditionTurnsIncreased { if:isDirectEffect & goodConditionTurnsDelta>=7 { goodConditionTurns+=6; concentration-=1 }; limit:2 },1,
+930,噛み合わない理屈+,,SSR,mental,sense,1,TRUE,TRUE,pIdol,167,FALSE,,stamina-=1,cardUsesRemaining+=1; at:goodConditionTurnsIncreased { if:isDirectEffect & goodConditionTurnsDelta>=7 { goodConditionTurns+=6; concentration-=1 }; limit:2 },1,
 931,噛み合わないプライド,,SSR,active,anomaly,1,FALSE,TRUE,pIdol,168,FALSE,,cost-=4,setStance(strength); score+=8; if:isPreservation { drawCard },1,at:stanceChanged { if:isFullPower { target:this { g.scoreTimes+=1; g.score+=10 } }; limit:1 }
 932,噛み合わないプライド+,,SSR,active,anomaly,1,TRUE,TRUE,pIdol,168,FALSE,,cost-=4,setStance(strength); score+=13; if:isPreservation { drawCard },1,at:stanceChanged { if:isFullPower { target:this { g.scoreTimes+=1; g.score+=15 } }; limit:1 }
-933,勝たしてもらうで！,,SSR,mental,sense,1,FALSE,TRUE,support,,FALSE,,cost-=3,concentration+=5,1,"at:mentalCardUsed { effectCounter+=1; if:effectCounter%2==1 { setConcentrationBuff(0.1,2); limit:3 } }"
-934,勝たしてもらうで！+,"38,17",SSR,mental,sense,1,TRUE,TRUE,support,,FALSE,,cost-=1,concentration+=5,1,"at:mentalCardUsed { effectCounter+=1; if:effectCounter%2==1 { setConcentrationBuff(0.1,2); limit:3 } }"
+933,勝たしてもらうで！,,SSR,mental,sense,1,FALSE,TRUE,support,,FALSE,,cost-=3,"concentration+=5; at:mentalCardUsed { effectCounter+=1; if:effectCounter%2==1 { setConcentrationBuff(0.1,2); limit:3 } }",1,
+934,勝たしてもらうで！+,"38,17",SSR,mental,sense,1,TRUE,TRUE,support,,FALSE,,cost-=1,"concentration+=5; at:mentalCardUsed { effectCounter+=1; if:effectCounter%2==1 { setConcentrationBuff(0.1,2); limit:3 } }",1,
 935,恩に報いる一番星,,L,mental,anomaly,1,FALSE,TRUE,pIdol,147,FALSE,,cost-=0,cardUsesRemaining+=1; at:stanceChanged { if:isFullPower & fullPowerCharge>=10 { target:selectUpto[!removed](2) { g.scoreTimes+=1; g.score+=10; g.staminaCost-=5 } }; limit:1 },1,
