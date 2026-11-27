@@ -40,6 +40,7 @@ import TierListPickerModal from "./TierListPickerModal";
 import TierRow from "./TierRow";
 import CommunityTierList from "@/components/CommunityTierList";
 import TierShareModal from "./TierShareModal";
+import { reportShareUse } from "@/utils/shareUse";
 import { AVAILABLE_RANKS, sortRanks } from "./ranks";
 import styles from "./TierList.module.scss";
 
@@ -86,6 +87,18 @@ function TierList({ type }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // The shared list this page was loaded with, as the server counted its
+  // open (the page's type set): editing it or taking it as yours counts as
+  // someone using it. Keeping your own list instead stops that.
+  const sharedQuery = useMemo(() => {
+    if (initialList === EMPTY_LIST) return null;
+    const query = new URLSearchParams(searchParams.toString());
+    query.set("type", type);
+    return query.toString();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const keptMineRef = useRef(false);
+
   const [list, setList] = useState(initialList);
   const listRef = useRef(list);
   listRef.current = list;
@@ -130,15 +143,25 @@ function TierList({ type }) {
   const deltas = comparing && comparison ? comparison.byId : null;
 
   const keepMine = useCallback(() => {
+    keptMineRef.current = true;
     setList(mine);
     setMine(null);
     setComparing(false);
   }, [mine]);
 
   const useTheirs = useCallback(() => {
+    reportShareUse("tierList", sharedQuery);
     setMine(null);
     setComparing(false);
-  }, []);
+  }, [sharedQuery]);
+
+  // An edit, counted once a drag settles (a cancelled drag puts it back).
+  useEffect(() => {
+    if (activeId != null || keptMineRef.current || list === initialList) return;
+    if (encodeList(list) !== encodeList(initialList)) {
+      reportShareUse("tierList", sharedQuery);
+    }
+  }, [list, activeId, initialList, sharedQuery]);
 
   // Defer URL sync until a drag finishes — hover-driven mid-drag list mutations
   // would otherwise rewrite the URL on every frame.

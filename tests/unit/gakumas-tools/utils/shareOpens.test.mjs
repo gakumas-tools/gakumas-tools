@@ -2,9 +2,12 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   MAX_IP_HASHES,
+  MAX_SHARE_QUERY_LENGTH,
   isCrawler,
   shareKey,
   shareOpenWrites,
+  shareUseKey,
+  shareUseWrites,
   sharedRunKey,
   withOpeners,
 } from "../../../../gakumas-tools/utils/shareOpens.js";
@@ -140,4 +143,50 @@ test("withOpeners leaves the runs as they were if the counts can't be read", asy
   const runs = [{ id: "AAAAAAAA" }];
   assert.deepEqual(await withOpeners(opensDb([], { fail: true }), runs), runs);
   assert.deepEqual(await withOpeners(opensDb([]), []), []);
+});
+
+test("shareUseKey keys a reuse report like the open it follows, and refuses what isn't one", () => {
+  assert.equal(
+    shareUseKey({ kind: "simulator", query: "stage=1&cards=5-6" }),
+    shareKey("simulator", params("stage=1&cards=5-6")),
+  );
+  assert.equal(shareUseKey({ kind: "simulator", query: "?cards=5-6" }), shareKey("simulator", params("cards=5-6")));
+  assert.equal(shareUseKey({ kind: "sharedRun", query: "id=AbC12345" }), sharedRunKey("AbC12345"));
+  assert.equal(shareUseKey({ kind: "simulator", query: "stage=1" }), null);
+  for (const kind of ["memories", "constructor", "__proto__", "toString", 3, null]) {
+    assert.equal(shareUseKey({ kind, query: "cards=1&d=x&id=y" }), null, String(kind));
+  }
+  assert.equal(shareUseKey({ kind: "tierList", query: ["d=x"] }), null);
+  assert.equal(shareUseKey({ kind: "tierList" }), null);
+  assert.equal(shareUseKey({ kind: "simulator", query: `cards=${"1".repeat(MAX_SHARE_QUERY_LENGTH)}` }), null);
+  assert.equal(shareUseKey(null), null);
+});
+
+test("shareUseWrites counts a reuse only on a link already opened, not by its first opener", () => {
+  const now = new Date("2026-11-27T00:00:00Z");
+  const writes = shareUseWrites({ key: "k", ipHash: "ip2", now });
+  assert.equal(writes.length, 2);
+  const [count, reuser] = writes;
+  assert.deepEqual(count.updateOne, {
+    filter: { _id: "k", "ipHashes.0": { $ne: "ip2" } },
+    update: { $inc: { reuses: 1 }, $set: { lastReuseAt: now } },
+  });
+  assert.deepEqual(reuser.updateOne, {
+    filter: {
+      _id: "k",
+      "ipHashes.0": { $ne: "ip2" },
+      [`reuserHashes.${MAX_IP_HASHES - 1}`]: { $exists: false },
+    },
+    update: { $addToSet: { reuserHashes: "ip2" } },
+  });
+  for (const { updateOne } of writes) {
+    assert.equal(updateOne.upsert, undefined);
+    assert.equal(updateOne.update.$setOnInsert, undefined);
+  }
+});
+
+test("shareUseWrites can count the first opener too (a shared run's opens skip its owner)", () => {
+  const [count, reuser] = shareUseWrites({ key: "k", ipHash: "ip1", now: new Date(0), skipFirstOpener: false });
+  assert.deepEqual(count.updateOne.filter, { _id: "k" });
+  assert.deepEqual(reuser.updateOne.filter, { _id: "k", [`reuserHashes.${MAX_IP_HASHES - 1}`]: { $exists: false } });
 });

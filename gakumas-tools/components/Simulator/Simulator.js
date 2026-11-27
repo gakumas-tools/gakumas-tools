@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 import { useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
 import { FaHashtag, FaPercent } from "react-icons/fa6";
 import {
   IdolConfig,
@@ -48,6 +49,7 @@ import {
 } from "@/simulator/workerPool";
 import c from "@/utils/classNames";
 import { createProgressStore } from "@/utils/progressStore";
+import { reportShareUse } from "@/utils/shareUse";
 import { extractLoadoutFields } from "@/utils/simulationRun";
 import { bucketScores, getMedianScore, mergeResults } from "@/utils/simulator";
 import usePersistedState from "@/utils/usePersistedState";
@@ -101,6 +103,26 @@ export default function Simulator() {
   const [progress] = useState(createProgressStore);
   const abortRef = useRef(null);
   const runSimulationRef = useRef(null);
+
+  // A shared link this page was loaded with (cards or loadout in the URL at
+  // mount): running it or changing it counts as someone using it.
+  const searchParams = useSearchParams();
+  const sharedQuery = useMemo(
+    () =>
+      searchParams?.get("cards") || searchParams?.getAll("loadout").some(Boolean)
+        ? searchParams.toString()
+        : null,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
+  const initialSimulatorUrl = useRef(simulatorUrl);
+  const reportUse = useCallback(
+    () => reportShareUse("simulator", sharedQuery),
+    [sharedQuery],
+  );
+  useEffect(() => {
+    if (simulatorUrl !== initialSimulatorUrl.current) reportUse();
+  }, [simulatorUrl, reportUse]);
 
   const config = useMemo(() => {
     const idolConfig = new IdolConfig(loadout);
@@ -197,6 +219,7 @@ export default function Simulator() {
   }
 
   async function startManualPlay() {
+    reportUse();
     abortRef.current?.abort();
     const controller = new AbortController();
     abortRef.current = controller;
@@ -243,6 +266,7 @@ export default function Simulator() {
   const startSimulation = useCallback(() => runSimulationRef.current(), []);
 
   async function runSimulation() {
+    reportUse();
     abortRef.current?.abort();
     const controller = new AbortController();
     abortRef.current = controller;
