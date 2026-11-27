@@ -425,3 +425,12 @@ twice, so the deck holds two copies of it and of スターライト.
 `contest-rehearsal-s56-tsubame-5301` is a second play of 5301 alone (as
 `contest-rehearsal-s56-tsubame-m19`), ending at 2,903, with 積み重ね moved to
 保留 on turn 10 and played from it on turn 11. Both check score only.
+
+Stage 3 again, 2026-11-28, with 9423 in place of 6372 as Sub:
+`contest-rehearsal-s56-misuzu-8187-9423` is ゆっくり、一歩ずつ 秦谷美鈴 8187 with
+9423 (1200/593/977, 体力 41; panel 1657/457/1116%) and そよ風に揺れる髪飾り, the
+only P-item the unit's loadout shows. Up to two cards a turn; スパート goes to
+保留 on turn 3 and is played on turn 6, 前途洋々 on turns 6, 8 and 11. It ends
+at 14,563, far under the simulator's own play (median about 38,700): the game
+never plays 総合芸術, though it grows on nearly every stance change. Score is
+checked, and 元気 5 after turn 2.
