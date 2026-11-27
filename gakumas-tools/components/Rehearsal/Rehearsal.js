@@ -7,6 +7,7 @@ import {
   FaFileCsv,
   FaFileImage,
   FaPlus,
+  FaScaleBalanced,
   FaTrashCan,
   FaTriangleExclamation,
   FaVideo,
@@ -16,7 +17,10 @@ import { BoxPlot, DistributionPlot } from "@/components/Charts";
 import Collapse from "@/components/Collapse";
 import Image from "@/components/Image";
 import ProgressBar from "@/components/ProgressBar";
+import { useRouter } from "@/i18n/routing";
 import { downloadBlob } from "@/utils/download";
+import { logEvent } from "@/utils/logging";
+import { stashRehearsalHandoff } from "@/utils/rehearsalHandoff";
 import { bucketScores } from "@/utils/simulator";
 import KofiAd from "../KofiAd";
 import FileDropzone from "./FileDropzone";
@@ -37,12 +41,22 @@ function Rehearsal() {
     data,
     setData,
     clearData,
+    icons,
     handleFiles,
     progress,
     total,
     processingStatus,
   } = useRehearsalParser();
   const [selected, setSelected] = useState(null);
+  const router = useRouter();
+
+  // Carry the rows (and the selected cell) into the simulator's Rehearsal
+  // tab. If storage is full or blocked, still go: the tab takes files too.
+  const compareWithSimulator = useCallback(() => {
+    const stored = stashRehearsalHandoff({ rows: data, icons, selected });
+    logEvent("rehearsal_to_simulator", { rows: data.length, stored });
+    router.push("/simulator");
+  }, [data, icons, selected, router]);
 
   const download = useCallback(() => {
     const csv = data
@@ -217,6 +231,14 @@ function Rehearsal() {
           disabled={!data.length}
         >
           <FaDownload /> CSV
+        </Button>
+        <Button
+          style="primary"
+          size="sm"
+          onClick={compareWithSimulator}
+          disabled={!data.length}
+        >
+          <FaScaleBalanced /> {t("compareWithSimulator")}
         </Button>
       </div>
 

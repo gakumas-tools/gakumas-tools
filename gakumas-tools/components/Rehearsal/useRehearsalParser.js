@@ -244,9 +244,20 @@ export default function useRehearsalParser() {
     setIcons(null);
   }, []);
 
+  // Replace the rows with ones parsed elsewhere (the Rehearsal tool's
+  // handoff to the simulator).
+  const load = useCallback(({ data: rows, icons: rowIcons }) => {
+    setData((d) => {
+      revokeRowSources(d);
+      return rows;
+    });
+    setIcons(rowIcons ?? null);
+  }, []);
+
   return {
     data,
     setData,
+    load,
     clearData,
     icons,
     handleFiles,

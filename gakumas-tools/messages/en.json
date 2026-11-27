@@ -864,7 +864,8 @@
     "selectFiles": "Select files",
     "addRow": "Add row",
     "clear": "Clear",
-    "confirmClear": "Clear all rows?"
+    "confirmClear": "Clear all rows?",
+    "compareWithSimulator": "Compare with the simulator"
   },
   "RehearsalComparison": {
     "addResults": "Add rehearsal results",
