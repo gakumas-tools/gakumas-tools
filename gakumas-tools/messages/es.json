@@ -838,7 +838,8 @@
     "selectFiles": "Seleccionar archivos",
     "addRow": "Añadir fila",
     "clear": "Borrar",
-    "confirmClear": "¿Borrar todas las filas?"
+    "confirmClear": "¿Borrar todas las filas?",
+    "compareWithSimulator": "Comparar con el simulador"
   },
   "RehearsalComparison": {
     "addResults": "Añadir resultados de ensayo",

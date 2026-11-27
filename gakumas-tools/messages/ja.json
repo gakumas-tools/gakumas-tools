@@ -872,7 +872,8 @@
     "selectFiles": "ファイルを選択",
     "addRow": "行を追加",
     "clear": "クリア",
-    "confirmClear": "すべての行を削除しますか？"
+    "confirmClear": "すべての行を削除しますか？",
+    "compareWithSimulator": "シミュレーターと比較"
   },
   "RehearsalComparison": {
     "addResults": "リハーサル結果を追加",

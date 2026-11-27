@@ -864,7 +864,8 @@
     "selectFiles": "选择文件",
     "addRow": "添加行",
     "clear": "清除",
-    "confirmClear": "确定要删除所有行吗？"
+    "confirmClear": "确定要删除所有行吗？",
+    "compareWithSimulator": "与模拟器比较"
   },
   "RehearsalComparison": {
     "addResults": "添加排练结果",

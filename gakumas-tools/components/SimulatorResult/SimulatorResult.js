@@ -33,6 +33,7 @@ import { downloadBlob } from "@/utils/download";
 import { logEvent } from "@/utils/logging";
 import { findOptimalParams } from "@/utils/paramOptimizer";
 import { cellScores } from "@/utils/rehearsalComparison";
+import { takeRehearsalHandoff } from "@/utils/rehearsalHandoff";
 import ScoreStats from "./ScoreStats";
 import SimulatorResultGraphs from "./SimulatorResultGraphs";
 import styles from "./SimulatorResult.module.scss";
@@ -116,6 +117,10 @@ function SimulatorResult({
   const [optimizeFeedback, setOptimizeFeedback] = useState(null);
   const rehearsalParser = useRehearsalParser();
   const [rehearsalCell, setRehearsalCell] = useState(null);
+  // Rows carried in from the Rehearsal tool open the Rehearsal tab once, on
+  // the first contest result, unless the player picks a tab first.
+  const [openRehearsal, setOpenRehearsal] = useState(false);
+  const { load: loadRehearsal } = rehearsalParser;
 
   useEffect(() => {
     try {
@@ -125,6 +130,14 @@ function SimulatorResult({
       // localStorage unavailable (e.g. privacy mode) — just stick with default.
     }
   }, []);
+
+  useEffect(() => {
+    const handoff = takeRehearsalHandoff();
+    if (!handoff) return;
+    loadRehearsal({ data: handoff.rows, icons: handoff.icons });
+    setRehearsalCell(handoff.cell);
+    setOpenRehearsal(true);
+  }, [loadRehearsal]);
 
   useEffect(() => {
     if (!optimizeFeedback?.visible) return;
@@ -137,6 +150,7 @@ function SimulatorResult({
 
   const setTab = useCallback((value) => {
     setTabState(value);
+    setOpenRehearsal(false);
     setTabSwitched(true);
     try {
       localStorage.setItem(TAB_STORAGE_KEY, value);
@@ -193,6 +207,13 @@ function SimulatorResult({
     Stages.getById(currentRun?.loadout?.stageId)?.type == "contest";
   const tabs = isContest ? TABS : TABS.filter((v) => !CONTEST_TABS.has(v));
   const shownTab = tabs.includes(tab) ? tab : "logs";
+
+  // Shown for this visit only: the saved tab stays the player's own choice.
+  useEffect(() => {
+    if (!openRehearsal || !isContest) return;
+    setTabState("rehearsal");
+    setOpenRehearsal(false);
+  }, [openRehearsal, isContest]);
   const rehearsalScores = useMemo(
     () =>
       rehearsalCell ? cellScores(rehearsalParser.data, ...rehearsalCell) : [],
