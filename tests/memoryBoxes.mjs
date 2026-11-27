@@ -24,12 +24,14 @@
  * heart) or "other" (a plain number); power is the total shown over the
  * memory's art.
  *
- * tests/fixtures/memory/account holds the account's 55 memories (ステージ tab,
+ * tests/fixtures/memory/account holds the account's 65 memories (ステージ tab,
  * phone 1080x2424, WebP q90): m01–m32 from 2026-11-17, m33–m55 from
- * 2026-11-24. Card names are printed under each card; every label was checked
- * against its screen (m33–m55 from a line-by-line transcription of each
- * screen, with each card's cost from its data, which matches all 160 costs
- * labelled by eye on m01–m32).
+ * 2026-11-24, m56–m65 (清夏 ×3, 美鈴 ×7, made after 11-24) from 2026-11-27.
+ * Card names are printed under each card; every label was checked against its
+ * screen (m33–m55 from a line-by-line transcription of each screen, with each
+ * card's cost from its data, which matches all 160 costs labelled by eye on
+ * m01–m32; m56–m65 labelled by eye, each cost from its data matching the
+ * badge on screen).
  *
  * Usage:
  *   pnpm test:memory              # compare; non-zero exit on a new or fixed miss
@@ -107,6 +109,9 @@ const KNOWN = new Set([
   // (params, P-items and cards all right). m32 is the only labelled memory with N cards (3) and
   // params under 100, and the gap is 37 per N card; which of the two it is is not settled yet.
   "power: tests/fixtures/memory/account/m32.webp expected 1683 got 1794",
+  // ティーパーティ+ shows +1 and two identical blue card icons; the card data's last effect,
+  // upgradeHand, has no icon in the prediction table, so the read card icon can't match it.
+  "badge: tests/fixtures/memory/account/m65.webp #1 bottom icon read draw data other:upgradeHand",
 ]);
 
 // Card slots the game's nav pill lies across, checked on each screen: all
