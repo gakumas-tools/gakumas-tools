@@ -155,3 +155,9 @@ test("仕切り直し and 全身全霊 show no draw icon, so +1 is their bottom 
   // アイドル宣言's drawCard(2) shows the draw icon.
   assert.equal(predictBadges(98).icon, "draw");
 });
+
+test("手札強化 shows the same card icon as a draw (ティーパーティ)", () => {
+  // The memory screen shows +1 and two identical card icons on ティーパーティ+.
+  assert.equal(predictBadges(252).icon, "draw");
+  assert.equal(predictBadges(253).icon, "draw");
+});
