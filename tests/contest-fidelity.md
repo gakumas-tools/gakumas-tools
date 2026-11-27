@@ -452,3 +452,20 @@ vocal, visual) with the same counts, first turn and last three turns. 共に戦�
 fires on turn 1's 情熱ターン, so 試行錯誤 follows it; one card a turn after that,
 with 振る舞いの基本 on turns 6, 8 and 10 and 挑戦 on turn 12. Score and 集中 are
 checked, as above.
+
+Stage 1 again, 2026-11-28, same unit, two more plays:
+`contest-rehearsal-s56-saki-7932-3` is a third play of the
+`contest-rehearsal-s56-saki-7932` loadout (same parameters, panel %, 体力 and
+P-items), ending at 2,864, with the turn order visual, visual, visual, visual,
+vocal, vocal, vocal, dance, visual, dance, vocal, visual. Turn 1 plays
+バランス感覚 alone, so 共に戦うタオル fires on turn 2's 情熱ターン and 眼力 follows
+it; one card a turn after that, with 振る舞いの基本 on turns 6 and 7,
+絶対に負けない on turn 10 and 情熱ターン on turns 2, 8 and 12. Score and 集中 are
+checked, as above.
+
+`contest-rehearsal-s56-saki-7932-4` is a fourth play of the same loadout,
+ending at 3,339, with the turn order visual, vocal, visual, vocal, dance,
+visual, visual, vocal, visual, dance, vocal, visual. Turn 1 plays 表情の基本
+alone, so 共に戦うタオル fires on turn 2's アピールの基本 and 眼力 follows it; one
+card a turn after that, with 情熱ターン on turns 3, 6 and 9, 絶対に負けない on
+turn 11 and トークタイム on turn 12. Score and 集中 are checked, as above.
