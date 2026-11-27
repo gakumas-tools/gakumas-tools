@@ -55,13 +55,15 @@ export default async function SharedRunPage({ params }) {
   const run = await findRun(id);
   if (!run) notFound();
   // The owner opening their own link isn't someone else using it.
-  if (!(await openedByOwner(id))) {
+  const ownRun = await openedByOwner(id);
+  if (!ownRun) {
     await recordShareOpen("sharedRun", new URLSearchParams({ id }));
   }
 
   return (
     <SharedRun
       run={{ ...run, createdAt: run.createdAt?.toISOString?.() ?? null }}
+      ownRun={ownRun}
     />
   );
 }
