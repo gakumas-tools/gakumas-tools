@@ -109,9 +109,6 @@ const KNOWN = new Set([
   // (params, P-items and cards all right). m32 is the only labelled memory with N cards (3) and
   // params under 100, and the gap is 37 per N card; which of the two it is is not settled yet.
   "power: tests/fixtures/memory/account/m32.webp expected 1683 got 1794",
-  // ティーパーティ+ shows +1 and two identical blue card icons; the card data's last effect,
-  // upgradeHand, has no icon in the prediction table, so the read card icon can't match it.
-  "badge: tests/fixtures/memory/account/m65.webp #1 bottom icon read draw data other:upgradeHand",
 ]);
 
 // Card slots the game's nav pill lies across, checked on each screen: all

@@ -88,6 +88,7 @@ const ICONS = {
   costReduction: "costReduction",
   cardUsesRemaining: "cardUses",
   drawCard: "draw",
+  upgradeHand: "draw",
   holdSelected: "deck",
   holdSelectedUpto: "deck",
   holdThisCard: "deck",
