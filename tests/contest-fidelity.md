@@ -469,3 +469,23 @@ visual, visual, vocal, visual, dance, vocal, visual. Turn 1 plays 表情の基�
 alone, so 共に戦うタオル fires on turn 2's アピールの基本 and 眼力 follows it; one
 card a turn after that, with 情熱ターン on turns 3, 6 and 9, 絶対に負けない on
 turn 11 and トークタイム on turn 12. Score and 集中 are checked, as above.
+
+Stage 1 unit 2 again, 2026-11-28:
+`contest-rehearsal-s56-temari-5319-5613-2` is a second play of the
+`contest-rehearsal-s56-temari-5319-5613` loadout (same parameters, panel %,
+体力 and P-item), ending at 2,372. Turn order: visual, vocal, visual, vocal,
+vocal, visual, dance, visual, visual, dance, vocal, visual. 私の「初」の楽譜
+fires on turns 1 and 4. On turn 4 練習再開！+ (好調 +3) sends ローン・ウルフ+ and
+バランス感覚 to the discard, draws 表情の基本 and 準備運動, and allows one more
+card, so 準備運動 follows it. One card a turn otherwise; 眼力 is played on
+turns 2 and 6 (two copies in the deck) and 準備運動 again on turn 7. Score and
+集中 are checked, as above, plus 好調 3 after 練習再開！+.
+
+Stage 2 unit 1 again, 2026-11-28:
+`contest-rehearsal-s56-saki-7935-6552-2` is a second play of the
+`contest-rehearsal-s56-saki-7935-6552` loadout (same parameters, panel %,
+体力 and P-item), ending at 4,516. Turn order: vocal, vocal, visual, vocal,
+visual, dance, vocal, vocal, visual, dance, visual, vocal. One card a turn:
+あふれる思い出 on turn 1, 今日もおはよう on turns 2, 7 and 9, リスタート on turns
+5 and 8, ラブリーウインク on turns 6 and 11, and 気分転換 on turn 12. Score is
+checked, after each turn's 好印象 tick.

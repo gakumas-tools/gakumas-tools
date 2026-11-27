@@ -133,6 +133,8 @@ const FIXTURES = [
   "contest-rehearsal-s56-saki-7932-2",
   "contest-rehearsal-s56-saki-7932-3",
   "contest-rehearsal-s56-saki-7932-4",
+  "contest-rehearsal-s56-temari-5319-5613-2",
+  "contest-rehearsal-s56-saki-7935-6552-2",
 ];
 
 function getTypeMultipliers(capture) {
