@@ -431,6 +431,14 @@ Stage 3 again, 2026-11-28, with 9423 in place of 6372 as Sub:
 9423 (1200/593/977, 体力 41; panel 1657/457/1116%) and そよ風に揺れる髪飾り, the
 only P-item the unit's loadout shows. Up to two cards a turn; スパート goes to
 保留 on turn 3 and is played on turn 6, 前途洋々 on turns 6, 8 and 11. It ends
-at 14,563, far under the simulator's own play (median about 38,700): the game
-never plays 総合芸術, though it grows on nearly every stance change. Score is
-checked, and 元気 5 after turn 2.
+at 14,563, far under the simulator's own play (median about 38,700). 総合芸術
+was drawn once, on turn 7, when no 指針 was active, so it couldn't be played.
+Score is checked, and 元気 5 after turn 2.
+
+Stage 3 again, 2026-11-28, with 6372 back as Sub:
+`contest-rehearsal-s56-misuzu-8187-6372-2` is a second play of the
+`contest-rehearsal-s56-misuzu-8187-6372` loadout (same parameters, panel %,
+体力 and P-item), ending at 54,267. It plays up to three cards a turn
+(スターライト twice in 全力 on turn 5), スターライト on turns 5, 7, 8 and 12,
+総合芸術 on turn 10 under 強気, and アッチェレランド on turns 2 and 11. Score is
+checked.
