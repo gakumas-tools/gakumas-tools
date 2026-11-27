@@ -6,6 +6,7 @@ import {
   bucketScores,
   createGraphAverage,
   mergeGraphDatas,
+  structureLogs,
 } from "../../../../gakumas-tools/utils/simulator.js";
 
 const graph = (values) =>
@@ -93,4 +94,27 @@ test("re-showing the same hand doesn't count extra draws", () => {
   );
   const usage = Object.values(cardUsage.turns[0]).find((u) => u.id === 1);
   assert.deepEqual([usage.use, usage.draw], [1, 1]);
+});
+
+test("the log drops an effect block that changed nothing, keeping the card played", () => {
+  const card = { type: "skillCard", id: 279 };
+  const counterStep = { type: "skillCard", id: 934, idx: 0, primary: true };
+  const drink = { type: "pDrink", id: 1 };
+  const diff = { logType: "diff", data: { field: 3, prev: 52, next: 48 } };
+  const logs = [
+    { logType: "entityStart", data: card },
+    diff,
+    { logType: "entityStart", data: counterStep },
+    { logType: "entityEnd", data: counterStep },
+    { logType: "entityEnd", data: card },
+    { logType: "entityStart", data: { type: "skillCard", id: 17 } },
+    { logType: "entityEnd", data: { type: "skillCard", id: 17 } },
+    { logType: "entityStart", data: drink },
+    { logType: "entityEnd", data: drink },
+  ];
+  assert.deepEqual(structureLogs(logs), [
+    { logType: "group", entity: card, childLogs: [diff] },
+    { logType: "group", entity: { type: "skillCard", id: 17 }, childLogs: [] },
+    { logType: "group", entity: drink, childLogs: [] },
+  ]);
 });

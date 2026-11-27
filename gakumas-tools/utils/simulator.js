@@ -528,6 +528,13 @@ export function getIndications(config, loadout) {
   };
 }
 
+// The block a player's own action opens (a card played, a drink taken), as
+// opposed to an effect that action or an item set up.
+function isPlayerAction(entity) {
+  if (entity?.type === "pDrink") return true;
+  return entity?.type === "skillCard" && entity.idx === undefined;
+}
+
 export function structureLogs(logs) {
   if (!logs) return null;
 
@@ -541,7 +548,12 @@ export function structureLogs(logs) {
       if (log.logType === "entityStart") {
         i++;
         const childLogs = getLogGroup();
-        group.push({ logType: "group", entity: log.data, childLogs });
+        // An effect that triggered but changed nothing (a counter step, an
+        // unmet inner condition) would show as an empty block that reads as
+        // if it fired. A card played or a drink taken still shows.
+        if (childLogs.length || isPlayerAction(log.data)) {
+          group.push({ logType: "group", entity: log.data, childLogs });
+        }
         i++;
       } else if (log.logType === "entityEnd") {
         return group;
