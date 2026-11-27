@@ -489,3 +489,32 @@ visual, dance, vocal, vocal, visual, dance, visual, vocal. One card a turn:
 あふれる思い出 on turn 1, 今日もおはよう on turns 2, 7 and 9, リスタート on turns
 5 and 8, ラブリーウインク on turns 6 and 11, and 気分転換 on turn 12. Score is
 checked, after each turn's 好印象 tick.
+
+Stage 1 unit 2 again, 2026-11-28, two more plays:
+`contest-rehearsal-s56-temari-5319-5613-3` and `-4` are a third and fourth
+play of the `contest-rehearsal-s56-temari-5319-5613` loadout (same
+parameters, panel %, 体力 and P-item), ending at 3,119 and 3,175. Turn orders:
+visual, visual, vocal, vocal, visual, visual, dance, vocal, visual, dance,
+vocal, visual (third) and visual, visual, dance, vocal, visual, visual, vocal,
+vocal, visual, dance, vocal, visual (fourth). 私の「初」の楽譜 fires on turns 1
+and 3 in the third play and on turns 1 and 2 in the fourth, so the 集中
+checked on turn 2 (third) and turn 1 (fourth) already carries the next
+turn's +3. 練習再開！+ (好調 +3) is played on turn 3 in
+the third play (表情の基本 and バランス感覚 to the discard, トークタイム and 挑戦
+drawn, then 挑戦) and on turn 5 in the fourth (眼力 and アピールの基本 to the
+discard, 振る舞いの基本 and 試行錯誤 drawn, then 振る舞いの基本). One card a turn
+otherwise; 挑戦 is in both decks and トークタイム in the fourth's. Score and
+集中 are checked, as above, plus 好調 3 after 練習再開！+.
+
+Stage 2 unit 1 again, 2026-11-28, two more plays:
+`contest-rehearsal-s56-saki-7935-6552-3` and `-4` are a third and fourth play
+of the `contest-rehearsal-s56-saki-7935-6552` loadout (same parameters, panel
+%, 体力 and P-item), ending at 5,399 and 5,412. Turn orders: vocal, dance,
+vocal, visual, visual, vocal, visual, vocal, vocal, dance, visual, vocal
+(third) and vocal, vocal, vocal, dance, visual, visual, vocal, visual, vocal,
+dance, visual, vocal (fourth). One card a turn. The third play opens with
+意識の基本 and 目線の基本, plays リスタート on turns 3, 6 and 11, 今日もおはよう
+on turns 4 and 5, and ends with 初めての未来+; 叶えたい夢 is not played. The
+fourth plays 今日もおはよう on turns 1, 3, 8 and 10, リスタート on turns 2, 4
+and 9, 叶えたい夢 on turn 5, 初めての未来+ on turn 7 and 可愛い仕草 on turn 12.
+Score is checked, after each turn's 好印象 tick.
