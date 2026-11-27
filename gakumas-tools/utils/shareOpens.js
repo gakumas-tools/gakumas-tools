@@ -114,3 +114,49 @@ export async function withOpeners(db, runs) {
     return { ...run, openedBy, openedByMore: openedBy >= MAX_IP_HASHES };
   });
 }
+
+// Longest shared-page query a reuse report may carry (simulator links with
+// three phases run to a few KB).
+export const MAX_SHARE_QUERY_LENGTH = 16_000;
+
+/**
+ * The key a reuse report from the browser is counted under: { kind, query },
+ * query being the shared page's search string as it was at page load. Null
+ * if the report isn't one of ours or the link carries nothing shared.
+ */
+export function shareUseKey(body) {
+  const { kind, query } = body ?? {};
+  if (typeof kind != "string" || !Object.hasOwn(CONTENT_PARAMS, kind)) return null;
+  if (typeof query != "string" || query.length > MAX_SHARE_QUERY_LENGTH) return null;
+  return shareKey(kind, new URLSearchParams(query));
+}
+
+/**
+ * The writes that count one reuse of `key`: a visitor who opened the shared
+ * link acting on it (running it, editing it, taking it as theirs). Only a
+ * link already counted as opened gets one: no document is made here. With
+ * skipFirstOpener, a visitor whose pseudonym is the link's first opener isn't
+ * counted, on the guess that the first to open a link is often its maker
+ * checking it; that is approximate both ways (a maker may never open their
+ * own link through the server, and IPs change). The reuser's pseudonym is
+ * kept while fewer than MAX_IP_HASHES are.
+ */
+export function shareUseWrites({ key, ipHash, now, skipFirstOpener = true }) {
+  const filter = skipFirstOpener
+    ? { _id: key, "ipHashes.0": { $ne: ipHash } }
+    : { _id: key };
+  return [
+    {
+      updateOne: {
+        filter,
+        update: { $inc: { reuses: 1 }, $set: { lastReuseAt: now } },
+      },
+    },
+    {
+      updateOne: {
+        filter: { ...filter, [`reuserHashes.${MAX_IP_HASHES - 1}`]: { $exists: false } },
+        update: { $addToSet: { reuserHashes: ipHash } },
+      },
+    },
+  ];
+}

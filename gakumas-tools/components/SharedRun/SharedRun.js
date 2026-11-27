@@ -17,6 +17,7 @@ import {
   computeTicks,
   normalizeSavedRun,
 } from "@/utils/simulationRun";
+import { reportShareUse } from "@/utils/shareUse";
 import { isListableStageId } from "@/utils/stageListing";
 import { formatStageName } from "@/utils/stages";
 import styles from "./SharedRun.module.scss";
@@ -26,7 +27,7 @@ const STATS = ["mean", "median", "min", "max", "stddev"];
 
 // A run someone shared: what they ran, what it scored, and a way to run it
 // against your own or keep it.
-function SharedRun({ run: shared }) {
+function SharedRun({ run: shared, ownRun = false }) {
   const t = useTranslations("SharedRun");
   const tStage = useTranslations("StageSummary");
   const router = useRouter();
@@ -45,9 +46,18 @@ function SharedRun({ run: shared }) {
   const range = useMemo(() => computeRange([run]), [run]);
   const ticks = useMemo(() => computeTicks(range.min, range.max), [range]);
 
+  // Running it, comparing with it or keeping it is someone using the link;
+  // the owner's own use isn't, as their opens aren't.
+  function reportUse() {
+    if (ownRun) return;
+    const query = new URLSearchParams({ id: shared.id }).toString();
+    reportShareUse("sharedRun", query);
+  }
+
   // Into the history, so the simulator's Compare tab shows it beside your
   // own runs, and into the simulator to run it again.
   function openInSimulator() {
+    reportUse();
     loadRun(addToHistory(run));
     router.push("/simulator");
   }
@@ -57,6 +67,7 @@ function SharedRun({ run: shared }) {
   // tab (chosen for you, filtered to this stage) shows your next result
   // beside this run.
   function compareWithMine() {
+    reportUse();
     addToHistory(run);
     selectStage(loadout.stageId, loadout.customStage);
     try {
@@ -97,6 +108,7 @@ function SharedRun({ run: shared }) {
     try {
       await saveRun(run, run.name || formatStageName(stage, tStage));
       setSaveState("saved");
+      reportUse();
     } catch (err) {
       console.error(err);
       setSaveState("failed");
