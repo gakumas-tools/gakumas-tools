@@ -518,8 +518,8 @@ id,name,rarity,upgraded,plan,mode,sourceType,pIdolId,welfare,effects
 517,お掃除の成果,SR,FALSE,sense,produce,support,,FALSE,
 518,従者の必需品,R,FALSE,sense,stage,pIdol,166,FALSE,"at:afterStartOfStage { concentration+=2; setScoreDebuff(0.1,2); limit:1 }"
 519,従者の必需品+,R,TRUE,sense,stage,pIdol,166,FALSE,"at:afterStartOfStage { concentration+=3; setScoreDebuff(0.1,2); limit:1 }"
-520,乖離する美学,SSR,FALSE,sense,stage,pIdol,167,FALSE,
+520,乖離する美学,SSR,FALSE,sense,stage,pIdol,167,FALSE,"at:mentalCardUsed { if:concentration>=13 { effectCounter+=1; if:effectCounter%3==2 { concentration+=6; limit:3 } } }"
 521,乖離する美学+,SSR,TRUE,sense,stage,pIdol,167,FALSE,"at:mentalCardUsed { if:concentration>=13 { effectCounter+=1; if:effectCounter%3==2 { concentration+=6; genki+=5; limit:3 } } }"
-522,轟く名前,SSR,FALSE,anomaly,stage,pIdol,168,FALSE,
+522,轟く名前,SSR,FALSE,anomaly,stage,pIdol,168,FALSE,"at:afterCardUsed { if:fullPowerTimes>=1 & cardHasEffect(strength) { effectCounter+=1; if:effectCounter%3==2 { setStance(preservation2); setStrengthEffectBuff(0.3); genki+=6; limit:2 } } }"
 523,轟く名前+,SSR,TRUE,anomaly,stage,pIdol,168,FALSE,"at:afterCardUsed { if:fullPowerTimes>=1 & cardHasEffect(strength) { effectCounter+=1; if:effectCounter%3==2 { setStance(preservation2); setStrengthEffectBuff(0.3); genki+=14; limit:2 } } }"
 524,変身ヒーローズ,SR,FALSE,anomaly,produce,support,,FALSE,
