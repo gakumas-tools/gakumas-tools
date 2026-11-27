@@ -523,3 +523,4 @@ id,name,rarity,upgraded,plan,mode,sourceType,pIdolId,welfare,effects
 522,轟く名前,SSR,FALSE,anomaly,stage,pIdol,168,FALSE,"at:afterCardUsed { if:fullPowerTimes>=1 & cardHasEffect(strength) { effectCounter+=1; if:effectCounter%3==2 { setStance(preservation2); setStrengthEffectBuff(0.3); genki+=6; limit:2 } } }"
 523,轟く名前+,SSR,TRUE,anomaly,stage,pIdol,168,FALSE,"at:afterCardUsed { if:fullPowerTimes>=1 & cardHasEffect(strength) { effectCounter+=1; if:effectCounter%3==2 { setStance(preservation2); setStrengthEffectBuff(0.3); genki+=14; limit:2 } } }"
 524,変身ヒーローズ,SR,FALSE,anomaly,produce,support,,FALSE,
+525,協力シューティング,SSR,FALSE,anomaly,produce,support,,TRUE,
