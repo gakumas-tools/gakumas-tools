@@ -455,7 +455,8 @@
     "lastUpdated": "最后更新于",
     "start": "开始",
     "restart": "重新开始",
-    "simulationFailed": "模拟过程中出错。请重试或修改编组。"
+    "simulationFailed": "模拟过程中出错。请重试或修改编组。",
+    "showSuggestions": "显示模拟器推荐"
   },
   "StrategyPicker": {
     "auto": "自动",
@@ -837,7 +838,8 @@
     "selectCardsToMoveToHand": "选择 {num} 张卡片",
     "selectCardsToMoveToTopOfDeck": "选择 {num} 张移到牌库顶端的卡片",
     "selectCardsToGrow": "选择 {num} 张卡片进行成长",
-    "confirm": "确认"
+    "confirm": "确认",
+    "simulatorPick": "推荐：{name}（预期分数 {score}）"
   },
   "BoxPlot": {
     "max": "最大",

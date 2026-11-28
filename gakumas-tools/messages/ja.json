@@ -463,7 +463,8 @@
     "lastUpdated": "最終更新",
     "start": "開始",
     "restart": "再開",
-    "simulationFailed": "シミュレーション中にエラーが発生しました。もう一度実行するか、編成を変更してください。"
+    "simulationFailed": "シミュレーション中にエラーが発生しました。もう一度実行するか、編成を変更してください。",
+    "showSuggestions": "シミュレーターのおすすめを表示"
   },
   "StrategyPicker": {
     "auto": "自動",
@@ -845,7 +846,8 @@
     "selectCardsToMoveToHand": "{num}枚のカードを選択",
     "selectCardsToMoveToTopOfDeck": "山札の一番上に移動するカードを{num}枚選択",
     "selectCardsToGrow": "成長させるカードを{num}枚選択",
-    "confirm": "確認"
+    "confirm": "確認",
+    "simulatorPick": "おすすめ：{name}（期待スコア {score}）"
   },
   "BoxPlot": {
     "max": "最大",

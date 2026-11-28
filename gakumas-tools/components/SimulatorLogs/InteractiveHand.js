@@ -50,6 +50,20 @@ function InteractiveHand({
     onDecision(null);
   };
 
+  // The simulator's expected final score after each play, when shown.
+  const suggestions = pendingDecision?.suggestions;
+  const expectedFor = (cardIndex) =>
+    suggestions?.plays.find((play) => play.card === cardIndex)?.mean;
+  const formatScore = (score) => Math.round(score).toLocaleString();
+  const best = suggestions?.best;
+  const bestName =
+    best &&
+    (best.card == null
+      ? t("skip")
+      : SkillCards.getById(
+          handCards[pendingDecision.handCards.indexOf(best.card)].id
+        ).name);
+
   // The P-drinks still held: one may be drunk now, before the next card.
   const pDrinks = pendingDecision?.pDrinks || [];
 
@@ -62,6 +76,14 @@ function InteractiveHand({
       <Collapse open={expanded}>
         <HandState state={state} />
       </Collapse>
+      {best && (
+        <div className={styles.simulatorPick}>
+          {t("simulatorPick", {
+            name: bestName,
+            score: formatScore(best.mean),
+          })}
+        </div>
+      )}
       <div className={styles.handCards}>
         {handCards.map((card, i) => (
           <button
@@ -70,6 +92,7 @@ function InteractiveHand({
             className={c(
               styles.handCard,
               i === selectedIndex && styles.selected,
+              best && best.card === getCardIndex(i) && styles.selected,
               scores[i] === -Infinity && styles.unusable,
               styles.interactive,
               !isCardUsable(i) && styles.unusable
@@ -89,6 +112,11 @@ function InteractiveHand({
             <span className={styles.cardName}>
               {SkillCards.getById(card.id).name}
             </span>
+            {expectedFor(getCardIndex(i)) != null && (
+              <span className={styles.cardScore}>
+                {formatScore(expectedFor(getCardIndex(i)))}
+              </span>
+            )}
           </button>
         ))}
       </div>
@@ -112,6 +140,7 @@ function InteractiveHand({
       <div className={styles.skip}>
         <Button fill onClick={handleEndTurn}>
           {t("skip")}
+          {expectedFor(null) != null && ` · ${formatScore(expectedFor(null))}`}
         </Button>
       </div>
     </div>

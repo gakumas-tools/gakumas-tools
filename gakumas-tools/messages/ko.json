@@ -455,7 +455,8 @@
     "lastUpdated": "최종 업데이트",
     "start": "시작",
     "restart": "재시작",
-    "simulationFailed": "시뮬레이션 중 오류가 발생했습니다. 다시 실행하거나 편성을 변경해 주세요."
+    "simulationFailed": "시뮬레이션 중 오류가 발생했습니다. 다시 실행하거나 편성을 변경해 주세요.",
+    "showSuggestions": "시뮬레이터 추천 표시"
   },
   "StrategyPicker": {
     "auto": "자동",
@@ -837,7 +838,8 @@
     "selectCardsToMoveToHand": "{num}장의 카드 선택",
     "selectCardsToMoveToTopOfDeck": "덱 맨 위로 이동할 카드 {num}장 선택",
     "selectCardsToGrow": "{num}장의 카드 선택",
-    "confirm": "확인"
+    "confirm": "확인",
+    "simulatorPick": "추천: {name} (예상 점수 {score})"
   },
   "BoxPlot": {
     "max": "최대",
