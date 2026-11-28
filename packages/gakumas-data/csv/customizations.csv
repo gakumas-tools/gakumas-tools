@@ -17,9 +17,9 @@ id,alias,name,type,price,max,forceInitialHand,conditions,cost,actions,limit,effe
 68,goodConditionTurns3,好調+,buff,"40,40,70",3,,,,,,level:1 { at:prestage { target:this { g.goodConditionTurns+=1 } } } level:2 { at:prestage { target:this { g.goodConditionTurns+=2 } } } level:3 { at:prestage { target:this { g.goodConditionTurns+=4 } } }
 14,goodConditionTurnsAdd1,好調追加,buff,70,1,,,,goodConditionTurns+=2,,
 83,halfCostTurnsAdd1,消費体力減少追加,buff,70,1,,,,halfCostTurns+=2,,
-24,halfCostTurns1,消費軽減+,buff,70,1,,,,,,at:prestage { target:this { g.halfCostTurns+=2 } }
-58,halfCostTurns2,消費軽減+,buff,"40,70",2,,,,,,level:1 { at:prestage { target:this { g.halfCostTurns+=1 } } } level:2 { at:prestage { target:this { g.halfCostTurns+=3 } } }
-74,halfCostTurns3,消費軽減+,buff,"40,40,70",3,,,,,,level:1 { at:prestage { target:this { g.halfCostTurns+=1 } } } level:2 { at:prestage { target:this { g.halfCostTurns+=2 } } } level:3 { at:prestage { target:this { g.halfCostTurns+=4 } } }
+24,halfCostTurns1,消費体力減少+,buff,70,1,,,,,,at:prestage { target:this { g.halfCostTurns+=2 } }
+58,halfCostTurns2,消費体力減少+,buff,"40,70",2,,,,,,level:1 { at:prestage { target:this { g.halfCostTurns+=1 } } } level:2 { at:prestage { target:this { g.halfCostTurns+=3 } } }
+74,halfCostTurns3,消費体力減少+,buff,"40,40,70",3,,,,,,level:1 { at:prestage { target:this { g.halfCostTurns+=1 } } } level:2 { at:prestage { target:this { g.halfCostTurns+=2 } } } level:3 { at:prestage { target:this { g.halfCostTurns+=4 } } }
 15,perfectConditionTurns1,絶好調+,buff,70,1,,,,,,at:prestage { target:this { g.perfectConditionTurns+=2 } }
 53,perfectConditionTurns2,絶好調+,buff,"40,70",2,,,,,,level:1 { at:prestage { target:this { g.perfectConditionTurns+=1 } } } level:2 { at:prestage { target:this { g.perfectConditionTurns+=3 } } }
 69,perfectConditionTurns3,絶好調+,buff,"40,40,70",3,,,,,,level:1 { at:prestage { target:this { g.perfectConditionTurns+=1 } } } level:2 { at:prestage { target:this { g.perfectConditionTurns+=2 } } } level:3 { at:prestage { target:this { g.perfectConditionTurns+=4 } } }
