@@ -850,6 +850,8 @@
     "simulatorPick": "おすすめ：{name}（期待スコア {score}）",
     "setHand": "手札をゲームに合わせる",
     "setHandPrompt": "ゲームの手札にあるカードを選択（{num}枚まで）",
+    "setValues": "数値をゲームに合わせる",
+    "setValuesPrompt": "ゲーム画面のスコア・体力・バフを入力",
     "deck": "山札",
     "discardPile": "捨札"
   },

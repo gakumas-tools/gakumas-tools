@@ -3,7 +3,9 @@ import assert from "node:assert/strict";
 import { S, resetRand } from "gakumas-engine";
 import ManualStrategy, {
   MoveToTopOfDeckSelectionRequest,
+  SET_VALUE_FIELDS,
   setHand,
+  setValues,
 } from "../../../../packages/gakumas-engine/strategies/ManualStrategy.js";
 import { createEngine } from "../helpers.mjs";
 
@@ -204,6 +206,7 @@ test("manual play offers the held P-drinks and passes a drink choice on", async 
     logger: { log: () => ({}), getHandStateForLogging: () => ({}) },
     isCardUsable: () => true,
     getHeldPDrinks: () => [5, 18],
+    getConfig: () => IDOL_CONFIG,
   };
   state[S.handCards] = [0];
   state[S.cardMap] = [{ id: 1 }];
@@ -216,6 +219,8 @@ test("manual play offers the held P-drinks and passes a drink choice on", async 
   assert.deepEqual(request.pDrinks, [5, 18]);
   assert.deepEqual(decision, { pDrink: 1 });
 });
+
+const IDOL_CONFIG = { idol: { plan: "sense", params: { stamina: 40 } } };
 
 function piles(hand, deck, discard) {
   const state = [];
@@ -254,6 +259,7 @@ test("manual play sets the hand it's given and asks again from it", async () => 
     logger: { log: () => ({}), getHandStateForLogging: () => ({}) },
     isCardUsable: () => true,
     getHeldPDrinks: () => [],
+    getConfig: () => IDOL_CONFIG,
   };
   const answers = [{ setHand: [0, 3] }, 3];
   const strategy = new ManualStrategy(engine, async (pending) => {
@@ -264,4 +270,60 @@ test("manual play sets the hand it's given and asks again from it", async () => 
   assert.deepEqual(requests, [[0, 1], [0, 3]]);
   assert.deepEqual(decision, { card: 3 });
   assert.deepEqual(state[S.deckCards], [2, 1]);
+});
+
+test("setting values takes only what the game shows, whole, in range", () => {
+  const state = [];
+  state[S.score] = 100;
+  state[S.stamina] = 30;
+  state[S.stance] = "none";
+  state[S.halfCostTurns] = 2;
+  setValues(
+    state,
+    {
+      score: 12345.7,
+      stamina: 55,
+      concentration: -3,
+      goodImpressionTurns: Number.NaN,
+      stance: "fullPower",
+      halfCostTurns: 9,
+    },
+    40,
+  );
+  assert.equal(state[S.score], 12345);
+  assert.equal(state[S.stamina], 40);
+  assert.equal(state[S.concentration], 0);
+  assert.equal(state[S.goodImpressionTurns], undefined);
+  assert.equal(state[S.stance], "fullPower");
+  assert.equal(state[S.halfCostTurns], 2);
+  setValues(state, { stance: "sideways" });
+  assert.equal(state[S.stance], "fullPower");
+  for (const field of Object.values(SET_VALUE_FIELDS).flat()) {
+    assert.ok(field in S, field);
+  }
+});
+
+test("manual play sets the values it's given and asks again with them", async () => {
+  const state = piles([0], [], []);
+  state[S.cardMap] = [{ id: 1 }];
+  state[S.score] = 0;
+  const seen = [];
+  const engine = {
+    logger: { log: () => ({}), getHandStateForLogging: () => ({}) },
+    isCardUsable: () => true,
+    getHeldPDrinks: () => [],
+    getConfig: () => IDOL_CONFIG,
+  };
+  const answers = [{ setValues: { score: 5000, stamina: 99 } }, 0];
+  const strategy = new ManualStrategy(engine, async (pending) => {
+    seen.push([pending.state[S.score], pending.plan, pending.maxStamina]);
+    return answers.shift();
+  });
+  const decision = await strategy.evaluate(state);
+  assert.deepEqual(seen, [
+    [0, "sense", 40],
+    [5000, "sense", 40],
+  ]);
+  assert.equal(state[S.stamina], 40);
+  assert.deepEqual(decision, { card: 0 });
 });

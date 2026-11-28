@@ -842,6 +842,8 @@
     "simulatorPick": "推荐：{name}（预期分数 {score}）",
     "setHand": "将手牌设为游戏中的手牌",
     "setHandPrompt": "选择游戏中手牌里的卡（最多{num}张）",
+    "setValues": "将数值设为游戏中的数值",
+    "setValuesPrompt": "输入游戏画面上的分数、体力和增益",
     "deck": "牌堆",
     "discardPile": "弃牌堆"
   },

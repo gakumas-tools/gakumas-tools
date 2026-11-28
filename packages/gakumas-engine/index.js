@@ -9,3 +9,4 @@ export {
   isUniqueCard,
 } from "./utils";
 export { calculateTypeMultipliers, getParamCap } from "./typeMultipliers";
+export { SET_VALUE_FIELDS } from "./strategies/ManualStrategy";

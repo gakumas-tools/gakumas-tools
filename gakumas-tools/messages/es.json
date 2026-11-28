@@ -816,6 +816,8 @@
     "simulatorPick": "Jugada del simulador: {name}, puntuación esperada {score}",
     "setHand": "Igualar la mano del juego",
     "setHandPrompt": "Elige las cartas de tu mano en el juego (hasta {num})",
+    "setValues": "Igualar los valores del juego",
+    "setValuesPrompt": "Introduce la puntuación, la resistencia y los efectos que muestra el juego",
     "deck": "Mazo",
     "discardPile": "Descartes"
   },

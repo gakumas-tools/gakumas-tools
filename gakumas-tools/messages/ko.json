@@ -842,6 +842,8 @@
     "simulatorPick": "추천: {name} (예상 점수 {score})",
     "setHand": "게임의 패에 맞추기",
     "setHandPrompt": "게임 패에 있는 카드를 선택 (최대 {num}장)",
+    "setValues": "수치를 게임에 맞추기",
+    "setValuesPrompt": "게임 화면의 점수, 체력, 버프를 입력",
     "deck": "덱",
     "discardPile": "버린 패"
   },
