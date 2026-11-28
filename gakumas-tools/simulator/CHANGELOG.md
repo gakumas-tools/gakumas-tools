@@ -16,6 +16,10 @@ All notable changes to the contest simulator will be documented in this file.
 
 
 
+## 2026-11-28
+
+- Fix カスタマイズ name 消費軽減+ to 消費体力減少+
+
 ## 2026-11-27
 
 - Update unbalance tsubame
