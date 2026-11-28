@@ -839,7 +839,11 @@
     "selectCardsToMoveToTopOfDeck": "Select {num} {num, plural, =1 {card} other {cards}} to move to the top of the deck",
     "selectCardsToGrow": "Select {num} {num, plural, =1 {card} other {cards}} to grow",
     "confirm": "Confirm",
-    "simulatorPick": "Simulator's pick: {name}, expected {score}"
+    "simulatorPick": "Simulator's pick: {name}, expected {score}",
+    "setHand": "Match the game's hand",
+    "setHandPrompt": "Pick the cards in your hand in the game (up to {num})",
+    "deck": "Deck",
+    "discardPile": "Discard pile"
   },
   "BoxPlot": {
     "max": "Max",

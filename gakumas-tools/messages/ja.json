@@ -847,7 +847,11 @@
     "selectCardsToMoveToTopOfDeck": "山札の一番上に移動するカードを{num}枚選択",
     "selectCardsToGrow": "成長させるカードを{num}枚選択",
     "confirm": "確認",
-    "simulatorPick": "おすすめ：{name}（期待スコア {score}）"
+    "simulatorPick": "おすすめ：{name}（期待スコア {score}）",
+    "setHand": "手札をゲームに合わせる",
+    "setHandPrompt": "ゲームの手札にあるカードを選択（{num}枚まで）",
+    "deck": "山札",
+    "discardPile": "捨札"
   },
   "BoxPlot": {
     "max": "最大",

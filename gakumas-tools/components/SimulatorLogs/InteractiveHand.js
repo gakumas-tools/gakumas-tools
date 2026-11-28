@@ -8,6 +8,7 @@ import c from "@/utils/classNames";
 import { EntityTypes } from "@/utils/entities";
 import HandState from "./HandState";
 import HandTitle from "./HandTitle";
+import SetHandModal from "./SetHandModal";
 import styles from "./SimulatorLogs.module.scss";
 
 function InteractiveHand({
@@ -22,6 +23,7 @@ function InteractiveHand({
   const t = useTranslations("stage");
 
   const [expanded, setExpanded] = useState(true);
+  const [settingHand, setSettingHand] = useState(false);
 
   const handRef = React.useRef(null);
   React.useEffect(() => {
@@ -138,11 +140,25 @@ function InteractiveHand({
         </div>
       )}
       <div className={styles.skip}>
+        {pendingDecision?.state && (
+          <Button onClick={() => setSettingHand(true)}>{t("setHand")}</Button>
+        )}
         <Button fill onClick={handleEndTurn}>
           {t("skip")}
           {expectedFor(null) != null && ` · ${formatScore(expectedFor(null))}`}
         </Button>
       </div>
+      {settingHand && (
+        <SetHandModal
+          state={pendingDecision.state}
+          idolId={idolId}
+          onClose={() => setSettingHand(false)}
+          onConfirm={(cards) => {
+            setSettingHand(false);
+            onDecision({ setHand: cards });
+          }}
+        />
+      )}
     </div>
   );
 }

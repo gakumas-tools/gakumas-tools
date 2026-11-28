@@ -839,7 +839,11 @@
     "selectCardsToMoveToTopOfDeck": "选择 {num} 张移到牌库顶端的卡片",
     "selectCardsToGrow": "选择 {num} 张卡片进行成长",
     "confirm": "确认",
-    "simulatorPick": "推荐：{name}（预期分数 {score}）"
+    "simulatorPick": "推荐：{name}（预期分数 {score}）",
+    "setHand": "将手牌设为游戏中的手牌",
+    "setHandPrompt": "选择游戏中手牌里的卡（最多{num}张）",
+    "deck": "牌堆",
+    "discardPile": "弃牌堆"
   },
   "BoxPlot": {
     "max": "最大",

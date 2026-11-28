@@ -839,7 +839,11 @@
     "selectCardsToMoveToTopOfDeck": "덱 맨 위로 이동할 카드 {num}장 선택",
     "selectCardsToGrow": "{num}장의 카드 선택",
     "confirm": "확인",
-    "simulatorPick": "추천: {name} (예상 점수 {score})"
+    "simulatorPick": "추천: {name} (예상 점수 {score})",
+    "setHand": "게임의 패에 맞추기",
+    "setHandPrompt": "게임 패에 있는 카드를 선택 (최대 {num}장)",
+    "deck": "덱",
+    "discardPile": "버린 패"
   },
   "BoxPlot": {
     "max": "최대",
