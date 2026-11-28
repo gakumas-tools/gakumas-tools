@@ -3668,6 +3668,12 @@ import image_925 from "./925.png";
 import image_926 from "./926.png";
 import image_927 from "./927.png";
 import image_928 from "./928.png";
+import image_929 from "./929.png";
+import image_930 from "./930.png";
+import image_931 from "./931.png";
+import image_932 from "./932.png";
+import image_933 from "./933.png";
+import image_934 from "./934.png";
 import image_935 from "./935.png";
 
 const IMAGES = {
@@ -7341,6 +7347,12 @@ const IMAGES = {
   '926': image_926,
   '927': image_927,
   '928': image_928,
+  '929': image_929,
+  '930': image_930,
+  '931': image_931,
+  '932': image_932,
+  '933': image_933,
+  '934': image_934,
   '935': image_935,
 };
 
