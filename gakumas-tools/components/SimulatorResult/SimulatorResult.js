@@ -29,6 +29,7 @@ import SimulatorStats from "@/components/SimulatorStats";
 import { LoadoutActionsContext } from "@/contexts/LoadoutContext";
 import SimulationRunsContext from "@/contexts/SimulationRunsContext";
 import c from "@/utils/classNames";
+import { countUse } from "@/utils/countUse";
 import { downloadBlob } from "@/utils/download";
 import { logEvent } from "@/utils/logging";
 import { findOptimalParams } from "@/utils/paramOptimizer";
@@ -214,6 +215,18 @@ function SimulatorResult({
     setTabState("rehearsal");
     setOpenRehearsal(false);
   }, [openRehearsal, isContest]);
+  // How far players get toward sharing a comparison: weekly counts only.
+  const rehearsalShown = shownTab === "rehearsal";
+  const rehearsalAdded = rehearsalParser.data.length > 0;
+  useEffect(() => {
+    if (rehearsalShown) countUse("rehearsalTabOpened");
+  }, [rehearsalShown]);
+  useEffect(() => {
+    if (rehearsalAdded) countUse("rehearsalResultsAdded");
+  }, [rehearsalAdded]);
+  useEffect(() => {
+    if (rehearsalCell) countUse("rehearsalCellPicked");
+  }, [rehearsalCell]);
   const rehearsalScores = useMemo(
     () =>
       rehearsalCell ? cellScores(rehearsalParser.data, ...rehearsalCell) : [],

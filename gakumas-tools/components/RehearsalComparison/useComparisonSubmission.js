@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { countUse } from "@/utils/countUse";
 import { rehearsalGrid } from "@/utils/rehearsalComparison";
 
 const ENDPOINT = "/api/rehearsal-comparison";
@@ -57,7 +58,10 @@ export default function useComparisonSubmission({
       },
     });
     setStatus(ok ? "idle" : "failed");
-    if (ok) setShared({ id, run, rows, cell });
+    if (ok) {
+      setShared({ id, run, rows, cell });
+      countUse("rehearsalShared");
+    }
   }, [run, enterPercents, rows, cell]);
 
   const undo = useCallback(() => {
