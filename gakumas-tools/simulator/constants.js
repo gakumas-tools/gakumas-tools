@@ -15,6 +15,8 @@ export const WORKER_MESSAGE = {
   CANCEL: "cancel",
   SCORE_P_DRINKS: "scorePDrinks",
   P_DRINK_SCORES: "pDrinkScores",
+  SUGGEST_PLAYS: "suggestPlays",
+  PLAY_SUGGESTIONS: "playSuggestions",
   RESULT: "result",
   ERROR: "error",
 };

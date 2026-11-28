@@ -455,7 +455,8 @@
     "lastUpdated": "Last updated",
     "start": "Start",
     "restart": "Restart",
-    "simulationFailed": "The simulation stopped with an error. Try again, or change the loadout."
+    "simulationFailed": "The simulation stopped with an error. Try again, or change the loadout.",
+    "showSuggestions": "Show the simulator's pick"
   },
   "StrategyPicker": {
     "auto": "Auto",
@@ -837,7 +838,8 @@
     "selectCardsToMoveToHand": "Select {num} {num, plural, =1 {card} other {cards}} to move to hand",
     "selectCardsToMoveToTopOfDeck": "Select {num} {num, plural, =1 {card} other {cards}} to move to the top of the deck",
     "selectCardsToGrow": "Select {num} {num, plural, =1 {card} other {cards}} to grow",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "simulatorPick": "Simulator's pick: {name}, expected {score}"
   },
   "BoxPlot": {
     "max": "Max",

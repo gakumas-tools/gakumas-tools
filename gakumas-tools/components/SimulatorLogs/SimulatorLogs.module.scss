@@ -239,6 +239,14 @@
   }
 }
 
+.simulatorPick {
+  padding: 0 10px 4px;
+  color: tokens.$accent-ink;
+  font-size: tokens.$text-xs;
+  font-weight: tokens.$weight-semibold;
+  @include mixins.numeric;
+}
+
 .handCards {
   display: flex;
   align-items: stretch;

@@ -24,6 +24,7 @@ import { PDrinks } from "gakumas-data";
 import Alert from "@/components/Alert";
 import Button from "@/components/Button";
 import ButtonGroup from "@/components/ButtonGroup";
+import Checkbox from "@/components/Checkbox";
 import IdolRoadDataNotice from "@/components/IdolRoadDataNotice";
 import Input from "@/components/Input";
 import KofiAd from "@/components/KofiAd";
@@ -45,6 +46,7 @@ import {
   planPDrinksOnWorkers,
   retainWorkerPool,
   runOnWorkers,
+  suggestPlaysOnWorker,
   workerCount,
 } from "@/simulator/workerPool";
 import c from "@/utils/classNames";
@@ -61,6 +63,7 @@ import styles from "./Simulator.module.scss";
 
 const LINK_PHASES = ["OP", "MID", "ED"];
 const NUM_RUNS_KEY = "gakumas-tools.simulator.numRuns";
+const SUGGESTIONS_KEY = "gakumas-tools.simulator.showSuggestions";
 
 // The engine's planned drink turns (one per drink it holds, the loadout's
 // known drinks in slot order) under the loadout's slots.
@@ -99,6 +102,13 @@ export default function Simulator() {
   const { enterPercents } = loadout;
 
   const [pendingDecision, setPendingDecision] = useState(null);
+  const [showSuggestions, setShowSuggestions] = usePersistedState(
+    SUGGESTIONS_KEY,
+    false,
+  );
+  // The simulator's expectation of each play at the card choice it was
+  // worked out for (suggestPlays), shown only while that choice is pending.
+  const [suggestions, setSuggestions] = useState(null);
   const resolveDecisionRef = useRef(null);
   const [progress] = useState(createProgressStore);
   const abortRef = useRef(null);
@@ -139,6 +149,32 @@ export default function Simulator() {
       });
     });
   }, []);
+
+  const manualInput = simulatorData?.input;
+  useEffect(() => {
+    if (
+      !showSuggestions ||
+      pendingDecision?.type !== "CARD_SELECTION" ||
+      !manualInput
+    ) {
+      return;
+    }
+    const controller = new AbortController();
+    suggestPlaysOnWorker(
+      {
+        idolStageConfig: manualInput.config,
+        linkConfigs: manualInput.linkConfigs,
+        state: pendingDecision.state,
+      },
+      controller.signal,
+    ).then(
+      (result) => setSuggestions({ decision: pendingDecision, ...result }),
+      (err) => {
+        if (!controller.signal.aborted) console.error(err);
+      },
+    );
+    return () => controller.abort();
+  }, [showSuggestions, pendingDecision, manualInput]);
 
   const handleDecision = useCallback((value) => {
     if (resolveDecisionRef.current) {
@@ -464,6 +500,15 @@ export default function Simulator() {
               />
             </div>
           )}
+          {strategy === "ManualStrategy" && (
+            <div className={styles.numRunsRow}>
+              <Checkbox
+                checked={showSuggestions}
+                label={t("showSuggestions")}
+                onChange={setShowSuggestions}
+              />
+            </div>
+          )}
         </div>
 
         <div data-export-hide="true">
@@ -511,7 +556,11 @@ export default function Simulator() {
         {strategy === "ManualStrategy" && simulatorData && (
           <ManualPlay
             logs={simulatorData.logs}
-            pendingDecision={pendingDecision}
+            pendingDecision={
+              showSuggestions && suggestions?.decision === pendingDecision
+                ? { ...pendingDecision, suggestions }
+                : pendingDecision
+            }
             onDecision={handleDecision}
             idolId={simulatorData.input.idolId}
           />

@@ -248,3 +248,49 @@ export function runOnWorkers(
     pendingRejects.delete(rejectRun);
   });
 }
+
+// The simulator's expectation of each play open at a manual-play card
+// choice (suggestPlays), worked out on one of the pool's workers so the page
+// stays responsive. An abort rejects the promise but leaves the pool running:
+// the worker finishes the request and its answer is dropped.
+export function suggestPlaysOnWorker(
+  { idolStageConfig, linkConfigs, state },
+  signal
+) {
+  if (signal?.aborted) return Promise.reject(signal.reason);
+  const worker = getWorkerPool()[0];
+  const runId = nextRunId++;
+  const listeners = new AbortController();
+
+  let rejectRun;
+  return new Promise((resolve, reject) => {
+    rejectRun = reject;
+    pendingRejects.add(reject);
+    signal?.addEventListener("abort", () => reject(signal.reason), {
+      once: true,
+      signal: listeners.signal,
+    });
+    worker.addEventListener(
+      "message",
+      ({ data }) => {
+        if (data.runId !== runId) return;
+        if (data.type === WORKER_MESSAGE.PLAY_SUGGESTIONS) {
+          resolve(data.suggestions);
+        } else if (data.type === WORKER_MESSAGE.ERROR) {
+          reject(new Error(data.message));
+        }
+      },
+      { signal: listeners.signal }
+    );
+    worker.postMessage({
+      type: WORKER_MESSAGE.SUGGEST_PLAYS,
+      runId,
+      idolStageConfig,
+      linkConfigs,
+      state,
+    });
+  }).finally(() => {
+    listeners.abort();
+    pendingRejects.delete(rejectRun);
+  });
+}

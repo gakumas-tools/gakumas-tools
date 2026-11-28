@@ -1,4 +1,5 @@
 import { createSimulation, scorePDrinkOptions } from ".";
+import { suggestPlays } from "@/utils/playSuggestions";
 import { WORKER_MESSAGE } from "./constants";
 
 const simulations = new Map();
@@ -20,6 +21,10 @@ async function handle({ type, runId, ...data }) {
       share
     );
     postMessage({ type: WORKER_MESSAGE.P_DRINK_SCORES, runId, scores });
+  } else if (type === WORKER_MESSAGE.SUGGEST_PLAYS) {
+    const { idolStageConfig, linkConfigs, state } = data;
+    const suggestions = suggestPlays(idolStageConfig, linkConfigs, state);
+    postMessage({ type: WORKER_MESSAGE.PLAY_SUGGESTIONS, runId, suggestions });
   } else if (type === WORKER_MESSAGE.CANCEL) {
     simulations.delete(runId);
   } else if (!simulations.has(runId)) {

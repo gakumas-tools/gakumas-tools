@@ -455,7 +455,8 @@
     "lastUpdated": "Última actualización",
     "start": "Iniciar",
     "restart": "Reiniciar",
-    "simulationFailed": "La simulación se ha detenido por un error. Vuelve a intentarlo o cambia la formación."
+    "simulationFailed": "La simulación se ha detenido por un error. Vuelve a intentarlo o cambia la formación.",
+    "showSuggestions": "Mostrar la jugada del simulador"
   },
   "StrategyPicker": {
     "auto": "Automática",
@@ -811,7 +812,8 @@
     "selectCardsToHold": "Selecciona {num} {num, plural, =1 {carta} other {cartas}} para reservar",
     "selectCardsToMoveToHand": "Selecciona {num} {num, plural, =1 {carta} other {cartas}} para mover a la mano",
     "selectCardsToMoveToTopOfDeck": "Selecciona {num} {num, plural, =1 {carta} other {cartas}} para mover a la parte superior del mazo",
-    "confirm": "Confirmar"
+    "confirm": "Confirmar",
+    "simulatorPick": "Jugada del simulador: {name}, puntuación esperada {score}"
   },
   "BoxPlot": {
     "max": "Máx.",
