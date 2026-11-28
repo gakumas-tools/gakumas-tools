@@ -267,8 +267,15 @@ function supplyHand(state, action, heldCard) {
       c11n ??= named;
       named = undefined;
     }
-    const card = findCopy(state, cardId, hand, c11n);
+    let card = findCopy(state, cardId, hand, c11n);
     assert.ok(card >= 0, `no copy of card ${cardId} left`);
+    // A copy the engine already drew, if it's the same as the one found, so
+    // the copy left in the deck is the one the game left there.
+    const same = JSON.stringify(state[S.cardMap][card]);
+    const drawn = state[S.handCards].find(
+      (c) => !hand.includes(c) && JSON.stringify(state[S.cardMap][c]) == same,
+    );
+    if (drawn !== undefined) card = drawn;
     hand.push(card);
   }
   return hand;
