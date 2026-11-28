@@ -24,13 +24,14 @@
  * heart) or "other" (a plain number); power is the total shown over the
  * memory's art.
  *
- * tests/fixtures/memory/account holds the account's 65 memories (ステージ tab,
+ * tests/fixtures/memory/account holds the account's 66 memories (ステージ tab,
  * phone 1080x2424, WebP q90): m01–m32 from 2026-11-17, m33–m55 from
- * 2026-11-24, m56–m65 (清夏 ×3, 美鈴 ×7, made after 11-24) from 2026-11-27.
+ * 2026-11-24, m56–m65 (清夏 ×3, 美鈴 ×7, made after 11-24) from 2026-11-27,
+ * m66 (美鈴) from 2026-11-28.
  * Card names are printed under each card; every label was checked against its
  * screen (m33–m55 from a line-by-line transcription of each screen, with each
  * card's cost from its data, which matches all 160 costs labelled by eye on
- * m01–m32; m56–m65 labelled by eye, each cost from its data matching the
+ * m01–m32; m56–m66 labelled by eye, each cost from its data matching the
  * badge on screen).
  *
  * Usage:
