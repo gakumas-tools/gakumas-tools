@@ -20,3 +20,5 @@ id,name,availableCustomizations,rarity,type,plan,unlockPlv,upgraded,unique,sourc
 10077,情熱ターン++,,SR,active,sense,1,TRUE,FALSE,produce,,FALSE,,cost-=5,score+=19; concentration+=4,,,77
 10018,表情の基本++,,N,mental,sense,1,TRUE,FALSE,default,,FALSE,,cost-=1,genki+=3; concentration+=3,,,18
 10231,ワンモアステップ++,,SSR,active,sense,1,TRUE,TRUE,pIdol,25,FALSE,,cost-=2,score+=10; score+=10; if:concentration>=6 { score+=9 },1,,231
+10059,リスタート++,,R,mental,logic,1,TRUE,FALSE,produce,,FALSE,,cost-=2,genki+=2; goodImpressionTurns+=4,,,59
+10383,スターライト++,,R,active,anomaly,1,TRUE,FALSE,produce,,FALSE,,cost-=5,setStance(strength); score+=18,,,383
