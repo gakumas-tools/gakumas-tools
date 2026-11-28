@@ -16,6 +16,15 @@ export const FEATURE_EVENTS = [
   "tierPublished",
 ];
 
+// Counted once a month per browser (utils/countUse.js countMonthly), so each
+// month's count is how many browsers did it: overall use, still with no ids.
+export const MONTHLY_EVENTS = ["simulatorUser"];
+
+/** The calendar month of a date (UTC), as "2026-11". */
+export function utcMonth(date) {
+  return date.toISOString().slice(0, 7);
+}
+
 /** The ISO week of a date, as "2026-W48". */
 export function isoWeek(date) {
   const d = new Date(
@@ -29,8 +38,16 @@ export function isoWeek(date) {
   return `${d.getUTCFullYear()}-W${String(week).padStart(2, "0")}`;
 }
 
-/** The update that counts one event in its week, or null for an unknown event. */
+/** The update that counts one event in its week (a monthly event in its
+ * month), or null for an unknown event. */
 export function featureUseWrite(event, now) {
+  if (MONTHLY_EVENTS.includes(event)) {
+    const month = utcMonth(now);
+    return {
+      filter: { _id: `${month}:${event}` },
+      update: { $inc: { n: 1 }, $setOnInsert: { month, event } },
+    };
+  }
   if (!FEATURE_EVENTS.includes(event)) return null;
   const week = isoWeek(now);
   return {
