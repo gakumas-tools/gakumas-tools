@@ -75,8 +75,10 @@ const FIXTURES = [
   "produce-exam-misuzu-g1256-final-to-turn2",
   "produce-exam-misuzu-g1337-final2-to-turn9",
   "produce-exam-suzuka-g1358-final-to-turn12",
-  "produce-exam-misuzu-g1436-final-to-turn11",
   "produce-exam-misuzu-g1436-final-retry-to-turn8",
+  "produce-exam-misuzu-g1436-final-retry",
+  "produce-exam-misuzu-g1436-final-to-turn11",
+  "produce-exam-misuzu-g1436-final",
 ];
 
 // Captures of a produce exam that has a ProduceExams row replay through
@@ -255,7 +257,22 @@ function holdAsCaptured(hold, onHold) {
       assert.equal(count, 1);
       assert.equal(optional, false);
       const candidateIds = candidates.map((c) => state[S.cardMap][c].id);
-      assert.deepEqual(candidateIds, hold.candidateIds);
+      // No candidateIds: the game showed which card went to 保留 but not
+      // the order it offered them in (a hold from 山札/捨札, e.g. ほっと緑茶).
+      // Pick it by id; copies that differ (growth, customizations) can't be
+      // told apart, so they fail rather than guess.
+      if (hold.candidateIds) {
+        assert.deepEqual(candidateIds, hold.candidateIds);
+      } else {
+        const copies = candidates.filter(
+          (c) => state[S.cardMap][c].id == hold.selectedId,
+        );
+        assert.ok(copies.length > 0, `no ${hold.selectedId} to hold`);
+        const entries = new Set(
+          copies.map((c) => JSON.stringify(state[S.cardMap][c])),
+        );
+        assert.equal(entries.size, 1, `copies of ${hold.selectedId} differ`);
+      }
       const choice = candidateIds.indexOf(hold.selectedId);
       onHold(candidates[choice]);
       return [choice];
@@ -362,6 +379,23 @@ function replay(capture, play) {
       engine.cardManager.supportUpgrade(state, card);
     }
 
+    // hold.from: the pile the ログ says the held card came from (ほっと緑茶:
+    // 「スターライト」を捨札から1枚保留に移動). The harness supplies hands
+    // itself, so the engine's piles don't hold what the game's did: put a
+    // copy of the card in that pile before the drink.
+    if (action.hold?.from) {
+      assert.ok(!action.fromDrink, `turn ${turn}: hold.from with fromDrink`);
+      const pile = { deck: S.deckCards, discarded: S.discardedCards }[
+        action.hold.from
+      ];
+      assert.ok(pile, `turn ${turn}: hold.from ${action.hold.from}`);
+      const copy = findCopy(state, action.hold.selectedId, hand);
+      assert.ok(copy >= 0, `turn ${turn}: no ${action.hold.selectedId} to hold`);
+      for (const p of [S.deckCards, S.discardedCards]) {
+        state[p] = state[p].filter((c) => c != copy);
+      }
+      state[pile].push(copy);
+    }
     let holds = 0;
     engine.strategy = holdAsCaptured(action.hold, (held) => {
       holds++;
