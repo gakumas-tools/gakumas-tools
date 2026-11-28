@@ -2,12 +2,18 @@
 // them. Counts only: no ids, no pseudonyms, nothing about who.
 export const FEATURE_USE = "featureUse";
 
-// The steps of sharing a rehearsal comparison (goal: more shared), in order.
+// The steps of sharing a rehearsal comparison, then of adding a tier list to
+// the community tier list (goal: more shared), each in order.
 export const FEATURE_EVENTS = [
   "rehearsalTabOpened",
   "rehearsalResultsAdded",
   "rehearsalCellPicked",
   "rehearsalShared",
+  "tierListEdited",
+  "tierCommunityOpened",
+  "tierShareOpened",
+  "tierPublishSignIn",
+  "tierPublished",
 ];
 
 /** The ISO week of a date, as "2026-W48". */

@@ -40,6 +40,7 @@ import TierListPickerModal from "./TierListPickerModal";
 import TierRow from "./TierRow";
 import CommunityTierList from "@/components/CommunityTierList";
 import TierShareModal from "./TierShareModal";
+import { countUse } from "@/utils/countUse";
 import { reportShareUse } from "@/utils/shareUse";
 import { AVAILABLE_RANKS, sortRanks } from "./ranks";
 import styles from "./TierList.module.scss";
@@ -244,6 +245,7 @@ function TierList({ type }) {
   const togglePickerItem = useCallback(
     (entity) => {
       if (entity?.id == null || pickerTier == null) return;
+      countUse("tierListEdited");
       const id = entity.id;
       const currentTier = pickedByIdRef.current[id];
       if (currentTier === pickerTier) {
@@ -480,6 +482,7 @@ function TierList({ type }) {
       lastOverIdRef.current = null;
       recentlyMovedRef.current = false;
       if (!over) return;
+      countUse("tierListEdited");
       const activeId = active.id;
       const dropId = over.id;
 

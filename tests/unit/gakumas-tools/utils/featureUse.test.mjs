@@ -32,3 +32,15 @@ test("only the known steps are counted", () => {
   assert.equal(featureUseWrite(undefined, new Date()), null);
   assert.equal(FEATURE_EVENTS.length, new Set(FEATURE_EVENTS).size);
 });
+
+test("the tier list steps are counted too", () => {
+  for (const event of [
+    "tierListEdited",
+    "tierCommunityOpened",
+    "tierShareOpened",
+    "tierPublishSignIn",
+    "tierPublished",
+  ]) {
+    assert.ok(featureUseWrite(event, new Date()), event);
+  }
+});
