@@ -13,7 +13,9 @@ export const DEFAULT_PLAYOUTS = 200;
  *
  * Returns { plays: [{ card, mean, min, max }], best } where card is the hand
  * card's index in the state (null = end the turn) and best is the play with
- * the highest mean. Reads nothing but its arguments; it reseeds the engine's
+ * the highest mean. Copies of the same card (the same cardMap entry, which
+ * holds its id, customizations and growth) are played out once and share one
+ * expectation, so they never show different numbers. Reads nothing but its arguments; it reseeds the engine's
  * random stream at the end, so later draws stay unpredictable.
  */
 export function suggestPlays(
@@ -31,24 +33,32 @@ export function suggestPlays(
     .filter((card) => engine.isCardUsable(state, card))
     .concat([null]);
 
+  const byEntry = new Map();
+  const expect = (card) => {
+    const key = card == null ? null : JSON.stringify(state[S.cardMap][card]);
+    if (!byEntry.has(key)) byEntry.set(key, playOut(card));
+    return { card, ...byEntry.get(key) };
+  };
+  const playOut = (card) => {
+    let total = 0;
+    let min = Infinity;
+    let max = -Infinity;
+    for (let p = 0; p < playouts; p++) {
+      resetRand(seed + p);
+      let s = state.slice();
+      s[S.deckCards] = [...state[S.deckCards]];
+      s = shuffleDeck(s);
+      s = card == null ? engine.endTurn(s) : engine.useCard(s, card);
+      while (s[S.turnsRemaining] > 0) s = strategy.evaluate(s).state;
+      total += s[S.score];
+      min = Math.min(min, s[S.score]);
+      max = Math.max(max, s[S.score]);
+    }
+    return { mean: total / playouts, min, max };
+  };
+
   try {
-    const plays = options.map((card) => {
-      let total = 0;
-      let min = Infinity;
-      let max = -Infinity;
-      for (let p = 0; p < playouts; p++) {
-        resetRand(seed + p);
-        let s = state.slice();
-        s[S.deckCards] = [...state[S.deckCards]];
-        s = shuffleDeck(s);
-        s = card == null ? engine.endTurn(s) : engine.useCard(s, card);
-        while (s[S.turnsRemaining] > 0) s = strategy.evaluate(s).state;
-        total += s[S.score];
-        min = Math.min(min, s[S.score]);
-        max = Math.max(max, s[S.score]);
-      }
-      return { card, mean: total / playouts, min, max };
-    });
+    const plays = options.map(expect);
     const best = plays.reduce((a, b) => (b.mean > a.mean ? b : a));
     return { plays, best };
   } finally {

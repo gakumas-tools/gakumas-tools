@@ -14,13 +14,13 @@ import { suggestPlays } from "../../../../gakumas-tools/utils/playSuggestions.js
 
 const stage = Stages.getAll().find((s) => s.type == "contest" && !s.preview);
 
-function setup() {
+function setup(cards = [1, 3, 5, 7, 9, 1, 3, 5]) {
   resetRand(7);
   const idol = new IdolConfig({
     params: [1500, 1500, 1500, 40],
     supportBonus: 0.04,
     pItemIds: [],
-    skillCardIdGroups: [[1, 3, 5, 7, 9, 1, 3, 5]],
+    skillCardIdGroups: [cards],
     customizationGroups: [[]],
   });
   const config = new IdolStageConfig(idol, new StageConfig(stage));
@@ -33,8 +33,12 @@ function setup() {
 
 test("one play per usable hand card, then ending the turn", () => {
   const { config, engine, state } = setup();
-  const usable = state[S.handCards].filter((c) => engine.isCardUsable(state, c));
-  const { plays, best } = suggestPlays(config, undefined, state, { playouts: 4 });
+  const usable = state[S.handCards].filter((c) =>
+    engine.isCardUsable(state, c),
+  );
+  const { plays, best } = suggestPlays(config, undefined, state, {
+    playouts: 4,
+  });
   assert.deepEqual(
     plays.map((p) => p.card),
     [...usable, null],
@@ -58,8 +62,22 @@ test("on the last turn, playing a scoring card beats ending the turn", () => {
   const { config, engine } = setup();
   let { state } = setup();
   while (state[S.turnsRemaining] > 1) state = engine.endTurn(state);
-  const { plays, best } = suggestPlays(config, undefined, state, { playouts: 2 });
+  const { plays, best } = suggestPlays(config, undefined, state, {
+    playouts: 2,
+  });
   const end = plays.find((p) => p.card == null);
   assert.notEqual(best.card, null);
   assert.ok(best.mean > end.mean);
+});
+
+test("copies of the same card share one expectation", () => {
+  const { config, engine, state } = setup([1, 1, 1, 1, 1, 1, 1, 1]);
+  const usable = state[S.handCards].filter((c) =>
+    engine.isCardUsable(state, c),
+  );
+  assert.ok(usable.length > 1);
+  const { plays } = suggestPlays(config, undefined, state, { playouts: 4 });
+  const cards = plays.filter((p) => p.card != null);
+  assert.equal(cards.length, usable.length);
+  for (const p of cards) assert.equal(p.mean, cards[0].mean);
 });
