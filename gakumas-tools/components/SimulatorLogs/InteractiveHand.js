@@ -9,6 +9,7 @@ import { EntityTypes } from "@/utils/entities";
 import HandState from "./HandState";
 import HandTitle from "./HandTitle";
 import SetHandModal from "./SetHandModal";
+import SetValuesModal from "./SetValuesModal";
 import styles from "./SimulatorLogs.module.scss";
 
 function InteractiveHand({
@@ -24,6 +25,7 @@ function InteractiveHand({
 
   const [expanded, setExpanded] = useState(true);
   const [settingHand, setSettingHand] = useState(false);
+  const [settingValues, setSettingValues] = useState(false);
 
   const handRef = React.useRef(null);
   React.useEffect(() => {
@@ -141,7 +143,12 @@ function InteractiveHand({
       )}
       <div className={styles.skip}>
         {pendingDecision?.state && (
-          <Button onClick={() => setSettingHand(true)}>{t("setHand")}</Button>
+          <>
+            <Button onClick={() => setSettingHand(true)}>{t("setHand")}</Button>
+            <Button onClick={() => setSettingValues(true)}>
+              {t("setValues")}
+            </Button>
+          </>
         )}
         <Button fill onClick={handleEndTurn}>
           {t("skip")}
@@ -156,6 +163,18 @@ function InteractiveHand({
           onConfirm={(cards) => {
             setSettingHand(false);
             onDecision({ setHand: cards });
+          }}
+        />
+      )}
+      {settingValues && (
+        <SetValuesModal
+          state={pendingDecision.state}
+          plan={pendingDecision.plan}
+          maxStamina={pendingDecision.maxStamina}
+          onClose={() => setSettingValues(false)}
+          onConfirm={(values) => {
+            setSettingValues(false);
+            onDecision({ setValues: values });
           }}
         />
       )}

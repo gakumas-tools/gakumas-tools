@@ -1,4 +1,4 @@
-import { S } from "../constants";
+import { S, STANCES } from "../constants";
 import { recordRand, rewindRand, stopRecordingRand } from "../utils";
 import BaseStrategy from "./BaseStrategy";
 
@@ -82,18 +82,26 @@ export default class ManualStrategy extends BaseStrategy {
         state: this.engine.logger.getHandStateForLogging(state),
       };
 
+      const { idol } = this.engine.getConfig(state);
       const selectedCard = await this.inputCallback({
         type: "CARD_SELECTION",
         state,
         handCards: state[S.handCards],
         usableCards,
         pDrinks: this.engine.getHeldPDrinks(state),
+        plan: idol.plan,
+        maxStamina: idol.params.stamina,
       });
 
       // The player may set the hand to the one the game shows:
       // { setHand: [card, ...] }, then choose again from it.
       if (selectedCard?.setHand) {
         setHand(state, selectedCard.setHand);
+        continue;
+      }
+      // Or the values the game shows: { setValues: { field: value } }.
+      if (selectedCard?.setValues) {
+        setValues(state, selectedCard.setValues, idol.params.stamina);
         continue;
       }
 
@@ -176,5 +184,37 @@ export function setHand(state, cards) {
   }
   state[S.deckCards] = [...displaced, ...state[S.deckCards]];
   state[S.handCards] = [...cards];
+  return state;
+}
+
+// The values a player may set to match the game's screen: the ones it shows
+// for every plan, then per plan.
+export const SET_VALUE_FIELDS = {
+  all: ["score", "stamina", "genki"],
+  sense: ["goodConditionTurns", "perfectConditionTurns", "concentration"],
+  logic: ["goodImpressionTurns", "motivation"],
+  anomaly: ["stance", "fullPowerCharge", "enthusiasm"],
+};
+const SETTABLE = new Set(Object.values(SET_VALUE_FIELDS).flat());
+
+/**
+ * Sets values to the ones the game shows, in place, as when the game's run
+ * has gone differently from the simulator's. Only the fields in
+ * SET_VALUE_FIELDS are set: numbers are whole and not negative, stamina is at
+ * most `maxStamina`, and a stance is one of STANCES. Setting a value is not a
+ * gain: nothing that triggers on an increase or a stance change fires.
+ */
+export function setValues(state, values, maxStamina = Infinity) {
+  for (const [field, value] of Object.entries(values)) {
+    if (!SETTABLE.has(field)) continue;
+    if (field == "stance") {
+      if (STANCES.includes(value)) state[S.stance] = value;
+      continue;
+    }
+    if (!Number.isFinite(value)) continue;
+    let v = Math.max(0, Math.floor(value));
+    if (field == "stamina") v = Math.min(v, maxStamina);
+    state[S[field]] = v;
+  }
   return state;
 }

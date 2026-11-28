@@ -362,14 +362,35 @@
 
 .skip {
   display: flex;
+  flex-wrap: wrap;
   gap: tokens.$space-2;
   padding: 0 10px 10px;
 
   > button {
+    flex: 1 1 0;
     background-color: tokens.$surface-panel;
 
     &:hover {
       background-color: tokens.$surface-alt;
     }
   }
+}
+
+// Skip gets its own full-width row under the two "Match" buttons.
+.skip > button:last-child {
+  flex-basis: 100%;
+}
+
+.setValues {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: tokens.$space-2;
+  margin-bottom: tokens.$space-3;
+}
+
+.setValue {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: tokens.$text-sm;
 }

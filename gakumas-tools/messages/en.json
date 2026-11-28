@@ -842,6 +842,8 @@
     "simulatorPick": "Simulator's pick: {name}, expected {score}",
     "setHand": "Match the game's hand",
     "setHandPrompt": "Pick the cards in your hand in the game (up to {num})",
+    "setValues": "Match the game's values",
+    "setValuesPrompt": "Enter the score, stamina and buffs the game shows",
     "deck": "Deck",
     "discardPile": "Discard pile"
   },
