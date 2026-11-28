@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import {
+  Customizations,
   PDrinks,
   ProduceExams,
   SkillCards,
@@ -160,6 +161,14 @@ function createEngine(capture, play) {
     // Cards the game drew but that were never played (nextTurnDraw).
     ...(capture.extraCardIds ?? []),
   ];
+  // IdolConfig drops a customization it doesn't know, so check them here.
+  for (const [cardId, c11n] of Object.entries(capture.cardCustomizations ?? {})) {
+    assert.ok(cardIds.includes(Number(cardId)), `customized ${cardId} not in deck`);
+    for (const [id, level] of Object.entries(c11n)) {
+      assert.ok(Customizations.getById(id), `no customization ${id}`);
+      assert.ok(level > 0, `customization ${id} level ${level}`);
+    }
+  }
   const idol = new IdolConfig({
     // maxStamina: the run's max 体力 when the exam starts below it (a
     // produce exam starts at the 体力 the run had), so heals cap there.
@@ -169,6 +178,12 @@ function createEngine(capture, play) {
     // engineDrinks: the drinks are held and drunk through the engine.
     pDrinkIds: capture.engineDrinks ? capture.pDrinkIds : undefined,
     skillCardIdGroups: [cardIds],
+    // cardCustomizations: { "<cardId>": { "<customizationId>": level } },
+    // the カスタマイズ the game showed on that card (カスタマイズ詳細),
+    // applied to every copy of the id.
+    customizationGroups: [
+      cardIds.map((id) => capture.cardCustomizations?.[id]),
+    ],
   });
   const engine = new StageEngine({
     idol,
@@ -292,6 +307,24 @@ function replay(capture, play) {
       deck.push(card);
     }
     initialState[S.deckCards] = deck.reverse();
+  }
+  // initialGrowth: { "<cardId>": { "g.score": n } }, growth the ログ shows
+  // the cards already had when the exam started (the 成長 lines before turn
+  // 1, e.g. from a P-item), added to every copy of the id.
+  for (const [cardId, growth] of Object.entries(capture.initialGrowth ?? {})) {
+    const copies = initialState[S.cardMap]
+      .map((entry, card) => (entry.id == cardId ? card : -1))
+      .filter((card) => card >= 0);
+    assert.ok(copies.length > 0, `grown ${cardId} not in deck`);
+    for (const card of copies) {
+      const entry = initialState[S.cardMap][card];
+      const next = { ...entry, growth: { ...entry.growth } };
+      for (const [field, value] of Object.entries(growth)) {
+        assert.ok(field in G, `no growth field ${field}`);
+        next.growth[G[field]] = (next.growth[G[field]] ?? 0) + value;
+      }
+      initialState[S.cardMap][card] = next;
+    }
   }
   let state = engine.startStage(initialState);
   engine.logger.disable();
