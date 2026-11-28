@@ -161,13 +161,27 @@ function createEngine(capture, play) {
     ...(capture.extraCardIds ?? []),
   ];
   // IdolConfig drops a customization it doesn't know, so check them here.
-  for (const [cardId, c11n] of Object.entries(capture.cardCustomizations ?? {})) {
+  for (const [cardId, value] of Object.entries(capture.cardCustomizations ?? {})) {
     assert.ok(cardIds.includes(Number(cardId)), `customized ${cardId} not in deck`);
-    for (const [id, level] of Object.entries(c11n)) {
-      assert.ok(Customizations.getById(id), `no customization ${id}`);
-      assert.ok(level > 0, `customization ${id} level ${level}`);
+    if (Array.isArray(value)) {
+      const copies = cardIds.filter((id) => id == cardId).length;
+      assert.equal(value.length, copies, `customized ${cardId}: one entry per copy`);
+    }
+    for (const c11n of [value].flat()) {
+      for (const [id, level] of Object.entries(c11n)) {
+        assert.ok(Customizations.getById(id), `no customization ${id}`);
+        assert.ok(level > 0, `customization ${id} level ${level}`);
+      }
     }
   }
+  // A copy's customization: an array value gives one per copy, in deck order.
+  const seen = {};
+  const c11nOf = (id) => {
+    const value = capture.cardCustomizations?.[id];
+    if (!Array.isArray(value)) return value;
+    seen[id] = (seen[id] ?? 0) + 1;
+    return value[seen[id] - 1];
+  };
   const idol = new IdolConfig({
     // maxStamina: the run's max 体力 when the exam starts below it (a
     // produce exam starts at the 体力 the run had), so heals cap there.
@@ -179,10 +193,10 @@ function createEngine(capture, play) {
     skillCardIdGroups: [cardIds],
     // cardCustomizations: { "<cardId>": { "<customizationId>": level } },
     // the カスタマイズ the game showed on that card (カスタマイズ詳細),
-    // applied to every copy of the id.
-    customizationGroups: [
-      cardIds.map((id) => capture.cardCustomizations?.[id]),
-    ],
+    // applied to every copy of the id. When the copies differ, the value is
+    // an array with one entry per copy ({} for an uncustomized one), and each
+    // action names its copy's customization (action.customizations).
+    customizationGroups: [cardIds.map(c11nOf)],
   });
   const engine = new StageEngine({
     idol,
@@ -196,10 +210,23 @@ function createEngine(capture, play) {
   return engine;
 }
 
-function findCopy(state, cardId, hand) {
+// The customization of a cardMap entry, as { "<customizationId>": level }
+// with nothing for none, so it can be compared with a capture's.
+function c11nKey(c11n) {
+  return JSON.stringify(
+    Object.entries(c11n ?? {})
+      .filter(([, level]) => level)
+      .map(([id, level]) => [String(id), level])
+      .sort(),
+  );
+}
+
+// c11n: only a copy with exactly this customization ({} = none) matches.
+function findCopy(state, cardId, hand, c11n) {
   return state[S.cardMap].findIndex(
     (c, index) =>
       c.id == cardId &&
+      (c11n === undefined || c11nKey(c.c11n) == c11nKey(c11n)) &&
       !state[S.removedCards].includes(index) &&
       !state[S.heldCards].includes(index) &&
       !hand.includes(index),
@@ -212,15 +239,27 @@ function supplyHand(state, action, heldCard) {
   // nextTurnDraw and raised there), not a fresh one.
   if (action.fromHand) {
     const card = state[S.handCards].find(
-      (c) => state[S.cardMap][c].id == action.cardId,
+      (c) =>
+        state[S.cardMap][c].id == action.cardId &&
+        (action.customizations === undefined ||
+          c11nKey(state[S.cardMap][c].c11n) == c11nKey(action.customizations)),
     );
     assert.ok(card !== undefined, `no card ${action.cardId} in hand`);
     return [card];
   }
 
   const hand = [];
-  for (const cardId of action.handCardIds ?? [action.cardId]) {
-    const card = findCopy(state, cardId, hand);
+  // customizations: the played copy's カスタマイズ, so the copy supplied for
+  // action.cardId is the one the game played. handCustomizations: one per
+  // handCardIds entry (null = any copy), for a copy that stays in hand.
+  let named = action.customizations;
+  for (const [i, cardId] of (action.handCardIds ?? [action.cardId]).entries()) {
+    let c11n = action.handCustomizations?.[i] ?? undefined;
+    if (cardId == action.cardId) {
+      c11n ??= named;
+      named = undefined;
+    }
+    const card = findCopy(state, cardId, hand, c11n);
     assert.ok(card >= 0, `no copy of card ${cardId} left`);
     hand.push(card);
   }
@@ -393,11 +432,16 @@ function replay(capture, play) {
       hand = supplyHand(state, action, heldCard);
       putInHand(state, hand);
     }
+    const played = (c) =>
+      state[S.cardMap][c].id == action.cardId &&
+      (action.customizations === undefined ||
+        c11nKey(state[S.cardMap][c].c11n) == c11nKey(action.customizations));
     const card = action.useReturnedHeldCard
       ? heldCard
       : action.fromDrink
-        ? hand.findLast((c) => state[S.cardMap][c].id == action.cardId)
-        : hand.find((c) => state[S.cardMap][c].id == action.cardId);
+        ? hand.findLast(played)
+        : hand.find(played);
+    assert.ok(card !== undefined, `turn ${turn}: no ${action.cardId} in hand as played`);
     for (const [field, value] of Object.entries(action.growthBefore ?? {})) {
       assert.equal(
         state[S.cardMap][card].growth[G[field]],
@@ -489,6 +533,16 @@ function replay(capture, play) {
       assert.ok(state[S.handCards].includes(heldCard), "held card in hand");
     }
     for (const [field, value] of Object.entries(action.expected)) {
+      // removedCardIds: the ids in 除外 after the turn, sorted, as the ログ
+      // shows cards moved there (e.g. 「眠気」 from 山札 to 除外).
+      if (field == "removedCardIds") {
+        const ids = state[S.removedCards]
+          .map((c) => state[S.cardMap][c].id)
+          .sort((a, b) => a - b);
+        assert.deepEqual(ids, value, `turn ${turn} 除外 (${action.capture})`);
+        continue;
+      }
+      assert.ok(field in S, `turn ${turn}: no field ${field}`);
       assert.equal(
         state[S[field]],
         value,
