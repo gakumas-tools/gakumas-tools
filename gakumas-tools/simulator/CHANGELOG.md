@@ -23,6 +23,7 @@ All notable changes to the contest simulator will be documented in this file.
 - Update unbalance support card 勝たしてもらうで！
 - Add unbalance tsubame portrait
 - Add unbalance mao portrait
+- Fix 勝たしてもらうで！ and 噛み合わない理屈 effects starting before the card is used
 
 ## 2026-11-26
 
