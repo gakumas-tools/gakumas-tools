@@ -495,6 +495,35 @@ function replay(capture, play) {
       }
       state[S.deckCards].push(drawn);
     }
+    // redrawnCardIds: cards the play draws after its drawnCardIds empty the
+    // 山札 and the 捨札 is shuffled into it (a card discarded earlier in the
+    // same play can come back, as after 仕切り直し+). The rest of the 山札
+    // goes to the 捨札 first, so the drawn cards are all that's left, and
+    // the reshuffle puts the named cards on top in the order drawn.
+    let recycle;
+    if (action.redrawnCardIds) {
+      const top = action.drawnCardIds ?? [];
+      const keep = state[S.deckCards].slice(state[S.deckCards].length - top.length);
+      const rest = state[S.deckCards].filter((c) => !keep.includes(c));
+      state[S.discardedCards].push(...rest);
+      state[S.deckCards] = keep;
+      const manager = engine.cardManager;
+      recycle = manager.recycleDiscards;
+      let reshuffles = 0;
+      manager.recycleDiscards = function (s) {
+        recycle.call(this, s);
+        reshuffles++;
+        assert.equal(reshuffles, 1, `turn ${turn}: one reshuffle`);
+        for (const cardId of [...action.redrawnCardIds].reverse()) {
+          const at = s[S.deckCards].findLastIndex(
+            (c) => s[S.cardMap][c].id == cardId,
+          );
+          assert.ok(at >= 0, `turn ${turn}: no ${cardId} in 捨札 to redraw`);
+          const [copy] = s[S.deckCards].splice(at, 1);
+          s[S.deckCards].push(copy);
+        }
+      };
+    }
     if (!action.fromDrink) {
       for (const drink of action.drinksBefore ?? []) {
         drinkAsCaptured(engine, state, drink);
@@ -528,7 +557,11 @@ function replay(capture, play) {
       state[S.deckCards].push(...[...drawn].reverse());
     }
     assert.ok(engine.isCardUsable(state, card), `turn ${turn}: usable`);
-    state = engine.useCard(state, card);
+    try {
+      state = engine.useCard(state, card);
+    } finally {
+      if (recycle) delete engine.cardManager.recycleDiscards;
+    }
 
     assert.equal(holds, action.hold ? 1 : 0);
     assert.equal(state[S.turnsElapsed], action.turnsElapsed ?? turn, `action ${turn} turnsElapsed`);
@@ -548,6 +581,15 @@ function replay(capture, play) {
           .map((c) => state[S.cardMap][c].id)
           .sort((a, b) => a - b);
         assert.deepEqual(ids, value, `turn ${turn} 除外 (${action.capture})`);
+        continue;
+      }
+      // handCardIds: the ids in the 手札 after the play, sorted, as the ログ
+      // shows the cards drawn.
+      if (field == "handCardIds") {
+        const ids = state[S.handCards]
+          .map((c) => state[S.cardMap][c].id)
+          .sort((a, b) => a - b);
+        assert.deepEqual(ids, value, `turn ${turn} 手札 (${action.capture})`);
         continue;
       }
       assert.ok(field in S, `turn ${turn}: no field ${field}`);
