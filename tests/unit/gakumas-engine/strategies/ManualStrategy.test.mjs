@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { S, resetRand } from "gakumas-engine";
 import ManualStrategy, {
   MoveToTopOfDeckSelectionRequest,
+  setHand,
 } from "../../../../packages/gakumas-engine/strategies/ManualStrategy.js";
 import { createEngine } from "../helpers.mjs";
 
@@ -214,4 +215,53 @@ test("manual play offers the held P-drinks and passes a drink choice on", async 
   assert.equal(request.type, "CARD_SELECTION");
   assert.deepEqual(request.pDrinks, [5, 18]);
   assert.deepEqual(decision, { pDrink: 1 });
+});
+
+function piles(hand, deck, discard) {
+  const state = [];
+  state[S.handCards] = hand;
+  state[S.deckCards] = deck;
+  state[S.discardedCards] = discard;
+  state[S.removedCards] = [9];
+  return state;
+}
+
+test("setting the hand swaps each chosen card with one the hand gives up", () => {
+  // Deck top is the end of the array.
+  const state = setHand(piles([0, 1, 2], [3, 4, 5], [6, 7]), [0, 4, 7]);
+  assert.deepEqual(state[S.handCards], [0, 4, 7]);
+  assert.deepEqual(state[S.deckCards], [3, 1, 5]);
+  assert.deepEqual(state[S.discardedCards], [6, 2]);
+  assert.deepEqual(state[S.removedCards], [9]);
+});
+
+test("a hand set bigger shrinks the piles, and one set smaller puts the rest under the deck", () => {
+  const bigger = setHand(piles([0], [3, 4, 5], [6]), [0, 3, 5, 6]);
+  assert.deepEqual(bigger[S.handCards], [0, 3, 5, 6]);
+  assert.deepEqual(bigger[S.deckCards], [4]);
+  assert.deepEqual(bigger[S.discardedCards], []);
+
+  const smaller = setHand(piles([0, 1, 2], [3, 4], []), [4]);
+  assert.deepEqual(smaller[S.handCards], [4]);
+  assert.deepEqual(smaller[S.deckCards], [1, 2, 3, 0]);
+});
+
+test("manual play sets the hand it's given and asks again from it", async () => {
+  const state = piles([0, 1], [2, 3], []);
+  state[S.cardMap] = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
+  const requests = [];
+  const engine = {
+    logger: { log: () => ({}), getHandStateForLogging: () => ({}) },
+    isCardUsable: () => true,
+    getHeldPDrinks: () => [],
+  };
+  const answers = [{ setHand: [0, 3] }, 3];
+  const strategy = new ManualStrategy(engine, async (pending) => {
+    requests.push([...pending.handCards]);
+    return answers.shift();
+  });
+  const decision = await strategy.evaluate(state);
+  assert.deepEqual(requests, [[0, 1], [0, 3]]);
+  assert.deepEqual(decision, { card: 3 });
+  assert.deepEqual(state[S.deckCards], [2, 1]);
 });

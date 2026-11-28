@@ -813,7 +813,11 @@
     "selectCardsToMoveToHand": "Selecciona {num} {num, plural, =1 {carta} other {cartas}} para mover a la mano",
     "selectCardsToMoveToTopOfDeck": "Selecciona {num} {num, plural, =1 {carta} other {cartas}} para mover a la parte superior del mazo",
     "confirm": "Confirmar",
-    "simulatorPick": "Jugada del simulador: {name}, puntuación esperada {score}"
+    "simulatorPick": "Jugada del simulador: {name}, puntuación esperada {score}",
+    "setHand": "Igualar la mano del juego",
+    "setHandPrompt": "Elige las cartas de tu mano en el juego (hasta {num})",
+    "deck": "Mazo",
+    "discardPile": "Descartes"
   },
   "BoxPlot": {
     "max": "Máx.",

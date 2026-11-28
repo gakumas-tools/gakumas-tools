@@ -361,6 +361,8 @@
 }
 
 .skip {
+  display: flex;
+  gap: tokens.$space-2;
   padding: 0 10px 10px;
 
   > button {
