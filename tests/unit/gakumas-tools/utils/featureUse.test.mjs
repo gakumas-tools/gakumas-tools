@@ -44,3 +44,21 @@ test("the tier list steps are counted too", () => {
     assert.ok(featureUseWrite(event, new Date()), event);
   }
 });
+
+test("a monthly event counts in its month's document", () => {
+  assert.deepEqual(
+    featureUseWrite("simulatorUser", new Date("2026-11-30T23:59:00Z")),
+    {
+      filter: { _id: "2026-11:simulatorUser" },
+      update: {
+        $inc: { n: 1 },
+        $setOnInsert: { month: "2026-11", event: "simulatorUser" },
+      },
+    },
+  );
+  assert.equal(
+    featureUseWrite("simulatorUser", new Date("2026-12-01T00:00:00Z")).filter
+      ._id,
+    "2026-12:simulatorUser",
+  );
+});
