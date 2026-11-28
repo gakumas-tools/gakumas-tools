@@ -515,6 +515,8 @@ import image_514 from "./514.png";
 import image_515 from "./515.png";
 import image_518 from "./518.png";
 import image_519 from "./519.png";
+import image_522 from "./522.png";
+import image_523 from "./523.png";
 
 const IMAGES = {
   '1': image_1,
@@ -1034,6 +1036,8 @@ const IMAGES = {
   '515': image_515,
   '518': image_518,
   '519': image_519,
+  '522': image_522,
+  '523': image_523,
 };
 
 export default IMAGES;
