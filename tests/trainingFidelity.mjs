@@ -306,6 +306,24 @@ function replay(capture, play) {
     }
     initialState[S.deckCards] = deck.reverse();
   }
+  // initialGrowth: { "<cardId>": { "g.score": n } }, growth the ログ shows
+  // the cards already had when the exam started (the 成長 lines before turn
+  // 1, e.g. from a P-item), added to every copy of the id.
+  for (const [cardId, growth] of Object.entries(capture.initialGrowth ?? {})) {
+    const copies = initialState[S.cardMap]
+      .map((entry, card) => (entry.id == cardId ? card : -1))
+      .filter((card) => card >= 0);
+    assert.ok(copies.length > 0, `grown ${cardId} not in deck`);
+    for (const card of copies) {
+      const entry = initialState[S.cardMap][card];
+      const next = { ...entry, growth: { ...entry.growth } };
+      for (const [field, value] of Object.entries(growth)) {
+        assert.ok(field in G, `no growth field ${field}`);
+        next.growth[G[field]] = (next.growth[G[field]] ?? 0) + value;
+      }
+      initialState[S.cardMap][card] = next;
+    }
+  }
   let state = engine.startStage(initialState);
   engine.logger.disable();
 
