@@ -50,6 +50,7 @@ import {
   workerCount,
 } from "@/simulator/workerPool";
 import c from "@/utils/classNames";
+import { countMonthly } from "@/utils/countUse";
 import { createProgressStore } from "@/utils/progressStore";
 import { reportShareUse } from "@/utils/shareUse";
 import { extractLoadoutFields } from "@/utils/simulationRun";
@@ -256,6 +257,7 @@ export default function Simulator() {
 
   async function startManualPlay() {
     reportUse();
+    countMonthly("simulatorUser");
     abortRef.current?.abort();
     const controller = new AbortController();
     abortRef.current = controller;
@@ -303,6 +305,7 @@ export default function Simulator() {
 
   async function runSimulation() {
     reportUse();
+    countMonthly("simulatorUser");
     abortRef.current?.abort();
     const controller = new AbortController();
     abortRef.current = controller;
