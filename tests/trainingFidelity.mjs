@@ -78,6 +78,7 @@ const FIXTURES = [
   "produce-exam-suzuka-g1358-final-to-turn12",
   "produce-exam-misuzu-g1436-final-retry-to-turn8",
   "produce-exam-misuzu-g1436-final-retry",
+  "produce-exam-saki-hif-r2-ranked-to-turn2",
 ];
 
 // Captures of a produce exam that has a ProduceExams row replay through
