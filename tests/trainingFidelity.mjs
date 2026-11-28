@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import {
+  Customizations,
   PDrinks,
   ProduceExams,
   SkillCards,
@@ -158,6 +159,14 @@ function createEngine(capture, play) {
     // Cards the game drew but that were never played (nextTurnDraw).
     ...(capture.extraCardIds ?? []),
   ];
+  // IdolConfig drops a customization it doesn't know, so check them here.
+  for (const [cardId, c11n] of Object.entries(capture.cardCustomizations ?? {})) {
+    assert.ok(cardIds.includes(Number(cardId)), `customized ${cardId} not in deck`);
+    for (const [id, level] of Object.entries(c11n)) {
+      assert.ok(Customizations.getById(id), `no customization ${id}`);
+      assert.ok(level > 0, `customization ${id} level ${level}`);
+    }
+  }
   const idol = new IdolConfig({
     // maxStamina: the run's max 体力 when the exam starts below it (a
     // produce exam starts at the 体力 the run had), so heals cap there.
@@ -167,6 +176,12 @@ function createEngine(capture, play) {
     // engineDrinks: the drinks are held and drunk through the engine.
     pDrinkIds: capture.engineDrinks ? capture.pDrinkIds : undefined,
     skillCardIdGroups: [cardIds],
+    // cardCustomizations: { "<cardId>": { "<customizationId>": level } },
+    // the カスタマイズ the game showed on that card (カスタマイズ詳細),
+    // applied to every copy of the id.
+    customizationGroups: [
+      cardIds.map((id) => capture.cardCustomizations?.[id]),
+    ],
   });
   const engine = new StageEngine({
     idol,
