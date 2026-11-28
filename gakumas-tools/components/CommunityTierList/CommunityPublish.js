@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { signIn, useSession } from "next-auth/react";
 import Button from "@/components/Button";
 import { normalizeTierList } from "@/utils/communityTierLists";
+import { countUse } from "@/utils/countUse";
 import styles from "./CommunityTierList.module.scss";
 
 // Adds the list being edited to the community tier list, only when its
@@ -49,6 +50,7 @@ function CommunityPublish({ type }) {
           body: JSON.stringify(body),
         });
         if (!res.ok && res.status != 404) throw new Error(`HTTP ${res.status}`);
+        if (method == "PUT" && res.ok) countUse("tierPublished");
         setPublished(method == "PUT" ? (await res.json()).list : null);
       } catch (e) {
         console.error(e);
@@ -67,7 +69,13 @@ function CommunityPublish({ type }) {
     content = (
       <>
         <p className={styles.hint}>{t("signInToPublish")}</p>
-        <Button fill onClick={() => signIn("discord")}>
+        <Button
+          fill
+          onClick={() => {
+            countUse("tierPublishSignIn");
+            signIn("discord");
+          }}
+        >
           {t("signIn")}
         </Button>
       </>

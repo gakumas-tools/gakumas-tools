@@ -6,6 +6,7 @@ import Button from "@/components/Button";
 import EntityIcon from "@/components/EntityIcon";
 import Image from "@/components/Image";
 import c from "@/utils/classNames";
+import { countUse } from "@/utils/countUse";
 import { encodeList } from "@/utils/tierList";
 import styles from "./CommunityTierList.module.scss";
 
@@ -117,7 +118,10 @@ function CommunityTierList({ type, onAddYours, refresh }) {
       <button
         type="button"
         className={styles.toggle}
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => {
+          if (!open) countUse("tierCommunityOpened");
+          setOpen((v) => !v);
+        }}
         aria-expanded={open}
       >
         <span>{t("title")}</span>

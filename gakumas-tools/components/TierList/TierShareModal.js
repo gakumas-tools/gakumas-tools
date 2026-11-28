@@ -6,6 +6,7 @@ import CommunityPublish from "@/components/CommunityTierList/CommunityPublish";
 import Loader from "@/components/Loader";
 import Modal from "@/components/Modal";
 import c from "@/utils/classNames";
+import { countUse } from "@/utils/countUse";
 import { EntityTypes } from "@/utils/entities";
 import styles from "./TierShareModal.module.scss";
 
@@ -27,6 +28,7 @@ function TierShareModal({ type, onClose }) {
 
   useEffect(() => {
     setShareUrl(window.location.href);
+    countUse("tierShareOpened");
   }, []);
 
   useEffect(() => () => clearTimeout(copyTimerRef.current), []);
