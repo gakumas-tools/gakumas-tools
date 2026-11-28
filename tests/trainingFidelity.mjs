@@ -78,6 +78,8 @@ const FIXTURES = [
   "produce-exam-suzuka-g1358-final-to-turn12",
   "produce-exam-misuzu-g1436-final-retry-to-turn8",
   "produce-exam-misuzu-g1436-final-retry",
+  "produce-exam-misuzu-g1436-final-to-turn11",
+  "produce-exam-misuzu-g1436-final",
   "produce-exam-saki-hif-r2-ranked-to-turn2",
   "produce-exam-saki-hif-r2-ranked-to-turn10",
 ];
