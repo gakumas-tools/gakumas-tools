@@ -198,6 +198,13 @@ function createEngine(capture, play) {
     // an array with one entry per copy ({} for an uncustomized one), and each
     // action names its copy's customization (action.customizations).
     customizationGroups: [cardIds.map(c11nOf)],
+    // memoryAbilities: [{ text, capture, effects }], each メモリーアビリティ
+    // the game showed for the loadout's memories, word for word in text,
+    // and the effect string it reads as.
+    memoryAbilities: (capture.memoryAbilities ?? []).map((a) => {
+      assert.ok(a.text && a.capture && a.effects, "memory ability fields");
+      return a.effects;
+    }),
   });
   const engine = new StageEngine({
     idol,
