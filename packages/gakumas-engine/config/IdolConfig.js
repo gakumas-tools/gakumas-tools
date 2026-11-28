@@ -1,6 +1,5 @@
 import {
   Customizations,
-  deserializeEffectSequence,
   PDrinks,
   PIdols,
   PItems,
@@ -21,7 +20,6 @@ export default class IdolConfig {
       skillCardIdGroups,
       customizationGroups,
       startStamina,
-      memoryAbilities,
     } = loadout;
 
     let skillCardIds = [];
@@ -52,12 +50,6 @@ export default class IdolConfig {
 
     // P-items and skill cards
     this.pItemIds = [...new Set(pItemIds.filter((id) => id))];
-    // Memory abilities (メモリーアビリティ): each an effect string in the
-    // same language as a P-item's, held for the whole stage from its start,
-    // as the ログ shows them granted at turn 1.
-    this.memoryAbilityEffects = (memoryAbilities || [])
-      .filter((effects) => effects)
-      .map((effects) => deserializeEffectSequence(effects));
     // P-drinks (produce exams only). Up to 3, as in the game's drink slots;
     // the same drink may be held more than once, so no dedupe. Each may have
     // a turn set for it (pDrinkTurns, 1-based); one with none (null) is the

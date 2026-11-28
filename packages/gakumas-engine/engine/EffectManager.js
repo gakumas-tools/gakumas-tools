@@ -65,17 +65,6 @@ export default class EffectManager extends EngineComponent {
         });
         state[S.effectInstanceId]++;
       }
-
-      // Memory abilities hold for the whole stage, like P-items.
-      const { memoryAbilityEffects = [] } = configs[c].idol;
-      for (let i = 0; i < memoryAbilityEffects.length; i++) {
-        this.setEffects(state, memoryAbilityEffects[i], {
-          type: "memoryAbility",
-          idx: i,
-          primary: true,
-        });
-        state[S.effectInstanceId]++;
-      }
     }
 
     // Set card effects
