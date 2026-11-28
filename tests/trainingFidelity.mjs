@@ -81,6 +81,7 @@ const FIXTURES = [
   "produce-exam-misuzu-g1436-final-to-turn11",
   "produce-exam-misuzu-g1436-final",
   "produce-exam-saki-hif-r2-ranked-to-turn2",
+  "produce-exam-saki-hif-r2-ranked-to-turn10",
 ];
 
 // Captures of a produce exam that has a ProduceExams row replay through
@@ -163,13 +164,27 @@ function createEngine(capture, play) {
     ...(capture.extraCardIds ?? []),
   ];
   // IdolConfig drops a customization it doesn't know, so check them here.
-  for (const [cardId, c11n] of Object.entries(capture.cardCustomizations ?? {})) {
+  for (const [cardId, value] of Object.entries(capture.cardCustomizations ?? {})) {
     assert.ok(cardIds.includes(Number(cardId)), `customized ${cardId} not in deck`);
-    for (const [id, level] of Object.entries(c11n)) {
-      assert.ok(Customizations.getById(id), `no customization ${id}`);
-      assert.ok(level > 0, `customization ${id} level ${level}`);
+    if (Array.isArray(value)) {
+      const copies = cardIds.filter((id) => id == cardId).length;
+      assert.equal(value.length, copies, `customized ${cardId}: one entry per copy`);
+    }
+    for (const c11n of [value].flat()) {
+      for (const [id, level] of Object.entries(c11n)) {
+        assert.ok(Customizations.getById(id), `no customization ${id}`);
+        assert.ok(level > 0, `customization ${id} level ${level}`);
+      }
     }
   }
+  // A copy's customization: an array value gives one per copy, in deck order.
+  const seen = {};
+  const c11nOf = (id) => {
+    const value = capture.cardCustomizations?.[id];
+    if (!Array.isArray(value)) return value;
+    seen[id] = (seen[id] ?? 0) + 1;
+    return value[seen[id] - 1];
+  };
   const idol = new IdolConfig({
     // maxStamina: the run's max 体力 when the exam starts below it (a
     // produce exam starts at the 体力 the run had), so heals cap there.
@@ -181,10 +196,17 @@ function createEngine(capture, play) {
     skillCardIdGroups: [cardIds],
     // cardCustomizations: { "<cardId>": { "<customizationId>": level } },
     // the カスタマイズ the game showed on that card (カスタマイズ詳細),
-    // applied to every copy of the id.
-    customizationGroups: [
-      cardIds.map((id) => capture.cardCustomizations?.[id]),
-    ],
+    // applied to every copy of the id. When the copies differ, the value is
+    // an array with one entry per copy ({} for an uncustomized one), and each
+    // action names its copy's customization (action.customizations).
+    customizationGroups: [cardIds.map(c11nOf)],
+    // memoryAbilities: [{ text, capture, effects }], each メモリーアビリティ
+    // the game showed for the loadout's memories, word for word in text,
+    // and the effect string it reads as.
+    memoryAbilities: (capture.memoryAbilities ?? []).map((a) => {
+      assert.ok(a.text && a.capture && a.effects, "memory ability fields");
+      return a.effects;
+    }),
   });
   const engine = new StageEngine({
     idol,
@@ -198,10 +220,23 @@ function createEngine(capture, play) {
   return engine;
 }
 
-function findCopy(state, cardId, hand) {
+// The customization of a cardMap entry, as { "<customizationId>": level }
+// with nothing for none, so it can be compared with a capture's.
+function c11nKey(c11n) {
+  return JSON.stringify(
+    Object.entries(c11n ?? {})
+      .filter(([, level]) => level)
+      .map(([id, level]) => [String(id), level])
+      .sort(),
+  );
+}
+
+// c11n: only a copy with exactly this customization ({} = none) matches.
+function findCopy(state, cardId, hand, c11n) {
   return state[S.cardMap].findIndex(
     (c, index) =>
       c.id == cardId &&
+      (c11n === undefined || c11nKey(c.c11n) == c11nKey(c11n)) &&
       !state[S.removedCards].includes(index) &&
       !state[S.heldCards].includes(index) &&
       !hand.includes(index),
@@ -214,16 +249,35 @@ function supplyHand(state, action, heldCard) {
   // nextTurnDraw and raised there), not a fresh one.
   if (action.fromHand) {
     const card = state[S.handCards].find(
-      (c) => state[S.cardMap][c].id == action.cardId,
+      (c) =>
+        state[S.cardMap][c].id == action.cardId &&
+        (action.customizations === undefined ||
+          c11nKey(state[S.cardMap][c].c11n) == c11nKey(action.customizations)),
     );
     assert.ok(card !== undefined, `no card ${action.cardId} in hand`);
     return [card];
   }
 
   const hand = [];
-  for (const cardId of action.handCardIds ?? [action.cardId]) {
-    const card = findCopy(state, cardId, hand);
+  // customizations: the played copy's カスタマイズ, so the copy supplied for
+  // action.cardId is the one the game played. handCustomizations: one per
+  // handCardIds entry (null = any copy), for a copy that stays in hand.
+  let named = action.customizations;
+  for (const [i, cardId] of (action.handCardIds ?? [action.cardId]).entries()) {
+    let c11n = action.handCustomizations?.[i] ?? undefined;
+    if (cardId == action.cardId) {
+      c11n ??= named;
+      named = undefined;
+    }
+    let card = findCopy(state, cardId, hand, c11n);
     assert.ok(card >= 0, `no copy of card ${cardId} left`);
+    // A copy the engine already drew, if it's the same as the one found, so
+    // the copy left in the deck is the one the game left there.
+    const same = JSON.stringify(state[S.cardMap][card]);
+    const drawn = state[S.handCards].find(
+      (c) => !hand.includes(c) && JSON.stringify(state[S.cardMap][c]) == same,
+    );
+    if (drawn !== undefined) card = drawn;
     hand.push(card);
   }
   return hand;
@@ -395,11 +449,16 @@ function replay(capture, play) {
       hand = supplyHand(state, action, heldCard);
       putInHand(state, hand);
     }
+    const played = (c) =>
+      state[S.cardMap][c].id == action.cardId &&
+      (action.customizations === undefined ||
+        c11nKey(state[S.cardMap][c].c11n) == c11nKey(action.customizations));
     const card = action.useReturnedHeldCard
       ? heldCard
       : action.fromDrink
-        ? hand.findLast((c) => state[S.cardMap][c].id == action.cardId)
-        : hand.find((c) => state[S.cardMap][c].id == action.cardId);
+        ? hand.findLast(played)
+        : hand.find(played);
+    assert.ok(card !== undefined, `turn ${turn}: no ${action.cardId} in hand as played`);
     for (const [field, value] of Object.entries(action.growthBefore ?? {})) {
       assert.equal(
         state[S.cardMap][card].growth[G[field]],
@@ -445,6 +504,35 @@ function replay(capture, play) {
       }
       state[S.deckCards].push(drawn);
     }
+    // redrawnCardIds: cards the play draws after its drawnCardIds empty the
+    // 山札 and the 捨札 is shuffled into it (a card discarded earlier in the
+    // same play can come back, as after 仕切り直し+). The rest of the 山札
+    // goes to the 捨札 first, so the drawn cards are all that's left, and
+    // the reshuffle puts the named cards on top in the order drawn.
+    let recycle;
+    if (action.redrawnCardIds) {
+      const top = action.drawnCardIds ?? [];
+      const keep = state[S.deckCards].slice(state[S.deckCards].length - top.length);
+      const rest = state[S.deckCards].filter((c) => !keep.includes(c));
+      state[S.discardedCards].push(...rest);
+      state[S.deckCards] = keep;
+      const manager = engine.cardManager;
+      recycle = manager.recycleDiscards;
+      let reshuffles = 0;
+      manager.recycleDiscards = function (s) {
+        recycle.call(this, s);
+        reshuffles++;
+        assert.equal(reshuffles, 1, `turn ${turn}: one reshuffle`);
+        for (const cardId of [...action.redrawnCardIds].reverse()) {
+          const at = s[S.deckCards].findLastIndex(
+            (c) => s[S.cardMap][c].id == cardId,
+          );
+          assert.ok(at >= 0, `turn ${turn}: no ${cardId} in 捨札 to redraw`);
+          const [copy] = s[S.deckCards].splice(at, 1);
+          s[S.deckCards].push(copy);
+        }
+      };
+    }
     if (!action.fromDrink) {
       for (const drink of action.drinksBefore ?? []) {
         drinkAsCaptured(engine, state, drink);
@@ -478,7 +566,11 @@ function replay(capture, play) {
       state[S.deckCards].push(...[...drawn].reverse());
     }
     assert.ok(engine.isCardUsable(state, card), `turn ${turn}: usable`);
-    state = engine.useCard(state, card);
+    try {
+      state = engine.useCard(state, card);
+    } finally {
+      if (recycle) delete engine.cardManager.recycleDiscards;
+    }
 
     assert.equal(holds, action.hold ? 1 : 0);
     assert.equal(state[S.turnsElapsed], action.turnsElapsed ?? turn, `action ${turn} turnsElapsed`);
@@ -491,6 +583,25 @@ function replay(capture, play) {
       assert.ok(state[S.handCards].includes(heldCard), "held card in hand");
     }
     for (const [field, value] of Object.entries(action.expected)) {
+      // removedCardIds: the ids in 除外 after the turn, sorted, as the ログ
+      // shows cards moved there (e.g. 「眠気」 from 山札 to 除外).
+      if (field == "removedCardIds") {
+        const ids = state[S.removedCards]
+          .map((c) => state[S.cardMap][c].id)
+          .sort((a, b) => a - b);
+        assert.deepEqual(ids, value, `turn ${turn} 除外 (${action.capture})`);
+        continue;
+      }
+      // handCardIds: the ids in the 手札 after the play, sorted, as the ログ
+      // shows the cards drawn.
+      if (field == "handCardIds") {
+        const ids = state[S.handCards]
+          .map((c) => state[S.cardMap][c].id)
+          .sort((a, b) => a - b);
+        assert.deepEqual(ids, value, `turn ${turn} 手札 (${action.capture})`);
+        continue;
+      }
+      assert.ok(field in S, `turn ${turn}: no field ${field}`);
       assert.equal(
         state[S[field]],
         value,
